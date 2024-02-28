@@ -33,13 +33,15 @@ public class GardenFormController {
      * @return thymeleaf gardenForm
      */
     @GetMapping("/form")
-    public String form(@RequestParam(name="displayGardenName", required = false, defaultValue = "") String displayGardenName,
-                       @RequestParam(name="displayFavouriteLanguage", required = false, defaultValue = "") String displayLanguage,
+    public String form(@RequestParam(name="displayGardenName", required = true, defaultValue = "") String displayGardenName,
+                       @RequestParam(name="displayGardenLocation", required = true, defaultValue = "") String displayGardenLocation,
+                       @RequestParam(name="displayGardenSize", required = false, defaultValue = "") String displayGardenSize,
                        Model model) {
         logger.info("GET /form");
         model.addAttribute("displayGardenName", displayGardenName);
-        model.addAttribute("displayFavouriteLanguage", displayLanguage);
-        model.addAttribute("isJava", displayLanguage.equalsIgnoreCase("java"));
+        model.addAttribute("displayGardenLocation", displayGardenLocation);
+        model.addAttribute("displayGardenSize", displayGardenSize);
+        model.addAttribute("Home", displayGardenLocation.equalsIgnoreCase("Home"));
         return "gardenForm";
     }
 
@@ -53,13 +55,15 @@ public class GardenFormController {
      */
     @PostMapping("/form")
     public String submitForm( @RequestParam(name="gardenName") String gardenName,
-                              @RequestParam(name = "favouriteLanguage") String favouriteLanguage,
+                              @RequestParam(name = "gardenLocation") String gardenLocation,
+                              @RequestParam(name = "gardenSize") String gardenSize,
                               Model model) {
         logger.info("POST /form");
-        formService.addFormResult(new FormResult(gardenName, favouriteLanguage));
+        formService.addFormResult(new FormResult(gardenName, gardenLocation, gardenSize));
         model.addAttribute("displayGardenName", gardenName);
-        model.addAttribute("displayFavouriteLanguage", favouriteLanguage);
-        model.addAttribute("isJava", favouriteLanguage.equalsIgnoreCase("java"));
+        model.addAttribute("displayGardenLocation", gardenLocation);
+        model.addAttribute("displayGardenSize", gardenSize);
+        model.addAttribute("Home", gardenLocation.equalsIgnoreCase("Home"));
         return "gardenForm";
     }
 

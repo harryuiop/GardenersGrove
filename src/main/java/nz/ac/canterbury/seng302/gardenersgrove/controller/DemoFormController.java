@@ -56,7 +56,7 @@ public class DemoFormController {
                               @RequestParam(name = "favouriteLanguage") String favouriteLanguage,
                               Model model) {
         logger.info("POST /form");
-        formService.addFormResult(new FormResult(name, favouriteLanguage));
+        formService.addFormResult(new FormResult(name, favouriteLanguage, "Demo"));
         model.addAttribute("displayName", name);
         model.addAttribute("displayFavouriteLanguage", favouriteLanguage);
         model.addAttribute("isJava", favouriteLanguage.equalsIgnoreCase("java"));

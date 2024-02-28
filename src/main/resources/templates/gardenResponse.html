@@ -12,7 +12,8 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th>Language</th>
+                <th>Location</th>
+                <th>Size</th>
             </tr>
             </thead>
             <tbody>
@@ -21,7 +22,8 @@
             </tr>
             <tr th:each="response : ${responses}">
                 <td><span th:text="${response.name}"> Name </span></td>
-                <td><span th:text="${response.language}"> Language </span></td>
+                <td><span th:text="${response.location}"> Location </span></td>
+                <td><span th:text="${response.size}"> Size </span></td>
             </tr>
             </tbody>
         </table>
