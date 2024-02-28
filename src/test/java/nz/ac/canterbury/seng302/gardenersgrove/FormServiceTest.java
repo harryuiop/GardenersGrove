@@ -32,8 +32,8 @@ public class FormServiceTest {
             @Override
             public <S extends FormResult> S save(S entity) {
                 // assume there is some modification at the service layer that we check here instead of just the same values
-                Assertions.assertEquals(entity.getName(), "John");
-                Assertions.assertEquals(entity.getLanguage(), "Python");
+                Assertions.assertEquals("John", entity.getName());
+                Assertions.assertEquals("Python", entity.getLanguage());
                 return entity;
             }
 
@@ -100,7 +100,7 @@ public class FormServiceTest {
     public void simpleTest2() {
         FormService formService = new FormService(formRepository);
         FormResult result = formService.addFormResult(new FormResult("John", "Python"));
-        Assertions.assertEquals(result.getName(), "John");
-        Assertions.assertEquals(result.getLanguage(), "Python");
+        Assertions.assertEquals("John", result.getName());
+        Assertions.assertEquals("Python", result.getLanguage());
     }
 }
