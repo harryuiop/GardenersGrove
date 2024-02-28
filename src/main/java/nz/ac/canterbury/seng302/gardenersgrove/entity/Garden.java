@@ -18,7 +18,7 @@ public class Garden {
     @Column(nullable = false)
     private String location;
 
-    @Column(nullable = false)
+    @Column()
     private float size;
 
     /**
