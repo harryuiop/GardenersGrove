@@ -1,7 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.FormResult;
-import nz.ac.canterbury.seng302.gardenersgrove.service.FormService;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,23 +19,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class GardenFormController {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
 
-    private final FormService formService;
+    private final GardenService gardenService;
 
     @Autowired
-    public GardenFormController(FormService formService) {
-        this.formService = formService;
+    public GardenFormController(GardenService gardenService) {
+        this.gardenService = gardenService;
     }
     /**
      * Gets form to be displayed, includes the ability to display results of previous form when linked to from POST form
-     * @param displayName previous name entered into form to be displayed
-     * @param displayLanguage previous favourite programming language entered into form to be displayed
+     * @param displayGardenName previous name entered into form to be displayed
+     * @param displayGardenLocation previous favourite programming language entered into form to be displayed
+     * @param displayGardenSize
      * @param model (map-like) representation of name, language and isJava boolean for use in thymeleaf
      * @return thymeleaf gardenForm
      */
     @GetMapping("/form")
     public String form(@RequestParam(name="displayGardenName", required = true, defaultValue = "") String displayGardenName,
                        @RequestParam(name="displayGardenLocation", required = true, defaultValue = "") String displayGardenLocation,
-                       @RequestParam(name="displayGardenSize", required = false, defaultValue = "") String displayGardenSize,
+                       @RequestParam(name="displayGardenSize", required = false, defaultValue = "0") float displayGardenSize,
                        Model model) {
         logger.info("GET /form");
         model.addAttribute("displayGardenName", displayGardenName);
@@ -47,8 +48,9 @@ public class GardenFormController {
 
     /**
      * Posts a form response with name and favourite language
-     * @param name name if user
-     * @param favouriteLanguage users favourite programming language
+     * @param gardenName name if user
+     * @param gardenLocation users favourite programming language
+     * @param gardenSize
      * @param model (map-like) representation of name, language and isJava boolean for use in thymeleaf,
      *              with values being set to relevant parameters provided
      * @return thymeleaf gardenForm
@@ -56,10 +58,10 @@ public class GardenFormController {
     @PostMapping("/form")
     public String submitForm( @RequestParam(name="gardenName") String gardenName,
                               @RequestParam(name = "gardenLocation") String gardenLocation,
-                              @RequestParam(name = "gardenSize") String gardenSize,
+                              @RequestParam(name = "gardenSize") float gardenSize,
                               Model model) {
         logger.info("POST /form");
-        formService.addFormResult(new FormResult(gardenName, gardenLocation, gardenSize));
+        gardenService.saveGarden(new Garden(gardenName, gardenLocation, gardenSize));
         model.addAttribute("displayGardenName", gardenName);
         model.addAttribute("displayGardenLocation", gardenLocation);
         model.addAttribute("displayGardenSize", gardenSize);
@@ -75,7 +77,7 @@ public class GardenFormController {
     @GetMapping("/form/responses")
     public String responses(Model model) {
         logger.info("GET /form/responses");
-        model.addAttribute("responses", formService.getFormResults());
+        model.addAttribute("responses", gardenService.getAllGardens());
         return "gardenResponse";
     }
 }
