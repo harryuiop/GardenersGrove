@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 /**
- * Entity class reflecting an entry of name, and favourite programming language
- * Note the @link{Entity} annotation required for declaring this as a persistence entity
+ * Entity class representing a plant in a garden
  */
 @Entity
 public class Plant {
