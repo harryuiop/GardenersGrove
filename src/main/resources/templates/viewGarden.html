@@ -8,7 +8,7 @@
 <h4>View Gardens</h4>
 
 <div>
-    <h4>Gardens</h4>
+    <h4>My Gardens</h4>
     <table>
         <thead>
         <tr>
@@ -18,6 +18,9 @@
         </tr>
         </thead>
         <tbody>
+        <tr th:if="${gardens.empty}">
+            <td colspan="2"> No gardens have been made yet</td>
+        </tr>
         <tr th:each="garden : ${gardens}">
             <td><span th:text="${garden.name}"> Name </span></td>
             <td><span th:text="${garden.location}"> Location </span></td>

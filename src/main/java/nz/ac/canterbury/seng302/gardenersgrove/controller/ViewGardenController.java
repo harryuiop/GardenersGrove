@@ -33,7 +33,7 @@ public class ViewGardenController {
     @GetMapping("/view-garden")
     public String home(Model model) {
         logger.info("GET /view-garden");
-        this.gardens(model);
+        this.viewSpecificGarden(model);
         return "viewGarden";
     }
 
@@ -42,8 +42,8 @@ public class ViewGardenController {
      *
      * @param model (map-like) representation of results to be used by thymeleaf
      */
-    public void gardens(Model model) {
-        logger.info("GET /view-garden garden responses");
+    public void viewSpecificGarden(Model model) {
+        logger.info("GET /view-garden viewing % Garden");
         model.addAttribute("gardens", this.gardenService.getAllGardens());
     }
 
