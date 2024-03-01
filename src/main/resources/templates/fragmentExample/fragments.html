@@ -27,7 +27,7 @@
             </thead>
             <tbody>
             <tr th:each="garden : ${gardens}">
-                <td><a th:href="@{/view-garden}"><span th:text="${garden.name}" > Name </span></a></td>
+                <td><a th:href="@{/view-garden(gardenId=${garden.id})}"><span th:text="${garden.name}" > Name </span></a></td>
             </tr>
             </tbody>
         </table>
