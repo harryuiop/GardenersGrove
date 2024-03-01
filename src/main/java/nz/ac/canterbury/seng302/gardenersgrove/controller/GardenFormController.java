@@ -34,9 +34,9 @@ public class GardenFormController {
      * @return thymeleaf gardenForm
      */
     @GetMapping("/form")
-    public String form(@RequestParam(name="displayGardenName", required = true, defaultValue = "") String displayGardenName,
-                       @RequestParam(name="displayGardenLocation", required = true, defaultValue = "") String displayGardenLocation,
-                       @RequestParam(name="displayGardenSize", required = false, defaultValue = "0") float displayGardenSize,
+    public String form(@RequestParam(name="displayGardenName", defaultValue = "") String displayGardenName,
+                       @RequestParam(name="displayGardenLocation", defaultValue = "") String displayGardenLocation,
+                       @RequestParam(name="displayGardenSize", required = false) Float displayGardenSize,
                        Model model) {
         logger.info("GET /form");
         model.addAttribute("displayGardenName", displayGardenName);
@@ -58,7 +58,7 @@ public class GardenFormController {
     @PostMapping("/form")
     public String submitForm( @RequestParam(name="gardenName") String gardenName,
                               @RequestParam(name = "gardenLocation") String gardenLocation,
-                              @RequestParam(name = "gardenSize") float gardenSize,
+                              @RequestParam(name = "gardenSize", required = false) Float gardenSize,
                               Model model) {
         logger.info("POST /form");
         gardenService.saveGarden(new Garden(gardenName, gardenLocation, gardenSize));
