@@ -22,7 +22,7 @@
              autofocus>
       <br/>
       <label for="gardenSize"> Size of your garden in square metres: </label>
-      <input type="number" class="form-control" id="gardenSize" placeholder="3"
+      <input type="number" step="0.01" class="form-control" id="gardenSize" placeholder="3"
              th:name="gardenSize" th:value="*{gardenSize}" data-cy="gardenSize"
              autofocus>
       <br/>
@@ -34,7 +34,7 @@
     <h4 th:if="${isJava}"> Looks like Java is both our favourite language!</h4>
   </div>
   <div>
-    <a th:href="@{form/responses}">View responses</a>
+    <!_-- a th:href="@{form/responses}">View responses /a>--> <!-- This is a link to all gardens -->
     <a th:href="@{demo}">Back to home</a>
   </div>
   </div>
