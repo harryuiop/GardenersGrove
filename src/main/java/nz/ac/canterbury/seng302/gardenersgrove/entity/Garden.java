@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +44,7 @@ public class Garden {
         this.name = name;
         this.location = location;
         this.size = size;
+        this.plants = new ArrayList<>();
     }
 
     public Long getId() {
