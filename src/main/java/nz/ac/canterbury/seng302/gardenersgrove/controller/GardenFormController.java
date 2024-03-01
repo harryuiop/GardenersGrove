@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
  */
 @Controller
-public class GardenFormController {
+public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
 
     private final GardenService gardenService;
@@ -24,6 +25,7 @@ public class GardenFormController {
     @Autowired
     public GardenFormController(GardenService gardenService) {
         this.gardenService = gardenService;
+        gardenService.saveGarden(new Garden("g1", "g", 1));
     }
     /**
      * Gets form to be displayed, includes the ability to display results of previous form when linked to from POST form
@@ -39,6 +41,7 @@ public class GardenFormController {
                        @RequestParam(name="displayGardenSize", required = false, defaultValue = "0") float displayGardenSize,
                        Model model) {
         logger.info("GET /form");
+        this.updateGardensSidebar(model, gardenService);
         model.addAttribute("displayGardenName", displayGardenName);
         model.addAttribute("displayGardenLocation", displayGardenLocation);
         model.addAttribute("displayGardenSize", displayGardenSize);
@@ -66,6 +69,7 @@ public class GardenFormController {
         model.addAttribute("displayGardenLocation", gardenLocation);
         model.addAttribute("displayGardenSize", gardenSize);
         model.addAttribute("Home", gardenLocation.equalsIgnoreCase("Home"));
+        this.updateGardensSidebar(model, gardenService);
         return "gardenForm";
     }
 
