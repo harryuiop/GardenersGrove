@@ -12,29 +12,27 @@
 <div>
   <div>
     <form th:action="@{form}" method="post">
-      <label for="gardenName"> Garden Name: </label>
+      <label class="form-input" for="gardenName"> Garden Name: </label>
       <input type="text" class="form-control" id="gardenName" placeholder="Garden 1"
              th:name="gardenName" th:value="*{gardenName}" data-cy="gardenName" required autofocus>
       <br/>
-      <label for="gardenLocation"> Location of your garden: </label>
+      <label class="form-input" for="gardenLocation"> Location of your garden: </label>
       <input type="text" class="form-control" id="gardenLocation" placeholder="Riccarton"
              th:name="gardenLocation" th:value="*{gardenLocation}" data-cy="gardenLocation" required
              autofocus>
       <br/>
-      <label for="gardenSize"> Size of your garden in square metres: </label>
+      <label class="form-input" for="gardenSize"> Size of your garden in square metres: </label>
       <input type="number" step="0.01" class="form-control" id="gardenSize" placeholder="3"
              th:name="gardenSize" th:value="*{gardenSize}" data-cy="gardenSize"
              autofocus>
       <br/>
-      <button type="submit">Submit!</button>
+      <button class="form-button" type="submit">Submit!</button>
+      <a th:href="@{demo}"><button class="form-button" type="home">Back to home</button></a>
     </form>
   </div>
   <div th:if="${displayGardenName!=''}">
     <h4 th:text="'Welcome ' + ${displayGardenName} +', ' + ${displayFavouriteLanguage} + ' is a pretty good language.'"></h4>
     <h4 th:if="${isJava}"> Looks like Java is both our favourite language!</h4>
-  </div>
-  <div>
-    <a th:href="@{demo}">Back to home</a>
   </div>
   </div>
 </div>
