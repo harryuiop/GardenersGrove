@@ -26,12 +26,12 @@ public class GardenFormController {
         this.gardenService = gardenService;
     }
     /**
-     * Gets form to be displayed, includes the ability to display results of previous form when linked to from POST form
-     * @param displayGardenName previous name entered into form to be displayed
-     * @param displayGardenLocation previous favourite programming language entered into form to be displayed
-     * @param displayGardenSize
-     * @param model (map-like) representation of name, language and isJava boolean for use in thymeleaf
-     * @return thymeleaf gardenForm
+     * Gets form to be displayed, and passes previous form values to the HTML.
+     * @param displayGardenName garden name value for used in HTML.
+     * @param displayGardenLocation garden location value for use in HTML.
+     * @param displayGardenSize garden size value for use in HTML.
+     * @param model object that passes data through to the HTML.
+     * @return thymeleaf HTML gardenForm template.
      */
     @GetMapping("/form")
     public String form(@RequestParam(name="displayGardenName", defaultValue = "") String displayGardenName,
@@ -42,18 +42,16 @@ public class GardenFormController {
         model.addAttribute("displayGardenName", displayGardenName);
         model.addAttribute("displayGardenLocation", displayGardenLocation);
         model.addAttribute("displayGardenSize", displayGardenSize);
-        model.addAttribute("Home", displayGardenLocation.equalsIgnoreCase("Home"));
         return "gardenForm";
     }
 
     /**
-     * Posts a form response with name and favourite language
-     * @param gardenName name if user
-     * @param gardenLocation users favourite programming language
-     * @param gardenSize
-     * @param model (map-like) representation of name, language and isJava boolean for use in thymeleaf,
-     *              with values being set to relevant parameters provided
-     * @return thymeleaf gardenForm
+     * Submits form and saves the garden to the database.
+     * @param gardenName The name of the garden as input by the user.
+     * @param gardenLocation The location of the garden as input by the user.
+     * @param gardenSize The size of the garden as input by the user.
+     * @param model object that passes data through to the HTML.
+     * @return thymeleaf HTML gardenForm template.
      */
     @PostMapping("/form")
     public String submitForm( @RequestParam(name="gardenName") String gardenName,
@@ -65,19 +63,6 @@ public class GardenFormController {
         model.addAttribute("displayGardenName", gardenName);
         model.addAttribute("displayGardenLocation", gardenLocation);
         model.addAttribute("displayGardenSize", gardenSize);
-        model.addAttribute("Home", gardenLocation.equalsIgnoreCase("Home"));
         return "gardenForm";
-    }
-
-    /**
-     * Gets all form responses
-     * @param model (map-like) representation of results to be used by thymeleaf
-     * @return thymeleaf gardenResponse
-     */
-    @GetMapping("/form/responses")
-    public String responses(Model model) {
-        logger.info("GET /form/responses");
-        model.addAttribute("responses", gardenService.getAllGardens());
-        return "gardenResponse";
     }
 }
