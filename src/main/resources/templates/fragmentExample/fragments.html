@@ -18,33 +18,19 @@
     <h2>Gardeners' Grove</h2>
 </div>
 
-    <nav th:fragment="gardens">
+    <nav class="gardens-list" th:fragment="gardens">
+        <a th:href="@{/form}"><button>Add New Garden</button></a>
+        <br/>
         <table>
             <thead>
-            <tr>
-                <th>Name</th>
-                <th>Location</th>
-                <th>Size</th>
-            </tr>
+            <th>Gardens</th>
             </thead>
             <tbody>
             <tr th:each="garden : ${gardens}">
-                <td><span th:text="${garden.name}"> Name </span></td>
-                <td><span th:text="${garden.location}"> Location </span></td>
-                <td><span th:text="${garden.size}"> Size </span></td>
+                <td><a th:href="@{/view-garden}"><span th:text="${garden.name}" > Name </span></a></td>
             </tr>
             </tbody>
         </table>
-        <a th:href="@{/form}"><button>Add New Garden</button></a>
-        <br/>
-        <!-- To add a list of the gardens, tr seems to repeat through a java list
-            <tr th:each = "garden : $(gardens)">
-            Unsure if the div will work but worth a shot for later
-            <div class = garden>
-                <td th:utext="$(garden.name)"> Unsure what goes here but we shall find out</td>
-            </div>
-        -->
-        <a th:href="@{fragments/main}">View a fragment example</a>
     </nav>
 
 </body>
