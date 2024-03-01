@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * This is a basic spring boot controller, note the @link{Controller} annotation which defines this.
@@ -22,7 +23,6 @@ public class ViewGardenController {
     @Autowired
     public ViewGardenController(GardenService gardenService) {
         this.gardenService = gardenService;
-        this.gardenService.saveGarden((new Garden("Test Garden", "Location", 100)));
     }
 
     /**
@@ -31,20 +31,10 @@ public class ViewGardenController {
      * @return redirect to /demo
      */
     @GetMapping("/view-garden")
-    public String home(Model model) {
+    public String home(@RequestParam(name = "gardenId", required = false) Long gardenId, Model model) {
         logger.info("GET /view-garden");
-        this.viewSpecificGarden(model);
+        model.addAttribute("garden", gardenService.getGardenById(gardenId));
         return "viewGarden";
-    }
-
-    /**
-     * Gets all Garden responses
-     *
-     * @param model (map-like) representation of results to be used by thymeleaf
-     */
-    public void viewSpecificGarden(Model model) {
-        logger.info("GET /view-garden viewing % Garden");
-        model.addAttribute("gardens", this.gardenService.getAllGardens());
     }
 
 

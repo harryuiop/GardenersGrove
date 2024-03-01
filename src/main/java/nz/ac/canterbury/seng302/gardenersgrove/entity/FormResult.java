@@ -16,7 +16,10 @@ public class FormResult {
     private String name;
 
     @Column(nullable = false)
-    private String language;
+    private String location;
+
+    @Column(nullable = false)
+    private String size;
 
     /**
      * JPA required no-args constructor
@@ -28,9 +31,10 @@ public class FormResult {
      * @param name name of user
      * @param language user's favourite programming language
      */
-    public FormResult(String name, String language) {
+    public FormResult(String name, String location, String size) {
         this.name = name;
-        this.language = language;
+        this.location = location;
+        this.size = size;
     }
 
     public Long getId() {
@@ -41,8 +45,10 @@ public class FormResult {
         return name;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getLocation() { return location;
+    }
+
+    public String getSize() { return size;
     }
 
     @Override
@@ -50,7 +56,8 @@ public class FormResult {
         return "FormResult{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", language='" + language + '\'' +
+                ", location='" + location + '\'' +
+                ", size='" + size + '\'' +
                 '}';
     }
 }

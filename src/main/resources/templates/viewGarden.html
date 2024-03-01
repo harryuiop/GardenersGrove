@@ -8,7 +8,7 @@
 <h4>View Gardens</h4>
 
 <div>
-    <h4>My Gardens</h4>
+    <h2 th:text="${garden.isPresent() ? garden.get().name : ''}"></h2>
     <table>
         <thead>
         <tr>
@@ -18,13 +18,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${gardens.empty}">
-            <td colspan="2"> No gardens have been made yet</td>
-        </tr>
-        <tr th:each="garden : ${gardens}">
-            <td><span th:text="${garden.name}"> Name </span></td>
-            <td><span th:text="${garden.location}"> Location </span></td>
-            <td><span th:text="${garden.size}"> Size </span></td>
+        <tr>
+            <td><span th:text="${garden.isPresent() ? garden.get().name : ''}">Name</span></td>
+            <td><span th:text="${garden.isPresent() ? garden.get().location : ''}">Location</span></td>
+            <td><span th:text="${garden.isPresent() ? garden.get().size : ''}">Size</span></td>
         </tr>
         </tbody>
     </table>
