@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Controller for form example.
- * Note the @link{Autowired} annotation giving us access to the @lnik{FormService} class automatically
+ * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
  */
 @Controller
 public class GardenFormController {
