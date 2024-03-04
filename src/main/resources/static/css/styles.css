@@ -79,3 +79,12 @@ nav button {
     margin-top: 20px;
 }
 
+.content a {
+    text-decoration: none;
+    color: var(--dark-neutral);
+}
+
+.content a:hover{
+    text-decoration: underline;
+    color: var(--dark-color);
+}

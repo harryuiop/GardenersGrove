@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" context="text/html; charset=UTF-8">
+    <title>Gardens' Grove</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:insert="fragmentExample/fragments :: title">Header</div>
+<nav th:insert="fragmentExample/fragments :: gardens">Gardens</nav>
+<div class="content">
+    <table>
+        <thead>
+        <th>My Gardens</th>
+        </thead>
+        <tbody>
+        <tr th:each="garden : ${gardens}">
+            <td><a th:href="@{/view-garden(gardenId=${garden.id})}"><span th:text="${garden.name}" > Name </span></a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
