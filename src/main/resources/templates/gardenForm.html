@@ -30,9 +30,13 @@
       <a th:href="@{demo}"><button class="form-button" type="button">Cancel</button></a>
     </form>
   </div>
-  <div th:if="${displayGardenName!=''}">
-    <h4 th:text="'Welcome ' + ${displayGardenName} +', ' + ${displayFavouriteLanguage} + ' is a pretty good language.'"></h4>
-    <h4 th:if="${isJava}"> Looks like Java is both our favourite language!</h4>
+  <div th:if="${!validName}">
+    <h4 th:if="${nameIsBlank}" class="form-input">Garden name cannot be empty</h4>
+    <h4 th:if="${!nameIsBlank}" class="form-input">Garden name must only include letters, numbers, spaces, dots, hyphens or apostrophes</h4>
+  </div>
+  <div th:if="${!validLocation}">
+    <h4 th:if="${locationIsBlank}" class="form-input">Location cannot be empty</h4>
+    <h4 th:if="${!locationIsBlank}" class="form-input">Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes</h4>
   </div>
   </div>
 </div>

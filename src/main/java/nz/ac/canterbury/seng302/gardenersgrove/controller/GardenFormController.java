@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Controller for form example.
  * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
@@ -39,10 +43,30 @@ public class GardenFormController {
                        @RequestParam(name="displayGardenSize", required = false) Float displayGardenSize,
                        Model model) {
         logger.info("GET /form");
+        model.addAttribute("validName", true);
+        model.addAttribute("validLocation", true);
         model.addAttribute("displayGardenName", displayGardenName);
         model.addAttribute("displayGardenLocation", displayGardenLocation);
         model.addAttribute("displayGardenSize", displayGardenSize);
         return "gardenForm";
+    }
+
+    public boolean checkString(String string) {
+        boolean validString = true;
+        List<String> accepted = Arrays.asList(",", ".", "-", "'");
+        if (!string.isBlank()) {
+            String name = string.replaceAll("\\s+","");
+            for (int i=0; i<name.length(); i++) {
+                if (!Character.isLetter(name.charAt(i)) && !accepted.contains(name.substring(i, i))) {
+                    validString = false;
+                    logger.info("Character invalid: "+name.charAt(i));
+                }
+            }
+        } else {
+            validString = false;
+            logger.info("Blank string");
+        }
+        return validString;
     }
 
     /**
@@ -59,10 +83,27 @@ public class GardenFormController {
                               @RequestParam(name = "gardenSize", required = false) Float gardenSize,
                               Model model) {
         logger.info("POST /form");
-        gardenService.saveGarden(new Garden(gardenName, gardenLocation, gardenSize));
-        model.addAttribute("displayGardenName", gardenName);
-        model.addAttribute("displayGardenLocation", gardenLocation);
-        model.addAttribute("displayGardenSize", gardenSize);
-        return "gardenForm";
+        boolean validName = checkString(gardenName);
+        model.addAttribute("validName", validName);
+        boolean validLocation = checkString(gardenLocation);
+        model.addAttribute("validLocation", validLocation);
+        if (validName && validLocation) {
+            gardenService.saveGarden(new Garden(gardenName, gardenLocation, gardenSize));
+            model.addAttribute("displayGardenName", gardenName);
+            model.addAttribute("displayGardenLocation", gardenLocation);
+            model.addAttribute("displayGardenSize", gardenSize);
+            return "redirect:./form/gardens";
+        } else {
+            model.addAttribute("nameIsBlank", gardenName.isBlank());
+            model.addAttribute("locationIsBlank", gardenLocation.isBlank());
+            return "gardenForm";
+        }
     }
+
+//    @GetMapping("/form/gardens")
+//    public String responses(Model model) {
+//        logger.info("GET /form/gardens");
+//        model.addAttribute("responses", gardenService.getAllGardens());
+//        return "gardenResponse";
+//    }
 }
