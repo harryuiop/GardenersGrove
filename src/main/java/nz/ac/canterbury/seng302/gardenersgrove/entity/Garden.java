@@ -2,6 +2,9 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Entity class reflecting an entry of name, and favourite programming language
  * Note the @link{Entity} annotation required for declaring this as a persistence entity
@@ -21,6 +24,10 @@ public class Garden {
     @Column()
     private Float size;
 
+    @Column(nullable = false)
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Plant> plants;
+
     /**
      * JPA required no-args constructor
      */
@@ -37,6 +44,7 @@ public class Garden {
         this.name = name;
         this.location = location;
         this.size = size;
+        this.plants = new ArrayList<>();
     }
 
     public Long getId() {
@@ -53,6 +61,10 @@ public class Garden {
 
     public Float getSize() {
         return size;
+    }
+
+    public List<Plant> getPlants() {
+        return plants;
     }
 
     @Override
