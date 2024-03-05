@@ -9,16 +9,10 @@
 <div th:insert="fragmentExample/fragments :: title">Header</div>
 <nav th:insert="fragmentExample/fragments :: gardens">Gardens</nav>
 <div class="content">
-    <table>
-        <thead>
-        <th>My Gardens</th>
-        </thead>
-        <tbody>
-        <tr th:each="garden : ${gardens}">
-            <td><a th:href="@{/view-garden(gardenId=${garden.id})}"><span th:text="${garden.name}" > Name </span></a></td>
-        </tr>
-        </tbody>
-    </table>
+    <h2>My Gardens</h2>
+    <div class="list-container">
+        <div class="garden-item" th:each="garden: ${gardens}"><a th:href="@{/view-garden(gardenId=${garden.id})}"><span th:text="${garden.name}" >Name</span></a></div>
+    </div>
 </div>
 </body>
 </html>
