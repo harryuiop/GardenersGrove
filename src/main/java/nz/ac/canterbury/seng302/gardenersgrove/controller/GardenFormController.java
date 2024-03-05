@@ -94,7 +94,6 @@ public class GardenFormController extends GardensSidebar {
         if (nameIsValid && locationIsValid && sizeIsValid) {
             Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
             gardenService.saveGarden(garden);
-            logger.info("Garden Size: " + garden.getSize());
             return "redirect:/view-garden?gardenId=" + garden.getId();
         } else {
             model.addAttribute("gardenName", gardenName);
