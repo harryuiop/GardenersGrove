@@ -48,7 +48,7 @@ public class Garden {
         this.location = newLocation;
     }
 
-    public void setSize(float newSize) {
+    public void setSize(Float newSize) {
         this.size = newSize;
     }
 

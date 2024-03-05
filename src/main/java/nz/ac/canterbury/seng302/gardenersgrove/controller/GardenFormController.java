@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import nz.ac.canterbury.seng302.gardenersgrove.components.FormSubmission;
+import java.util.HashMap;
 
 /**
  * Controller for form example.
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
-
+    FormSubmission checker = new FormSubmission();
     private final GardenService gardenService;
 
     @Autowired
@@ -42,9 +44,7 @@ public class GardenFormController extends GardensSidebar {
         return "gardenForm";
     }
 
-    public boolean checkString(String string) {
-        return string.matches("[a-zA-Z0-9 .,\\-']*");
-    }
+
 
     /**
      * Submits form and saves the garden to the database.
@@ -60,46 +60,21 @@ public class GardenFormController extends GardensSidebar {
                              @RequestParam(name = "gardenSize", required = false) Float gardenSize,
                              Model model) {
         logger.info("POST /form");
-        boolean nameIsValid = false;
-        boolean locationIsValid = false;
-        boolean sizeIsValid = false;
-
-        if (gardenName.isBlank()) {
-            model.addAttribute("gardenNameError", "Garden name cannot by empty");
-        } else if (!checkString(gardenName)) {
-            model.addAttribute(
-                    "gardenNameError",
-                    "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
-        } else {
-            nameIsValid = true;
-        }
-
-        if (gardenLocation.isBlank()) {
-            model.addAttribute("gardenLocationError", "Location cannot be empty");
-        } else if (!checkString(gardenLocation)) {
-            model.addAttribute(
-                    "gardenLocationError",
-                    "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
-            );
-        } else {
-            locationIsValid = true;
-        }
-
-        if (gardenSize != null && gardenSize <= 0) {
-            model.addAttribute("gardenSizeError", "Garden size must be a positive number");
-        } else {
-            sizeIsValid = true;
-        }
-
-        if (nameIsValid && locationIsValid && sizeIsValid) {
+        HashMap<String, String> errors = checker.formErrors(gardenName, gardenLocation, gardenSize);
+        if (errors.isEmpty()) {
             Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
             gardenService.saveGarden(garden);
             return "redirect:/view-garden?gardenId=" + garden.getId();
-        } else {
+        }
+        else {
+            for (String i: errors.keySet()) {
+                model.addAttribute(i, errors.get(i));
+            }
             model.addAttribute("gardenName", gardenName);
             model.addAttribute("gardenLocation", gardenLocation);
             model.addAttribute("gardenSize", gardenSize);
             return "gardenForm";
         }
+
     }
 }
