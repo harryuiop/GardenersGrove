@@ -51,7 +51,7 @@ public class Garden {
         return location;
     }
 
-    public float getSize() {
+    public Float getSize() {
         return size;
     }
 
