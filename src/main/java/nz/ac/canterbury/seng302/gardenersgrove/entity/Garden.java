@@ -39,6 +39,19 @@ public class Garden {
         this.size = size;
     }
 
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    public void setLocation(String newLocation) {
+        this.location = newLocation;
+    }
+
+    public void setSize(float newSize) {
+        this.size = newSize;
+    }
+
     public Long getId() {
         return id;
     }
