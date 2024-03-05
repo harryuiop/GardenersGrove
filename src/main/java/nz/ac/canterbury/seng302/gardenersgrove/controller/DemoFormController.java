@@ -32,7 +32,7 @@ public class DemoFormController {
      * @param model (map-like) representation of name, language and isJava boolean for use in thymeleaf
      * @return thymeleaf demoFormTemplate
      */
-    @GetMapping("/form")
+    @GetMapping("/demoform")
     public String form(@RequestParam(name="displayName", required = false, defaultValue = "") String displayName,
                        @RequestParam(name="displayFavouriteLanguage", required = false, defaultValue = "") String displayLanguage,
                        Model model) {
@@ -51,12 +51,12 @@ public class DemoFormController {
      *              with values being set to relevant parameters provided
      * @return thymeleaf demoFormTemplate
      */
-    @PostMapping("/form")
+    @PostMapping("/demoform")
     public String submitForm( @RequestParam(name="name") String name,
                               @RequestParam(name = "favouriteLanguage") String favouriteLanguage,
                               Model model) {
         logger.info("POST /form");
-        formService.addFormResult(new FormResult(name, favouriteLanguage));
+        formService.addFormResult(new FormResult(name, favouriteLanguage, "Demo"));
         model.addAttribute("displayName", name);
         model.addAttribute("displayFavouriteLanguage", favouriteLanguage);
         model.addAttribute("isJava", favouriteLanguage.equalsIgnoreCase("java"));
@@ -68,7 +68,7 @@ public class DemoFormController {
      * @param model (map-like) representation of results to be used by thymeleaf
      * @return thymeleaf demoResponseTemplate
      */
-    @GetMapping("/form/responses")
+    @GetMapping("/demoform/responses")
     public String responses(Model model) {
         logger.info("GET /form/responses");
         model.addAttribute("responses", formService.getFormResults());
