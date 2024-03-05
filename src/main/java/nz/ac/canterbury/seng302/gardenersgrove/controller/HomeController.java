@@ -1,7 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,22 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
  * This controller defines endpoints as functions with specific HTTP mappings
  */
 @Controller
-public class DemoController extends GardensSidebar {
-    private final GardenService gardenService;
-    Logger logger = LoggerFactory.getLogger(DemoController.class);
-
-
-    public DemoController(GardenService gardenService) {this.gardenService = gardenService;}
-    /**
-    /** Unused here for informational purposes
-     * Redirects GET default url '/' to '/demo'
-     * @return redirect to /demo
-    @GetMapping("/demo")
-    public String home() {
-        logger.info("GET /");
-        return "redirect:./demo";
-    }
-    */
+public class HomeController {
+    Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     /**
      * Gets the thymeleaf page representing the /demo page (a basic welcome screen with some links)
@@ -37,12 +21,11 @@ public class DemoController extends GardensSidebar {
      * @param model (map-like) representation of data to be used in thymeleaf display
      * @return thymeleaf demoTemplate
      */
-    @GetMapping("/demo")
+    @GetMapping("/")
     public String getTemplate(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
-        logger.info("GET /demo");
-        this.updateGardensSidebar(model, gardenService);
+        logger.info("GET /");
         model.addAttribute("name", name);
-        return "demoTemplate";
+        return "homeTemplate";
     }
 
 }

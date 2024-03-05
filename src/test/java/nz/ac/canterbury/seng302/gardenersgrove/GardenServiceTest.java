@@ -14,15 +14,15 @@ import java.util.Optional;
 
 @DataJpaTest
 @Import(GardenService.class)
-public class GardenServiceTest {
+class GardenServiceTest {
 
     @Autowired
     private GardenRepository gardenRepository;
 
     @Test
-    public void gardenRepositoryGardenCreation() {
+    void gardenRepositoryGardenCreation() {
         GardenService gardenService = new GardenService(gardenRepository);
-        Garden garden = gardenService.saveGarden(new Garden("Test Garden", "Test location", 100));
+        Garden garden = gardenService.saveGarden(new Garden("Test Garden", "Test location", 100f));
         List<Garden> gardens = gardenRepository.findAll();
 
         Assertions.assertEquals(1, gardens.size());
