@@ -11,7 +11,9 @@
 <div class="content">
     <h2>My Gardens</h2>
     <div class="list-container">
-        <div class="garden-item" th:each="garden: ${gardens}"><a th:href="@{/view-garden(gardenId=${garden.id})}"><span th:text="${garden.name}" >Name</span></a></div>
+        <a th:each="garden: ${gardens}" th:href="@{/view-garden(gardenId=${garden.id})}">
+            <div class="garden-item"><span th:text="${garden.name}" >Name</span></div>
+        </a>
     </div>
 </div>
 </body>
