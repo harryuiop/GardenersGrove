@@ -15,11 +15,12 @@
         <h2 th:text="${garden.get().name}"></h2>
 
         <article class="in-line"><p>Name: </p>
-            <p th:text="${garden.isPresent() ? garden.get().name : ''}"></p></article>
+            <p th:text="${garden.get().name}"></p></article>
         <article class="in-line"><p>Location: </p>
-            <p th:text="${garden.isPresent() ? garden.get().location : ''}"></p></article>
+            <p th:text="${garden.get().location}"></p></article>
         <article class="in-line"><p>Size: </p>
-            <p th:text="${garden.isPresent() ? garden.get().size : ''}"></p></article>
+            <p th:text="${garden.get().getSize() != null ? garden.get().size : 'unspecified'}"></p>
+        </article>
 
     </div>
 
