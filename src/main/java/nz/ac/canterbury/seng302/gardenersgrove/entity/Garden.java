@@ -18,8 +18,8 @@ public class Garden {
     @Column(nullable = false)
     private String location;
 
-    @Column(nullable = false)
-    private float size;
+    @Column()
+    private Float size;
 
     /**
      * JPA required no-args constructor
@@ -33,7 +33,7 @@ public class Garden {
      * @param name     name of Garden
      * @param location user's favourite programming language
      */
-    public Garden(String name, String location, float size) {
+    public Garden(String name, String location, Float size) {
         this.name = name;
         this.location = location;
         this.size = size;
