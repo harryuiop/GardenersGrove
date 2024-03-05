@@ -62,3 +62,10 @@ nav button {
     margin-top: 20px;
 }
 
+.form-field {
+    white-space: nowrap;
+}
+.form-field * {
+    display: inline-block;
+}
+

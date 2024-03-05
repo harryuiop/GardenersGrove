@@ -11,10 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Controller for form example.
  * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
@@ -29,44 +25,23 @@ public class GardenFormController {
     public GardenFormController(GardenService gardenService) {
         this.gardenService = gardenService;
     }
+
     /**
      * Gets form to be displayed, and passes previous form values to the HTML.
-     * @param displayGardenName garden name value for used in HTML.
-     * @param displayGardenLocation garden location value for use in HTML.
-     * @param displayGardenSize garden size value for use in HTML.
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
     @GetMapping("/form")
-    public String form(@RequestParam(name="displayGardenName", defaultValue = "") String displayGardenName,
-                       @RequestParam(name="displayGardenLocation", defaultValue = "") String displayGardenLocation,
-                       @RequestParam(name="displayGardenSize", required = false) Float displayGardenSize,
-                       Model model) {
+    public String form(Model model) {
         logger.info("GET /form");
-        model.addAttribute("validName", true);
-        model.addAttribute("validLocation", true);
-        model.addAttribute("displayGardenName", displayGardenName);
-        model.addAttribute("displayGardenLocation", displayGardenLocation);
-        model.addAttribute("displayGardenSize", displayGardenSize);
+        model.addAttribute("gardenNameError", "");
+        model.addAttribute("gardenLocationError", "");
+        model.addAttribute("gardenSizeError", "");
         return "gardenForm";
     }
 
     public boolean checkString(String string) {
-        boolean validString = true;
-        List<String> accepted = Arrays.asList(",", ".", "-", "'");
-        if (!string.isBlank()) {
-            String name = string.replaceAll("\\s+","");
-            for (int i=0; i<name.length(); i++) {
-                if (!Character.isLetter(name.charAt(i)) && !accepted.contains(name.substring(i, i))) {
-                    validString = false;
-                    logger.info("Character invalid: "+name.charAt(i));
-                }
-            }
-        } else {
-            validString = false;
-            logger.info("Blank string");
-        }
-        return validString;
+        return string.matches("[a-zA-Z0-9 .,\\-']*");
     }
 
     /**
@@ -75,35 +50,50 @@ public class GardenFormController {
      * @param gardenLocation The location of the garden as input by the user.
      * @param gardenSize The size of the garden as input by the user.
      * @param model object that passes data through to the HTML.
-     * @return thymeleaf HTML gardenForm template.
+     * @return thymeleaf HTML template to redirect to.
      */
     @PostMapping("/form")
-    public String submitForm( @RequestParam(name="gardenName") String gardenName,
-                              @RequestParam(name = "gardenLocation") String gardenLocation,
-                              @RequestParam(name = "gardenSize", required = false) Float gardenSize,
-                              Model model) {
+    public String submitForm(@RequestParam(name = "gardenName") String gardenName,
+                             @RequestParam(name = "gardenLocation") String gardenLocation,
+                             @RequestParam(name = "gardenSize", required = false) Float gardenSize,
+                             Model model) {
         logger.info("POST /form");
-        boolean validName = checkString(gardenName);
-        model.addAttribute("validName", validName);
-        boolean validLocation = checkString(gardenLocation);
-        model.addAttribute("validLocation", validLocation);
-        if (validName && validLocation) {
-            gardenService.saveGarden(new Garden(gardenName, gardenLocation, gardenSize));
-            model.addAttribute("displayGardenName", gardenName);
-            model.addAttribute("displayGardenLocation", gardenLocation);
-            model.addAttribute("displayGardenSize", gardenSize);
-            return "redirect:./form/gardens";
+        boolean nameIsValid = false;
+        boolean locationIsValid = false;
+        boolean sizeIsValid = false;
+
+        if (gardenName.isBlank()) {
+            model.addAttribute("gardenNameError", "Garden name cannot by empty");
+        } else if (!checkString(gardenName)) {
+            model.addAttribute(
+                "gardenNameError",
+                "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         } else {
-            model.addAttribute("nameIsBlank", gardenName.isBlank());
-            model.addAttribute("locationIsBlank", gardenLocation.isBlank());
+            nameIsValid = true;
+        }
+
+        if (gardenLocation.isBlank()) {
+            model.addAttribute("gardenLocationError", "Location cannot be empty");
+        } else if (!checkString(gardenLocation)) {
+            model.addAttribute(
+                "gardenLocationError",
+                "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+            );
+        } else {
+            locationIsValid = true;
+        }
+
+        if (gardenSize != null && gardenSize <= 0) {
+            model.addAttribute("gardenSizeError", "Garden size must be a positive number");
+        } else {
+            sizeIsValid = true;
+        }
+
+        if (nameIsValid && locationIsValid && sizeIsValid) {
+            gardenService.saveGarden(new Garden(gardenName, gardenLocation, gardenSize));
+            return "redirect:/";
+        } else {
             return "gardenForm";
         }
     }
-
-//    @GetMapping("/form/gardens")
-//    public String responses(Model model) {
-//        logger.info("GET /form/gardens");
-//        model.addAttribute("responses", gardenService.getAllGardens());
-//        return "gardenResponse";
-//    }
 }
