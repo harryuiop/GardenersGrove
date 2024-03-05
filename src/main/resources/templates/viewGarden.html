@@ -10,15 +10,23 @@
 <nav th:insert="fragmentExample/fragments :: gardens">Gardens</nav>
 <h4>View Gardens</h4>
 
-<div class="content">
-    <h2 th:text="${garden.isPresent() ? garden.get().name : ''}"></h2>
+<div class="content" >
+    <div th:if="${garden.isPresent()}" >
+        <h2 th:text="${garden.get().name}"></h2>
 
-    <article class="in-line"><p>Name: </p>
-        <p th:text="${garden.isPresent() ? garden.get().name : ''}"></p></article>
-    <article class="in-line"><p>Location: </p>
-        <p th:text="${garden.isPresent() ? garden.get().location : ''}"></p></article>
-    <article class="in-line"><p>Size: </p>
-        <p th:text="${garden.isPresent() ? garden.get().size : ''}"></p></article>
+        <article class="in-line"><p>Name: </p>
+            <p th:text="${garden.isPresent() ? garden.get().name : ''}"></p></article>
+        <article class="in-line"><p>Location: </p>
+            <p th:text="${garden.isPresent() ? garden.get().location : ''}"></p></article>
+        <article class="in-line"><p>Size: </p>
+            <p th:text="${garden.isPresent() ? garden.get().size : ''}"></p></article>
+
+    </div>
+
+    <div th:unless="${garden.isPresent()}">
+        <p>Garden does not exist. Please select or create another garden.</p>
+    </div>
+
 </div>
 </body>
 </html>
