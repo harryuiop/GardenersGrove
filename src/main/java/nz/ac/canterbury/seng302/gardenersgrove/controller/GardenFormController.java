@@ -93,6 +93,9 @@ public class GardenFormController {
             gardenService.saveGarden(new Garden(gardenName, gardenLocation, gardenSize));
             return "redirect:/";
         } else {
+            model.addAttribute("gardenName", gardenName);
+            model.addAttribute("gardenLocation", gardenLocation);
+            model.addAttribute("gardenSize", gardenSize);
             return "gardenForm";
         }
     }
