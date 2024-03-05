@@ -26,6 +26,7 @@ public class GardenFormController extends GardensSidebar {
     public GardenFormController(GardenService gardenService) {
         this.gardenService = gardenService;
         gardenService.saveGarden(new Garden("g1", "g", 1));
+        gardenService.saveGarden(new Garden("g2", "g", 2));
     }
     /**
      * Gets form to be displayed, includes the ability to display results of previous form when linked to from POST form

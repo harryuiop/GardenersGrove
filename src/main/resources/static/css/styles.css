@@ -79,3 +79,30 @@ nav button {
     margin-top: 20px;
 }
 
+.content a {
+    text-decoration: none;
+    color: var(--dark-neutral);
+}
+
+.content a:hover{
+    text-decoration: underline;
+    color: var(--dark-color);
+}
+
+.list-container {
+}
+
+.garden-item {
+    display: flex;
+    background-color: var(--light-color);
+    border: 3px solid #000000;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.garden-item:hover {
+    background-color: var(--light-neutral);
+}
