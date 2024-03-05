@@ -11,7 +11,7 @@
 <div class="content">
     <div>
         <div>
-            <form th:action="@{form}" method="post" id="plant-form">
+            <form th:action="@{form}" method="post" id="plant-form" enctype="multipart/form-data">
                 <div class="form-field">
                     <label class="form-input" for="plantName"> Plant Name: </label>
                     <input type="text" class="form-control" id="plantName" th:name="plantName"
@@ -36,10 +36,17 @@
                 <div class="form-field">
                     <label class="form-input" for="plantedDate"> Date Planted: </label>
                     <input type="text" class="form-control" id="plantedDate" th:name="plantedDate"
-                           th:value="*{plantedDate}" data-cy="plantedDate" placeholder="DD/MM/YYYY" autofocus>
+                           th:value="*{plantedDate}" data-cy="plantedDate" autofocus>
                     <h5 th:text=${plantedDateError}></h5>
                 </div>
                 <br/>
+                <div class="form-field">
+                    <label class="form-input" for="plantImage"> Select Image: </label>
+                    <input type="file" class="form-control" id="plantImage" th:name="plantImage" accept="image/*"
+                           th:value="*{plantImage}" data-cy="plantedDate" placeholder="DD/MM/YYYY" autofocus>
+                    <h5 th:text=${plantImageError}></h5>
+                </div>
+                <br>
                 <button class="form-button" type="submit">Submit!</button>
                 <a th:href="@{demo}">
                     <button class="form-button" type="button">Cancel</button>

@@ -2,12 +2,17 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Base64;
 
 /**
  * This is a basic spring boot controller, note the @link{Controller} annotation which defines this.
@@ -16,10 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class DemoController extends GardensSidebar {
     private final GardenService gardenService;
+    private final PlantService plantService;
     Logger logger = LoggerFactory.getLogger(DemoController.class);
 
 
-    public DemoController(GardenService gardenService) {this.gardenService = gardenService;}
+    public DemoController(GardenService gardenService, PlantService plantService) {
+        this.gardenService = gardenService;
+        this.plantService = plantService;
+    }
     /**
     /** Unused here for informational purposes
      * Redirects GET default url '/' to '/demo'
@@ -30,7 +39,6 @@ public class DemoController extends GardensSidebar {
         return "redirect:./demo";
     }
     */
-
     /**
      * Gets the thymeleaf page representing the /demo page (a basic welcome screen with some links)
      * @param name url query parameter of user's name
@@ -40,8 +48,9 @@ public class DemoController extends GardensSidebar {
     @GetMapping("/demo")
     public String getTemplate(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
         logger.info("GET /demo");
-        this.updateGardensSidebar(model, gardenService);
-        model.addAttribute("name", name);
+        //this.updateGardensSidebar(model, gardenService);
+        //model.addAttribute("name", name);
+        //model.addAttribute("plants", plantService.getAllPlants());
         return "demoTemplate";
     }
 

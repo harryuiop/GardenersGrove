@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -42,6 +44,7 @@ public class PlantFormController {
         model.addAttribute("plantCountError", "");
         model.addAttribute("plantDescriptionError", "");
         model.addAttribute("plantedDateError", "");
+        model.addAttribute("plantImage", "");
         return "plantForm";
     }
 
@@ -65,12 +68,15 @@ public class PlantFormController {
                              @RequestParam(name = "plantCount", required = false) Integer plantCount,
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
                              @RequestParam(name = "plantedDate", required = false) String plantedDate,
-                             Model model) {
+                             @RequestParam(name = "plantImage") MultipartFile imageFile,
+                             Model model) throws IOException {
         logger.info("POST /form");
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
         boolean dateIsValid = false;
+
+        byte[] imageBytes = imageFile.getBytes(); // Convert MultipartFile to byte[] to be saved in database
 
         if (plantName.isBlank() || !checkString(plantName)) {
             model.addAttribute(
@@ -92,17 +98,19 @@ public class PlantFormController {
             descriptionIsValid = true;
         }
 
-        if (plantedDate != null && !checkDate(plantedDate)) {
+        /*if (plantedDate != null && !checkDate(plantedDate)) {
             model.addAttribute("plantedDateError", "Date in not in valid format, DD/MM/YYYY");
         } else {
             dateIsValid = true;
-        }
+        }*/
+        Date date = new Date();
+        dateIsValid = true;
+
 
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
-
-            Date date = new Date(Integer.parseInt(plantedDate.split("/")[2]), Integer.parseInt(plantedDate.split("/")[1]), Integer.parseInt(plantedDate.split("/")[0]));
-            plantService.savePlant(new Plant(plantName, plantCount, plantDescription, date));
-            return "redirect:/";
+            plantService.savePlant(new Plant(plantName, plantCount, plantDescription, date, imageBytes));
+            logger.info("Plant Saved");
+            return "redirect:/demo";
         } else {
             model.addAttribute("plantName", plantName);
             model.addAttribute("plantCount", plantCount);
