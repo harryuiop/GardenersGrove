@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Base64;
+import java.util.Optional;
 
 /**
  * This is a basic spring boot controller, note the @link{Controller} annotation which defines this.
@@ -46,11 +48,17 @@ public class DemoController extends GardensSidebar {
      * @return thymeleaf demoTemplate
      */
     @GetMapping("/demo")
-    public String getTemplate(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
+    public String getTemplate(@RequestParam(name = "plantId", required = false) Long plantId, Model model) {
         logger.info("GET /demo");
-        //this.updateGardensSidebar(model, gardenService);
-        //model.addAttribute("name", name);
-        //model.addAttribute("plants", plantService.getAllPlants());
+        Optional<Plant> plant = plantService.getPlantById(plantId);
+        if (plant.isPresent()) {
+            byte[] plantBytes = plant.get().getImage();
+            String base64Image = Base64.getEncoder().encodeToString(plantBytes);
+            String plantImage = "data:image/jpeg;base64," + base64Image;
+            logger.info("Plant Image length" + plantImage.length());
+            model.addAttribute("plantImage", plantImage);
+        }
+
         return "demoTemplate";
     }
 

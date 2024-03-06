@@ -11,10 +11,6 @@
         <div class="content">
         </div>
         <h1> PLANT </h1>
-        <div th:each="plant : ${plants}">
-            <!-- Displaying image -->
-            <p th:text="${plant.name}"></p>
-            <img th:src="@{'/images/' + ${plant.image}}" alt="Plant Image" width="200"/>
-        </div>
+        <img th:src="*{plantImage}" alt="plantImage" width="200"/>
     </body>
 </html>

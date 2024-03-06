@@ -108,9 +108,10 @@ public class PlantFormController {
 
 
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
-            plantService.savePlant(new Plant(plantName, plantCount, plantDescription, date, imageBytes));
-            logger.info("Plant Saved");
-            return "redirect:/demo";
+            Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageBytes);
+            plantService.savePlant(plant);
+            logger.info("Plant Saved: ");
+            return "redirect:/demo?plantId=" + plant.getId();
         } else {
             model.addAttribute("plantName", plantName);
             model.addAttribute("plantCount", plantCount);
