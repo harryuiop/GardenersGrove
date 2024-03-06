@@ -2,13 +2,11 @@ package nz.ac.canterbury.seng302.gardenersgrove;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -18,8 +16,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
+
+@SpringBootTest
 @AutoConfigureMockMvc
 class GardenFormControllerTest {
 
@@ -27,21 +25,23 @@ class GardenFormControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private GardenService gardenService;
-
-    @Autowired
     private GardenRepository gardenRepository;
 
+    @BeforeEach
+    void setUp() {
+        gardenRepository.deleteAll();
+    }
+
     @Test
-    void testSubmitForm() throws Exception {
+    void submitForm_allValid_gardenNotSaved() throws Exception {
         String gardenName = "Test Garden";
         String gardenLocation = "Test Location";
-        Float gardenSize = 100.0f;
+        float gardenSize = 100.0f;
 
         mockMvc.perform(MockMvcRequestBuilders.post("/form")
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", gardenSize.toString()))
+                        .param("gardenSize", Float.toString(gardenSize)))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
 
@@ -54,15 +54,49 @@ class GardenFormControllerTest {
     }
 
     @Test
-    void submitForm_invalidInput_gardenNotSaved() throws Exception {
+    void submitForm_invalidName_gardenNotSaved() throws Exception {
         String gardenName = "Test&Garden";
-        String gardenLocation = "Test^Location";
-        Float gardenSize = -1f;
+        String gardenLocation = "Test Location";
+        float gardenSize = 4f;
 
         mockMvc.perform(MockMvcRequestBuilders.post("/form")
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", gardenSize.toString()))
+                        .param("gardenSize", Float.toString(gardenSize)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+
+        List<Garden> allGardens = gardenRepository.findAll();
+        assertTrue(allGardens.isEmpty());
+    }
+
+    @Test
+    void submitForm_invalidLocation_gardenNotSaved() throws Exception {
+        String gardenName = "Test Garden";
+        String gardenLocation = "Test^Location";
+        float gardenSize = 4f;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/form")
+                        .param("gardenName", gardenName)
+                        .param("gardenLocation", gardenLocation)
+                        .param("gardenSize", Float.toString(gardenSize)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+
+        List<Garden> allGardens = gardenRepository.findAll();
+        assertTrue(allGardens.isEmpty());
+    }
+
+    @Test
+    void submitForm_invalidSize_gardenNotSaved() throws Exception {
+        String gardenName = "Test&Garden";
+        String gardenLocation = "Test^Location";
+        float gardenSize = -1f;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/form")
+                        .param("gardenName", gardenName)
+                        .param("gardenLocation", gardenLocation)
+                        .param("gardenSize", Float.toString(gardenSize)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
