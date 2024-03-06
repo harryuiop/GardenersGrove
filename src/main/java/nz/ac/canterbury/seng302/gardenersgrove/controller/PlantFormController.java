@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,13 +36,14 @@ public class PlantFormController {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
-    @GetMapping("/plantform")
-    public String form(Model model) {
+    @GetMapping("/plantform(gardenId=${garden.id})")
+    public String form(Model model, @PathVariable String garden) {
         logger.info("GET /plantform");
         model.addAttribute("plantNameError", "");
         model.addAttribute("plantCountError", "");
         model.addAttribute("plantDescriptionError", "");
         model.addAttribute("plantedDateError", "");
+        model.addAttribute("garden", garden);
         return "plantForm";
     }
 
@@ -49,7 +51,7 @@ public class PlantFormController {
         return string.matches("[a-zA-Z0-9 .,\\-']*");
     }
 
-    public boolean checkDate(String string) { return string.matches("(0[1-9]|[12][0-9]|3[01])(\\/)(0[1-9]|1[1,2])(\\/)(19|20)\\d{2}\n"); }
+//    public boolean checkDate(String string) { return string.matches("(0[1-9]|[12][0-9]|3[01])(\\/)(0[1-9]|1[1,2])(\\/)(19|20)\\d{2}\n"); }
 
     /**
      * Submits form and saves the garden to the database.
@@ -60,11 +62,12 @@ public class PlantFormController {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
      */
-    @PostMapping("/form")
+    @PostMapping("/plantform(gardenId=${garden.id})")
     public String submitForm(@RequestParam(name = "plantName") String plantName,
                              @RequestParam(name = "plantCount", required = false) Integer plantCount,
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
-                             @RequestParam(name = "plantedDate", required = false) String plantedDate,
+                             @RequestParam(name = "plantedDate", required = false) Date plantedDate,
+                             @PathVariable Garden garden,
                              Model model) {
         logger.info("POST /form");
         boolean nameIsValid = false;
@@ -92,16 +95,18 @@ public class PlantFormController {
             descriptionIsValid = true;
         }
 
-        if (plantedDate != null && !checkDate(plantedDate)) {
-            model.addAttribute("plantedDateError", "Date in not in valid format, DD/MM/YYYY");
-        } else {
-            dateIsValid = true;
-        }
+//        if (plantedDate != null && !checkDate(plantedDate)) {
+//            model.addAttribute("plantedDateError", "Date in not in valid format, DD/MM/YYYY");
+//        } else {
+//            dateIsValid = true;
+//        }
 
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
 
-            Date date = new Date(Integer.parseInt(plantedDate.split("/")[2]), Integer.parseInt(plantedDate.split("/")[1]), Integer.parseInt(plantedDate.split("/")[0]));
-            plantService.savePlant(new Plant(plantName, plantCount, plantDescription, date));
+            //Date date = new Date(Integer.parseInt(plantedDate.split("/")[2]), Integer.parseInt(plantedDate.split("/")[1]), Integer.parseInt(plantedDate.split("/")[0]));
+            Plant plant = new Plant(plantName, plantCount, plantDescription, plantedDate);
+            plantService.savePlant(plant);
+            garden.addPlant(plant);
             return "redirect:/";
         } else {
             model.addAttribute("plantName", plantName);
