@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Controller for form example.
@@ -26,6 +26,12 @@ public class PlantFormController {
     Logger logger = LoggerFactory.getLogger(PlantFormController.class);
 
     private final PlantService plantService;
+
+    private final int MAX_IMAGE_SIZE_KB = 10000;
+
+    private final int BYTES_IN_KBS = 1024;
+
+    private final List<String> requiredImageTypes = Arrays.asList("jpg", "png", "svg");
 
     @Autowired
     public PlantFormController(PlantService plantService) {
@@ -54,6 +60,19 @@ public class PlantFormController {
 
     public boolean checkDate(String string) { return string.matches("(0[1-9]|[12][0-9]|3[01])(\\/)(0[1-9]|1[1,2])(\\/)(19|20)\\d{2}\n"); }
 
+    public boolean checkImageType(String fileName) {
+        for (String requiredType : requiredImageTypes) {
+            if (fileName.endsWith(requiredType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkImageSize(byte[] imageBytes) {
+        return imageBytes.length / BYTES_IN_KBS < MAX_IMAGE_SIZE_KB;
+    }
+
     /**
      * Submits form and saves the garden to the database.
      * @param plantName The name of the plant as input by the user.
@@ -74,7 +93,8 @@ public class PlantFormController {
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
-        boolean dateIsValid = false;
+        //boolean imageIsValidType = false;
+        //boolean imageIsValidSize = false;
 
         byte[] imageBytes = imageFile.getBytes(); // Convert MultipartFile to byte[] to be saved in database
 
@@ -98,19 +118,15 @@ public class PlantFormController {
             descriptionIsValid = true;
         }
 
-        /*if (plantedDate != null && !checkDate(plantedDate)) {
-            model.addAttribute("plantedDateError", "Date in not in valid format, DD/MM/YYYY");
-        } else {
-            dateIsValid = true;
-        }*/
         Date date = new Date();
-        dateIsValid = true;
+        boolean dateIsValid = true;
 
 
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
             Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageBytes);
             plantService.savePlant(plant);
             logger.info("Plant Saved: ");
+
             return "redirect:/demo?plantId=" + plant.getId();
         } else {
             model.addAttribute("plantName", plantName);

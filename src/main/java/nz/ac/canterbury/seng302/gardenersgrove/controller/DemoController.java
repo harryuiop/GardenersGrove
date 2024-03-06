@@ -54,8 +54,8 @@ public class DemoController extends GardensSidebar {
         if (plant.isPresent()) {
             byte[] plantBytes = plant.get().getImage();
             String base64Image = Base64.getEncoder().encodeToString(plantBytes);
-            String plantImage = "data:image/jpeg;base64," + base64Image;
-            logger.info("Plant Image length" + plantImage.length());
+            String plantImage = "data:image/;base64," + base64Image;
+            logger.info("Plant Image size: " + plantImage.length());
             model.addAttribute("plantImage", plantImage);
         }
 

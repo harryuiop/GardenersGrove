@@ -42,7 +42,7 @@
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantImage"> Select Image: </label>
-                    <input type="file" class="form-control" id="plantImage" th:name="plantImage" accept="image/*"
+                    <input type="file" class="form-control" id="plantImage" th:name="plantImage" accept=".jpg, .svg, .png"
                            th:value="*{plantImage}" data-cy="plantedDate" placeholder="DD/MM/YYYY" autofocus>
                     <h5 th:text=${plantImageError}></h5>
                 </div>
