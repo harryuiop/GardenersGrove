@@ -1,8 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +68,8 @@ public class PlantFormController {
     }
 
     public boolean checkImageSize(byte[] imageBytes) {
-        return imageBytes.length / BYTES_IN_KBS < MAX_IMAGE_SIZE_KB;
+        logger.info("Image KB" + imageBytes.length / BYTES_IN_KBS);
+        return imageBytes.length / BYTES_IN_KBS <= MAX_IMAGE_SIZE_KB;
     }
 
     /**
@@ -93,10 +92,19 @@ public class PlantFormController {
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
-        //boolean imageIsValidType = false;
-        //boolean imageIsValidSize = false;
+        boolean imageIsValid = false;
+        boolean imageIsValidType = false;
+        boolean imageIsValidSize = false;
+        byte[] imageBytes = new byte[0];
 
-        byte[] imageBytes = imageFile.getBytes(); // Convert MultipartFile to byte[] to be saved in database
+        if (imageFile.isEmpty()) {
+            imageIsValid = true;
+        } else {
+            imageBytes = imageFile.getBytes(); // Convert MultipartFile to byte[] to be saved in database
+            imageIsValidType = checkImageType(imageFile.getOriginalFilename());
+            imageIsValidSize = checkImageSize(imageFile.getBytes());
+            imageIsValid = imageIsValidType && imageIsValidSize;
+        }
 
         if (plantName.isBlank() || !checkString(plantName)) {
             model.addAttribute(
@@ -118,11 +126,23 @@ public class PlantFormController {
             descriptionIsValid = true;
         }
 
+
+        if (!imageIsValidType) {
+            model.addAttribute("plantImageTypeError", "Image must be of type png, jpg or svg.");
+        }
+
+        if (!imageIsValidSize) {
+            model.addAttribute("plantImageSizeError", "Image must be less than 10MB.");
+        }
+
+        logger.info("Type, Size: ", imageIsValidType + ", " + imageIsValidSize);
+
+
         Date date = new Date();
         boolean dateIsValid = true;
 
 
-        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
+        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && imageIsValid) {
             Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageBytes);
             plantService.savePlant(plant);
             logger.info("Plant Saved: ");
