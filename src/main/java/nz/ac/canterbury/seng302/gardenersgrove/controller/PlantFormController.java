@@ -25,10 +25,12 @@ public class PlantFormController {
     Logger logger = LoggerFactory.getLogger(PlantFormController.class);
 
     private final PlantService plantService;
+    private final GardenService gardenService;
 
     @Autowired
-    public PlantFormController(PlantService plantService) {
+    public PlantFormController(PlantService plantService, GardenService gardenService) {
         this.plantService = plantService;
+        this.gardenService = gardenService;
     }
 
     /**
@@ -36,14 +38,14 @@ public class PlantFormController {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
-    @GetMapping("/plantform(gardenId=${garden.id})")
-    public String form(Model model, @PathVariable String garden) {
+    @GetMapping("/plantform")
+    public String form(Model model, @RequestParam(name="gardenId") Long gardenId) {
         logger.info("GET /plantform");
         model.addAttribute("plantNameError", "");
         model.addAttribute("plantCountError", "");
         model.addAttribute("plantDescriptionError", "");
         model.addAttribute("plantedDateError", "");
-        model.addAttribute("garden", garden);
+        model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
         return "plantForm";
     }
 
@@ -62,7 +64,7 @@ public class PlantFormController {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
      */
-    @PostMapping("/plantform(gardenId=${garden.id})")
+    @PostMapping("/plantform")
     public String submitForm(@RequestParam(name = "plantName") String plantName,
                              @RequestParam(name = "plantCount", required = false) Integer plantCount,
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
