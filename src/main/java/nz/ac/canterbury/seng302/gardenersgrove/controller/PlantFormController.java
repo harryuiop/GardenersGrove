@@ -68,8 +68,7 @@ public class PlantFormController {
     public String submitForm(@RequestParam(name = "plantName") String plantName,
                              @RequestParam(name = "plantCount", required = false) Integer plantCount,
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
-                             @RequestParam(name = "plantedDate", required = false) Date plantedDate,
-                             @PathVariable Garden garden,
+                             @RequestParam(name = "plantedDate", required = false) String plantedDate,
                              Model model) {
         logger.info("POST /form");
         boolean nameIsValid = false;
@@ -104,9 +103,8 @@ public class PlantFormController {
 //        }
 
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
-
-            //Date date = new Date(Integer.parseInt(plantedDate.split("/")[2]), Integer.parseInt(plantedDate.split("/")[1]), Integer.parseInt(plantedDate.split("/")[0]));
-            Plant plant = new Plant(plantName, plantCount, plantDescription, plantedDate);
+            Date date = new Date(Integer.parseInt(plantedDate.split("/")[2]), Integer.parseInt(plantedDate.split("/")[1]), Integer.parseInt(plantedDate.split("/")[0]));
+            Plant plant = new Plant(plantName, plantCount, plantDescription, date);
             plantService.savePlant(plant);
             garden.addPlant(plant);
             return "redirect:/";
