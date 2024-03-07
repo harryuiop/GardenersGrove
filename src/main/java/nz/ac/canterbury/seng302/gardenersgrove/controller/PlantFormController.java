@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.valadation.ImageValidation;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import org.slf4j.Logger;
@@ -24,12 +25,6 @@ public class PlantFormController {
     Logger logger = LoggerFactory.getLogger(PlantFormController.class);
 
     private final PlantService plantService;
-
-    private final int MAX_IMAGE_SIZE_KB = 10000;
-
-    private final int BYTES_IN_KBS = 1024;
-
-    private final List<String> requiredImageTypes = Arrays.asList("jpg", "png", "svg");
 
     @Autowired
     public PlantFormController(PlantService plantService) {
@@ -58,20 +53,6 @@ public class PlantFormController {
 
     public boolean checkDate(String string) { return string.matches("(0[1-9]|[12][0-9]|3[01])(\\/)(0[1-9]|1[1,2])(\\/)(19|20)\\d{2}\n"); }
 
-    public boolean checkImageType(String fileName) {
-        for (String requiredType : requiredImageTypes) {
-            if (fileName.endsWith(requiredType)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkImageSize(byte[] imageBytes) {
-        logger.info("Image KB" + imageBytes.length / BYTES_IN_KBS);
-        return imageBytes.length / BYTES_IN_KBS <= MAX_IMAGE_SIZE_KB;
-    }
-
     /**
      * Submits form and saves the garden to the database.
      * @param plantName The name of the plant as input by the user.
@@ -81,7 +62,7 @@ public class PlantFormController {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
      */
-    @PostMapping("/form")
+    @PostMapping("/plantform")
     public String submitForm(@RequestParam(name = "plantName") String plantName,
                              @RequestParam(name = "plantCount", required = false) Integer plantCount,
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
@@ -92,17 +73,18 @@ public class PlantFormController {
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
-        boolean imageIsValid = false;
+        boolean imageIsValid;
         boolean imageIsValidType = false;
         boolean imageIsValidSize = false;
         byte[] imageBytes = new byte[0];
+        ImageValidation imageValadation = new ImageValidation();
 
         if (imageFile.isEmpty()) {
             imageIsValid = true;
         } else {
             imageBytes = imageFile.getBytes(); // Convert MultipartFile to byte[] to be saved in database
-            imageIsValidType = checkImageType(imageFile.getOriginalFilename());
-            imageIsValidSize = checkImageSize(imageFile.getBytes());
+            imageIsValidType = imageValadation.checkImageType(imageFile.getOriginalFilename());
+            imageIsValidSize = imageValadation.checkImageSize(imageFile.getBytes());
             imageIsValid = imageIsValidType && imageIsValidSize;
         }
 
