@@ -18,17 +18,18 @@ public class DemoController extends GardensSidebar {
     private final GardenService gardenService;
     Logger logger = LoggerFactory.getLogger(DemoController.class);
 
-    
+
     public DemoController(GardenService gardenService) {this.gardenService = gardenService;}
     /**
+    /** Unused here for informational purposes
      * Redirects GET default url '/' to '/demo'
      * @return redirect to /demo
-     */
-    @GetMapping("/")
+    @GetMapping("/demo")
     public String home() {
         logger.info("GET /");
         return "redirect:./demo";
     }
+    */
 
     /**
      * Gets the thymeleaf page representing the /demo page (a basic welcome screen with some links)

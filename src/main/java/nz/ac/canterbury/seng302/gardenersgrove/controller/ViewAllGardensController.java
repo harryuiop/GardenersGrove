@@ -1,7 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,28 +14,24 @@ import org.springframework.web.bind.annotation.RequestParam;
  * This controller defines endpoints as functions with specific HTTP mappings
  */
 @Controller
-public class ViewGardenController extends GardensSidebar {
-    Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
+public class ViewAllGardensController {
+    Logger logger = LoggerFactory.getLogger(ViewAllGardensController.class);
 
     private final GardenService gardenService;
 
     @Autowired
-    public ViewGardenController(GardenService gardenService) {
+    public ViewAllGardensController(GardenService gardenService) {
         this.gardenService = gardenService;
     }
 
     /**
-     * Redirects GET default url '/' to '/demo'
-     *
-     * @return redirect to /demo
+     * @return redirect to /view-all
      */
-    @GetMapping("/view-garden")
+    @GetMapping("/view-all")
     public String home(@RequestParam(name = "gardenId", required = false) Long gardenId, Model model) {
-        logger.info("GET /view-garden");
-        this.updateGardensSidebar(model, gardenService);
-        model.addAttribute("garden", gardenService.getGardenById(gardenId));
-        model.addAttribute("id", gardenId);
-        return "viewGarden";
+        logger.info("GET /view-all");
+        model.addAttribute("gardens", gardenService.getAllGardens());
+        return "allGardens";
     }
 
 

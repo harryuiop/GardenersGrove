@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import nz.ac.canterbury.seng302.gardenersgrove.components.FormSubmission;
+import java.util.HashMap;
 
 /**
  * Controller for form example.
@@ -19,69 +21,60 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
-
+    FormSubmission checker = new FormSubmission();
     private final GardenService gardenService;
 
     @Autowired
     public GardenFormController(GardenService gardenService) {
         this.gardenService = gardenService;
-        gardenService.saveGarden(new Garden("g1", "g", 1));
     }
+
     /**
-     * Gets form to be displayed, includes the ability to display results of previous form when linked to from POST form
-     * @param displayGardenName previous name entered into form to be displayed
-     * @param displayGardenLocation previous favourite programming language entered into form to be displayed
-     * @param displayGardenSize
-     * @param model (map-like) representation of name, language and isJava boolean for use in thymeleaf
-     * @return thymeleaf gardenForm
+     * Gets form to be displayed, and passes previous form values to the HTML.
+     * @param model object that passes data through to the HTML.
+     * @return thymeleaf HTML gardenForm template.
      */
     @GetMapping("/form")
-    public String form(@RequestParam(name="displayGardenName", required = true, defaultValue = "") String displayGardenName,
-                       @RequestParam(name="displayGardenLocation", required = true, defaultValue = "") String displayGardenLocation,
-                       @RequestParam(name="displayGardenSize", required = false, defaultValue = "0") float displayGardenSize,
-                       Model model) {
+    public String form(Model model) {
         logger.info("GET /form");
         this.updateGardensSidebar(model, gardenService);
-        model.addAttribute("displayGardenName", displayGardenName);
-        model.addAttribute("displayGardenLocation", displayGardenLocation);
-        model.addAttribute("displayGardenSize", displayGardenSize);
-        model.addAttribute("Home", displayGardenLocation.equalsIgnoreCase("Home"));
+        model.addAttribute("gardenNameError", "");
+        model.addAttribute("gardenLocationError", "");
+        model.addAttribute("gardenSizeError", "");
         return "gardenForm";
     }
 
+
+
     /**
-     * Posts a form response with name and favourite language
-     * @param gardenName name if user
-     * @param gardenLocation users favourite programming language
-     * @param gardenSize
-     * @param model (map-like) representation of name, language and isJava boolean for use in thymeleaf,
-     *              with values being set to relevant parameters provided
-     * @return thymeleaf gardenForm
+     * Submits form and saves the garden to the database.
+     * @param gardenName The name of the garden as input by the user.
+     * @param gardenLocation The location of the garden as input by the user.
+     * @param gardenSize The size of the garden as input by the user.
+     * @param model object that passes data through to the HTML.
+     * @return thymeleaf HTML template to redirect to.
      */
     @PostMapping("/form")
-    public String submitForm( @RequestParam(name="gardenName") String gardenName,
-                              @RequestParam(name = "gardenLocation") String gardenLocation,
-                              @RequestParam(name = "gardenSize") float gardenSize,
-                              Model model) {
+    public String submitForm(@RequestParam(name = "gardenName") String gardenName,
+                             @RequestParam(name = "gardenLocation") String gardenLocation,
+                             @RequestParam(name = "gardenSize", required = false) Float gardenSize,
+                             Model model) {
         logger.info("POST /form");
-        gardenService.saveGarden(new Garden(gardenName, gardenLocation, gardenSize));
-        model.addAttribute("displayGardenName", gardenName);
-        model.addAttribute("displayGardenLocation", gardenLocation);
-        model.addAttribute("displayGardenSize", gardenSize);
-        model.addAttribute("Home", gardenLocation.equalsIgnoreCase("Home"));
-        this.updateGardensSidebar(model, gardenService);
-        return "gardenForm";
-    }
+        HashMap<String, String> errors = checker.formErrors(gardenName, gardenLocation, gardenSize);
+        if (errors.isEmpty()) {
+            Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
+            gardenService.saveGarden(garden);
+            return "redirect:/view-garden?gardenId=" + garden.getId();
+        }
+        else {
+            for (String i: errors.keySet()) {
+                model.addAttribute(i, errors.get(i));
+            }
+            model.addAttribute("gardenName", gardenName);
+            model.addAttribute("gardenLocation", gardenLocation);
+            model.addAttribute("gardenSize", gardenSize);
+            return "gardenForm";
+        }
 
-    /**
-     * Gets all form responses
-     * @param model (map-like) representation of results to be used by thymeleaf
-     * @return thymeleaf gardenResponse
-     */
-    @GetMapping("/form/responses")
-    public String responses(Model model) {
-        logger.info("GET /form/responses");
-        model.addAttribute("responses", gardenService.getAllGardens());
-        return "gardenResponse";
     }
 }
