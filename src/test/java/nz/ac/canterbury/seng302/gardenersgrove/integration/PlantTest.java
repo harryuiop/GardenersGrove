@@ -32,7 +32,7 @@ public class PlantTest {
     }
 
     @Test
-    void AddPlantImage_GivenImageValid_PlantSaved () throws IOException {
+    void AddPlantImage_GivenImageValid_PlantSaved () {
         byte[] imageBytes = fakeByteArray(1);
         Plant plant = new Plant("TestPlant", 1, "Test Description", new Date(), imageBytes);
         Mockito.when(plantRepositoryMock.save(Mockito.any())).thenReturn(plant);
@@ -45,7 +45,7 @@ public class PlantTest {
     }
 
     @Test
-    void AddPlantImage_GivenImageInvalid_PlantNotSaved () throws IOException {
+    void AddPlantImage_GivenImageInvalid_PlantNotSaved () {
         byte[] imageBytes = fakeByteArray(11);
         Plant plant = new Plant("TestPlant", 1, "Test Description", new Date(), imageBytes);
 
