@@ -12,7 +12,7 @@
     <h1 th:text="${gardenName}"></h1>
     <div>
         <div>
-            <form th:action="@{plantform}" method="post" id="plant-form">
+            <form th:action="@{/plantform(gardenId=${gardenId})}" method="post" id="plant-form">
                 <div class="form-field">
                     <label class="form-input" for="plantName"> Plant Name: </label>
                     <input type="text" class="form-control" id="plantName" th:name="plantName"
@@ -42,7 +42,7 @@
                 </div>
                 <br/>
                 <button class="form-button" type="submit">Submit!</button>
-                <a th:href="@{demo}">
+                <a th:href="@{/view-garden}">
                     <button class="form-button" type="button">Cancel</button>
                 </a>
             </form>

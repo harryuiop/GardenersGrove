@@ -46,6 +46,7 @@ public class PlantFormController {
         model.addAttribute("plantDescriptionError", "");
         model.addAttribute("plantedDateError", "");
         model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
+        model.addAttribute("gardenId", gardenId);
         return "plantForm";
     }
 
@@ -69,12 +70,13 @@ public class PlantFormController {
                              @RequestParam(name = "plantCount", required = false) Integer plantCount,
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
                              @RequestParam(name = "plantedDate", required = false) String plantedDate,
+                             @RequestParam(name = "gardenId") Long gardenId,
                              Model model) {
         logger.info("POST /form");
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
-        boolean dateIsValid = false;
+        boolean dateIsValid = true;
 
         if (plantName.isBlank() || !checkString(plantName)) {
             model.addAttribute(
@@ -96,23 +98,22 @@ public class PlantFormController {
             descriptionIsValid = true;
         }
 
-//        if (plantedDate != null && !checkDate(plantedDate)) {
-//            model.addAttribute("plantedDateError", "Date in not in valid format, DD/MM/YYYY");
-//        } else {
-//            dateIsValid = true;
-//        }
-
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
-            Date date = new Date(Integer.parseInt(plantedDate.split("/")[2]), Integer.parseInt(plantedDate.split("/")[1]), Integer.parseInt(plantedDate.split("/")[0]));
+            logger.info(plantedDate);
+            Date date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
             Plant plant = new Plant(plantName, plantCount, plantDescription, date);
             plantService.savePlant(plant);
+            Garden garden = gardenService.getGardenById(gardenId).get();
             garden.addPlant(plant);
-            return "redirect:/";
+            model.addAttribute("gardenId", gardenId);
+            return "viewGarden";
         } else {
             model.addAttribute("plantName", plantName);
             model.addAttribute("plantCount", plantCount);
             model.addAttribute("plantDescription", plantDescription);
             model.addAttribute("plantedDate", plantedDate);
+            model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
+            model.addAttribute("gardenId", gardenId);
             return "plantForm";
         }
     }
