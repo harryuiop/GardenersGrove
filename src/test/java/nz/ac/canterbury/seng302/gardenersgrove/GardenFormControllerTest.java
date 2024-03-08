@@ -13,8 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -33,7 +32,7 @@ class GardenFormControllerTest {
     }
 
     @Test
-    void submitForm_allValid_gardenNotSaved() throws Exception {
+    void submitForm_allValid_gardenSaved() throws Exception {
         String gardenName = "Test Garden";
         String gardenLocation = "Test Location";
         float gardenSize = 100.0f;
@@ -89,8 +88,8 @@ class GardenFormControllerTest {
 
     @Test
     void submitForm_invalidSize_gardenNotSaved() throws Exception {
-        String gardenName = "Test&Garden";
-        String gardenLocation = "Test^Location";
+        String gardenName = "Test Garden";
+        String gardenLocation = "Test Location";
         float gardenSize = -1f;
 
         mockMvc.perform(MockMvcRequestBuilders.post("/form")
@@ -102,5 +101,25 @@ class GardenFormControllerTest {
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertTrue(allGardens.isEmpty());
+    }
+
+    @Test
+    void submitForm_noSize_gardenSaved() throws Exception {
+        String gardenName = "Test Garden";
+        String gardenLocation = "Test Location";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/form")
+                        .param("gardenName", gardenName)
+                        .param("gardenLocation", gardenLocation))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+
+
+        List<Garden> allGardens = gardenRepository.findAll();
+        assertEquals(1, allGardens.size());
+        Garden garden = allGardens.get(0);
+        assertEquals(gardenName, garden.getName());
+        assertEquals(gardenLocation, garden.getLocation());
+        assertNull(garden.getSize());
     }
 }
