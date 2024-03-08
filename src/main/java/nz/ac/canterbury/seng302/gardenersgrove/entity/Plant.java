@@ -23,7 +23,7 @@ public class Plant {
     private String description;
 
     @Column()
-    private Date plantedOn;
+    private String plantedOn;
 
     @Column()
     private Long gardenId;
@@ -35,7 +35,7 @@ public class Plant {
     }
 
 
-    public Plant(String name, Integer count, String description, Date plantedOn, Long gardenId) {
+    public Plant(String name, Integer count, String description, String plantedOn, Long gardenId) {
         this.name = name;
         this.count = count;
         this.description = description;
@@ -59,7 +59,7 @@ public class Plant {
         return description;
     }
 
-    public Date getPlantedOn() { return plantedOn; }
+    public String getPlantedOn() { return plantedOn; }
 
     public Long getGardenId() { return gardenId; }
 
@@ -75,7 +75,7 @@ public class Plant {
         this.description = description;
     }
 
-    public void setPlantedOn(Date plantedOn) { this.plantedOn = plantedOn; }
+    public void setPlantedOn(String plantedOn) { this.plantedOn = plantedOn; }
 
     @Override
     public String toString() {

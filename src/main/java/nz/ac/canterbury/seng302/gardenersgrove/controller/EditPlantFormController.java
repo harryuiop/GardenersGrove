@@ -105,14 +105,10 @@ public class EditPlantFormController extends GardensSidebar {
 
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
             Plant plant = plantService.getPlantById(this.id).get();
-            Date date = null;
-            if (!plantedDate.isBlank()) {
-                date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
-            }
             plant.setName(plantName);
             plant.setCount(plantCount);
             plant.setDescription(plantDescription);
-            plant.setPlantedOn(date);
+            plant.setPlantedOn(plantedDate);
             plantService.savePlant(plant);
 
             return "redirect:/view-garden?gardenId=" + plant.getGardenId();
