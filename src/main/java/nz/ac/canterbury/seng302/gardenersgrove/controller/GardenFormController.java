@@ -34,7 +34,7 @@ public class GardenFormController extends GardensSidebar {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
-    @GetMapping("/form")
+    @GetMapping("/gardenform")
     public String form(Model model) {
         logger.info("GET /form");
         this.updateGardensSidebar(model, gardenService);
@@ -54,7 +54,7 @@ public class GardenFormController extends GardensSidebar {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
      */
-    @PostMapping("/form")
+    @PostMapping("/gardenform")
     public String submitForm(@RequestParam(name = "gardenName") String gardenName,
                              @RequestParam(name = "gardenLocation") String gardenLocation,
                              @RequestParam(name = "gardenSize", required = false) Float gardenSize,
@@ -75,6 +75,5 @@ public class GardenFormController extends GardensSidebar {
             model.addAttribute("gardenSize", gardenSize);
             return "gardenForm";
         }
-
     }
 }
