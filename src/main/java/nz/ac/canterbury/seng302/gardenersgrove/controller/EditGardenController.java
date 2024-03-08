@@ -31,7 +31,6 @@ public class EditGardenController extends GardensSidebar {
     @Autowired
     public EditGardenController(GardenService gardenService) {
         this.gardenService = gardenService;
-        //gardenService.saveGarden(new Garden("g1", "g", 1));
     }
 
     @PostMapping("/edit-garden")
