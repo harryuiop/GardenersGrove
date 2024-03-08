@@ -23,6 +23,26 @@
         </article>
 
     </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${plants.empty}">
+            <td colspan="2"> No responses have been made yet</td>
+        </tr>
+        <tr th:each="plant : ${plants}">
+            <p>Images here</p>
+            <!-- <td><img th:src="${plant.image}" alt="plantImage" width="200"/></td> -->
+            <td><span th:text="${plant.name}"> Name </span></td>
+        </tr>
+        </tbody>
+    </table>
+
     <a th:href="@{/plantform(gardenId=${garden.get().getId()})}">
         <button class="form-button" type="button">Add Plant</button>
     </a>
