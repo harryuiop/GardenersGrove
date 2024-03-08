@@ -4,6 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,28 @@ public class ViewGardenController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
 
     private final GardenService gardenService;
+    private final PlantService plantService;
+
+    /**
+     * Temporary function to get plants with garden id
+     * @return
+     */
+    public List<Plant> getPlantsFromGardenId(Long gardenId) {
+        List<Plant> allPlants = plantService.getAllPlants();
+        ArrayList<Plant> myPlants = new ArrayList<>();
+        for (Plant plant : allPlants) {
+            if (plant.getGardenId() == gardenId) {
+                myPlants.add(plant);
+            }
+        }
+        return myPlants;
+
+    }
 
     @Autowired
-    public ViewGardenController(GardenService gardenService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService) {
         this.gardenService = gardenService;
+        this.plantService = plantService;
     }
 
     /**
@@ -46,7 +65,7 @@ public class ViewGardenController extends GardensSidebar {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isPresent()) {
             Garden garden = optionalGarden.get();
-            List<Plant> plants = garden.getPlants();
+            List<Plant> plants = getPlantsFromGardenId(gardenId);
             logger.info("plants" + plants);
             ArrayList<String> plantImages = new ArrayList<>();
             for (Plant plant : plants) {

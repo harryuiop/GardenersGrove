@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Base64;
 import java.util.Date;
 
 /**
@@ -39,11 +40,12 @@ public class Plant {
     }
 
 
-    public Plant(String name, Integer count, String description, Date plantedOn, Long gardenId) {
+    public Plant(String name, Integer count, String description, Date plantedOn, byte[] image, Long gardenId) {
         this.name = name;
         this.count = count;
         this.description = description;
         this.plantedOn = plantedOn;
+        this.image = image;
         this.gardenId = gardenId;
     }
 
@@ -63,6 +65,8 @@ public class Plant {
         return description;
     }
 
+    public byte[] getImage() { return image; }
+
     public Date getPlantedOn() { return plantedOn; }
 
     public Long getGardenId() { return gardenId; }
@@ -80,6 +84,11 @@ public class Plant {
     }
 
     public void setPlantedOn(Date plantedOn) { this.plantedOn = plantedOn; }
+
+    public String getBase64Image() {
+        String base64Image = Base64.getEncoder().encodeToString(image);
+        return "data:image/;base64," + base64Image;
+    }
 
     @Override
     public String toString() {

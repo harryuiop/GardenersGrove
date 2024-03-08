@@ -37,7 +37,7 @@
         </tr>
         <tr th:each="plant : ${plants}">
             <p>Images here</p>
-            <!-- <td><img th:src="${plant.image}" alt="plantImage" width="200"/></td> -->
+            <td><img th:src="${plant.getBase64Image()}" alt="plantImage" width="200"/></td>
             <td><span th:text="${plant.name}"> Name </span></td>
         </tr>
         </tbody>
