@@ -54,8 +54,6 @@ public class PlantFormController {
         return string.matches("[a-zA-Z0-9 .,\\-']*");
     }
 
-//    public boolean checkDate(String string) { return string.matches("(0[1-9]|[12][0-9]|3[01])(\\/)(0[1-9]|1[1,2])(\\/)(19|20)\\d{2}\n"); }
-
     /**
      * Submits form and saves the garden to the database.
      * @param plantName The name of the plant as input by the user.
