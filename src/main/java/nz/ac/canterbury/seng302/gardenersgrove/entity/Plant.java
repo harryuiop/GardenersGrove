@@ -19,11 +19,11 @@ public class Plant {
     @Column()
     private Integer count;
 
-    @Column()
+    @Column(length = 512)
     private String description;
 
     @Column()
-    private Date plantedOn;
+    private String plantedOn;
 
     /**
      * JPA required no-args constructor
@@ -32,7 +32,7 @@ public class Plant {
     }
 
 
-    public Plant(String name, Integer count, String description, Date plantedOn) {
+    public Plant(String name, Integer count, String description, String plantedOn) {
         this.name = name;
         this.count = count;
         this.description = description;
@@ -55,6 +55,8 @@ public class Plant {
         return description;
     }
 
+    public String getPlantedOn() {return plantedOn;}
+
     @Override
     public String toString() {
         return "Plant{" +
@@ -62,7 +64,7 @@ public class Plant {
                 ", name='" + name + '\'' +
                 ", count=" + count +
                 ", description='" + description + '\'' +
-                ", plantedOn=" + plantedOn +
+                ", plantedOn=" + plantedOn.toString().split(" ")[0] +
                 '}';
     }
 }
