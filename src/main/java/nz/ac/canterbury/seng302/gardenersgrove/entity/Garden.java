@@ -67,6 +67,10 @@ public class Garden {
         return plants;
     }
 
+    public void addPlant(Plant plant) {
+        this.plants.add(plant);
+    }
+
     @Override
     public String toString() {
         return "Garden{" +

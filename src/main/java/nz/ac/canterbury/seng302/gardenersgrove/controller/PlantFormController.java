@@ -1,14 +1,17 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidation;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,10 +28,12 @@ public class PlantFormController {
     Logger logger = LoggerFactory.getLogger(PlantFormController.class);
 
     private final PlantService plantService;
+    private final GardenService gardenService;
 
     @Autowired
-    public PlantFormController(PlantService plantService) {
+    public PlantFormController(PlantService plantService, GardenService gardenService) {
         this.plantService = plantService;
+        this.gardenService = gardenService;
     }
 
     /**
@@ -37,12 +42,14 @@ public class PlantFormController {
      * @return thymeleaf HTML gardenForm template.
      */
     @GetMapping("/plantform")
-    public String form(Model model) {
+    public String form(Model model, @RequestParam(name="gardenId") Long gardenId) {
         logger.info("GET /plantform");
         model.addAttribute("plantNameError", "");
         model.addAttribute("plantCountError", "");
         model.addAttribute("plantDescriptionError", "");
         model.addAttribute("plantedDateError", "");
+        model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
+        model.addAttribute("gardenId", gardenId);
         model.addAttribute("plantImage", "");
         return "plantForm";
     }
@@ -50,8 +57,6 @@ public class PlantFormController {
     public boolean checkString(String string) {
         return string.matches("[a-zA-Z0-9 .,\\-']*");
     }
-
-    public boolean checkDate(String string) { return string.matches("(0[1-9]|[12][0-9]|3[01])(\\/)(0[1-9]|1[1,2])(\\/)(19|20)\\d{2}\n"); }
 
     /**
      * Submits form and saves the garden to the database.
@@ -67,12 +72,14 @@ public class PlantFormController {
                              @RequestParam(name = "plantCount", required = false) Integer plantCount,
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
                              @RequestParam(name = "plantedDate", required = false) String plantedDate,
+                             @RequestParam(name = "gardenId") Long gardenId,
                              @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
                              Model model) throws IOException {
         logger.info("POST /form");
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
+        boolean dateIsValid = true;
         boolean imageIsValid;
         boolean imageIsValidType = false;
         boolean imageIsValidSize = false;
@@ -107,8 +114,6 @@ public class PlantFormController {
         } else {
             descriptionIsValid = true;
         }
-
-
         if (!imageIsValidType) {
             model.addAttribute("plantImageTypeError", "Image must be of type png, jpg or svg.");
         }
@@ -117,24 +122,22 @@ public class PlantFormController {
             model.addAttribute("plantImageSizeError", "Image must be less than 10MB.");
         }
 
-        logger.info("Type, Size: ", imageIsValidType + ", " + imageIsValidSize);
-
-
-        Date date = new Date();
-        boolean dateIsValid = true;
-
-
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && imageIsValid) {
+            logger.info(plantedDate);
+            Date date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
             Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageBytes);
             plantService.savePlant(plant);
-            logger.info("Plant Saved: ");
-
-            return "redirect:/demo?plantId=" + plant.getId();
+            Garden garden = gardenService.getGardenById(gardenId).get();
+            garden.addPlant(plant);
+            model.addAttribute("gardenId", gardenId);
+            return "viewGarden";
         } else {
             model.addAttribute("plantName", plantName);
             model.addAttribute("plantCount", plantCount);
             model.addAttribute("plantDescription", plantDescription);
             model.addAttribute("plantedDate", plantedDate);
+            model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
+            model.addAttribute("gardenId", gardenId);
             return "plantForm";
         }
     }

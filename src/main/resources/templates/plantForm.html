@@ -9,9 +9,10 @@
 <div th:insert="~{fragmentExample/fragments :: title}">Header</div>
 <nav th:insert="~{fragmentExample/fragments :: gardens}">Gardens</nav>
 <div class="content">
+    <h1 th:text="${gardenName}"></h1>
     <div>
         <div>
-            <form th:action="@{form}" method="post" id="plant-form" enctype="multipart/form-data">
+            <form th:action="@{/plantform(gardenId=${gardenId})}" method="post" id="plant-form" nctype="multipart/form-data">
                 <div class="form-field">
                     <label class="form-input" for="plantName"> Plant Name: </label>
                     <input type="text" class="form-control" id="plantName" th:name="plantName"
@@ -35,8 +36,8 @@
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantedDate"> Date Planted: </label>
-                    <input type="text" class="form-control" id="plantedDate" th:name="plantedDate"
-                           th:value="*{plantedDate}" data-cy="plantedDate" autofocus>
+                    <input type="date" class="form-control" id="plantedDate" th:name="plantedDate"
+                           th:value="*{plantedDate}" data-cy="plantedDate" placeholder="DD/MM/YYYY" autofocus>
                     <h5 th:text=${plantedDateError}></h5>
                 </div>
                 <br/>
@@ -49,7 +50,7 @@
                 </div>
                 <br>
                 <button class="form-button" type="submit">Submit!</button>
-                <a th:href="@{demo}">
+                <a th:href="@{/view-garden}">
                     <button class="form-button" type="button">Cancel</button>
                 </a>
             </form>
