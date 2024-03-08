@@ -60,6 +60,8 @@ public class Plant {
         return description;
     }
 
+    public Date getPlantedOn() { return plantedOn; }
+
     public byte[] getImage() {
         return image;
     }

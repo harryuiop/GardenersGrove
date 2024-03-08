@@ -67,7 +67,7 @@ public class PlantFormController {
                              @RequestParam(name = "plantCount", required = false) Integer plantCount,
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
                              @RequestParam(name = "plantedDate", required = false) String plantedDate,
-                             @RequestParam(name = "plantImage") MultipartFile imageFile,
+                             @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
                              Model model) throws IOException {
         logger.info("POST /form");
         boolean nameIsValid = false;
@@ -79,7 +79,7 @@ public class PlantFormController {
         byte[] imageBytes = new byte[0];
         ImageValidation imageValadation = new ImageValidation();
 
-        if (imageFile.isEmpty()) {
+        if (imageFile == null) {
             imageIsValid = true;
         } else {
             imageBytes = imageFile.getBytes(); // Convert MultipartFile to byte[] to be saved in database
