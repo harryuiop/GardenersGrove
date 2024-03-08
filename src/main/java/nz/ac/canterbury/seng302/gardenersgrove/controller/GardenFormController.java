@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
  */
 @Controller
-public class GardenFormController {
+public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
 
     private final GardenService gardenService;
@@ -34,6 +35,7 @@ public class GardenFormController {
     @GetMapping("/gardenform")
     public String form(Model model) {
         logger.info("GET /form");
+        this.updateGardensSidebar(model, gardenService);
         model.addAttribute("gardenNameError", "");
         model.addAttribute("gardenLocationError", "");
         model.addAttribute("gardenSizeError", "");
@@ -66,8 +68,8 @@ public class GardenFormController {
             model.addAttribute("gardenNameError", "Garden name cannot by empty");
         } else if (!checkString(gardenName)) {
             model.addAttribute(
-                "gardenNameError",
-                "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
+                    "gardenNameError",
+                    "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         } else {
             nameIsValid = true;
         }
@@ -76,8 +78,8 @@ public class GardenFormController {
             model.addAttribute("gardenLocationError", "Location cannot be empty");
         } else if (!checkString(gardenLocation)) {
             model.addAttribute(
-                "gardenLocationError",
-                "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+                    "gardenLocationError",
+                    "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
             );
         } else {
             locationIsValid = true;
@@ -90,8 +92,9 @@ public class GardenFormController {
         }
 
         if (nameIsValid && locationIsValid && sizeIsValid) {
-            gardenService.saveGarden(new Garden(gardenName, gardenLocation, gardenSize));
-            return "redirect:/";
+            Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
+            gardenService.saveGarden(garden);
+            return "redirect:/view-garden?gardenId=" + garden.getId();
         } else {
             model.addAttribute("gardenName", gardenName);
             model.addAttribute("gardenLocation", gardenLocation);
