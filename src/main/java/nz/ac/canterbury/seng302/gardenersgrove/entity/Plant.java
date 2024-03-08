@@ -29,6 +29,9 @@ public class Plant {
     @Column(name = "image", columnDefinition="BLOB")
     private byte[] image;
 
+    @Column()
+    private Long gardenId;
+
     /**
      * JPA required no-args constructor
      */
@@ -36,12 +39,12 @@ public class Plant {
     }
 
 
-    public Plant(String name, Integer count, String description, Date plantedOn) {
+    public Plant(String name, Integer count, String description, Date plantedOn, Long gardenId) {
         this.name = name;
         this.count = count;
         this.description = description;
         this.plantedOn = plantedOn;
-        this.image = image;
+        this.gardenId = gardenId;
     }
 
     public Long getId() {
@@ -62,13 +65,21 @@ public class Plant {
 
     public Date getPlantedOn() { return plantedOn; }
 
-    public byte[] getImage() {
-        return image;
+    public Long getGardenId() { return gardenId; }
+
+    public void setName(String name) {
+        this.name=name;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setCount(Integer count) {
+        this.count=count;
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPlantedOn(Date plantedOn) { this.plantedOn = plantedOn; }
 
     @Override
     public String toString() {
