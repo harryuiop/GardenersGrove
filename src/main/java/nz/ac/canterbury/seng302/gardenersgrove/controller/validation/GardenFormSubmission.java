@@ -1,13 +1,27 @@
-package nz.ac.canterbury.seng302.gardenersgrove.components;
+package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import java.util.HashMap;
 
-public class FormSubmission {
-
+/**
+ * Checks the validity of the entries into the garden form
+ */
+public class GardenFormSubmission {
+    /**
+     * Checks the String contains valid characters
+     * @param string represents the string being checked for correct characters
+     * @return whether it is valid or not.
+     */
     public boolean checkString(String string) {
         return string.matches("[a-zA-Z0-9 .,\\-']*");
     }
+
+    /**
+     * Checks for valid user entries that meet the given requirements
+     * @param gardenName represents the name given
+     * @param gardenLocation represents the location given
+     * @param gardenSize represents the size given
+     * @return a mapping of the error labels and messages
+     */
     public HashMap<String, String> formErrors(String gardenName, String gardenLocation, Float gardenSize) {
         HashMap<String, String> errors = new HashMap<>();
         if (gardenName.isBlank()) {

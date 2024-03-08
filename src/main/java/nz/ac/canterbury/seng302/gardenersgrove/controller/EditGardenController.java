@@ -10,29 +10,39 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import nz.ac.canterbury.seng302.gardenersgrove.components.FormSubmission;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.GardenFormSubmission;
 import java.util.HashMap;
 
 /**
- * Controller for form example.
- * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
+ * Controller for editing garden form.
  */
 @Controller
 public class EditGardenController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(EditGardenController.class);
-    FormSubmission checker = new FormSubmission();
+    GardenFormSubmission checker = new GardenFormSubmission();
 
     private final GardenService gardenService;
 
     private Long id;
 
+    /**
+     * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
+     * @param gardenService the linking agent
+     */
     @Autowired
     public EditGardenController(GardenService gardenService) {
         this.gardenService = gardenService;
     }
 
+    /**
+     *
+     * @param gardenName represents the entered name value
+     * @param gardenLocation represents the entered location value
+     * @param gardenSize represents the enetered garden size
+     * @param model represents the results to from thymeleaf
+     * @return if the submission is valid, redirects to the garden view page, if invalid reloads the same edit page
+     */
     @PostMapping("/edit-garden")
     public String submitForm(@RequestParam(name="gardenName") String gardenName,
                              @RequestParam(name = "gardenLocation") String gardenLocation,
@@ -55,14 +65,15 @@ public class EditGardenController extends GardensSidebar {
             model.addAttribute("gardenName", gardenName);
             model.addAttribute("gardenLocation", gardenLocation);
             model.addAttribute("gardenSize", gardenSize);
-            return "gardenForm";
+            return "redirect:/edit-garden?gardenId=" + this.id;
         }
         return "redirect:/view-garden?gardenId=" + this.id;
         }
 
     /**
      * @param model (map-like) representation of results to be used by thymeleaf
-     * @return thymeleaf gardenResponse
+     * @param gardenId represents the Id for the garden in the database
+     * @return thymeleaf editGarden
      */
     @GetMapping("/edit-garden")
     public String home(@RequestParam(name = "gardenId", required = true) Long gardenId, Model model) {

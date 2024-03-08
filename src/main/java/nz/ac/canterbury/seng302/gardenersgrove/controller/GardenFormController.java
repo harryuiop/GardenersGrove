@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import nz.ac.canterbury.seng302.gardenersgrove.components.FormSubmission;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.GardenFormSubmission;
 import java.util.HashMap;
 
 /**
@@ -21,7 +21,7 @@ import java.util.HashMap;
 @Controller
 public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
-    FormSubmission checker = new FormSubmission();
+    GardenFormSubmission checker = new GardenFormSubmission();
     private final GardenService gardenService;
 
     @Autowired
