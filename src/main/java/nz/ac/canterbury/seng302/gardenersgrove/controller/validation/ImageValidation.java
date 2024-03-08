@@ -1,4 +1,4 @@
-package nz.ac.canterbury.seng302.gardenersgrove.controller.valadation;
+package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import java.util.Arrays;
 import java.util.List;

@@ -25,6 +25,8 @@ public class PlantTest {
     private static PlantRepository plantRepositoryMock;
     private static PlantService plantService;
 
+    private final int BYTES_IN_KBS = 1024;
+
     @BeforeAll
     public static void setup() {
         plantRepositoryMock = Mockito.mock(PlantRepository.class);
@@ -56,9 +58,9 @@ public class PlantTest {
     }
 
     private byte[] fakeByteArray(int sizeInMB) {
-        int sizeInBytes = sizeInMB * 1024 * 1024; // 1 MB = 1024 * 1024 bytes
+        int sizeInBytes = sizeInMB * BYTES_IN_KBS * BYTES_IN_KBS;
         byte[] fakeByteArray = new byte[sizeInBytes];
-        Arrays.fill(fakeByteArray, (byte) 0); // Fill the array with zeros
+        Arrays.fill(fakeByteArray, (byte) 0);
         return fakeByteArray;
     }
 

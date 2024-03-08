@@ -1,25 +1,20 @@
 package nz.ac.canterbury.seng302.gardenersgrove.unit;
 
-import nz.ac.canterbury.seng302.gardenersgrove.controller.valadation.ImageValidation;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidation;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.io.ByteArrayOutputStream;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Arrays;
-import javax.imageio.ImageIO;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImageValidationTest {
     private static ImageValidation imageValidation;
+
+    private final int BYTES_IN_KBS = 1024;
 
     @BeforeAll
     public static void setup() {
@@ -51,9 +46,9 @@ class ImageValidationTest {
     }
 
     private byte[] fakeByteArray(int sizeInMB) {
-        int sizeInBytes = sizeInMB * 1024 * 1024; // 1 MB = 1024 * 1024 bytes
+        int sizeInBytes = sizeInMB * BYTES_IN_KBS * BYTES_IN_KBS;
         byte[] fakeByteArray = new byte[sizeInBytes];
-        Arrays.fill(fakeByteArray, (byte) 0); // Fill the array with zeros
+        Arrays.fill(fakeByteArray, (byte) 0);
         return fakeByteArray;
     }
 
