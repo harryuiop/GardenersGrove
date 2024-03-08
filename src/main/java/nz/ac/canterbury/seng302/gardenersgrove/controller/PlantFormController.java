@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidation;
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
@@ -24,7 +25,7 @@ import java.util.*;
  * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
  */
 @Controller
-public class PlantFormController {
+public class PlantFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(PlantFormController.class);
 
     private final PlantService plantService;
@@ -44,6 +45,7 @@ public class PlantFormController {
     @GetMapping("/plantform")
     public String form(Model model, @RequestParam(name="gardenId") Long gardenId) {
         logger.info("GET /plantform");
+        this.updateGardensSidebar(model, gardenService);
         model.addAttribute("plantNameError", "");
         model.addAttribute("plantCountError", "");
         model.addAttribute("plantDescriptionError", "");
@@ -124,13 +126,16 @@ public class PlantFormController {
 
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && imageIsValid) {
             logger.info(plantedDate);
-            Date date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
-            Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageBytes);
+            Date date = null;
+            if (!plantedDate.isBlank()) {
+                date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
+            }
+            Plant plant = new Plant(plantName, plantCount, plantDescription, date);
             plantService.savePlant(plant);
             Garden garden = gardenService.getGardenById(gardenId).get();
             garden.addPlant(plant);
-            model.addAttribute("gardenId", gardenId);
-            return "viewGarden";
+            model.addAttribute("garden", gardenService.getGardenById(gardenId));
+            return "redirect:/view-garden?gardenId=" + garden.getId();
         } else {
             model.addAttribute("plantName", plantName);
             model.addAttribute("plantCount", plantCount);

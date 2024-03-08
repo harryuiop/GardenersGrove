@@ -17,12 +17,12 @@ public class Plant {
     private String name;
 
     @Column()
-    private int count;
+    private Integer count;
 
-    @Column(nullable = false)
+    @Column()
     private String description;
 
-    @Column(nullable = false)
+    @Column()
     private Date plantedOn;
 
     @Lob
@@ -36,7 +36,7 @@ public class Plant {
     }
 
 
-    public Plant(String name, int count, String description, Date plantedOn, byte[] image) {
+    public Plant(String name, Integer count, String description, Date plantedOn) {
         this.name = name;
         this.count = count;
         this.description = description;
@@ -52,7 +52,7 @@ public class Plant {
         return name;
     }
 
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 
