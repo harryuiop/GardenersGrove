@@ -1,11 +1,11 @@
 :root,
-    :root.light {
+:root.light {
     --dark-color: #344E41;
     --dark-neutral: #3A5A40;
     --neutral: #588157;
     --light-neutral: #A3B18A;
     --light-color: #DAD7CD;
-    }
+}
 
 body {
     background-color: var(--light-color);
@@ -110,5 +110,37 @@ nav button {
 }
 .form-field * {
     display: inline-block;
+}
+
+.plant-image-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    display: inline-block;
+}
+.plant-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.add-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 45px;
+    color: var(--dark-color);
+    cursor: pointer;
+}
+
+.add-image label {
+    cursor: pointer;
+    opacity: 0.8;
+    width: 50%;
+    height: 50%;
+}
+.add-image input[type="file"] {
+    display: none;
 }
 

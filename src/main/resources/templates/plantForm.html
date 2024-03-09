@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Add Plant</title>
     <link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 <div th:insert="~{fragmentExample/fragments :: title}">Header</div>
@@ -41,13 +42,23 @@
                     <h5 th:text=${plantedDateError}></h5>
                 </div>
                 <br/>
+
                 <div class="form-field">
-                    <label class="form-input" for="plantImage"> Select Image: </label>
-                    <input type="file" class="form-control" id="plantImage" th:name="plantImage" accept=".jpg, .svg, .png"
-                           th:value="*{plantImage}" data-cy="plantedDate" autofocus>
+                    <div class="plant-image-container">
+                        <img id="selectedImage" th:src="@{/images/plant.jpg}"  alt="Plant Image">
+                        <p id = "image-selected-message"></p>
+                        <div class="add-image">
+                            <label for="plantImage">
+                                <i class="fas fa-plus-circle"></i>
+                            </label>
+                            <input type="file" class="form-control" id="plantImage" th:name="plantImage" accept=".jpg, .svg, .png"
+                                   th:value="*{plantImage}" data-cy="plantedDate" onchange="displayImage()" autofocus>
+                        </div>
+                    </div>
                     <h5 th:text=${plantImageTypeError}></h5>
                     <h5 th:text=${plantImageSizeError}></h5>
                 </div>
+
                 <br>
                 <button class="form-button" type="submit">Submit!</button>
                 <a th:href="@{/view-garden}">
@@ -57,5 +68,27 @@
         </div>
     </div>
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script>
+    function displayImage() {
+
+        console.log("Image Uploaded");
+
+        const input = document.getElementById('plantImage');
+        const img = document.getElementById('selectedImage');
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            img.src = e.target.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 </body>
 </html>
