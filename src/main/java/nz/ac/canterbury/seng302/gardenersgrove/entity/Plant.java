@@ -85,6 +85,10 @@ public class Plant {
 
     public void setPlantedOn(Date plantedOn) { this.plantedOn = plantedOn; }
 
+    /**
+     * Get image in base64 String format to be shown in the frontend via html.
+     * @return Image in base64 String format
+     */
     public String getBase64Image() {
         String base64Image = Base64.getEncoder().encodeToString(image);
         return "data:image/;base64," + base64Image;

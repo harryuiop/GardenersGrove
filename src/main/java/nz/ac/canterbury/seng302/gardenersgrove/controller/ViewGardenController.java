@@ -27,28 +27,10 @@ public class ViewGardenController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
 
     private final GardenService gardenService;
-    private final PlantService plantService;
-
-    /**
-     * Temporary function to get plants with garden id
-     * @return
-     */
-    public List<Plant> getPlantsFromGardenId(Long gardenId) {
-        List<Plant> allPlants = plantService.getAllPlants();
-        ArrayList<Plant> myPlants = new ArrayList<>();
-        for (Plant plant : allPlants) {
-            if (plant.getGardenId() == gardenId) {
-                myPlants.add(plant);
-            }
-        }
-        return myPlants;
-
-    }
 
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService) {
+    public ViewGardenController(GardenService gardenService) {
         this.gardenService = gardenService;
-        this.plantService = plantService;
     }
 
     /**
@@ -65,14 +47,7 @@ public class ViewGardenController extends GardensSidebar {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isPresent()) {
             Garden garden = optionalGarden.get();
-            List<Plant> plants = getPlantsFromGardenId(gardenId);
-            logger.info("plants" + plants);
-            ArrayList<String> plantImages = new ArrayList<>();
-            for (Plant plant : plants) {
-                byte[] plantBytes = plant.getImage();
-                String base64Image = Base64.getEncoder().encodeToString(plantBytes);
-                plantImages.add("data:image/;base64," + base64Image);
-            }
+            List<Plant> plants = garden.getPlants();
             model.addAttribute("plants", plants);
         }
         return "viewGarden";
