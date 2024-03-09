@@ -31,6 +31,9 @@ public class Plant {
     private byte[] image;
 
     @Column()
+    private String imageType;
+
+    @Column()
     private Long gardenId;
 
     /**
@@ -40,12 +43,13 @@ public class Plant {
     }
 
 
-    public Plant(String name, Integer count, String description, Date plantedOn, byte[] image, Long gardenId) {
+    public Plant(String name, Integer count, String description, Date plantedOn, byte[] image, String imageType, Long gardenId) {
         this.name = name;
         this.count = count;
         this.description = description;
         this.plantedOn = plantedOn;
         this.image = image;
+        this.imageType = imageType;
         this.gardenId = gardenId;
     }
 
@@ -91,7 +95,7 @@ public class Plant {
      */
     public String getBase64Image() {
         String base64Image = Base64.getEncoder().encodeToString(image);
-        return "data:image/;base64," + base64Image;
+        return "data:" + imageType + ";base64," + base64Image;
     }
 
     @Override

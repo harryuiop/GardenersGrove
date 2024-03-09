@@ -86,16 +86,15 @@ public class PlantFormController extends GardensSidebar {
         boolean imageIsValidType = false;
         boolean imageIsValidSize = false;
         byte[] imageBytes = new byte[0];
+        String imageType = "";
         ImageValidation imageValadation = new ImageValidation();
 
-        logger.info("ii", imageFile);
 
         if (imageFile == null) {
-            logger.info("image file null");
             imageIsValid = true;
         } else {
             imageBytes = imageFile.getBytes(); // Convert MultipartFile to byte[] to be saved in database
-            logger.info("image file not null");
+            imageType = imageFile.getContentType();
             imageIsValidType = imageValadation.checkImageType(imageFile.getOriginalFilename());
             imageIsValidSize = imageValadation.checkImageSize(imageFile.getBytes());
             imageIsValid = imageIsValidType && imageIsValidSize;
@@ -135,7 +134,7 @@ public class PlantFormController extends GardensSidebar {
                 date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
             }
             logger.info("Image bytes" + imageBytes.length);
-            Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageBytes, gardenId);
+            Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageBytes, imageType, gardenId);
             plantService.savePlant(plant);
             Garden garden = gardenService.getGardenById(gardenId).get();
             garden.addPlant(plant);
