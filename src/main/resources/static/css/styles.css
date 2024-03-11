@@ -134,13 +134,20 @@ nav button {
     cursor: pointer;
 }
 
-.add-image label {
-    cursor: pointer;
+.add-image .plus-button {
     opacity: 0.8;
     width: 50%;
     height: 50%;
 }
-.add-image input[type="file"] {
+
+.add-image .fa-plus-circle {
+    cursor: pointer;
+}
+.add-image input {
     display: none;
+}
+
+.no-icon {
+    content: none;
 }
 

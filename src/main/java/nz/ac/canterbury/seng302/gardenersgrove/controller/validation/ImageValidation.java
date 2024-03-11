@@ -5,10 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 /**
- * Test Image is valid
+ * Test Image is valid.
  */
 public class ImageValidation {
     private final int MAX_IMAGE_SIZE_KB = 10000;
@@ -50,15 +49,18 @@ public class ImageValidation {
      * @return Image object.
      * @throws IOException
      */
-    public Image getImageResults(MultipartFile imageFile) throws IOException {
+    public ImageResults getImageResults(MultipartFile imageFile) throws IOException {
         boolean imageIsValid;
         boolean imageIsValidType = false;
         boolean imageIsValidSize = false;
-        byte[] imageBytes = null;
+        byte[] imageBytes = new byte[0];
         String imageType = null;
 
-        if (imageFile == null) {
+        System.out.println("gdssdg");
+
+        if (imageFile.isEmpty()) {
             imageIsValid = true;
+            System.out.println("gdssdggfdhdh");
         } else {
             imageBytes = imageFile.getBytes(); // Convert MultipartFile to byte[] to be saved in database
             imageType = imageFile.getContentType();
@@ -67,6 +69,6 @@ public class ImageValidation {
             imageIsValid = imageIsValidType && imageIsValidSize;
         }
 
-        return new Image(imageIsValidType, imageIsValidSize, imageIsValid, imageType, imageBytes);
+        return new ImageResults(imageIsValidType, imageIsValidSize, imageIsValid, imageType, imageBytes);
     }
 }

@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.Image;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageResults;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidation;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,15 +77,14 @@ public class PlantFormController extends GardensSidebar {
                              @RequestParam(name = "gardenId") Long gardenId,
                              @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
                              Model model) throws IOException {
-        logger.info("POST /form");
+        logger.info("POST /plantform");
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
         boolean dateIsValid = true;
 
         ImageValidation imageValidation = new ImageValidation();
-        Image imageResults = imageValidation.getImageResults(imageFile);
-
+        ImageResults imageResults = imageValidation.getImageResults(imageFile);
 
         if (plantName.isBlank() || !checkString(plantName)) {
             model.addAttribute(
@@ -107,12 +105,15 @@ public class PlantFormController extends GardensSidebar {
         } else {
             descriptionIsValid = true;
         }
-        if (!imageResults.getImageIsValidType()) {
-            model.addAttribute("plantImageTypeError", "Image must be of type png, jpg or svg.");
-        }
 
-        if (!imageResults.getImageIsValidSize()) {
-            model.addAttribute("plantImageSizeError", "Image must be less than 10MB.");
+        if (imageResults.isImageSet()) {
+            if (!imageResults.getImageIsValidType()) {
+                model.addAttribute("plantImageTypeError", "Image must be of type png, jpg or svg.");
+            }
+
+            if (!imageResults.getImageIsValidSize()) {
+                model.addAttribute("plantImageSizeError", "Image must be less than 10MB.");
+            }
         }
 
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && imageResults.getImageIsValid()) {
@@ -121,7 +122,6 @@ public class PlantFormController extends GardensSidebar {
             if (!plantedDate.isBlank()) {
                 date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
             }
-            logger.info("Image bytes" + imageResults.getImageBytes().length);
             Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageResults.getImageBytes(), imageResults.getImageType(), gardenId);
             plantService.savePlant(plant);
             Garden garden = gardenService.getGardenById(gardenId).get();
