@@ -55,6 +55,10 @@ public class Plant {
         return description;
     }
 
+    public Date getPlantedOn() {
+        return plantedOn;
+    }
+
     @Override
     public String toString() {
         return "Plant{" +
