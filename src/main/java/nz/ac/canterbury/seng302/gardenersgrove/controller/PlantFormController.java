@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Controller for form example.
@@ -76,7 +78,8 @@ public class PlantFormController extends GardensSidebar {
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
-        boolean dateIsValid = true;
+        boolean dateIsValid = false;
+        boolean gardenIsValid = false;
 
         if (plantName.isBlank() || !checkString(plantName)) {
             model.addAttribute(
@@ -98,17 +101,28 @@ public class PlantFormController extends GardensSidebar {
             descriptionIsValid = true;
         }
 
-        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
-            logger.info(plantedDate);
-            Date date = null;
-            if (!plantedDate.isBlank()) {
-                date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
+        Date plantDate = null;
+        try {
+            if (plantedDate != null && !plantedDate.isBlank()) {
+                plantDate = DateFormat.getDateInstance().parse(plantedDate);
             }
-            Plant plant = new Plant(plantName, plantCount, plantDescription, date);
+            dateIsValid = true;
+        } catch (ParseException exception) {
+            model.addAttribute("plantedDateError", "Date not in valid format (DD/MM/YYYY)");
+        }
+
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isPresent()) {
+            gardenIsValid = true;
+        }
+
+        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && gardenIsValid) {
+            logger.info(plantedDate);
+            Garden garden = optionalGarden.get();
+            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate);
             plantService.savePlant(plant);
-            Garden garden = gardenService.getGardenById(gardenId).get();
             garden.addPlant(plant);
-            model.addAttribute("garden", gardenService.getGardenById(gardenId));
+            gardenService.saveGarden(garden);
             return "redirect:/view-garden?gardenId=" + garden.getId();
         } else {
             model.addAttribute("plantName", plantName);
