@@ -48,6 +48,7 @@
                                 <label for="plantImage">
                                     <i class="fas fa-plus-circle"></i>
                                 </label>
+                                <input type="hidden" name="plantFormId" th:value="${plant.getId()}" />
                                 <input type="file" class="form-control" id="plantImage" th:name="plantImage" accept=".jpg, .svg, .png"
                                        th:value="*{plantImage}" data-cy="plantedDate" onchange="displayImage()" autofocus>                            </div>
                         </div>

@@ -1,7 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 
@@ -89,6 +91,10 @@ public class Plant {
 
     public void setPlantedOn(Date plantedOn) { this.plantedOn = plantedOn; }
 
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
     /**
      * Get image in base64 String format to be shown in the frontend via html.
      * @return Image in base64 String format

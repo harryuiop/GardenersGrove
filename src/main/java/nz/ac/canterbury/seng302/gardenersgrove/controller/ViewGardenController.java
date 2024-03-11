@@ -42,6 +42,11 @@ public class ViewGardenController extends GardensSidebar {
     @GetMapping("/view-garden")
     public String home(@RequestParam(name = "gardenId", required = false) Long gardenId, Model model) {
         logger.info("GET /view-garden");
+        this.addViewGardenAttributes(gardenId, model);
+        return "viewGarden";
+    }
+
+    private void addViewGardenAttributes(Long gardenId, Model model) {
         this.updateGardensSidebar(model, gardenService);
         model.addAttribute("gardenId", gardenId);
         model.addAttribute("garden", gardenService.getGardenById(gardenId));
@@ -52,25 +57,22 @@ public class ViewGardenController extends GardensSidebar {
             List<Plant> plants = garden.getPlants();
             model.addAttribute("plants", plants);
         }
-        return "viewGarden";
     }
 
     @PostMapping("/view-garden")
-    public String submitForm(@RequestParam(name = "plantImage", required=false) MultipartFile imageFile
-            , Model model) throws IOException {
+    public String submitForm(@RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
+                             @RequestParam(name = "plantId", required=false) Long plantFormId,
+                             @RequestParam(name = "gardenId", required = false) Long gardenId,
+                             Model model) throws IOException {
         logger.info("POST/ plant image");
 
-        // The following code is temporary
-        this.updateGardensSidebar(model, gardenService);
-        model.addAttribute("gardenId", 1);
-        model.addAttribute("garden", gardenService.getGardenById(1l));
+        logger.info("Garden id" + gardenId);
 
-        Optional<Garden> optionalGarden = gardenService.getGardenById(1l);
-        if (optionalGarden.isPresent()) {
-            Garden garden = optionalGarden.get();
-            List<Plant> plants = garden.getPlants();
-            model.addAttribute("plants", plants);
-        }
+        Garden gardn = gardenService.getGardenById(1l).get();
+        gardn.getPlants().get(0).setImage(imageFile.getBytes());
+        gardenService.saveGarden(gardn);
+
+        this.addViewGardenAttributes(gardenId, model);
 
         return "viewGarden";
     }
