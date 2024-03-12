@@ -1,7 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
-import java.util.HashMap;
-
 /**
  * Checks the validity of the entries into the garden form
  */
@@ -15,33 +13,19 @@ public class GardenFormSubmission {
         return string.matches("[a-zA-Z0-9 .,\\-']*");
     }
 
-    /**
-     * Checks for valid user entries that meet the given requirements
-     * @param gardenName represents the name given
-     * @param gardenLocation represents the location given
-     * @param gardenSize represents the size given
-     * @return a mapping of the error labels and messages
-     */
-    public HashMap<String, String> formErrors(String gardenName, String gardenLocation, Float gardenSize) {
-        HashMap<String, String> errors = new HashMap<>();
-        if (gardenName.isBlank()) {
-            errors.put("gardenNameError", "Garden name cannot by empty");
-        } else if (!checkString(gardenName)) {
-            errors.put(
-                    "gardenNameError",
-                    "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
+    public boolean checkName(String string) throws IllegalArgumentException {
+        if (string.isBlank()) {
+            throw new IllegalArgumentException("Blank");
+        } else if (!checkString(string)) {
+            throw new IllegalArgumentException("InvalidChar");
         }
-        if (gardenLocation.isBlank()) {
-            errors.put("gardenLocationError", "Location cannot be empty");
-        } else if (!checkString(gardenLocation)) {
-            errors.put(
-                    "gardenLocationError",
-                    "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
-            );
+        return false;
+    }
+
+    public boolean checkSize (Float size) throws IllegalArgumentException {
+        if (size != null && size <= 0) {
+            throw new IllegalArgumentException("Negative");
         }
-        if (gardenSize != null && gardenSize <= 0) {
-            errors.put("gardenSizeError", "Garden size must be a positive number");
-        }
-        return errors;
+        return false;
     }
 }
