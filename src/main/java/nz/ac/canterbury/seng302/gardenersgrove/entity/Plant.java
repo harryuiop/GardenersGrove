@@ -95,6 +95,11 @@ public class Plant {
     public void setImage(byte[] image) {
         this.image = image;
     }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
     /**
      * Get image in base64 String format to be shown in the frontend via html.
      * @return Image in base64 String format

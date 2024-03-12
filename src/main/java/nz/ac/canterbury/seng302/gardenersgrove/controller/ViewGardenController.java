@@ -62,9 +62,10 @@ public class ViewGardenController extends GardensSidebar {
         }
     }
 
-    private void savePlantImage(Long plantId, Long gardenId, byte[] imageBytes) {
+    private void savePlantImage(Long plantId, Long gardenId, byte[] imageBytes, String imageType) {
         Plant plant = plantService.getPlantById(plantId).get();
         plant.setImage(imageBytes);
+        plant.setImageType(imageType);
         plantService.savePlant(plant);
         Garden garden = gardenService.getGardenById(gardenId).get();
         gardenService.saveGarden(garden);
@@ -95,7 +96,7 @@ public class ViewGardenController extends GardensSidebar {
         ImageResults imageResults = imageValidation.getImageResults(imageFile);
 
         if (imageResults.getImageIsValid()) {
-            this.savePlantImage(plantId, gardenId, imageResults.getImageBytes());
+            this.savePlantImage(plantId, gardenId, imageResults.getImageBytes(), imageResults.getImageType());
         } else {
             model.addAttribute("selectedPlantId", plantId);
             if (!imageResults.getImageIsValidType()) {
