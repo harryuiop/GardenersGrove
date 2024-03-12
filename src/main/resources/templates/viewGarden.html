@@ -39,11 +39,14 @@
         <tr th:each="plant : ${plants}">
             <td>
                 <p th:value="${plant.getId()}"></p>
-                <form th:action="@{/update-plant-image(gardenId=${gardenId},plantId=${plant.getId()})}" method="post" enctype="multipart/form-data">
+                <form th:action="@{/view-garden(gardenId=${gardenId})}" method="post" enctype="multipart/form-data">
                     <div class="form-field">
                         <div class="plant-image-container">
                             <img id="selectedImage" th:src="${plant.getBase64Image()}" alt="No plant image."/>
                             <p id="image-selected-message"></p>
+
+                            <input type="hidden" th:name="plantId" th:value="${plant.getId()}" />
+
                             <div class="add-image">
                                 <label th:for="${plant.getId()}" class="plus-button">
                                     <i class="fas fa-plus-circle"></i>
