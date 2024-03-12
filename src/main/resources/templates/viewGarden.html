@@ -55,8 +55,9 @@
                                        th:value="*{plantImage}" data-cy="plantImage" onchange="submitForm(id)" autofocus>
                             </div>
                         </div>
-                        <h5 th:text=${plantImageTypeError}></h5>
-                        <h5 th:text=${plantImageSizeError}></h5>
+
+                        <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageTypeError}></h5>
+                        <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageSizeError}></h5>
                     </div>
                     <button class="form-button" type="submit" th:id="${plant.getId()} + submit" style="display: none;">Submit</button>
                 </form>

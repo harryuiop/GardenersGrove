@@ -97,6 +97,7 @@ public class ViewGardenController extends GardensSidebar {
         if (imageResults.getImageIsValid()) {
             this.savePlantImage(plantId, gardenId, imageResults.getImageBytes());
         } else {
+            model.addAttribute("selectedPlantId", plantId);
             if (!imageResults.getImageIsValidType()) {
                 model.addAttribute("plantImageTypeError", "Image must be of type png, jpg or svg.");
             }
