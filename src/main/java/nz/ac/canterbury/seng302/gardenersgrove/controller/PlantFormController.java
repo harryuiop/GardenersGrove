@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Optional;
 import java.io.IOException;
 import java.util.*;
 
@@ -81,7 +85,8 @@ public class PlantFormController extends GardensSidebar {
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
-        boolean dateIsValid = true;
+        boolean dateIsValid = false;
+        boolean gardenIsValid = false;
 
         ImageValidation imageValidation = new ImageValidation();
         ImageResults imageResults = imageValidation.getImageResults(imageFile);
@@ -106,26 +111,28 @@ public class PlantFormController extends GardensSidebar {
             descriptionIsValid = true;
         }
 
-        if (imageResults.isImageSet()) {
-            if (!imageResults.getImageIsValidType()) {
-                model.addAttribute("plantImageTypeError", "Image must be of type png, jpg or svg.");
+        Date plantDate = null;
+        try {
+            if (plantedDate != null && !plantedDate.isBlank()) {
+                plantDate = DateFormat.getDateInstance().parse(plantedDate);
             }
-
-            if (!imageResults.getImageIsValidSize()) {
-                model.addAttribute("plantImageSizeError", "Image must be less than 10MB.");
-            }
+            dateIsValid = true;
+        } catch (ParseException exception) {
+            model.addAttribute("plantedDateError", "Date not in valid format (DD/MM/YYYY)");
         }
 
-        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && imageResults.getImageIsValid()) {
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isPresent()) {
+            gardenIsValid = true;
+        }
+
+        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && gardenIsValid) {
             logger.info(plantedDate);
-            Date date = null;
-            if (!plantedDate.isBlank()) {
-                date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
-            }
-            Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageResults.getImageBytes(), imageResults.getImageType(), gardenId);
+            Garden garden = optionalGarden.get();
+            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate);
             plantService.savePlant(plant);
-            Garden garden = gardenService.getGardenById(gardenId).get();
             garden.addPlant(plant);
+            gardenService.saveGarden(garden);
             model.addAttribute("garden", gardenService.getGardenById(gardenId));
             gardenService.saveGarden(garden);
             return "redirect:/view-garden?gardenId=" + garden.getId();
