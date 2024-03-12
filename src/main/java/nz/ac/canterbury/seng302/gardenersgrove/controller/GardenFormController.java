@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.GardenFormSubmission;
-import java.util.HashMap;
+
+import java.util.Map;
 
 /**
  * Controller for form example.
@@ -21,7 +22,7 @@ import java.util.HashMap;
 @Controller
 public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
-    GardenFormSubmission checker = new GardenFormSubmission();
+    GardenFormSubmission gardenValidator = new GardenFormSubmission();
     private final GardenService gardenService;
 
     @Autowired
@@ -60,16 +61,14 @@ public class GardenFormController extends GardensSidebar {
                              @RequestParam(name = "gardenSize", required = false) Float gardenSize,
                              Model model) {
         logger.info("POST /form");
-        HashMap<String, String> errors = checker.formErrors(gardenName, gardenLocation, gardenSize);
+        Map<String, String> errors = gardenValidator.formErrors(gardenName, gardenLocation, gardenSize);
         if (errors.isEmpty()) {
             Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
             gardenService.saveGarden(garden);
             return "redirect:/view-garden?gardenId=" + garden.getId();
         }
         else {
-            for (String i: errors.keySet()) {
-                model.addAttribute(i, errors.get(i));
-            }
+            gardenValidator.addErrorAttributes(model, errors);
             model.addAttribute("gardenName", gardenName);
             model.addAttribute("gardenLocation", gardenLocation);
             model.addAttribute("gardenSize", gardenSize);

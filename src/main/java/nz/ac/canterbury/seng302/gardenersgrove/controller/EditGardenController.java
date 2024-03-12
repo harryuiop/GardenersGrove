@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.GardenFormSubmission;
-import java.util.HashMap;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controller for editing garden form.
@@ -20,11 +22,11 @@ import java.util.HashMap;
 @Controller
 public class EditGardenController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(EditGardenController.class);
-    GardenFormSubmission checker = new GardenFormSubmission();
-
-    private final GardenService gardenService;
+    GardenFormSubmission gardenValidator = new GardenFormSubmission();
 
     private Long id;
+
+    private final GardenService gardenService;
 
     /**
      * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
@@ -48,32 +50,30 @@ public class EditGardenController extends GardensSidebar {
                              @RequestParam(name = "gardenLocation") String gardenLocation,
                              @RequestParam(name = "gardenSize", required=false) Float gardenSize,
                              Model model) {
+        Long gardenId = this.id;
         logger.info("POST /edit-garden");
-        HashMap<String, String> errors = checker.formErrors(gardenName, gardenLocation, gardenSize);
+        Map<String, String> errors = gardenValidator.formErrors(gardenName, gardenLocation, gardenSize);
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (errors.isEmpty()) {
-            if ( gardenService.getGardenById(this.id).isPresent()) {
-                Garden garden = gardenService.getGardenById(this.id).get();
+            if (optionalGarden.isPresent()) {
+                Garden garden = optionalGarden.get();
                 garden.setName(gardenName);
                 garden.setLocation(gardenLocation);
                 garden.setSize(gardenSize);
                 gardenService.saveGarden(garden);
             }
         } else {
-            for (String i: errors.keySet()) {
-                model.addAttribute(i, errors.get(i));
-            }
-            model.addAttribute("gardenName", gardenName);
-            model.addAttribute("gardenLocation", gardenLocation);
-            model.addAttribute("gardenSize", gardenSize);
-            this.addEditGardenAttributes(this.id, model);
+            gardenValidator.addErrorAttributes(model, errors);
+            this.addEditGardenAttributes(gardenId, model);
             return "editGarden";
         }
-        return "redirect:/view-garden?gardenId=" + this.id;
-        }
+        return "redirect:/view-garden?gardenId=" + gardenId;
+    }
+
 
     /**
      * @param model (map-like) representation of results to be used by thymeleaf
-     * @param gardenId represents the Id for the garden in the database
+     * @param gardenId represents the identifier for the garden in the database
      * @return thymeleaf editGarden
      */
     @GetMapping("/edit-garden")
@@ -86,8 +86,10 @@ public class EditGardenController extends GardensSidebar {
 
     private void addEditGardenAttributes(Long gardenId, Model model) {
         this.updateGardensSidebar(model, gardenService);
-        if (gardenService.getGardenById(gardenId).isPresent()) {
-            Garden garden = gardenService.getGardenById(gardenId).get();
+
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isPresent()) {
+            Garden garden = optionalGarden.get();
             model.addAttribute("displayGardenName", garden.getName());
             model.addAttribute("displayGardenLocation", garden.getLocation());
             model.addAttribute("displayGardenSize", garden.getSize());
