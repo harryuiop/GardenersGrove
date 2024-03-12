@@ -25,6 +25,9 @@ public class Plant {
     @Column()
     private String plantedOn;
 
+    @Column()
+    private Long gardenId;
+
     /**
      * JPA required no-args constructor
      */
@@ -32,11 +35,12 @@ public class Plant {
     }
 
 
-    public Plant(String name, Integer count, String description, String plantedOn) {
+    public Plant(String name, Integer count, String description, String plantedOn, Long gardenId) {
         this.name = name;
         this.count = count;
         this.description = description;
         this.plantedOn = plantedOn;
+        this.gardenId = gardenId;
     }
 
     public Long getId() {
@@ -55,7 +59,23 @@ public class Plant {
         return description;
     }
 
-    public String getPlantedOn() {return plantedOn;}
+    public String getPlantedOn() { return plantedOn; }
+
+    public Long getGardenId() { return gardenId; }
+
+    public void setName(String name) {
+        this.name=name;
+    }
+
+    public void setCount(Integer count) {
+        this.count=count;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPlantedOn(String plantedOn) { this.plantedOn = plantedOn; }
 
     @Override
     public String toString() {
@@ -64,7 +84,7 @@ public class Plant {
                 ", name='" + name + '\'' +
                 ", count=" + count +
                 ", description='" + description + '\'' +
-                ", plantedOn=" + plantedOn.toString().split(" ")[0] +
+                ", plantedOn=" + plantedOn +
                 '}';
     }
 }
