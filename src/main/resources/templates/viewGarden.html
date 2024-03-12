@@ -39,27 +39,23 @@
         <tr th:each="plant : ${plants}">
             <td>
                 <p th:value="${plant.getId()}"></p>
-                <form th:action="@{/view-garden(gardenId=${gardenId})}" method="post" id="${plant.getId()}" enctype="multipart/form-data">
+                <form th:action="@{/update-plant-image(gardenId=${gardenId},plantId=${plant.getId()})}" method="post" enctype="multipart/form-data">
                     <div class="form-field">
                         <div class="plant-image-container">
                             <img id="selectedImage" th:src="${plant.getBase64Image()}" alt="No plant image."/>
                             <p id="image-selected-message"></p>
                             <div class="add-image">
-                                <label for="plantId"></label>
-                                <input type="hidden" class="form-control" name="plantId" id="plantId" th:name="plantId" th:value="*{plant.getId()}"
-                                       data-cy="plantId" autofocus />
-
-                                <label for="plantImage" class="plus-button">
+                                <label th:for="${plant.getId()}" class="plus-button">
                                     <i class="fas fa-plus-circle"></i>
                                 </label>
-                                <input type="file" class="form-control" id="plantImage" th:name="plantImage" accept=".jpg, .svg, .png"
-                                       th:value="*{plantImage}" data-cy="plantImage" onchange="submitForm()" autofocus>
+                                <input type="file" class="form-control" th:id="${plant.getId()}" th:name="plantImage" accept=".jpg, .svg, .png"
+                                       th:value="*{plantImage}" data-cy="plantImage" onchange="submitForm(id)" autofocus>
                             </div>
                         </div>
                         <h5 th:text=${plantImageTypeError}></h5>
                         <h5 th:text=${plantImageSizeError}></h5>
                     </div>
-                    <button class="form-button" type="submit" id="submitBtn" style="display: none;">Submit</button>
+                    <button class="form-button" type="submit" th:id="${plant.getId()} + submit" style="display: none;">Submit</button>
                 </form>
             </td>
             <td><span th:text="${plant.name}"> Name </span></td>
@@ -78,11 +74,11 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script>
-    function submitForm() {
-        console.log("Image Uploaded");
+    function submitForm(id) {
+        console.log("Image Uploaded on form: " + id);
 
         // Currently clicks the first form only as getting by id.
-        document.getElementById('submitBtn').click()
+        document.getElementById(id + 'submit').click()
     }
 </script>
 </body>

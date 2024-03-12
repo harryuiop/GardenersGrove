@@ -81,13 +81,14 @@ public class ViewGardenController extends GardensSidebar {
      * @return Thyme leaf html template of the view garden page.
      * @throws IOException
      */
-    @PostMapping("/view-garden")
+    @PostMapping("/update-plant-image")
     public String submitPlantImage(@RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
-                             @RequestParam(name="plantId") Long plantId,
-                             @RequestParam(name = "gardenId") Long gardenId,
-                             Model model) throws IOException {
+                                   @RequestParam(name = "gardenId") Long gardenId,
+                                   @RequestParam(name = "plantId") Long plantId,
+                                   Model model) throws IOException {
 
         logger.info("POST/ plant image");
+        logger.info("Garden id: " + gardenId);
         logger.info("Plant Id: " + plantId);
 
         ImageValidation imageValidation = new ImageValidation();
