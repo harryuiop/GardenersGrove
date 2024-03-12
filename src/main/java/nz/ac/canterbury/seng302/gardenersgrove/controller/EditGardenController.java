@@ -65,7 +65,8 @@ public class EditGardenController extends GardensSidebar {
             model.addAttribute("gardenName", gardenName);
             model.addAttribute("gardenLocation", gardenLocation);
             model.addAttribute("gardenSize", gardenSize);
-            return "redirect:/edit-garden?gardenId=" + this.id;
+            this.addEditGardenAttributes(this.id, model);
+            return "editGarden";
         }
         return "redirect:/view-garden?gardenId=" + this.id;
         }
@@ -77,9 +78,14 @@ public class EditGardenController extends GardensSidebar {
      */
     @GetMapping("/edit-garden")
     public String home(@RequestParam(name = "gardenId", required = true) Long gardenId, Model model) {
-        this.updateGardensSidebar(model, gardenService);
         logger.info("GET /edit-garden");
+        this.addEditGardenAttributes(gardenId, model);
         this.id = gardenId;
+        return "editGarden";
+    }
+
+    private void addEditGardenAttributes(Long gardenId, Model model) {
+        this.updateGardensSidebar(model, gardenService);
         if (gardenService.getGardenById(gardenId).isPresent()) {
             Garden garden = gardenService.getGardenById(gardenId).get();
             model.addAttribute("displayGardenName", garden.getName());
@@ -87,6 +93,5 @@ public class EditGardenController extends GardensSidebar {
             model.addAttribute("displayGardenSize", garden.getSize());
             model.addAttribute("gardenId", gardenId);
         }
-        return "editGarden";
     }
 }
