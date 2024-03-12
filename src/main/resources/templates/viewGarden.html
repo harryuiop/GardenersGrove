@@ -42,7 +42,7 @@
             <tr th:if="${plants.empty}">
                 <td colspan="4"> No plants have been added yet</td>
             </tr>
-            <tr th:each="plant : ${plants}">
+            <tr th:each="plant : ${plants}" class="plant-entry">
                 <td><span th:text="${plant.getName()}"> Name </span></td>
                 <td><span th:text="${plant.getDescription()}"> Description </span></td>
                 <td><span th:text="${plant.getCount()}"> Count </span></td>
