@@ -11,7 +11,7 @@
 <div class="content">
   <div>
     <div>
-      <form th:action="@{edit-garden}" method="post">
+      <form th:action="@{edit-garden(gardenId=${gardenId})}" method="post">
         <div class="form-field">
           <label class="form-input" for="gardenName"> Garden Name: </label>
           <input type="text" class="form-control" id="gardenName" th:name="gardenName"

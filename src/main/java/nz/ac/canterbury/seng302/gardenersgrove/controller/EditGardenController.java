@@ -24,8 +24,6 @@ public class EditGardenController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(EditGardenController.class);
     GardenFormSubmission gardenValidator = new GardenFormSubmission();
 
-    private Long id;
-
     private final GardenService gardenService;
 
     /**
@@ -49,8 +47,8 @@ public class EditGardenController extends GardensSidebar {
     public String submitForm(@RequestParam(name="gardenName") String gardenName,
                              @RequestParam(name = "gardenLocation") String gardenLocation,
                              @RequestParam(name = "gardenSize", required=false) Float gardenSize,
+                             @RequestParam(name = "gardenId") Long gardenId,
                              Model model) {
-        Long gardenId = this.id;
         logger.info("POST /edit-garden");
         Map<String, String> errors = gardenValidator.formErrors(gardenName, gardenLocation, gardenSize);
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
@@ -80,7 +78,6 @@ public class EditGardenController extends GardensSidebar {
     public String home(@RequestParam(name = "gardenId", required = true) Long gardenId, Model model) {
         logger.info("GET /edit-garden");
         this.addEditGardenAttributes(gardenId, model);
-        this.id = gardenId;
         return "editGarden";
     }
 
