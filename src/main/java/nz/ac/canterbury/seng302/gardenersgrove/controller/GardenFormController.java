@@ -23,6 +23,10 @@ public class GardenFormController extends GardensSidebar {
     GardenFormSubmission checker = new GardenFormSubmission();
     private final GardenService gardenService;
 
+    private static final String GARDEN_NAME_ERROR = "gardenNameError";
+    private static final String GARDEN_LOCATION_ERROR = "gardenLocationError";
+    private static final String GARDEN_SIZE_ERROR = "gardenSizeError";
+
     @Autowired
     public GardenFormController(GardenService gardenService) {
         this.gardenService = gardenService;
@@ -31,16 +35,16 @@ public class GardenFormController extends GardensSidebar {
     /**
      * Gets form to be displayed, and passes previous form values to the HTML.
      * @param model object that passes data through to the HTML.
-     * @return thymeleaf HTML gardenForm template.
+     * @return thymeleaf HTML gardenform template.
      */
     @GetMapping("/gardenform")
     public String form(Model model) {
         logger.info("GET /form");
         this.updateGardensSidebar(model, gardenService);
-        model.addAttribute("gardenNameError", "");
-        model.addAttribute("gardenLocationError", "");
-        model.addAttribute("gardenSizeError", "");
-        return "gardenForm";
+        model.addAttribute(GARDEN_NAME_ERROR, "");
+        model.addAttribute(GARDEN_LOCATION_ERROR, "");
+        model.addAttribute(GARDEN_SIZE_ERROR, "");
+        return "gardenform";
     }
 
 
@@ -59,29 +63,29 @@ public class GardenFormController extends GardensSidebar {
                              @RequestParam(name = "gardenSize", required = false) Float gardenSize,
                              Model model) {
         logger.info("POST /form");
-        boolean gardenError = false;
-        boolean locationError = false;
-        boolean sizeError = false;
+        boolean gardenValid = false;
+        boolean locationValid = false;
+        boolean sizeValid = false;
         try{
             checker.checkName(gardenName);
+            gardenValid = true;
         } catch (IllegalArgumentException e) {
-            gardenError = true;
             if (e.getMessage().equals("Blank")) {
-                model.addAttribute("gardenNameError", "Garden name cannot by empty");
+                model.addAttribute(GARDEN_NAME_ERROR, "Garden name cannot by empty");
             } else if (e.getMessage().equals("InvalidChar")) {
                 model.addAttribute(
-                        "gardenNameError",
+                        GARDEN_NAME_ERROR,
                         "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
             }
         }
         try {
             checker.checkName(gardenLocation);
+            locationValid = true;
         } catch (IllegalArgumentException e) {
-            locationError = true;
             if (e.getMessage().equals("Blank")) {
-                model.addAttribute("gardenLocationError", "Location cannot be empty");
+                model.addAttribute(GARDEN_LOCATION_ERROR, "Location cannot be empty");
             } else if (e.getMessage().equals("InvalidChar")) {
-                model.addAttribute("gardenLocationError",
+                model.addAttribute(GARDEN_LOCATION_ERROR,
                         "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
                 );
             }
@@ -89,18 +93,16 @@ public class GardenFormController extends GardensSidebar {
 
         try {
             checker.checkSize(gardenSize);
+            sizeValid = true;
         } catch (IllegalArgumentException e) {
-            sizeError = true;
-            model.addAttribute("gardenSizeError", "Garden size must be a positive number");
+            model.addAttribute(GARDEN_SIZE_ERROR, "Garden size must be a positive number");
         }
 
-        if (gardenError || locationError || sizeError) {
+        if (!gardenValid || !locationValid || !sizeValid) {
             return "gardenform";
-        } else {
-            Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
-            gardenService.saveGarden(garden);
-            return "redirect:/view-garden?gardenId=" + garden.getId();
-
         }
+        Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
+        gardenService.saveGarden(garden);
+        return "redirect:/view-garden?gardenId=" + garden.getId();
     }
 }

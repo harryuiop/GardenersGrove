@@ -4,6 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.GardenFormS
 import org.assertj.core.internal.ErrorMessages;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -30,20 +31,33 @@ class GardenFormSubmissionTest {
         Assertions.assertFalse(answer);
     }
     @Test
-    void checkName_validName_returnFalse() {
+    void checkName_validName_returnTrue() {
         String string = "Garden 1";
-        Assertions.assertFalse(gardenFormSubmission.checkName(string));
+        Assertions.assertTrue(gardenFormSubmission.checkName(string));
     }
     @Test
-    void checkString_validName_returnTrue() {
+    void checkName_blankName_throwErrorBlank() {
         String string = " ";
         Throwable error = Assertions.assertThrows(IllegalArgumentException.class, () -> gardenFormSubmission.checkName(string));
         Assertions.assertEquals("Blank", error.getMessage());
     }
     @Test
-    void testInvalidName() {
+    void checkName_InvalidName_throwErrorInvalidChar() {
         String string = "#$%^&*";
+        Mockito.when(gardenFormSubmission.checkString(Mockito.any())).thenReturn(false);
         Throwable error = Assertions.assertThrows(IllegalArgumentException.class, () -> gardenFormSubmission.checkName(string));
         Assertions.assertEquals("InvalidChar", error.getMessage());
     }
+    @Test
+    void checkSize_ValidSize_throwErrorInvalidChar() {
+        Float size = null;
+        Assertions.assertTrue(gardenFormSubmission.checkSize(size));
+    }
+    @Test
+    void checkSize_InvalidSize_throwErrorInvalidChar() {
+        Float size = null;
+        Throwable error = Assertions.assertThrows(IllegalArgumentException.class, () -> gardenFormSubmission.checkSize(size));
+        Assertions.assertEquals("Negative", error.getMessage());
+    }
+
 }

@@ -25,7 +25,7 @@ public class GardenFormSubmission {
         } else if (!checkString(string)) {
             throw new IllegalArgumentException("InvalidChar");
         }
-        return false;
+        return true;
     }
 
     /**
@@ -38,6 +38,6 @@ public class GardenFormSubmission {
         if (size != null && size <= 0) {
             throw new IllegalArgumentException("Negative");
         }
-        return false;
+        return true;
     }
 }

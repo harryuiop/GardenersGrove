@@ -23,6 +23,10 @@ public class EditGardenController extends GardensSidebar {
 
     private final GardenService gardenService;
 
+    private static final String GARDEN_NAME_ERROR = "gardenNameError";
+    private static final String GARDEN_LOCATION_ERROR = "gardenLocationError";
+    private static final String GARDEN_SIZE_ERROR = "gardenSizeError";
+
     private Long id;
 
     /**
@@ -38,7 +42,7 @@ public class EditGardenController extends GardensSidebar {
      *
      * @param gardenName represents the entered name value
      * @param gardenLocation represents the entered location value
-     * @param gardenSize represents the enetered garden size
+     * @param gardenSize represents the entered garden size
      * @param model represents the results to from thymeleaf
      * @return if the submission is valid, redirects to the garden view page, if invalid reloads the same edit page
      */
@@ -56,10 +60,10 @@ public class EditGardenController extends GardensSidebar {
             gardenValid = true;
         } catch (IllegalArgumentException e) {
             if (e.getMessage().equals("Blank")) {
-                model.addAttribute("gardenNameError", "Garden name cannot by empty");
+                model.addAttribute(GARDEN_NAME_ERROR, "Garden name cannot by empty");
             } else if (e.getMessage().equals("InvalidChar")) {
                 model.addAttribute(
-                                "gardenNameError",
+                        GARDEN_NAME_ERROR,
                         "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
             }
         }
@@ -68,9 +72,9 @@ public class EditGardenController extends GardensSidebar {
             locationValid = true;
         } catch (IllegalArgumentException e) {
             if (e.getMessage().equals("Blank")) {
-                model.addAttribute("gardenLocationError", "Location cannot be empty");
+                model.addAttribute(GARDEN_LOCATION_ERROR, "Location cannot be empty");
             } else if (e.getMessage().equals("InvalidChar")) {
-                model.addAttribute("gardenLocationError",
+                model.addAttribute(GARDEN_LOCATION_ERROR,
                         "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
                 );
             }
@@ -80,13 +84,12 @@ public class EditGardenController extends GardensSidebar {
             checker.checkSize(gardenSize);
             sizeValid = true;
         } catch (IllegalArgumentException e) {
-            model.addAttribute("gardenSizeError", "Garden size must be a positive number");
+            model.addAttribute(GARDEN_SIZE_ERROR, "Garden size must be a positive number");
         }
 
         if (!gardenValid || !locationValid || !sizeValid) {
             return "redirect:/edit-garden?gardenId=" + this.id;
         }
-
         if ( gardenService.getGardenById(this.id).isPresent()) {
             Garden garden = gardenService.getGardenById(this.id).get();
             garden.setName(gardenName);
@@ -99,14 +102,17 @@ public class EditGardenController extends GardensSidebar {
 
     /**
      * @param model (map-like) representation of results to be used by thymeleaf
-     * @param gardenId represents the Id for the garden in the database
+     * @param gardenId represents the identifier for the garden in the database
      * @return thymeleaf editGarden
      */
     @GetMapping("/edit-garden")
     public String home(@RequestParam(name = "gardenId", required = true) Long gardenId, Model model) {
         this.updateGardensSidebar(model, gardenService);
-        logger.info("GET /edit-garden");
+        logger.info("GET edit-garden");
         this.id = gardenId;
+        model.addAttribute(GARDEN_NAME_ERROR, "");
+        model.addAttribute(GARDEN_LOCATION_ERROR, "");
+        model.addAttribute(GARDEN_SIZE_ERROR, "");
         if (gardenService.getGardenById(gardenId).isPresent()) {
             Garden garden = gardenService.getGardenById(gardenId).get();
             model.addAttribute("displayGardenName", garden.getName());
@@ -114,6 +120,6 @@ public class EditGardenController extends GardensSidebar {
             model.addAttribute("displayGardenSize", garden.getSize());
             model.addAttribute("gardenId", gardenId);
         }
-        return "edit-garden";
+        return "editGarden";
     }
 }
