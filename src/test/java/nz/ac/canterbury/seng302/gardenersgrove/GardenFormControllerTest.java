@@ -37,7 +37,7 @@ class GardenFormControllerTest {
         String gardenLocation = "Test Location";
         float gardenSize = 100.0f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/form")
+        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
                         .param("gardenSize", Float.toString(gardenSize)))
@@ -58,7 +58,7 @@ class GardenFormControllerTest {
         String gardenLocation = "Test Location";
         float gardenSize = 4f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/form")
+        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
                         .param("gardenSize", Float.toString(gardenSize)))
@@ -75,7 +75,7 @@ class GardenFormControllerTest {
         String gardenLocation = "Test^Location";
         float gardenSize = 4f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/form")
+        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
                         .param("gardenSize", Float.toString(gardenSize)))
@@ -92,7 +92,7 @@ class GardenFormControllerTest {
         String gardenLocation = "Test Location";
         float gardenSize = -1f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/form")
+        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
                         .param("gardenSize", Float.toString(gardenSize)))
@@ -108,7 +108,7 @@ class GardenFormControllerTest {
         String gardenName = "Test Garden";
         String gardenLocation = "Test Location";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/form")
+        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())

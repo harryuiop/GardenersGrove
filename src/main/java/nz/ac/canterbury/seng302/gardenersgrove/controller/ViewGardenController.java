@@ -38,6 +38,7 @@ public class ViewGardenController extends GardensSidebar {
         this.updateGardensSidebar(model, gardenService);
         model.addAttribute("garden", gardenService.getGardenById(gardenId));
         model.addAttribute("plants", gardenService.getGardenById(gardenId).get().getPlants());
+        model.addAttribute("id", gardenId);
         return "viewGarden";
     }
 
