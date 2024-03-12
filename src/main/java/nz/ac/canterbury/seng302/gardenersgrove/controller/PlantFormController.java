@@ -99,13 +99,7 @@ public class PlantFormController extends GardensSidebar {
         }
 
         if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
-            logger.info(plantedDate);
-            Date date = null;
-            if (!plantedDate.isBlank()) {
-                date = new Date(Integer.parseInt(plantedDate.split("-")[2]), Integer.parseInt(plantedDate.split("-")[1]), Integer.parseInt(plantedDate.split("-")[0]));
-            }
-            Plant plant = new Plant(plantName, plantCount, plantDescription, date, gardenId);
-            Plant plant = new Plant(plantName, plantCount, plantDescription, plantedDate);
+            Plant plant = new Plant(plantName, plantCount, plantDescription, plantedDate, gardenId);
             plantService.savePlant(plant);
             Garden garden = gardenService.getGardenById(gardenId).get();
             garden.addPlant(plant);

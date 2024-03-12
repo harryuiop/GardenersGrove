@@ -28,7 +28,7 @@
     </a>
 
     <h2>My Plants</h2>
-    <div class="list-container">
+    <div id="plant-entries" class="plant-entries">
         <table>
             <thead>
             <tr>
@@ -47,6 +47,9 @@
                 <td><span th:text="${plant.getDescription()}"> Description </span></td>
                 <td><span th:text="${plant.getCount()}"> Count </span></td>
                 <td><span th:text="${plant.getPlantedOn()}"> Date Planted </span></td>
+                <td><a th:href="@{/plantform/edit(plantId=${plant.getId()})}">
+                    <button type="button">Edit</button>
+                </a></td>
             </tr>
             </tbody>
         </table>

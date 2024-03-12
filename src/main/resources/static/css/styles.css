@@ -88,15 +88,6 @@ nav button {
     color: var(--dark-color);
 }
 
-.list-container {
-    max-height: 500px;
-    overflow-y: scroll;
-}
-
-.plant-entry {
-    height: 50px;
-}
-
 .garden-item {
     display: flex;
     background-color: var(--light-color);
@@ -116,5 +107,14 @@ nav button {
 }
 .form-field * {
     display: inline-block;
+}
+
+.plant-entry{
+    min-height: 50px;
+}
+
+.plant-entries {
+    max-height: 550px;
+    overflow-y: scroll;
 }
 
