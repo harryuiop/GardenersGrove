@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.util.Assert;
+
+import java.lang.reflect.Executable;
 
 @DataJpaTest
 @Import(GardenFormSubmission.class)
@@ -15,26 +18,32 @@ class GardenFormSubmissionTest {
     GardenFormSubmission gardenFormSubmission = Mockito.spy(GardenFormSubmission.class);
 
     @Test
-    void testValidString() {
+    void checkString_validString_returnTrue() {
         String string = "qwertyuiopasdfghjklzxcvbnmABC -'";
         boolean answer = gardenFormSubmission.checkString(string);
         Assertions.assertTrue(answer);
     }
     @Test
-    void testInvalidString() {
+    void checkString_invalidString_returnFalse() {
         String string = "!@#$%{}";
         boolean answer = gardenFormSubmission.checkString(string);
         Assertions.assertFalse(answer);
     }
     @Test
-    void testValidName() {
+    void checkName_validName_returnFalse() {
         String string = "Garden 1";
         Assertions.assertFalse(gardenFormSubmission.checkName(string));
     }
     @Test
-    void testBlankString() {
+    void checkString_validName_returnTrue() {
         String string = " ";
-        Mockito.when(gardenFormSubmission.checkString(Mockito.any()));
-        Assertions.assertThrows(IllegalArgumentException, gardenFormSubmission::checkName, string);
+        Throwable error = Assertions.assertThrows(IllegalArgumentException.class, () -> gardenFormSubmission.checkName(string));
+        Assertions.assertEquals("Blank", error.getMessage());
+    }
+    @Test
+    void testInvalidName() {
+        String string = "#$%^&*";
+        Throwable error = Assertions.assertThrows(IllegalArgumentException.class, () -> gardenFormSubmission.checkName(string));
+        Assertions.assertEquals("InvalidChar", error.getMessage());
     }
 }

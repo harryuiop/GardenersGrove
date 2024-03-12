@@ -48,11 +48,12 @@ public class EditGardenController extends GardensSidebar {
                              @RequestParam(name = "gardenSize", required=false) Float gardenSize,
                              Model model) {
         logger.info("POST /edit-garden");
-        boolean gardenError = true;
-        boolean locationError = true;
-        boolean sizeError = true;
+        boolean gardenValid = false;
+        boolean locationValid = false;
+        boolean sizeValid = false;
         try{
-            gardenError = checker.checkName(gardenName);
+            checker.checkName(gardenName);
+            gardenValid = true;
         } catch (IllegalArgumentException e) {
             if (e.getMessage().equals("Blank")) {
                 model.addAttribute("gardenNameError", "Garden name cannot by empty");
@@ -63,7 +64,8 @@ public class EditGardenController extends GardensSidebar {
             }
         }
         try {
-            locationError = checker.checkName(gardenLocation);
+            checker.checkName(gardenLocation);
+            locationValid = true;
         } catch (IllegalArgumentException e) {
             if (e.getMessage().equals("Blank")) {
                 model.addAttribute("gardenLocationError", "Location cannot be empty");
@@ -75,24 +77,25 @@ public class EditGardenController extends GardensSidebar {
         }
 
         try {
-            sizeError = checker.checkSize(gardenSize);
+            checker.checkSize(gardenSize);
+            sizeValid = true;
         } catch (IllegalArgumentException e) {
             model.addAttribute("gardenSizeError", "Garden size must be a positive number");
         }
 
-        if (gardenError && locationError && sizeError) {
+        if (!gardenValid || !locationValid || !sizeValid) {
             return "redirect:/edit-garden?gardenId=" + this.id;
-        } else {
-            if ( gardenService.getGardenById(this.id).isPresent()) {
-                Garden garden = gardenService.getGardenById(this.id).get();
-                garden.setName(gardenName);
-                garden.setLocation(gardenLocation);
-                garden.setSize(gardenSize);
-                gardenService.saveGarden(garden);
-            }
+        }
+
+        if ( gardenService.getGardenById(this.id).isPresent()) {
+            Garden garden = gardenService.getGardenById(this.id).get();
+            garden.setName(gardenName);
+            garden.setLocation(gardenLocation);
+            garden.setSize(gardenSize);
+            gardenService.saveGarden(garden);
         }
         return "redirect:/view-garden?gardenId=" + this.id;
-        }
+    }
 
     /**
      * @param model (map-like) representation of results to be used by thymeleaf
