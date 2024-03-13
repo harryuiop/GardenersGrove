@@ -47,6 +47,19 @@ public class Garden {
         this.plants = new ArrayList<>();
     }
 
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    public void setLocation(String newLocation) {
+        this.location = newLocation;
+    }
+
+    public void setSize(Float newSize) {
+        this.size = newSize;
+    }
+
     public Long getId() {
         return id;
     }

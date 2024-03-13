@@ -30,8 +30,9 @@
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantDescription"> Plant Description: </label>
-                    <input type="text" class="form-control" id="plantDescription" th:name="plantDescription"
-                           th:value="*{plantDescription}" data-cy="plantDescription" autofocus>
+                    <textarea form="plant-form" type="text" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                              class="form-control" id="plantDescription" th:name="plantDescription"
+                              th:text="*{plantDescription}" data-cy="plantDescription" autofocus></textarea>
                     <h5 th:text=${plantDescriptionError}></h5>
                 </div>
                 <br/>
@@ -61,7 +62,7 @@
 
                 <br>
                 <button class="form-button" type="submit">Submit!</button>
-                <a th:href="@{/view-garden}">
+                <a th:href="@{/view-garden(gardenId=${gardenId})}">
                     <button class="form-button" type="button">Cancel</button>
                 </a>
             </form>

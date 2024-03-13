@@ -1,6 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -34,11 +38,16 @@ public class PlantFormController extends GardensSidebar {
 
     private final PlantService plantService;
     private final GardenService gardenService;
+    private final ErrorChecker validate;
+
+    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @Autowired
     public PlantFormController(PlantService plantService, GardenService gardenService) {
         this.plantService = plantService;
         this.gardenService = gardenService;
+        this.validate =  new ErrorChecker();
     }
 
     /**
@@ -60,10 +69,6 @@ public class PlantFormController extends GardensSidebar {
         return "plantForm";
     }
 
-    public boolean checkString(String string) {
-        return string.matches("[a-zA-Z0-9 .,\\-']*");
-    }
-
     /**
      * Submits form and saves the garden to the database.
      * @param plantName The name of the plant as input by the user.
@@ -82,12 +87,9 @@ public class PlantFormController extends GardensSidebar {
                              @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
                              Model model) {
         logger.info("POST /plantform");
-        boolean nameIsValid = false;
-        boolean countIsValid = false;
-        boolean descriptionIsValid = false;
-        boolean dateIsValid = false;
-        boolean gardenIsValid = false;
         boolean imageIsValid = false;
+
+        Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
 
         ImageValidator imageValidator = new ImageValidator(imageFile);
         if (imageFile == null || imageValidator.isValid()) {
@@ -97,43 +99,18 @@ public class PlantFormController extends GardensSidebar {
                 model.addAttribute(entry.getKey(), entry.getValue());
             }
         }
-
-        if (plantName.isBlank() || !checkString(plantName)) {
-            model.addAttribute(
-                    "plantNameError",
-                    "Plant name cannot by empty and must only include letters, numbers, spaces, dots, hyphens or apostrophes");
-        } else {
-            nameIsValid = true;
-        }
-
-        if (plantCount != null && plantCount <= 0) {
-            model.addAttribute("plantCountError", "Plant count must be a positive number");
-        } else {
-            countIsValid = true;
-        }
-
-        if (plantDescription != null && plantDescription.length() > 512) {
-            model.addAttribute("plantDescriptionError", "Plant description must be less than 512 characters");
-        } else {
-            descriptionIsValid = true;
-        }
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
 
         Date plantDate = null;
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
-                plantDate = DateFormat.getDateInstance().parse(plantedDate);
+                plantDate = readFormat.parse(plantedDate);
             }
-            dateIsValid = true;
         } catch (ParseException exception) {
-            model.addAttribute("plantedDateError", "Date not in valid format (DD/MM/YYYY)");
+            errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isPresent()) {
-            gardenIsValid = true;
-        }
-
-        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && imageIsValid && gardenIsValid) {
+        if (errors.isEmpty() && optionalGarden.isPresent()) {
             Garden garden = optionalGarden.get();
             String imageFileName = null;
             if (imageFile != null) {
@@ -148,11 +125,12 @@ public class PlantFormController extends GardensSidebar {
             plantService.savePlant(plant);
             garden.addPlant(plant);
             gardenService.saveGarden(garden);
-
-            model.addAttribute("garden", gardenService.getGardenById(gardenId));
-            gardenService.saveGarden(garden);
+            model.addAttribute("gardenId", gardenId);
             return "redirect:/view-garden?gardenId=" + garden.getId();
         } else {
+            for (Map.Entry<String, String> error : errors.entrySet()) {
+                model.addAttribute(error.getKey(), error.getValue());
+            }
             model.addAttribute("plantName", plantName);
             model.addAttribute("plantCount", plantCount);
             model.addAttribute("plantDescription", plantDescription);

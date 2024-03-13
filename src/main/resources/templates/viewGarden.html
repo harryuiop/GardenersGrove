@@ -24,58 +24,72 @@
         </article>
 
     </div>
-
-    <table>
-        <thead>
-        <tr>
-            <th>Image</th>
-            <th>Name</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:if="${plants.empty}">
-            <td colspan="2"> No responses have been made yet</td>
-        </tr>
-        <tr th:each="plant : ${plants}">
-            <td>
-                <p th:value="${plant.getId()}"></p>
-                <form th:action="@{/view-garden(gardenId=${gardenId})}" method="post" enctype="multipart/form-data">
-                    <div class="form-field">
-                        <div class="plant-image-container">
-
-                            <div th:if="${plant.isImageSet()}">
-                                <img th:src="@{${plant.getImageFilePath()}}" alt="Error showing image"/>
-                            </div>
-
-                            <div th:unless="${plant.isImageSet()}">
-                                <img th:src="@{/images/default-plant.jpg}"/>
-                            </div>
-
-                            <input type="hidden" th:name="plantId" th:value="${plant.getId()}" />
-
-                            <div class="add-image">
-                                <label th:for="${plant.getId()}" class="plus-button">
-                                    <i class="fas fa-plus-circle"></i>
-                                </label>
-                                <input type="file" class="form-control" th:id="${plant.getId()}" th:name="plantImage" accept=".jpg, .svg, .png"
-                                       th:value="*{plantImage}" data-cy="plantImage" onchange="submitForm(id)" autofocus>
-                            </div>
-                        </div>
-
-                        <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageTypeError}></h5>
-                        <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageSizeError}></h5>
-                    </div>
-                    <button class="form-button" type="submit" th:id="${plant.getId()} + submit" style="display: none;">Submit</button>
-                </form>
-            </td>
-            <td><span th:text="${plant.name}"> Name </span></td>
-        </tr>
-        </tbody>
-    </table>
-
+    <a th:href="@{/edit-garden(gardenId=${id})}">
+        <button class="form-button" type="button">Edit Garden</button>
+    </a>
     <a th:href="@{/plantform(gardenId=${garden.get().getId()})}">
         <button class="form-button" type="button">Add Plant</button>
     </a>
+
+    <h2>My Plants</h2>
+    <div id="plant-entries" class="plant-entries">
+        <table>
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Count</th>
+                <th>Date Planted</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${plants.empty}">
+                <td colspan="5"> No plants have been added yet</td>
+            </tr>
+            <tr th:each="plant : ${plants}" class="plant-entry">
+                <td>
+                    <p th:value="${plant.getId()}"></p>
+                    <form th:action="@{/view-garden(gardenId=${gardenId})}" method="post" enctype="multipart/form-data">
+                        <div class="form-field">
+                            <div class="plant-image-container">
+
+                                <div th:if="${plant.isImageSet()}">
+                                    <img th:src="@{${plant.getImageFilePath()}}" alt="Error showing image"/>
+                                </div>
+
+                                <div th:unless="${plant.isImageSet()}">
+                                    <img th:src="@{/images/default-plant.jpg}"/>
+                                </div>
+
+                                <input type="hidden" th:name="plantId" th:value="${plant.getId()}" />
+
+                                <div class="add-image">
+                                    <label th:for="${plant.getId()}" class="plus-button">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </label>
+                                    <input type="file" class="form-control" th:id="${plant.getId()}" th:name="plantImage" accept=".jpg, .svg, .png"
+                                           th:value="*{plantImage}" data-cy="plantImage" onchange="submitForm(id)" autofocus>
+                                </div>
+                            </div>
+
+                            <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageTypeError}></h5>
+                            <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageSizeError}></h5>
+                        </div>
+                        <button class="form-button" type="submit" th:id="${plant.getId()} + submit" style="display: none;">Submit</button>
+                    </form>
+                </td>
+                <td><span th:text="${plant.getName()}"> Name </span></td>
+                <td><span th:text="${plant.getDescription()}"> Description </span></td>
+                <td><span th:text="${plant.getCount()}"> Count </span></td>
+                <td><span th:text="${plant.getDateString()}"> Date Planted </span></td>
+                <td><a th:href="@{/plantform/edit(plantId=${plant.getId()})}">
+                    <button type="button">Edit</button>
+                </a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <div th:unless="${garden.isPresent()}">
         <p>Garden does not exist. Please select or create another garden.</p>
     </div>

@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+
 /**
  * Controller for form example.
  * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
@@ -19,12 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
-
     private final GardenService gardenService;
+    private final ErrorChecker Validator;
 
     @Autowired
     public GardenFormController(GardenService gardenService) {
         this.gardenService = gardenService;
+        this.Validator = new ErrorChecker();
     }
 
     /**
@@ -42,9 +46,7 @@ public class GardenFormController extends GardensSidebar {
         return "gardenForm";
     }
 
-    public boolean checkString(String string) {
-        return string.matches("[a-zA-Z0-9 .,\\-']*");
-    }
+
 
     /**
      * Submits form and saves the garden to the database.
@@ -59,43 +61,17 @@ public class GardenFormController extends GardensSidebar {
                              @RequestParam(name = "gardenLocation") String gardenLocation,
                              @RequestParam(name = "gardenSize", required = false) Float gardenSize,
                              Model model) {
-        logger.info("POST /gardenform");
-        boolean nameIsValid = false;
-        boolean locationIsValid = false;
-        boolean sizeIsValid = false;
-
-        if (gardenName.isBlank()) {
-            model.addAttribute("gardenNameError", "Garden name cannot by empty");
-        } else if (!checkString(gardenName)) {
-            model.addAttribute(
-                    "gardenNameError",
-                    "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
-        } else {
-            nameIsValid = true;
-        }
-
-        if (gardenLocation.isBlank()) {
-            model.addAttribute("gardenLocationError", "Location cannot be empty");
-        } else if (!checkString(gardenLocation)) {
-            model.addAttribute(
-                    "gardenLocationError",
-                    "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
-            );
-        } else {
-            locationIsValid = true;
-        }
-
-        if (gardenSize != null && gardenSize <= 0) {
-            model.addAttribute("gardenSizeError", "Garden size must be a positive number");
-        } else {
-            sizeIsValid = true;
-        }
-
-        if (nameIsValid && locationIsValid && sizeIsValid) {
+        logger.info("POST /form");
+        Map<String, String> errors = Validator.gardenFormErrors(gardenName, gardenLocation, gardenSize);
+        if (errors.isEmpty()) {
             Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
             gardenService.saveGarden(garden);
             return "redirect:/view-garden?gardenId=" + garden.getId();
-        } else {
+        }
+        else {
+            for (Map.Entry<String, String> error : errors.entrySet()) {
+                model.addAttribute(error.getKey(), error.getValue());
+            }
             model.addAttribute("gardenName", gardenName);
             model.addAttribute("gardenLocation", gardenLocation);
             model.addAttribute("gardenSize", gardenSize);
