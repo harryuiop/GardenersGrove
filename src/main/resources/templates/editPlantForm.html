@@ -38,7 +38,7 @@
                 <div class="form-field">
                     <label class="form-input" for="plantedDate"> Date Planted: </label>
                     <input type="date" class="form-control" id="plantedDate" th:name="plantedDate"
-                           th:value="*{plantedDate}" data-cy="plantedDate" placeholder="DD/MM/YYYY" autofocus>
+                           th:value="${plantedDate}" data-cy="plantedDate" autofocus>
                     <h5 th:text=${plantedDateError}></h5>
                 </div>
                 <br/>

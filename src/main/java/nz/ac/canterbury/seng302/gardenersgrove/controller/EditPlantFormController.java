@@ -33,8 +33,7 @@ public class EditPlantFormController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final ErrorChecker validate;
-    private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
-    private final DateFormat readFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
     private Long id;
 
     @Autowired
@@ -54,16 +53,24 @@ public class EditPlantFormController extends GardensSidebar {
         logger.info("GET /plantform/edit");
         this.updateGardensSidebar(model, gardenService);
         this.id = plantId;
+        Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
+        if (optionalPlant.isEmpty()) {
+            return "redirect:/";
+        }
+        Plant plant = optionalPlant.get();
+
+        String date = readFormat.format(plant.getPlantedOn());
+
         model.addAttribute("plantNameError", "");
         model.addAttribute("plantCountError", "");
         model.addAttribute("plantDescriptionError", "");
         model.addAttribute("plantedDateError", "");
-        model.addAttribute("plantName", plantService.getPlantById(plantId).get().getName());
-        model.addAttribute("plantCount", plantService.getPlantById(plantId).get().getCount());
-        model.addAttribute("plantDescription", plantService.getPlantById(plantId).get().getDescription());
-        model.addAttribute("plantedDate", plantService.getPlantById(plantId).get().getPlantedOn());
+        model.addAttribute("plantName", plant.getName());
+        model.addAttribute("plantCount", plant.getCount());
+        model.addAttribute("plantDescription", plant.getDescription());
+        model.addAttribute("plantedDate", date);
         model.addAttribute("plantId", plantId);
-        model.addAttribute("gardenId", plantService.getPlantById(plantId).get().getGardenId());
+        model.addAttribute("gardenId", plant.getGardenId());
         return "editPlantForm";
     }
 

@@ -63,8 +63,15 @@ public class Plant {
         return description;
     }
 
-    public Date getPlantedOn() { return plantedOn; }
-    public String getDateString() { return printFormat.format(plantedOn);};
+    public Date getPlantedOn() {
+        return plantedOn;
+    }
+    public String getDateString() {
+        if (plantedOn == null) {
+            return null;
+        }
+        return printFormat.format(plantedOn);
+    };
 
     public Long getGardenId() { return gardenId; }
 
