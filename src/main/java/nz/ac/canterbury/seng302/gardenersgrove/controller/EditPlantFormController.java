@@ -105,6 +105,9 @@ public class EditPlantFormController extends GardensSidebar {
 
             return "redirect:/view-garden?gardenId=" + plant.getGardenId();
         } else {
+            for (Map.Entry<String, String> error : errors.entrySet()) {
+                model.addAttribute(error.getKey(), error.getValue());
+            }
             model.addAttribute("plantName", plantName);
             model.addAttribute("plantCount", plantCount);
             model.addAttribute("plantDescription", plantDescription);
