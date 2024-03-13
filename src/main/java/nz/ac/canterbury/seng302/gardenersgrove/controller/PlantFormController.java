@@ -2,7 +2,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -110,7 +108,7 @@ public class PlantFormController extends GardensSidebar {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        if (errors.isEmpty() && optionalGarden.isPresent()) {
+        if (errors.isEmpty() && optionalGarden.isPresent() && imageIsValid) {
             Garden garden = optionalGarden.get();
             String imageFileName = null;
             if (imageFile != null) {
@@ -135,7 +133,7 @@ public class PlantFormController extends GardensSidebar {
             model.addAttribute("plantCount", plantCount);
             model.addAttribute("plantDescription", plantDescription);
             model.addAttribute("plantedDate", plantedDate);
-            model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
+            optionalGarden.ifPresent(garden -> model.addAttribute("gardenName", garden.getName()));
             model.addAttribute("gardenId", gardenId);
             return "plantForm";
         }

@@ -3,9 +3,9 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,18 +13,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-/**
- * To be discussed withn team....
- */
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PlantFormControllerTest {
+class PlantFormControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,7 +28,8 @@ public class PlantFormControllerTest {
     @Autowired
     private PlantRepository plantRepository;
 
-    private final int BYTES_IN_KBS = 1024;
+    @Autowired
+    private GardenService gardenService;
 
     @BeforeEach
     void setUpDefaultRepository() {
@@ -45,15 +42,17 @@ public class PlantFormControllerTest {
         int plantCount = 1;
         String plantDescription = "Test Description";
         String plantedDate = "01/01/2020";
+        Garden garden = new Garden("Test Garden", "Test Location", 1f);
+        gardenService.saveGarden(garden);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/plantform")
                         .param("plantName", plantName)
                         .param("plantCount", Integer.toString(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate))
+                        .param("plantedDate", plantedDate)
+                        .param("gardenId", garden.getId().toString()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/demo?plantId=*"));
-
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -61,15 +60,7 @@ public class PlantFormControllerTest {
         assertEquals(plantName, plant.getName());
         assertEquals(plantCount, plant.getCount());
         assertEquals(plantDescription, plant.getDescription());
-        // assertEquals(new Date(), plant.getPlantedOn());
-        assertEquals(plant.getImage().length, 0);
+//         assertEquals(new Date(), plant.getPlantedOn());
+        assertNull(plant.getImageFileName());
     }
-
-    private byte[] fakeByteArray(int sizeInMB) {
-        int sizeInBytes = sizeInMB * BYTES_IN_KBS * BYTES_IN_KBS;
-        byte[] fakeByteArray = new byte[sizeInBytes];
-        Arrays.fill(fakeByteArray, (byte) 0);
-        return fakeByteArray;
-    }
-
 }
