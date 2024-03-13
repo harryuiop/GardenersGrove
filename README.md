@@ -29,7 +29,8 @@ By default, the application will run on local port 8080 [http://localhost:8080](
 > - Create a new garden using "Add New Garden" button in the top left corner of the page.
 > - Edit garden and add plants can only be accessed through created gardens.
 > - View gardens either through the My Gardens page or by clicking their name on the sidebar.
->
+> - On the plant form, images can be added by clicking the semi-transparent "+" icon in the top right of the image.
+    > This can be done in the view garden, add plant, and edit plant pages.
 
 ## How to run tests
 
