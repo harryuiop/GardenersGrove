@@ -30,7 +30,7 @@
                 <div class="form-field">
                     <label class="form-input" for="plantDescription"> Plant Description: </label>
                     <textarea form="plant-form" type="text" class="form-control" id="plantDescription" th:name="plantDescription"
-                              th:value="*{plantDescription}" data-cy="plantDescription" autofocus></textarea>
+                              th:text="*{plantDescription}" data-cy="plantDescription" autofocus></textarea>
                     <h5 th:text=${plantDescriptionError}></h5>
                 </div>
                 <br/>
