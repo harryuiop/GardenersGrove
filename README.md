@@ -26,16 +26,14 @@ By default, the application will run on local port 8080 [http://localhost:8080](
 
 ### 2 - Using the application
 
-> You may want to include information here about how to use the application, notably:
-> - default user credentials if required
-> - link to home/login page
-> - disclosing known issues (and workarounds if applicable)
-> - ...
+> - Create a new garden using "Add New Garden" button in the top left corner of the page.
+> - Edit garden and add plants can only be accessed through created gardens.
+> - View gardens either through the My Gardens page or by clicking their name on the sidebar.
 >
 
 ## How to run tests
 
-> Once you have some tests written make sure you detail how to run them, especially if there are special requirements.
+> Run ./gradlew test
 
 ## Todo (Sprint 1)
 
