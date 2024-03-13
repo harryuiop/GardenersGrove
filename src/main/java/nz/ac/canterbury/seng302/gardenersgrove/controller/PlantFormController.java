@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,8 @@ public class PlantFormController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final ErrorChecker validate;
+
+    private final DateFormat nzFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @Autowired
     public PlantFormController(PlantService plantService, GardenService gardenService) {
@@ -59,10 +62,6 @@ public class PlantFormController extends GardensSidebar {
         return "plantForm";
     }
 
-    public boolean checkString(String string) {
-        return string.matches("[a-zA-Z0-9 .,\\-']*");
-    }
-
     /**
      * Submits form and saves the garden to the database.
      * @param plantName The name of the plant as input by the user.
@@ -87,7 +86,7 @@ public class PlantFormController extends GardensSidebar {
         Date plantDate = null;
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
-                plantDate = DateFormat.getDateInstance().parse(plantedDate);
+                plantDate = nzFormat.parse(plantedDate);
             }
         } catch (ParseException exception) {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
