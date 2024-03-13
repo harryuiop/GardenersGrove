@@ -1,12 +1,12 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageResults;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidation;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
-import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Controller for form example.
@@ -80,16 +80,23 @@ public class PlantFormController extends GardensSidebar {
                              @RequestParam(name = "plantedDate", required = false) String plantedDate,
                              @RequestParam(name = "gardenId") Long gardenId,
                              @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
-                             Model model) throws IOException {
+                             Model model) {
         logger.info("POST /plantform");
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
         boolean dateIsValid = false;
         boolean gardenIsValid = false;
+        boolean imageIsValid = false;
 
-        ImageValidation imageValidation = new ImageValidation();
-        ImageResults imageResults = imageValidation.getImageResults(imageFile);
+        ImageValidator imageValidator = new ImageValidator(imageFile);
+        if (imageFile == null || imageValidator.isValid()) {
+            imageIsValid = true;
+        } else {
+            for (Map.Entry<String, String> entry : imageValidator.getErrorMessages().entrySet()) {
+                model.addAttribute(entry.getKey(), entry.getValue());
+            }
+        }
 
         if (plantName.isBlank() || !checkString(plantName)) {
             model.addAttribute(
@@ -126,13 +133,22 @@ public class PlantFormController extends GardensSidebar {
             gardenIsValid = true;
         }
 
-        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && gardenIsValid) {
-            logger.info(plantedDate);
+        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && imageIsValid && gardenIsValid) {
             Garden garden = optionalGarden.get();
-            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate);
+            String imageFileName = null;
+            if (imageFile != null) {
+                try {
+                    imageFileName = ImageStore.storeImage(imageFile);
+                } catch (IOException error) {
+                    logger.error("Error saving plant image", error);
+                    return "plantForm";
+                }
+            }
+            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, imageFileName, gardenId);
             plantService.savePlant(plant);
             garden.addPlant(plant);
             gardenService.saveGarden(garden);
+
             model.addAttribute("garden", gardenService.getGardenById(gardenId));
             gardenService.saveGarden(garden);
             return "redirect:/view-garden?gardenId=" + garden.getId();

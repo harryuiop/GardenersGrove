@@ -1,10 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Base64;
 import java.util.Date;
 
 /**
@@ -14,7 +11,7 @@ import java.util.Date;
 public class Plant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(nullable = false)
     private String name;
@@ -28,12 +25,8 @@ public class Plant {
     @Column()
     private Date plantedOn;
 
-    @Lob
-    @Column(name = "image", columnDefinition="BLOB")
-    private byte[] image;
-
-    @Column()
-    private String imageType;
+    @Column
+    private String imageFileName;
 
     @Column()
     private Long gardenId;
@@ -45,13 +38,12 @@ public class Plant {
     }
 
 
-    public Plant(String name, Integer count, String description, Date plantedOn, byte[] image, String imageType, Long gardenId) {
+    public Plant(String name, Integer count, String description, Date plantedOn, String imageFileName, Long gardenId) {
         this.name = name;
         this.count = count;
         this.description = description;
         this.plantedOn = plantedOn;
-        this.image = image;
-        this.imageType = imageType;
+        this.imageFileName = imageFileName;
         this.gardenId = gardenId;
     }
 
@@ -71,42 +63,40 @@ public class Plant {
         return description;
     }
 
-    public byte[] getImage() { return image; }
+    public String getImageFileName() {
+        return imageFileName;
+    }
 
-    public Date getPlantedOn() { return plantedOn; }
+    public String getImageFilePath() {
+        return "/uploads/" + imageFileName;
+    }
 
-    public Long getGardenId() { return gardenId; }
+    public Date getPlantedOn() {
+        return plantedOn;
+    }
+
+    public Long getGardenId() {
+        return gardenId;
+    }
 
     public void setName(String name) {
-        this.name=name;
+        this.name = name;
     }
 
     public void setCount(Integer count) {
-        this.count=count;
+        this.count = count;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setPlantedOn(Date plantedOn) { this.plantedOn = plantedOn; }
-
-
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setPlantedOn(Date plantedOn) {
+        this.plantedOn = plantedOn;
     }
 
-    public void setImageType(String imageType) {
-        this.imageType = imageType;
-    }
-
-    /**
-     * Get image in base64 String format to be shown in the frontend via html.
-     * @return Image in base64 String format
-     */
-    public String getBase64Image() {
-        String base64Image = Base64.getEncoder().encodeToString(image);
-        return "data:" + imageType + ";base64," + base64Image;
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
     }
 
     /**
@@ -115,11 +105,7 @@ public class Plant {
      * @return If image is set.
      */
     public boolean isImageSet() {
-        if (image == null) {
-            return false;
-        } else {
-            return image.length > 0;
-        }
+        return imageFileName != null;
     }
 
     @Override
@@ -132,4 +118,5 @@ public class Plant {
                 ", plantedOn=" + plantedOn +
                 '}';
     }
+
 }

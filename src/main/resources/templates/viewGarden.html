@@ -44,7 +44,7 @@
                         <div class="plant-image-container">
 
                             <div th:if="${plant.isImageSet()}">
-                                <img th:src="${plant.getBase64Image()}" alt="Error showing image"/>
+                                <img th:src="@{${plant.getImageFilePath()}}" alt="Error showing image"/>
                             </div>
 
                             <div th:unless="${plant.isImageSet()}">
