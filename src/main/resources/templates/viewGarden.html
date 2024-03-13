@@ -23,9 +23,7 @@
         </article>
 
     </div>
-    <a th:href="@{/plantform(gardenId=${garden.get().getId()})}">
-        <button class="form-button" type="button">Add Plant</button>
-    </a>
+    <a th:href="@{/edit-garden(gardenId=${id})}"><button class="form-button" type="button">Edit Garden</button></a>
     <div th:unless="${garden.isPresent()}">
         <p>Garden does not exist. Please select or create another garden.</p>
     </div>
