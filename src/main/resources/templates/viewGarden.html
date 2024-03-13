@@ -23,7 +23,40 @@
         </article>
 
     </div>
-    <a th:href="@{/edit-garden(gardenId=${id})}"><button class="form-button" type="button">Edit Garden</button></a>
+    <a th:href="@{/edit-garden(gardenId=${id})}">
+        <button class="form-button" type="button">Edit Garden</button>
+    </a>
+    <a th:href="@{/plantform(gardenId=${garden.get().getId()})}">
+        <button class="form-button" type="button">Add Plant</button>
+    </a>
+
+    <h2>My Plants</h2>
+    <div id="plant-entries" class="plant-entries">
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Count</th>
+                <th>Date Planted</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${plants.empty}">
+                <td colspan="4"> No plants have been added yet</td>
+            </tr>
+            <tr th:each="plant : ${plants}" class="plant-entry">
+                <td><span th:text="${plant.getName()}"> Name </span></td>
+                <td><span th:text="${plant.getDescription()}"> Description </span></td>
+                <td><span th:text="${plant.getCount()}"> Count </span></td>
+                <td><span th:text="${plant.getDateString()}"> Date Planted </span></td>
+                <td><a th:href="@{/plantform/edit(plantId=${plant.getId()})}">
+                    <button type="button">Edit</button>
+                </a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <div th:unless="${garden.isPresent()}">
         <p>Garden does not exist. Please select or create another garden.</p>
     </div>

@@ -2,7 +2,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,20 +27,20 @@ import java.util.Optional;
  * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
  */
 @Controller
-public class PlantFormController extends GardensSidebar {
-    Logger logger = LoggerFactory.getLogger(PlantFormController.class);
+public class EditPlantFormController extends GardensSidebar {
+    Logger logger = LoggerFactory.getLogger(EditPlantFormController.class);
+
     private final PlantService plantService;
     private final GardenService gardenService;
     private final ErrorChecker validate;
-
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private Long id;
 
     @Autowired
-    public PlantFormController(PlantService plantService, GardenService gardenService) {
+    public EditPlantFormController(PlantService plantService, GardenService gardenService) {
         this.plantService = plantService;
         this.gardenService = gardenService;
-        this.validate =  new ErrorChecker();
+        this.validate = new ErrorChecker();
     }
 
     /**
@@ -50,17 +48,30 @@ public class PlantFormController extends GardensSidebar {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
-    @GetMapping("/plantform")
-    public String form(Model model, @RequestParam(name="gardenId") Long gardenId) {
-        logger.info("GET /plantform");
+    @GetMapping("/plantform/edit")
+    public String form(Model model, @RequestParam(name="plantId") Long plantId) {
+        logger.info("GET /plantform/edit");
         this.updateGardensSidebar(model, gardenService);
+        this.id = plantId;
+        Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
+        if (optionalPlant.isEmpty()) {
+            return "redirect:/";
+        }
+        Plant plant = optionalPlant.get();
+
+        String date = readFormat.format(plant.getPlantedOn());
+
         model.addAttribute("plantNameError", "");
         model.addAttribute("plantCountError", "");
         model.addAttribute("plantDescriptionError", "");
         model.addAttribute("plantedDateError", "");
-        model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
-        model.addAttribute("gardenId", gardenId);
-        return "plantForm";
+        model.addAttribute("plantName", plant.getName());
+        model.addAttribute("plantCount", plant.getCount());
+        model.addAttribute("plantDescription", plant.getDescription());
+        model.addAttribute("plantedDate", date);
+        model.addAttribute("plantId", plantId);
+        model.addAttribute("gardenId", plant.getGardenId());
+        return "editPlantForm";
     }
 
     /**
@@ -72,20 +83,20 @@ public class PlantFormController extends GardensSidebar {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
      */
-    @PostMapping("/plantform")
+    @PostMapping("/plantform/edit")
     public String submitForm(@RequestParam(name = "plantName") String plantName,
                              @RequestParam(name = "plantCount", required = false) Integer plantCount,
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
                              @RequestParam(name = "plantedDate", required = false) String plantedDate,
-                             @RequestParam(name = "gardenId") Long gardenId,
+                             @RequestParam(name = "plantId") Long plantId,
                              Model model) {
-        logger.info("POST /form");
+        logger.info("POST /plantform/edit");
+
         Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
 
-        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        Optional<Garden> optionalGarden = gardenService.getGardenById(plantService.getPlantById(plantId).get().getGardenId());
 
         Date plantDate = null;
-        logger.info(plantedDate);
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
                 plantDate = readFormat.parse(plantedDate);
@@ -95,13 +106,14 @@ public class PlantFormController extends GardensSidebar {
         }
 
         if (errors.isEmpty() && optionalGarden.isPresent()) {
-            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, gardenId);
+            Plant plant = plantService.getPlantById(this.id).get();
+            plant.setName(plantName);
+            plant.setCount(plantCount);
+            plant.setDescription(plantDescription);
+            plant.setPlantedOn(plantDate);
             plantService.savePlant(plant);
-            Garden garden = optionalGarden.get();
-            garden.addPlant(plant);
-            gardenService.saveGarden(garden);
-            model.addAttribute("gardenId", gardenId);
-            return "redirect:/view-garden?gardenId=" + garden.getId();
+
+            return "redirect:/view-garden?gardenId=" + plant.getGardenId();
         } else {
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
@@ -110,9 +122,10 @@ public class PlantFormController extends GardensSidebar {
             model.addAttribute("plantCount", plantCount);
             model.addAttribute("plantDescription", plantDescription);
             model.addAttribute("plantedDate", plantedDate);
-            model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
-            model.addAttribute("gardenId", gardenId);
-            return "plantForm";
+            model.addAttribute("plantId", plantId);
+            model.addAttribute("gardenName", gardenService.getGardenById(plantService.getPlantById(plantId).get().getGardenId()).get().getName());
+            model.addAttribute("gardenId", plantService.getPlantById(plantId).get().getGardenId());
+            return "editPlantForm";
         }
     }
 }

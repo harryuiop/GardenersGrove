@@ -46,18 +46,16 @@ nav button {
 
 .content {
     margin-top: 60px;
-    margin-left: 200px;
+    margin-left: 250px;
     padding: 10px;
     color: var(--dark-neutral);
 }
 
 .form-input {
-    margin-left: 50px;
     line-height: 50px;
 }
 
 .form-button {
-    margin-left: 50px;
     line-height: 20px;
     margin-top: 20px;
 }
@@ -88,9 +86,6 @@ nav button {
     color: var(--dark-color);
 }
 
-.list-container {
-}
-
 .garden-item {
     display: flex;
     background-color: var(--light-color);
@@ -112,3 +107,15 @@ nav button {
     display: inline-block;
 }
 
+.plant-entry{
+    min-height: 50px;
+}
+
+.plant-entries {
+    max-height: 550px;
+    overflow-y: scroll;
+}
+
+textarea {
+    width: 250px;
+}

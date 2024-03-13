@@ -2,6 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -19,11 +21,16 @@ public class Plant {
     @Column()
     private Integer count;
 
-    @Column()
+    @Column(length = 512)
     private String description;
 
     @Column()
     private Date plantedOn;
+
+    @Column()
+    private Long gardenId;
+
+    private static final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
      * JPA required no-args constructor
@@ -32,11 +39,12 @@ public class Plant {
     }
 
 
-    public Plant(String name, Integer count, String description, Date plantedOn) {
+    public Plant(String name, Integer count, String description, Date plantedOn, Long gardenId) {
         this.name = name;
         this.count = count;
         this.description = description;
         this.plantedOn = plantedOn;
+        this.gardenId = gardenId;
     }
 
     public Long getId() {
@@ -58,6 +66,28 @@ public class Plant {
     public Date getPlantedOn() {
         return plantedOn;
     }
+    public String getDateString() {
+        if (plantedOn == null) {
+            return null;
+        }
+        return printFormat.format(plantedOn);
+    };
+
+    public Long getGardenId() { return gardenId; }
+
+    public void setName(String name) {
+        this.name=name;
+    }
+
+    public void setCount(Integer count) {
+        this.count=count;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPlantedOn(Date plantedOn) { this.plantedOn = plantedOn; }
 
     @Override
     public String toString() {

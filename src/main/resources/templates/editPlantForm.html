@@ -12,18 +12,18 @@
     <h1 th:text="${gardenName}"></h1>
     <div>
         <div>
-            <form th:action="@{/plantform(gardenId=${gardenId})}" method="post" id="plant-form">
+            <form th:action="@{/plantform/edit(plantId=${plantId})}" method="post" id="plant-form">
                 <div class="form-field">
                     <label class="form-input" for="plantName"> Plant Name: </label>
                     <input type="text" class="form-control" id="plantName" th:name="plantName"
-                           th:value="*{plantName}" data-cy="plantName" autofocus>
+                           th:value="${plantName}" data-cy="plantName" autofocus>
                     <h5 th:text=${plantNameError}></h5>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantCount"> Number of these plants to add to garden: </label>
                     <input type="number" step="1" class="form-control" id="plantCount" th:name="plantCount"
-                           th:value="*{plantCount}" data-cy="plantCount" autofocus>
+                           th:value="${plantCount}" data-cy="plantCount" autofocus>
                     <h5 th:text=${plantCountError}></h5>
                 </div>
                 <br/>
@@ -31,14 +31,14 @@
                     <label class="form-input" for="plantDescription"> Plant Description: </label>
                     <textarea form="plant-form" type="text" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
                               class="form-control" id="plantDescription" th:name="plantDescription"
-                              th:text="*{plantDescription}" data-cy="plantDescription" autofocus></textarea>
+                           th:text="${plantDescription}" data-cy="plantDescription" autofocus></textarea>
                     <h5 th:text=${plantDescriptionError}></h5>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantedDate"> Date Planted: </label>
                     <input type="date" class="form-control" id="plantedDate" th:name="plantedDate"
-                           th:value="*{plantedDate}" data-cy="plantedDate" placeholder="DD/MM/YYYY" autofocus>
+                           th:value="${plantedDate}" data-cy="plantedDate" autofocus>
                     <h5 th:text=${plantedDateError}></h5>
                 </div>
                 <br/>
