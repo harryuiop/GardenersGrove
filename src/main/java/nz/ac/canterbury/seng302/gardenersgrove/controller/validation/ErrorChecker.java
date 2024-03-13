@@ -1,9 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
-import org.springframework.ui.Model;
-
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,8 +8,7 @@ import java.util.Map;
  */
 public class ErrorChecker {
 
-    public ErrorChecker(){};
-    private FormValuesValidator valuesValidator = new FormValuesValidator();
+    private final FormValuesValidator valuesValidator = new FormValuesValidator();
 
     /**
      * Checks for valid user entries that meet the given requirements
