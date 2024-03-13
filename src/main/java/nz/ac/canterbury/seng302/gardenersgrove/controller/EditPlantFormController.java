@@ -33,7 +33,8 @@ public class EditPlantFormController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final ErrorChecker validate;
-    private final DateFormat nzFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private final DateFormat readFormat = new SimpleDateFormat("yyyy/MM/dd");
     private Long id;
 
     @Autowired
@@ -91,7 +92,7 @@ public class EditPlantFormController extends GardensSidebar {
         Date plantDate = null;
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
-                plantDate = nzFormat.parse(plantedDate);
+                plantDate = readFormat.parse(plantedDate);
             }
         } catch (ParseException exception) {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");

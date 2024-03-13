@@ -2,6 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -27,6 +29,8 @@ public class Plant {
 
     @Column()
     private Long gardenId;
+
+    private static final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
      * JPA required no-args constructor
@@ -60,6 +64,7 @@ public class Plant {
     }
 
     public Date getPlantedOn() { return plantedOn; }
+    public String getDateString() { return printFormat.format(plantedOn);};
 
     public Long getGardenId() { return gardenId; }
 
