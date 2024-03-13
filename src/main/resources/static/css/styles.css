@@ -116,3 +116,6 @@ nav button {
     overflow-y: scroll;
 }
 
+textarea {
+    width: 250px;
+}
