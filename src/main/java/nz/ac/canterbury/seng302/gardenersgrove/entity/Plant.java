@@ -95,6 +95,11 @@ public class Plant {
     public void setImage(byte[] image) {
         this.image = image;
     }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
     /**
      * Get image in base64 String format to be shown in the frontend via html.
      * @return Image in base64 String format
@@ -102,6 +107,19 @@ public class Plant {
     public String getBase64Image() {
         String base64Image = Base64.getEncoder().encodeToString(image);
         return "data:" + imageType + ";base64," + base64Image;
+    }
+
+    /**
+     * Check if image has been set to be used in frontend via html.
+     *
+     * @return If image is set.
+     */
+    public boolean isImageSet() {
+        if (image == null) {
+            return false;
+        } else {
+            return image.length > 0;
+        }
     }
 
     @Override

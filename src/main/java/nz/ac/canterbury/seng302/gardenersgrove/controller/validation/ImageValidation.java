@@ -56,11 +56,8 @@ public class ImageValidation {
         byte[] imageBytes = new byte[0];
         String imageType = null;
 
-        System.out.println("gdssdg");
-
         if (imageFile.isEmpty()) {
             imageIsValid = true;
-            System.out.println("gdssdggfdhdh");
         } else {
             imageBytes = imageFile.getBytes(); // Convert MultipartFile to byte[] to be saved in database
             imageType = imageFile.getContentType();

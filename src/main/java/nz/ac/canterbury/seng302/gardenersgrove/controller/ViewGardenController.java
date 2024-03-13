@@ -62,9 +62,10 @@ public class ViewGardenController extends GardensSidebar {
         }
     }
 
-    private void savePlantImage(Long plantId, Long gardenId, byte[] imageBytes) {
+    private void savePlantImage(Long plantId, Long gardenId, byte[] imageBytes, String imageType) {
         Plant plant = plantService.getPlantById(plantId).get();
         plant.setImage(imageBytes);
+        plant.setImageType(imageType);
         plantService.savePlant(plant);
         Garden garden = gardenService.getGardenById(gardenId).get();
         gardenService.saveGarden(garden);
@@ -83,19 +84,21 @@ public class ViewGardenController extends GardensSidebar {
      */
     @PostMapping("/view-garden")
     public String submitPlantImage(@RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
-                             @RequestParam(name="plantId") Long plantId,
-                             @RequestParam(name = "gardenId") Long gardenId,
-                             Model model) throws IOException {
+                                   @RequestParam(name = "gardenId") Long gardenId,
+                                   @RequestParam(name = "plantId") Long plantId,
+                                   Model model) throws IOException {
 
         logger.info("POST/ plant image");
+        logger.info("Garden id: " + gardenId);
         logger.info("Plant Id: " + plantId);
 
         ImageValidation imageValidation = new ImageValidation();
         ImageResults imageResults = imageValidation.getImageResults(imageFile);
 
         if (imageResults.getImageIsValid()) {
-            this.savePlantImage(plantId, gardenId, imageResults.getImageBytes());
+            this.savePlantImage(plantId, gardenId, imageResults.getImageBytes(), imageResults.getImageType());
         } else {
+            model.addAttribute("selectedPlantId", plantId);
             if (!imageResults.getImageIsValidType()) {
                 model.addAttribute("plantImageTypeError", "Image must be of type png, jpg or svg.");
             }
