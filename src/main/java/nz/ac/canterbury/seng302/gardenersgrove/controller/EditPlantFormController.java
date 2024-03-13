@@ -58,8 +58,12 @@ public class EditPlantFormController extends GardensSidebar {
             return "redirect:/";
         }
         Plant plant = optionalPlant.get();
-
-        String date = readFormat.format(plant.getPlantedOn());
+        String date;
+        if (plant.getPlantedOn() == null) {
+            date = null;
+        } else {
+            date = readFormat.format(plant.getPlantedOn());
+        }
 
         model.addAttribute("plantNameError", "");
         model.addAttribute("plantCountError", "");
