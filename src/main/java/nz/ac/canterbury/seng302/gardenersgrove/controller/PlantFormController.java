@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Controller for form example.
@@ -76,7 +79,8 @@ public class PlantFormController extends GardensSidebar {
         boolean nameIsValid = false;
         boolean countIsValid = false;
         boolean descriptionIsValid = false;
-        boolean dateIsValid = true;
+        boolean dateIsValid = false;
+        boolean gardenIsValid = false;
 
         if (plantName.isBlank() || !checkString(plantName)) {
             model.addAttribute(
@@ -98,10 +102,26 @@ public class PlantFormController extends GardensSidebar {
             descriptionIsValid = true;
         }
 
-        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
-            Plant plant = new Plant(plantName, plantCount, plantDescription, plantedDate, gardenId);
+        Date plantDate = null;
+        try {
+            if (plantedDate != null && !plantedDate.isBlank()) {
+                plantDate = DateFormat.getDateInstance().parse(plantedDate);
+            }
+            dateIsValid = true;
+        } catch (ParseException exception) {
+            model.addAttribute("plantedDateError", "Date not in valid format (DD/MM/YYYY)");
+        }
+
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isPresent()) {
+            gardenIsValid = true;
+        }
+
+        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid && gardenIsValid) {
+            logger.info(plantedDate);
+            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, gardenId);
             plantService.savePlant(plant);
-            Garden garden = gardenService.getGardenById(gardenId).get();
+            Garden garden = optionalGarden.get();
             garden.addPlant(plant);
             gardenService.saveGarden(garden);
             model.addAttribute("gardenId", gardenId);
