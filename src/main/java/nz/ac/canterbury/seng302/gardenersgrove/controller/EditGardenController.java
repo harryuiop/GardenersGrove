@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.GardenFormSubmission;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
@@ -11,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.GardenFormSubmission;
 
 import java.util.Map;
 import java.util.Optional;
@@ -62,7 +62,10 @@ public class EditGardenController extends GardensSidebar {
             }
         } else {
             gardenValidator.addErrorAttributes(model, errors);
-            this.addEditGardenAttributes(gardenId, model);
+            model.addAttribute("displayGardenName", gardenName);
+            model.addAttribute("displayGardenLocation", gardenLocation);
+            model.addAttribute("displayGardenSize", gardenSize);
+            model.addAttribute("gardenId", gardenId);
             return "editGarden";
         }
         return "redirect:/view-garden?gardenId=" + gardenId;
@@ -77,11 +80,6 @@ public class EditGardenController extends GardensSidebar {
     @GetMapping("/edit-garden")
     public String home(@RequestParam(name = "gardenId", required = true) Long gardenId, Model model) {
         logger.info("GET /edit-garden");
-        this.addEditGardenAttributes(gardenId, model);
-        return "editGarden";
-    }
-
-    private void addEditGardenAttributes(Long gardenId, Model model) {
         this.updateGardensSidebar(model, gardenService);
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
@@ -92,5 +90,6 @@ public class EditGardenController extends GardensSidebar {
             model.addAttribute("displayGardenSize", garden.getSize());
             model.addAttribute("gardenId", gardenId);
         }
+        return "editGarden";
     }
 }

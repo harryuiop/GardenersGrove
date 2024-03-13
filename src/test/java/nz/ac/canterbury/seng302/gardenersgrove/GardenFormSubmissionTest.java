@@ -9,17 +9,14 @@ import org.springframework.context.annotation.Import;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 @DataJpaTest
 @Import(GardenFormSubmission.class)
 
 class GardenFormSubmissionTest {
     GardenFormSubmission gardenFormSubmission = new GardenFormSubmission();
-//    FormValuesValidator valuesValidator = Mockito
 
     @Test
-    public void testAllValuesEnteredValid() {
+    public void formErrors_ValidInputs_returnsNull() {
         String name = "Garden 1";
         String location = "Christchurch";
         Float size = 1.5f;
@@ -28,7 +25,7 @@ class GardenFormSubmissionTest {
         Assertions.assertEquals(correctErrors, errors);
     }
     @Test
-    public void testEnteredNegativeSize() {
+    public void formErrors_NegativeSize_returnsNegativeError() {
         String name = "Garden 1";
         String location = "Christchurch";
         Float size = -1.5f;
@@ -39,7 +36,7 @@ class GardenFormSubmissionTest {
     }
 
     @Test
-    public void testEnteredBlankName() {
+    public void formErrors_blankName_returnBlankError() {
         String name = "";
         String location = "Christchurch";
         Float size = 1.5f;
@@ -49,7 +46,7 @@ class GardenFormSubmissionTest {
         Assertions.assertEquals(errors, correctErrors);
     }
     @Test
-    public void testEnteredBlankLocation() {
+    public void formErrors_blankLocation_returnsBlankError() {
         String name = "Garden 1";
         String location = "";
         Float size = 1.5f;
@@ -60,7 +57,7 @@ class GardenFormSubmissionTest {
     }
 
     @Test
-    public void testEnteredBlankSize() {
+    public void formErrors_blankSize_returnsNull() {
         String name = "Garden 1";
         String location = "Christchurch";
         Float size = null;
@@ -70,7 +67,7 @@ class GardenFormSubmissionTest {
     }
 
     @Test
-    public void testEnteredBlankNameAndLocation() {
+    public void formErrors_blankNameAndLocation_returnsBlankErrors() {
         String name = "";
         String location = " ";
         Float size = 1.5f;
@@ -82,7 +79,7 @@ class GardenFormSubmissionTest {
     }
 
     @Test
-    public void testEnteredInvalidName() {
+    public void formErrors_invalidNameInputs_returnsInvalidChar() {
         String name = "This!@$%";
         String location = "Christchurch";
         Float size = 1.5f;
@@ -95,7 +92,7 @@ class GardenFormSubmissionTest {
     }
 
     @Test
-    public void testEnteredInvalidLocation() {
+    public void formErrors_invalidLocationInputs_returnsInvalidChar() {
         String name = "Garden 1";
         String location = "#1";
         Float size = 1.5f;
@@ -109,7 +106,7 @@ class GardenFormSubmissionTest {
     }
 
     @Test
-    public void testEnteredBlankNameInvalidLocation() {
+    public void formErrors_blankNameInvalidLocation_returnsBlankAndInvalidError() {
         String name = "  ";
         String location = "#1";
         Float size = 1.5f;
@@ -122,7 +119,4 @@ class GardenFormSubmissionTest {
         );
         Assertions.assertEquals(errors, correctErrors);
     }
-
-
-
 }
