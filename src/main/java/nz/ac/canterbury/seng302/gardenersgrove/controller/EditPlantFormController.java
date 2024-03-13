@@ -58,10 +58,9 @@ public class EditPlantFormController extends GardensSidebar {
             return "redirect:/";
         }
         Plant plant = optionalPlant.get();
-        String date;
-        if (plant.getPlantedOn() == null) {
-            date = null;
-        } else {
+
+        String date = null;
+        if (plant.getPlantedOn() != null) {
             date = readFormat.format(plant.getPlantedOn());
         }
 

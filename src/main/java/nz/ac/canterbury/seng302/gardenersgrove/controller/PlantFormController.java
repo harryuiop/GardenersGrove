@@ -2,21 +2,23 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +33,7 @@ import java.util.Optional;
 @Controller
 public class PlantFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(PlantFormController.class);
+
     private final PlantService plantService;
     private final GardenService gardenService;
     private final ErrorChecker validate;
@@ -60,6 +63,7 @@ public class PlantFormController extends GardensSidebar {
         model.addAttribute("plantedDateError", "");
         model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
         model.addAttribute("gardenId", gardenId);
+        model.addAttribute("plantImage", "");
         return "plantForm";
     }
 
@@ -78,14 +82,24 @@ public class PlantFormController extends GardensSidebar {
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
                              @RequestParam(name = "plantedDate", required = false) String plantedDate,
                              @RequestParam(name = "gardenId") Long gardenId,
+                             @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
                              Model model) {
-        logger.info("POST /form");
+        logger.info("POST /plantform");
+        boolean imageIsValid = false;
+
         Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
 
+        ImageValidator imageValidator = new ImageValidator(imageFile);
+        if (imageFile == null || imageValidator.isValid()) {
+            imageIsValid = true;
+        } else {
+            for (Map.Entry<String, String> entry : imageValidator.getErrorMessages().entrySet()) {
+                model.addAttribute(entry.getKey(), entry.getValue());
+            }
+        }
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
 
         Date plantDate = null;
-        logger.info(plantedDate);
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
                 plantDate = readFormat.parse(plantedDate);
@@ -94,10 +108,19 @@ public class PlantFormController extends GardensSidebar {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        if (errors.isEmpty() && optionalGarden.isPresent()) {
-            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, gardenId);
-            plantService.savePlant(plant);
+        if (errors.isEmpty() && optionalGarden.isPresent() && imageIsValid) {
             Garden garden = optionalGarden.get();
+            String imageFileName = null;
+            if (imageFile != null) {
+                try {
+                    imageFileName = ImageStore.storeImage(imageFile);
+                } catch (IOException error) {
+                    logger.error("Error saving plant image", error);
+                    return "plantForm";
+                }
+            }
+            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, imageFileName, gardenId);
+            plantService.savePlant(plant);
             garden.addPlant(plant);
             gardenService.saveGarden(garden);
             model.addAttribute("gardenId", gardenId);
@@ -110,7 +133,7 @@ public class PlantFormController extends GardensSidebar {
             model.addAttribute("plantCount", plantCount);
             model.addAttribute("plantDescription", plantDescription);
             model.addAttribute("plantedDate", plantedDate);
-            model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
+            optionalGarden.ifPresent(garden -> model.addAttribute("gardenName", garden.getName()));
             model.addAttribute("gardenId", gardenId);
             return "plantForm";
         }

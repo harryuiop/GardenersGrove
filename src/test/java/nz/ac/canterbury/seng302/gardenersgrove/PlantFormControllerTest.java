@@ -13,9 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,8 +31,6 @@ class PlantFormControllerTest {
     @Autowired
     private GardenRepository gardenRepository;
 
-    private final DateFormat nzFormat = new SimpleDateFormat("dd/MM/yyyy");
-
     @BeforeEach
     void setUp() {
         gardenRepository.save(new Garden("Test Garden", "test location", null));
@@ -47,14 +42,14 @@ class PlantFormControllerTest {
         String plantName = "Test Plant";
         Integer plantCount = 4;
         String plantDescription = "Test Description";
-        Date plantedDate = nzFormat.parse("20/03/2024");
+        String plantedDate = "2024-01-01";
         long gardenId = gardenRepository.findAll().get(0).getId();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/plantform")
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", nzFormat.format(plantedDate))
+                        .param("plantedDate", plantedDate)
                         .param("gardenId", Long.toString(gardenId)))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
@@ -72,13 +67,13 @@ class PlantFormControllerTest {
     void submitForm_noCount_plantSaved() throws Exception {
         String plantName = "Test Plant";
         String plantDescription = "Test Description";
-        Date plantedDate = nzFormat.parse("20/03/2024");
+        String plantedDate = "2024-01-01";
         long gardenId = gardenRepository.findAll().get(0).getId();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/plantform")
                         .param("plantName", plantName)
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", nzFormat.format(plantedDate))
+                        .param("plantedDate", plantedDate)
                         .param("gardenId", Long.toString(gardenId)))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
@@ -96,13 +91,13 @@ class PlantFormControllerTest {
     void submitForm_noDescription_plantSaved() throws Exception {
         String plantName = "Test Plant";
         Integer plantCount = 4;
-        Date plantedDate = nzFormat.parse("20/03/2024");
+        String plantedDate = "2024-01-01";
         long gardenId = gardenRepository.findAll().get(0).getId();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/plantform")
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
-                        .param("plantedDate", nzFormat.format(plantedDate))
+                        .param("plantedDate", plantedDate)
                         .param("gardenId", Long.toString(gardenId)))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
@@ -145,7 +140,7 @@ class PlantFormControllerTest {
         String plantName = "Test&Plant";
         Integer plantCount = 4;
         String plantDescription = "Test Description";
-        Date plantedDate = nzFormat.parse("20/03/2024");
+        String plantedDate = "2024-01-01";
         long gardenId = gardenRepository.findAll().get(0).getId();
 
 
@@ -153,7 +148,7 @@ class PlantFormControllerTest {
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", nzFormat.format(plantedDate))
+                        .param("plantedDate", plantedDate)
                         .param("gardenId", Long.toString(gardenId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
@@ -167,7 +162,7 @@ class PlantFormControllerTest {
         String plantName = "Test Plant";
         Integer plantCount = -1;
         String plantDescription = "Test Description";
-        Date plantedDate = nzFormat.parse("20/03/2024");
+        String plantedDate = "2024-01-01";
         long gardenId = gardenRepository.findAll().get(0).getId();
 
 
@@ -175,7 +170,7 @@ class PlantFormControllerTest {
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", nzFormat.format(plantedDate))
+                        .param("plantedDate", plantedDate)
                         .param("gardenId", Long.toString(gardenId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
@@ -189,7 +184,7 @@ class PlantFormControllerTest {
         String plantName = "Test Plant";
         Integer plantCount = 4;
         String plantDescription = new String(new char[513]);
-        Date plantedDate = nzFormat.parse("20/03/2024");
+        String plantedDate = "2024-01-01";
         long gardenId = gardenRepository.findAll().get(0).getId();
 
 
@@ -197,7 +192,7 @@ class PlantFormControllerTest {
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", nzFormat.format(plantedDate))
+                        .param("plantedDate", plantedDate)
                         .param("gardenId", Long.toString(gardenId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
@@ -211,18 +206,16 @@ class PlantFormControllerTest {
         String plantName = "Test Plant";
         Integer plantCount = 4;
         String plantDescription = "Test Description";
-        // Day value exceeds 12, so when formatted with MM/dd/yyy it will fail parsing against dd/MM/yyyy
-        Date plantedDate = nzFormat.parse("20/03/2024");
+        // Month value exceeds 12, so when parsed with yyyy-MM-dd it will fail
+        String plantedDate = "2024-20-02";
         long gardenId = gardenRepository.findAll().get(0).getId();
 
-
-        DateFormat nonNzFormat = new SimpleDateFormat("MM/dd/yyyy");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/plantform")
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", nonNzFormat.format(plantedDate))
+                        .param("plantedDate", plantedDate)
                         .param("gardenId", Long.toString(gardenId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
@@ -236,7 +229,7 @@ class PlantFormControllerTest {
         String plantName = "Test Plant";
         Integer plantCount = 4;
         String plantDescription = "Test Description";
-        Date plantedDate = nzFormat.parse("20/03/2024");
+        String plantedDate = "2024-01-01";
         long gardenId = -1;
 
 
@@ -244,7 +237,7 @@ class PlantFormControllerTest {
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", nzFormat.format(plantedDate))
+                        .param("plantedDate", plantedDate)
                         .param("gardenId", Long.toString(gardenId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
