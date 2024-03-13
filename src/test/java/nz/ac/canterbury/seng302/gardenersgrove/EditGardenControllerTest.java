@@ -96,6 +96,10 @@ class EditGardenControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
 
         List<Garden> allGardens = gardenRepository.findAll();
+        Garden garden = allGardens.get(0);
+        assertEquals(initialGardenName, garden.getName());
+        assertEquals(initialGardenLocation, garden.getLocation());
+        assertEquals(initialGardenSize, garden.getSize());
         assertEquals(1, allGardens.size());
     }
     @Test
@@ -112,6 +116,10 @@ class EditGardenControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
 
         List<Garden> allGardens = gardenRepository.findAll();
+        Garden garden = allGardens.get(0);
+        assertEquals(initialGardenName, garden.getName());
+        assertEquals(initialGardenLocation, garden.getLocation());
+        assertEquals(initialGardenSize, garden.getSize());
         assertEquals(1, allGardens.size());
     }
 
@@ -129,6 +137,10 @@ class EditGardenControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
 
         List<Garden> allGardens = gardenRepository.findAll();
+        Garden garden = allGardens.get(0);
+        assertEquals(initialGardenName, garden.getName());
+        assertEquals(initialGardenLocation, garden.getLocation());
+        assertEquals(initialGardenSize, garden.getSize());
         assertEquals(1, allGardens.size());
     }
 
