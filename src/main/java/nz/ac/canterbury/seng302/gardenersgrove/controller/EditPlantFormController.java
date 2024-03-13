@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
@@ -14,7 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controller for form example.
@@ -26,6 +31,7 @@ public class EditPlantFormController extends GardensSidebar {
 
     private final PlantService plantService;
     private final GardenService gardenService;
+    private final ErrorChecker validate;
 
     private Long id;
 
@@ -33,6 +39,7 @@ public class EditPlantFormController extends GardensSidebar {
     public EditPlantFormController(PlantService plantService, GardenService gardenService) {
         this.plantService = plantService;
         this.gardenService = gardenService;
+        this.validate = new ErrorChecker();
     }
 
     /**
@@ -57,10 +64,6 @@ public class EditPlantFormController extends GardensSidebar {
         return "editPlantForm";
     }
 
-    public boolean checkString(String string) {
-        return string.matches("[a-zA-Z0-9 .,\\-']*");
-    }
-
     /**
      * Submits form and saves the garden to the database.
      * @param plantName The name of the plant as input by the user.
@@ -78,37 +81,26 @@ public class EditPlantFormController extends GardensSidebar {
                              @RequestParam(name = "plantId") Long plantId,
                              Model model) {
         logger.info("POST /plantform/edit");
-        boolean nameIsValid = false;
-        boolean countIsValid = false;
-        boolean descriptionIsValid = false;
-        boolean dateIsValid = true;
 
-        if (plantName.isBlank() || !checkString(plantName)) {
-            model.addAttribute(
-                    "plantNameError",
-                    "Plant name cannot by empty and must only include letters, numbers, spaces, dots, hyphens or apostrophes");
-        } else {
-            nameIsValid = true;
+        Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
+
+        Optional<Garden> optionalGarden = gardenService.getGardenById(plantService.getPlantById(plantId).get().getGardenId());
+
+        Date plantDate = null;
+        try {
+            if (plantedDate != null && !plantedDate.isBlank()) {
+                plantDate = DateFormat.getDateInstance().parse(plantedDate);
+            }
+        } catch (ParseException exception) {
+            errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        if (plantCount != null && plantCount <= 0) {
-            model.addAttribute("plantCountError", "Plant count must be a positive number");
-        } else {
-            countIsValid = true;
-        }
-
-        if (plantDescription != null && plantDescription.length() > 512) {
-            model.addAttribute("plantDescriptionError", "Plant description must be less than 512 characters");
-        } else {
-            descriptionIsValid = true;
-        }
-
-        if (nameIsValid && countIsValid && descriptionIsValid && dateIsValid) {
+        if (errors.isEmpty()) {
             Plant plant = plantService.getPlantById(this.id).get();
             plant.setName(plantName);
             plant.setCount(plantCount);
             plant.setDescription(plantDescription);
-            plant.setPlantedOn(plantedDate);
+            plant.setPlantedOn(plantDate);
             plantService.savePlant(plant);
 
             return "redirect:/view-garden?gardenId=" + plant.getGardenId();

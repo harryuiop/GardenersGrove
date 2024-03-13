@@ -1,5 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+
 public class FormValuesValidator {
     /**
      * Checks the String contains valid characters
@@ -7,7 +11,7 @@ public class FormValuesValidator {
      * @param string represents the string being checked for correct characters
      * @return whether it is valid or not.
      */
-    public boolean checkString(String string) {
+    public boolean checkCharacters(String string) {
         return string.matches("[a-zA-Z0-9 .,\\-']*");
     }
 
@@ -18,13 +22,8 @@ public class FormValuesValidator {
      * @return false to show there are no errors
      * @throws IllegalArgumentException
      */
-    public String checkName(String string) {
-        if (string.isBlank()) {
-            return "Blank";
-        } else if (!checkString(string)) {
-            return "InvalidChar";
-        }
-        return null;
+    public Boolean checkBlank(String string) {
+        return !string.isBlank();
     }
 
     /**
@@ -34,10 +33,18 @@ public class FormValuesValidator {
      * @return false if there is no error
      * @throws IllegalArgumentException
      */
-    public String checkSize(Float size) {
+    public Boolean checkSize(Float size) {
         if (size != null && size <= 0) {
-            return "Negative";
+            return false;
         }
-        return null;
+        return true;
+    }
+
+    public Boolean checkDescription(String description) {
+        return description.length() <= 512;
+    }
+
+    public Boolean checkCount(Integer count) {
+        return count > 0;
     }
 }

@@ -1,7 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.GardenFormSubmission;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @Controller
 public class EditGardenController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(EditGardenController.class);
-    GardenFormSubmission gardenValidator = new GardenFormSubmission();
+    ErrorChecker gardenValidator = new ErrorChecker();
 
     private final GardenService gardenService;
 
@@ -50,7 +50,7 @@ public class EditGardenController extends GardensSidebar {
                              @RequestParam(name = "gardenId") Long gardenId,
                              Model model) {
         logger.info("POST /edit-garden");
-        Map<String, String> errors = gardenValidator.formErrors(gardenName, gardenLocation, gardenSize);
+        Map<String, String> errors = gardenValidator.gardenFormErrors(gardenName, gardenLocation, gardenSize);
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (errors.isEmpty()) {
             if (optionalGarden.isPresent()) {
@@ -61,7 +61,9 @@ public class EditGardenController extends GardensSidebar {
                 gardenService.saveGarden(garden);
             }
         } else {
-            gardenValidator.addErrorAttributes(model, errors);
+            for (Map.Entry<String, String> error : errors.entrySet()) {
+                model.addAttribute(error.getKey(), error.getValue());
+            }
             model.addAttribute("displayGardenName", gardenName);
             model.addAttribute("displayGardenLocation", gardenLocation);
             model.addAttribute("displayGardenSize", gardenSize);

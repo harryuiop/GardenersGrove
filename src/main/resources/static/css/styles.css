@@ -46,18 +46,16 @@ nav button {
 
 .content {
     margin-top: 60px;
-    margin-left: 200px;
+    margin-left: 250px;
     padding: 10px;
     color: var(--dark-neutral);
 }
 
 .form-input {
-    margin-left: 50px;
     line-height: 50px;
 }
 
 .form-button {
-    margin-left: 50px;
     line-height: 20px;
     margin-top: 20px;
 }

@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.slf4j.Logger;
@@ -11,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.GardenFormSubmission;
 
 import java.util.Map;
 
@@ -22,12 +22,13 @@ import java.util.Map;
 @Controller
 public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
-    GardenFormSubmission gardenValidator = new GardenFormSubmission();
     private final GardenService gardenService;
+    private final ErrorChecker Validator;
 
     @Autowired
     public GardenFormController(GardenService gardenService) {
         this.gardenService = gardenService;
+        this.Validator = new ErrorChecker();
     }
 
     /**
@@ -61,14 +62,16 @@ public class GardenFormController extends GardensSidebar {
                              @RequestParam(name = "gardenSize", required = false) Float gardenSize,
                              Model model) {
         logger.info("POST /form");
-        Map<String, String> errors = gardenValidator.formErrors(gardenName, gardenLocation, gardenSize);
+        Map<String, String> errors = Validator.gardenFormErrors(gardenName, gardenLocation, gardenSize);
         if (errors.isEmpty()) {
             Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
             gardenService.saveGarden(garden);
             return "redirect:/view-garden?gardenId=" + garden.getId();
         }
         else {
-            gardenValidator.addErrorAttributes(model, errors);
+            for (Map.Entry<String, String> error : errors.entrySet()) {
+                model.addAttribute(error.getKey(), error.getValue());
+            }
             model.addAttribute("gardenName", gardenName);
             model.addAttribute("gardenLocation", gardenLocation);
             model.addAttribute("gardenSize", gardenSize);
