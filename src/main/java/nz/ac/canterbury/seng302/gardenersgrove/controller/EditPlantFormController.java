@@ -61,6 +61,7 @@ public class EditPlantFormController extends GardensSidebar {
         model.addAttribute("plantDescription", plantService.getPlantById(plantId).get().getDescription());
         model.addAttribute("plantedDate", plantService.getPlantById(plantId).get().getPlantedOn());
         model.addAttribute("plantId", plantId);
+        model.addAttribute("gardenId", plantService.getPlantById(plantId).get().getGardenId());
         return "editPlantForm";
     }
 
@@ -95,7 +96,7 @@ public class EditPlantFormController extends GardensSidebar {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        if (errors.isEmpty()) {
+        if (errors.isEmpty() && optionalGarden.isPresent()) {
             Plant plant = plantService.getPlantById(this.id).get();
             plant.setName(plantName);
             plant.setCount(plantCount);
