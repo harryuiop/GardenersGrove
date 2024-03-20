@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Profile Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+  </head>
+  <body>
+    <a th:href="@{/editProfile}" class="button">Edit Profile</a>
+    <div class="profileBody">
+      <div class="formContainer">
+
+        <img
+          id="profilePhoto"
+          th:src="@{css/images/default_profile_photo.png}"
+          alt="default"
+        />
+
+        <h2 th:text="${user.getFname() + ' ' + user.getLname()}"></h2>
+        <h3 id="profileDoB" th:text="${user.getDob()}"></h3>
+        <h3 id="profileEmail" th:text="${user.getEmail()}"></h3>
+      </div>
+    </div>
+  </body>
+</html>
