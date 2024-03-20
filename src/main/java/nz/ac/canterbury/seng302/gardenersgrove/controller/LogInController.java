@@ -30,12 +30,12 @@ public class LogInController {
         this.userService = userService;
     }
 
-  @GetMapping("/")
-  public String getRootPage() {
-    userService.addUsers(new Users
-            ("user@gmail.com", "user", "default", "1 test road", "Password1!", "2000-01-01"));
-    return "login";
-  }
+    @GetMapping("/")
+    public String getRootPage() {
+        userService.addUsers(new Users
+                ("user@gmail.com", "user", "default", "1 test road", "Password1!", "2000-01-01"));
+        return "login";
+    }
 
     /**
     * Handles GET requests to the "/login" URL.
@@ -43,14 +43,11 @@ public class LogInController {
     *
     * @return The name of the login view template.
     */
-    @GetMapping("/login")
+    @GetMapping("/")
     public String getLoginPage(@RequestParam(name = "error") String paramName, Model model) {
-        if (paramName != null) {
-            model.addAttribute("error", "Incorrect username or password");
-        }
+
         return "login";
     }
-
 
     /**
     * Handles POST requests to the "/login" URL.
