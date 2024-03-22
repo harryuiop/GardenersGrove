@@ -1,0 +1,179 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    font-size: 1rem;
+    position: fixed;
+    padding: 10px 20px;
+    top: 30px;
+    right: 30px;
+    background-color: #4caf50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+  background-color: #45a049;
+}
+
+/* -------------------- Register page specific -------------------- */
+
+#forumContentsDiv {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.inputStyle {
+    width: calc(100% - 10px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+#submit {
+  background-color: #CCC;
+  color: #fff;
+  cursor: pointer;
+}
+
+#submit:hover {
+  background-color: #BBB;
+}
+
+#back {
+    background-color: green;
+    color: #fff;
+    cursor: pointer;
+}
+
+#back:hover {
+    background-color: #BBB;
+}
+
+.errorMessage {
+    font-size: 0.8rem;
+    color: red;
+    font-style: italic;
+    margin-top: 0;
+}
+
+.noSurname {
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* -------------------- Profile page specific -------------------- */
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.formControlFile {
+  margin-bottom: 5px;
+}
+
+.uploadButton {
+  margin-bottom: 20px;
+}
+
+#profilePhoto {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  width: 280px;
+  height: auto;
+}
+
+#editProfileCancelButton {
+  right: 185px;
+    font-weight: lighter;
+}
+
+#profileEmail {
+    margin-top: 10px;
+    font-weight: lighter;
+}
+
+#profileDoB {
+margin-bottom: 10px;
+}
+
+/* -------------------- Login page specific -------------------- */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 1.2rem;
+  background-color: #f4f4f4;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  vertical-align: baseline;
+}
+
+header {
+  display: block;
+}
+
+#sign_in_button {
+  background-color: #4caf50;
+  border-color: #4caf50;
+  border-radius: 0.3rem 0.3rem;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.7rem 0.9rem;
+  font-size: 1.1rem;
+}
+
+#sign_in_button:hover {
+  background-color: #45a049;
+}
+
+#form {
+  background-color: #fff;
+  padding: 20px;
+  justify-content: center;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 20rem;
+}
+
+input[type=text], input[type=password] {
+  padding: 0.3rem 0.3rem;
+  font-size: 1.2rem;
+}
+
+.registerLink {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 1rem 0.5rem 1rem;
+}
+
+#registerLink {
+  font-style: italic;
+  margin-left: 0.5rem;
+}
