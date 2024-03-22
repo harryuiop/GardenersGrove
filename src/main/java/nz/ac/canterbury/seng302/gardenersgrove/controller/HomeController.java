@@ -28,15 +28,13 @@ public class HomeController extends GardensSidebar {
 
     /**
      * Gets the thymeleaf page representing the /demo page (a basic welcome screen with some links)
-     * @param name url query parameter of user's name
      * @param model (map-like) representation of data to be used in thymeleaf display
-     * @return thymeleaf demoTemplate
+     * @return thymeleaf homeTemplate
      */
     @GetMapping("/")
-    public String getTemplate(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
+    public String getTemplate(Model model) {
         logger.info("GET /");
         this.updateGardensSidebar(model, gardenService);
-        model.addAttribute("name", name);
         return "homeTemplate";
     }
 
