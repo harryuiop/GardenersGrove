@@ -12,7 +12,7 @@
 <div class="content">
     <h1 th:text="${gardenName}"></h1>
     <div>
-        <div>
+        <div class="forumContentsDiv">
             <form th:action="@{/plantform(gardenId=${gardenId})}" method="post" id="plant-form" enctype="multipart/form-data">
                 <div class="form-field">
                     <label class="form-input" for="plantName"> Plant Name: </label>
