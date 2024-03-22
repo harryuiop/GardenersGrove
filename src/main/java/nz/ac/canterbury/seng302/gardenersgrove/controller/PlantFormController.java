@@ -90,7 +90,6 @@ public class PlantFormController extends GardensSidebar {
         Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
 
         ImageValidator imageValidator = new ImageValidator(imageFile);
-        logger.info("bool imageFile", (imageFile.isEmpty()));
         if (imageFile.isEmpty() || imageValidator.isValid()) {
             imageIsValid = true;
         } else {
