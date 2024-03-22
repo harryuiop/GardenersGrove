@@ -94,19 +94,13 @@ public class SecurityConfiguration {
                         headers.frameOptions(Customizer.withDefaults()).disable()
                 )
                 .csrf(csrf ->
-                        csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2/**"))
+                        csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2/**"),
+                                AntPathRequestMatcher.antMatcher("/login/**"),
+                                AntPathRequestMatcher.antMatcher("/register/**"),
+                                AntPathRequestMatcher.antMatcher("/check-email-duplication/**"),
+                                AntPathRequestMatcher.antMatcher("/logout"))
                 )
-                .csrf(csrf ->
-                        csrf.ignoringRequestMatchers(
-                                AntPathRequestMatcher.antMatcher("/login/**")
-                        )
-                )
-                .csrf(csrf ->
-                        csrf.ignoringRequestMatchers(
-                                AntPathRequestMatcher.antMatcher("/register/**")
-                        )
-                ).csrf(csrf -> csrf.ignoringRequestMatchers(
-                        AntPathRequestMatcher.antMatcher("/check-email-duplication/**")))
+
                 .authorizeHttpRequests(request ->
                         // Allow "/", "/register", and "/login" to anyone (permitAll)
                         request
@@ -127,12 +121,13 @@ public class SecurityConfiguration {
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/profile")
+
                 )
                 // Define logging out, a POST "/logout" endpoint now exists under the hood, redirect to "/login", invalidate session and remove cookie
                 .logout(logout ->
                         logout
                                 .logoutUrl("/logout")
-                                .logoutSuccessUrl("/login")
+                                .logoutSuccessUrl("/home")
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                 );
