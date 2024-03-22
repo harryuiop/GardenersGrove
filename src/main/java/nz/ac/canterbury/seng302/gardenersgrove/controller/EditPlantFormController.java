@@ -2,10 +2,12 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -74,6 +78,8 @@ public class EditPlantFormController extends GardensSidebar {
         model.addAttribute("plantedDate", date);
         model.addAttribute("plantId", plantId);
         model.addAttribute("gardenId", plant.getGardenId());
+        model.addAttribute("isPlantImageSet", plant.isImageSet());
+        model.addAttribute("plantImage", plant.getImageFilePath());
         return "editPlantForm";
     }
 
@@ -92,12 +98,25 @@ public class EditPlantFormController extends GardensSidebar {
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
                              @RequestParam(name = "plantedDate", required = false) String plantedDate,
                              @RequestParam(name = "plantId") Long plantId,
+                             @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
                              Model model) {
         logger.info("POST /plantform/edit");
+        Long gardenId = plantService.getPlantById(plantId).get().getGardenId();
+
+        boolean imageIsValid = false;
 
         Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
 
-        Optional<Garden> optionalGarden = gardenService.getGardenById(plantService.getPlantById(plantId).get().getGardenId());
+        ImageValidator imageValidator = new ImageValidator(imageFile);
+        if (imageFile.isEmpty() || imageValidator.isValid()) {
+            imageIsValid = true;
+        } else {
+            for (Map.Entry<String, String> entry : imageValidator.getErrorMessages().entrySet()) {
+                model.addAttribute(entry.getKey(), entry.getValue());
+            }
+        }
+
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
 
         Date plantDate = null;
         try {
@@ -108,15 +127,26 @@ public class EditPlantFormController extends GardensSidebar {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        if (errors.isEmpty() && optionalGarden.isPresent()) {
+        if (errors.isEmpty() && optionalGarden.isPresent() && imageIsValid) {
             Plant plant = plantService.getPlantById(this.id).get();
+            String imageFileName = null;
+            if (!imageFile.isEmpty()) {
+                try {
+                    imageFileName = ImageStore.storeImage(imageFile);
+                } catch (IOException error) {
+                    logger.error("Error saving plant image", error);
+                    return "editPlantForm";
+                }
+            }
             plant.setName(plantName);
             plant.setCount(plantCount);
             plant.setDescription(plantDescription);
             plant.setPlantedOn(plantDate);
+            plant.setImageFileName(imageFileName);
+
             plantService.savePlant(plant);
 
-            return "redirect:/view-garden?gardenId=" + plant.getGardenId();
+            return "redirect:/view-garden?gardenId=" + gardenId;
         } else {
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
