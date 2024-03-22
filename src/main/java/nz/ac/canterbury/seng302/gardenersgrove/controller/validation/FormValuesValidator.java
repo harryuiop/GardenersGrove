@@ -42,7 +42,10 @@ public class FormValuesValidator {
     }
 
     public boolean checkPassword(String password) {return password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");}
-    public boolean checkUserName() {
-        return true;
+    public boolean checkUserName(String name) {
+        return name.matches("^[a-zA-Z\\-' ]+$");
+    }
+    public boolean checkNameLength(String name) {
+        return name.length() > 64;
     }
 }

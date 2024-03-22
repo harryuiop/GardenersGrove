@@ -26,8 +26,8 @@ public class ErrorChecker {
             errors.put("gardenNameError", "Garden name cannot by empty");
         } else if (!valuesValidator.checkCharacters(gardenName)) {
             errors.put(
-                    "gardenNameError",
-                    "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
+            "gardenNameError",
+            "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         }
 
         if (!valuesValidator.checkBlank(gardenLocation)) {
@@ -67,8 +67,23 @@ public class ErrorChecker {
     }
 
     public Map<String, String> registerUserFormErrors(String firstName, String lastName, String email, String address,
-                                                      String password, String confirmPassword, Date dateOfBirth)
+                                                      String password, String dateOfBirth)
     {
-
+        Map<String, String> errors = new HashMap<>();
+        if (!valuesValidator.checkBlank(firstName)) {
+            errors.put("firstNameError", "First Name cannot be empty");
+        } else if (valuesValidator.checkNameLength(firstName)){
+            errors.put("firstNameError", "First Name cannot exceed length of 64 characters");
+        } else if (!valuesValidator.checkUserName(firstName)) {
+            errors.put("firstNameError", "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+        }
+        if (!valuesValidator.checkBlank(lastName)) {
+            errors.put("lastNameError", "Last Name cannot be empty unless box is ticked");
+        } else if (valuesValidator.checkNameLength(lastName)){
+            errors.put("lastNameError", "Last Name cannot exceed length of 64 characters");
+        } else if (valuesValidator.checkUserName(lastName)) {
+            errors.put("lastNameError", "Last Name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+        }
+        return errors;
     }
 }
