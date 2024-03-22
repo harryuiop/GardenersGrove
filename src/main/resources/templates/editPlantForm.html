@@ -75,27 +75,6 @@
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-<script>
-    function displayImage() {
-
-        console.log("Image Uploaded");
-
-        const input = document.getElementById('plantImage');
-        const imgs = document.querySelectorAll('.selectedImage');
-        console.log(imgs);
-        const file = input.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            for (const img of imgs) {
-                img.src = e.target.result;
-            }
-        }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    }
-</script>
+<script th:src="@{/javascript/image.js}"></script>
 </body>
 </html>

@@ -46,7 +46,7 @@
 
                 <div class="form-field">
                     <div class="plant-image-container">
-                        <img id="selectedImage" th:src="@{/images/default-plant.jpg}"  alt="Plant Image">
+                        <img class="selectedImage" th:src="@{/images/default-plant.jpg}"  alt="Plant Image">
                         <p id = "image-selected-message"></p>
                         <div class="add-image">
                             <label for="plantImage">
@@ -72,24 +72,6 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-<script>
-    function displayImage() {
-
-        console.log("Image Uploaded");
-
-        const input = document.getElementById('plantImage');
-        const img = document.getElementById('selectedImage');
-        const file = input.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            img.src = e.target.result;
-        }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    }
-</script>
+<script th:src="@{/javascript/image.js}"></script>
 </body>
 </html>
