@@ -266,3 +266,59 @@ nav button {
 .garden-item:hover {
     background-color: var(--light-neutral);
 }
+
+
+.plant-image-container {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    display: inline-block;
+}
+
+.plant-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.add-image {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    font-size: 15px;
+    color: var(--dark-color);
+    cursor: pointer;
+}
+
+.add-image .plus-button {
+    opacity: 0.75;
+}
+
+.add-image .fa-plus-circle {
+    cursor: pointer;
+}
+
+.add-image input {
+    display: none;
+}
+
+.no-icon {
+    content: none;
+}
+
+.plant-entry {
+    min-height: 50px;
+}
+
+.plant-entries {
+    max-height: 550px;
+    overflow-y: scroll;
+}
+
+textarea {
+    width: 250px;
+}
