@@ -7,10 +7,10 @@
     --light-color: #DAD7CD;
 }
 
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: var(--light-color);
+    color: var(--dark-neutral);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,7 +23,7 @@ body {
     padding: 10px 20px;
     top: 30px;
     right: 30px;
-    background-color: #4caf50;
+    background-color: var(--neutral);
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -31,16 +31,12 @@ body {
 }
 
 .button:hover {
-    background-color: #45a049;
+    background-color: var(--light-neutral);
 }
 
 /* -------------------- Register page specific -------------------- */
 
-#registerH1 {
-    margin-top: 5px;
-}
-
-#forumContentsDiv {
+.forumContentsDiv {
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
@@ -64,35 +60,24 @@ label {
     font-size: 1rem;
 }
 
-#backbutton {
-    display: flex;
-    justify-content: center;
-    width: 98%;
-    color: white;
-    text-decoration: none;
-}
-
-#back {
-    width: 100%;
-    background-color: #4caf50;
+#submit {
+    background-color: #CCC;
     color: #fff;
     cursor: pointer;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: none;
-    border-radius: 3px;
-    box-sizing: border-box;
-    font-size: 1rem;
-    background-color: #4caf50;
-}
-
-#back:hover {
-    background-color: #45a040;
 }
 
 #submit:hover {
     background-color: #BBB;
+}
+
+#back {
+    background-color: var(--dark-color);
+    color: #fff;
     cursor: pointer;
+}
+
+#back:hover {
+    background-color: #BBB;
 }
 
 .errorMessage {
@@ -107,7 +92,6 @@ label {
     font-style: italic;
 }
 
-
 /* -------------------- Profile page specific -------------------- */
 
 .formContainer {
@@ -115,11 +99,6 @@ label {
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
-}
-
-#editProfileForm {
-    max-width: 272.6px;
-    max-height: 783.15px;
 }
 
 .formControlFile {
@@ -153,41 +132,15 @@ label {
     margin-bottom: 10px;
 }
 
-#backDiv {
-    display: flex;
-    align-content: center;
-}
-
-#backbutton {
-    display: flex;
-    justify-content: center;
-    background-color: #4caf50;
-    width: 97%;
-}
-
-#backbutton:hover {
-    background-color: #4caf49;
-}
-
 /* -------------------- Login page specific -------------------- */
-
-body {
-    font-family: Arial, sans-serif;
-    font-size: 1.2rem;
-    background-color: #f4f4f4;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    vertical-align: baseline;
-}
 
 header {
     display: block;
 }
 
 #sign_in_button {
-    background-color: #4caf50;
-    border-color: #4caf50;
+    background-color: var(--neutral);
+    border-color: var(--neutral);
     border-radius: 0.3rem 0.3rem;
     color: #fff;
     cursor: pointer;
@@ -196,7 +149,7 @@ header {
 }
 
 #sign_in_button:hover {
-    background-color: #45a049;
+    background-color: var(--neutral);
 }
 
 #form {
@@ -226,19 +179,17 @@ input[type=text], input[type=password] {
     margin-left: 0.5rem;
 }
 
+
+/* Team-r styling */
 /* Title at top of page */
 .title {
     background-color: var(--light-color);
     color: var(--dark-neutral);
-    text-align: center;
+    /*text-align: center;*/
     width: 100%;
     height: 50px;
     position: fixed;
     top: 0;
-}
-
-.title h2 {
-    margin: auto;
 }
 
 /* navigation side bar */
@@ -316,13 +267,6 @@ nav button {
     background-color: var(--light-neutral);
 }
 
-.form-field {
-    white-space: nowrap;
-}
-
-.form-field * {
-    display: inline-block;
-}
 
 .plant-image-container {
     position: relative;
