@@ -40,4 +40,9 @@ public class FormValuesValidator {
     public boolean checkCount(Integer count) {
         return count == null || count > 0;
     }
+
+    public boolean checkPassword(String password) {return password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");}
+    public boolean checkUserName() {
+        return true;
+    }
 }

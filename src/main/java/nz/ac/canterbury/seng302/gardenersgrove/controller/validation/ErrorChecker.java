@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,5 +64,11 @@ public class ErrorChecker {
         }
 
         return errors;
+    }
+
+    public Map<String, String> registerUserFormErrors(String firstName, String lastName, String email, String address,
+                                                      String password, String confirmPassword, Date dateOfBirth)
+    {
+
     }
 }
