@@ -30,6 +30,12 @@ public class LogInController {
         this.userService = userService;
     }
 
+    /**
+     * Handles GET requests to the "/" URL.
+     * Displays the login page.
+     *
+     * @return a redirect to the login page
+     */
     @GetMapping("/")
     public String getRootPage() {
         return "login";

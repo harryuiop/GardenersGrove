@@ -54,8 +54,8 @@ public class ProfileController {
     public String getProfilePage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
-        Users u = userService.getUserById(currentPrincipalName);
-        model.addAttribute("user", u);
+        Users user = userService.getUserById(currentPrincipalName);
+        model.addAttribute("user", user);
 
         return "profile";
     }

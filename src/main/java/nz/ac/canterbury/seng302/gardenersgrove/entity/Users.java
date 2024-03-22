@@ -94,7 +94,6 @@ public class Users {
         this.address = address;
         this.password = password;
         this.dob = dob;
-//    this.imagePath = "css/images/default_profile_photo.png";
     }
 
     /**
