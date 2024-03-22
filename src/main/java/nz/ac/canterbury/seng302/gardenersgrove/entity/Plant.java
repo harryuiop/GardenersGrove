@@ -126,6 +126,7 @@ public class Plant {
                 ", name='" + name + '\'' +
                 ", count=" + count +
                 ", description='" + description + '\'' +
+                ", imageFileName='" + imageFileName + '\'' +
                 ", plantedOn=" + plantedOn +
                 '}';
     }

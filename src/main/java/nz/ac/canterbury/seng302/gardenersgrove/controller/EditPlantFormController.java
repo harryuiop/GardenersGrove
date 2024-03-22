@@ -38,7 +38,6 @@ public class EditPlantFormController extends GardensSidebar {
     private final GardenService gardenService;
     private final ErrorChecker validate;
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private Long id;
 
     @Autowired
     public EditPlantFormController(PlantService plantService, GardenService gardenService) {
@@ -56,7 +55,6 @@ public class EditPlantFormController extends GardensSidebar {
     public String form(Model model, @RequestParam(name="plantId") Long plantId) {
         logger.info("GET /plantform/edit");
         this.updateGardensSidebar(model, gardenService);
-        this.id = plantId;
         Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
         if (optionalPlant.isEmpty()) {
             return "redirect:/";
@@ -128,7 +126,7 @@ public class EditPlantFormController extends GardensSidebar {
         }
 
         if (errors.isEmpty() && optionalGarden.isPresent() && imageIsValid) {
-            Plant plant = plantService.getPlantById(this.id).get();
+            Plant plant = plantService.getPlantById(plantId).get();
             String imageFileName = null;
             if (!imageFile.isEmpty()) {
                 try {
