@@ -19,11 +19,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     /**
      * Autowired's users service for custom authentication using our own user objects
      */
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    public CustomAuthenticationProvider() {
+    public CustomAuthenticationProvider(UserService userService) {
         super();
+        this.userService = userService;
     }
 
     /**

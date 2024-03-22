@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.authentication;
 
 import nz.ac.canterbury.seng302.gardenersgrove.authentication.CustomAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -17,10 +19,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * Custom Security Configuration
  * Such functionality was previously handled by WebSecurityConfigurerAdapter
  */
+// don't worry if the "com.baeldung.security" comes up red in IntelliJ
 @Configuration
 @EnableWebSecurity
-// don't worry if the "com.baeldung.security" comes up red in IntelliJ
-//@ComponentScan("com.baeldung.security")
+@ComponentScan("com.baeldung.security")
 public class SecurityConfiguration {
 
     /**
@@ -49,6 +51,7 @@ public class SecurityConfiguration {
         );
         authenticationManagerBuilder.authenticationProvider(authProvider);
         return authenticationManagerBuilder.build();
+
     }
 
     /**
@@ -72,7 +75,6 @@ public class SecurityConfiguration {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         String[] staticResources = {
                 "/css/**",
                 "/images/**",
@@ -103,15 +105,12 @@ public class SecurityConfiguration {
                         csrf.ignoringRequestMatchers(
                                 AntPathRequestMatcher.antMatcher("/register/**")
                         )
-                ).csrf(csrf ->
-                        csrf.ignoringRequestMatchers(
-                                AntPathRequestMatcher.antMatcher("/check-email-duplication/**"))
-                        )
-
+                ).csrf(csrf -> csrf.ignoringRequestMatchers(
+                        AntPathRequestMatcher.antMatcher("/check-email-duplication/**")))
                 .authorizeHttpRequests(request ->
                         // Allow "/", "/register", and "/login" to anyone (permitAll)
                         request
-                                .requestMatchers("/", "/register", "/login", "/check-email-duplication", "/homepage")
+                                .requestMatchers("/", "/register", "/login", "/check-email-duplication")
                                 .permitAll()
                                 // Only allow admins to reach the "/admin" page
                                 .requestMatchers("/admin")
@@ -125,7 +124,7 @@ public class SecurityConfiguration {
                 // Define logging in, a POST "/login" endpoint now exists under the hood, after login redirect to user page
                 .formLogin(formLogin ->
                         formLogin
-//                                .loginPage("/register")
+                                .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/profile")
                 )
@@ -139,4 +138,6 @@ public class SecurityConfiguration {
                 );
         return http.build();
     }
+
 }
+
