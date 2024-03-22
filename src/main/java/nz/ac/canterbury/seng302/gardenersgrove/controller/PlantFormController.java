@@ -124,7 +124,7 @@ public class PlantFormController extends GardensSidebar {
             garden.addPlant(plant);
             gardenService.saveGarden(garden);
             model.addAttribute("gardenId", gardenId);
-            return "redirect:/view-garden?gardenId=" + garden.getId();
+            return "redirect:/view-garden?gardenId=" + gardenId;
         } else {
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
