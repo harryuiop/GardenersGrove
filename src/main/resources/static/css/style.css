@@ -45,9 +45,9 @@ body {
 }
 
 label {
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
 }
 
 .inputStyle {
@@ -61,9 +61,9 @@ label {
 }
 
 #submit {
-  background-color: #CCC;
-  color: #fff;
-  cursor: pointer;
+    background-color: #CCC;
+    color: #fff;
+    cursor: pointer;
 }
 
 #submit:hover {
@@ -129,54 +129,54 @@ label {
 }
 
 #profileDoB {
-margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 /* -------------------- Login page specific -------------------- */
 
 header {
-  display: block;
+    display: block;
 }
 
 #sign_in_button {
-  background-color: var(--neutral);
-  border-color: var(--neutral);
-  border-radius: 0.3rem 0.3rem;
-  color: #fff;
-  cursor: pointer;
-  padding: 0.7rem 0.9rem;
-  font-size: 1.1rem;
+    background-color: var(--neutral);
+    border-color: var(--neutral);
+    border-radius: 0.3rem 0.3rem;
+    color: #fff;
+    cursor: pointer;
+    padding: 0.7rem 0.9rem;
+    font-size: 1.1rem;
 }
 
 #sign_in_button:hover {
-  background-color: var(--neutral);
+    background-color: var(--neutral);
 }
 
 #form {
-  background-color: #fff;
-  padding: 20px;
-  justify-content: center;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 20rem;
+    background-color: #fff;
+    padding: 20px;
+    justify-content: center;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 20rem;
 }
 
 input[type=text], input[type=password] {
-  padding: 0.3rem 0.3rem;
-  font-size: 1.2rem;
+    padding: 0.3rem 0.3rem;
+    font-size: 1.2rem;
 }
 
 .registerLink {
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 1rem 1rem 0.5rem 1rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 1rem 0.5rem 1rem;
 }
 
 #registerLink {
-  font-style: italic;
-  margin-left: 0.5rem;
+    font-style: italic;
+    margin-left: 0.5rem;
 }
 
 

@@ -15,6 +15,7 @@
   </head>
   <body>
     <div class="registerBody">
+        <h1 id="registerH1">Register</h1>
       <a th:href="@{/}" class="button">Return Home</a>
       <div class="forumContentsDiv">
         <h1>Register</h1>
@@ -32,6 +33,7 @@
             th:name="firstName"
             th:value="*{firstName}"
             autofocus
+            autocomplete="off"
             onblur="firstNameValidation(
                     document.registerForm)"
           />
@@ -47,6 +49,7 @@
             th:name="lastName"
             th:value="*{lastName}"
             autofocus
+            autocomplete="off"
             onblur="lastNameValidation(document.registerForm)"
           />
 
@@ -59,6 +62,7 @@
                 th:name="noSurname"
                 th:value="*{noSurname}"
                 autofocus
+                autocomplete="off"
                 onblur="checkNoSurnameClicked(document.registerForm)"
               />
               I have no surname
@@ -77,6 +81,8 @@
             th:value="*{email}"
             autofocus
             onblur="emailValidation(document.registerForm)"
+            autocomplete="off"
+            onblur="checkEmailValidation(document.registerForm)"
           />
           <p class="errorMessage" id="emailError"></p>
 
@@ -89,6 +95,7 @@
             th:name="address"
             th:value="*{address}"
             autofocus
+            autocomplete="off"
           />
           <p class="errorMessage" id="addressError"></p>
 
@@ -101,6 +108,7 @@
             th:name="password"
             th:value="*{password}"
             autofocus
+            autocomplete="off"
             onblur="passwordValidation(document.registerForm)"
           />
           <p class="errorMessage" id="passwordError"></p>
@@ -114,6 +122,7 @@
             th:name="passwordConfirm"
             th:value="*{passwordConfirm}"
             autofocus
+            autofill="off"
             onblur="confirmPasswordValidation(document.registerForm)"
           />
           <p class="errorMessage" id="passwordConfirmError"></p>
@@ -127,12 +136,14 @@
             th:name="dateOfBirth"
             th:value="*{dateOfBirth}"
             autofocus
+            autocomplete="off"
             onblur="ageValidation(document.registerForm)"
           />
           <p class="errorMessage" id="dateOfBirthError"></p>
 
           <input class="inputStyle" id="submit" type="submit" value="Submit" disabled/>
         </form>
+        <p class="registerLink"> Already have an account?<a id="registerLink" th:href="@{/login}"> Login Here.</a></p>
       </div>
     </div>
   </body>

@@ -7,33 +7,41 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * UserRepository to send User data to database
+ * Repository interface for accessing User entities using Spring's CrudRepository.
+ * Provides basic CRUD operations for User entities without the need to write custom implementations.
  */
 @Repository
 public interface UserRepository extends CrudRepository<Users, String> {
-  /**
-   * Find all Users
-   *
-   * @return a list of Users objects
-   */
-  List<Users> findAll();
 
-  /**
-   * Find a specific user by email and password
-   *
-   * @param email of the user
-   * @param password created by the user
-   * @return a Users object
-   */
-  Users findByEmailAndPassword(String email, String password);
+    /**
+     * Retrieves all User entities.
+     *
+     * @return A list of all User entities.
+     */
+    List<Users> findAll();
 
-  /**
-   * Find a specific user by email
-   *
-   * @param email of the user
-   * @return a Users object
-   */
-  Users findByEmail(String email);
+    /**
+     * Retrieves a specific user by email and password.
+     *
+     * @param email    The email of the user.
+     * @param password The password of the user.
+     * @return A Users object if found, otherwise null.
+     */
+    Users findByEmailAndPassword(String email, String password);
 
-  Users findByUserId(int id);
+    /**
+     * Retrieves a specific user by email.
+     *
+     * @param email The email of the user.
+     * @return A Users object if found, otherwise null.
+     */
+    Users findByEmail(String email);
+
+    /**
+     * Retrieves a specific user by ID.
+     *
+     * @param id The ID of the user.
+     * @return A Users object if found, otherwise null.
+     */
+    Users findByUserId(int id);
 }

@@ -25,17 +25,4 @@ public class HomeController extends GardensSidebar {
     public HomeController(GardenService gardenService) {
         this.gardenService = gardenService;
     }
-
-    /**
-     * Gets the thymeleaf page representing the /demo page (a basic welcome screen with some links)
-     * @param model (map-like) representation of data to be used in thymeleaf display
-     * @return thymeleaf homeTemplate
-     */
-    @GetMapping("/")
-    public String getTemplate(Model model) {
-        logger.info("GET /");
-        this.updateGardensSidebar(model, gardenService);
-        return "homeTemplate";
-    }
-
 }

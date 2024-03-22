@@ -118,6 +118,59 @@ let lastNameValidation = function (form) {
 };
 
 /**
+ * Check email validation when user try to register
+ * or try to update their profile
+ * @param form  <form> The input form.
+ */
+let checkEmailValidation = function (form) {
+  emailValidation(form);
+  //if emailValidaton pass then we check user's new email whether it is already in database
+  if (emailValid === true) {
+    checkEmail(form);
+  }
+  refreshSubmitButton();
+};
+
+/**
+ * check user email and return error message
+ * if user input email is already exist in database
+ * @param form  <form> The input form.
+ */
+let checkEmail = function (form) {
+  const email = form.email;
+  const errorMessage = document.getElementById("emailError");
+
+  //Open XMLHttpRequest
+  let xhr = new XMLHttpRequest();
+  // Configure request
+  xhr.open("POST", "/check-email-duplication", true);
+  xhr.setRequestHeader("Content-Type", "text/plain");
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      // handle response here when request is successful
+      if (xhr.status === 200) {
+        const isValid = xhr.responseText;
+        console.log("Received data: ", isValid);
+        // Handles isValid here
+        if (isValid === "true") {
+          setInvalidStyle(email, errorMessage, "Email is already in use.");
+          emailValid = false;
+        } else {
+          setValidStyle(email, errorMessage);
+          emailValid = true;
+        }
+      } else {
+        // error handling here when request is failed
+        console.error("ERROR Status:", xhr.status);
+      }
+    }
+  };
+  // send data
+  xhr.send(email.value);
+};
+
+/**
  * Does live input validation of the email field of a form.
  * @param form  <form> The input form.
  */
@@ -168,7 +221,7 @@ passwordValidation = function (form) {
 };
 
 /**
- * Does live input validation of the confirm password field of a form.
+ * Does live input validation of the confirmPassword field of a form.
  * @param form  <form> The input form.
  */
 confirmPasswordValidation = function (form) {
@@ -265,6 +318,7 @@ refreshSubmitButton = function () {
   ) {
     submitButton.style.backgroundColor = validBorderColour;
     submitButton.disabled = false;
+    submitButton.style.color = "white";
   } else {
     submitButton.style.backgroundColor = defaultBorderColour;
     submitButton.disabled = true;
