@@ -23,7 +23,7 @@ body {
     padding: 10px 20px;
     top: 30px;
     right: 30px;
-    background-color: #4caf50;
+    background-color: var(--neutral);
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -31,7 +31,7 @@ body {
 }
 
 .button:hover {
-  background-color: #45a049;
+  background-color: var(--light-neutral);
 }
 
 /* -------------------- Register page specific -------------------- */
@@ -71,7 +71,7 @@ label {
 }
 
 #back {
-    background-color: green;
+    background-color: var(--dark-color);
     color: #fff;
     cursor: pointer;
 }
@@ -139,8 +139,8 @@ header {
 }
 
 #sign_in_button {
-  background-color: #4caf50;
-  border-color: #4caf50;
+  background-color: var(--neutral);
+  border-color: var(--neutral);
   border-radius: 0.3rem 0.3rem;
   color: #fff;
   cursor: pointer;
@@ -149,7 +149,7 @@ header {
 }
 
 #sign_in_button:hover {
-  background-color: #45a049;
+  background-color: var(--neutral);
 }
 
 #form {
