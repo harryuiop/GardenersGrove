@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.ui.Model;
-import org.slf4j.Logger;
 
 import static java.lang.Integer.parseInt;
 
@@ -120,7 +118,7 @@ public class ProfileController {
      * @return The name of the login view template.
      */
     @PostMapping("/confirmProfileChanges")
-    public String addNewUser(
+    public String updateUser(
             @RequestParam(name = "email") String email,
             @RequestParam(name = "firstName") String firstName,
             @RequestParam(name = "lastName") String lastName,

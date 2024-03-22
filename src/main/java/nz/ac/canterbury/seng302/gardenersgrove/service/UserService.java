@@ -30,18 +30,30 @@ public class UserService {
     }
 
     /**
-     * Adds a new user to persistence.
+     * Adds a new user to the database if there is no pre-existing user with
+     * the same email address. Otherwise, the pre-exiting user's information
+     * is updated
      *
      * @param newUser The new user data.
-     * @return The UserRepository instance with the new user saved.
+     * @return The UserRepository instance with the new user (or the current
+     * user with new information) saved.
      */
     public Users addUsers(Users newUser) {
+        Users currentUser = userRepository.findByEmail(newUser.getEmail());
         if (emailIsValid(newUser.getEmail()) &&
                 passwordIsValid(newUser.getPassword()) &&
-                    nameIsValid(newUser.getFname(), newUser.getLname()) &&
-                            dobIsValid(newUser.getDob()) &&
-                                (getUserByEmail(newUser.getEmail()) == null)) {
-            return userRepository.save(newUser);
+                nameIsValid(newUser.getFname(), newUser.getLname()) &&
+                dobIsValid(newUser.getDob())) {
+            if ((getUserByEmail(newUser.getEmail()) != null)) { // if there is a pre-existing user with the same email
+                currentUser.fname = newUser.fname;
+                currentUser.lname = newUser.lname;
+                currentUser.password = newUser.password;
+                currentUser.address = newUser.address;
+                currentUser.dob = newUser.dob;
+                return userRepository.save(currentUser);
+            } else {
+                return userRepository.save(newUser);
+            }
         }
         return null;
     }

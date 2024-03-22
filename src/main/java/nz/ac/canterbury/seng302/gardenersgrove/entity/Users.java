@@ -24,31 +24,31 @@ public class Users {
      * Users First Name
      */
     @Column(name = "First_name", nullable = false)
-    private String fname;
+    public String fname;
 
     /**
      * Users Last Name This can be Null
      */
     @Column(name = "Last_name")
-    private String lname;
+    public String lname;
 
     /**
      * User's Home address
      */
     @Column(nullable = false)
-    private String address;
+    public String address;
 
     /**
      * User Password for verification
      */
     @Column(nullable = false)
-    private String password;
+    public String password;
 
     /**
      * Users Date of Birth
      */
     @Column(name = "Date_of_Birth", nullable = false)
-    private String dob;
+    public String dob;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
