@@ -1,0 +1,147 @@
+<!doctype html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://thymeleaf.org"
+  lang="us"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script
+      type="text/javascript"˘
+      src="/javascript/ValidationService.js"
+    ></script>
+  </head>
+  <body>
+    <div class="registerBody">
+      <div id="forumContentsDiv">
+        <h1 id="registerH1">Register</h1>
+        <form
+          th:action="@{register}"
+          method="post"
+          name="registerForm"
+        >
+          <label for="firstName">First name:</label>
+          <input
+            class="inputStyle"
+            type="text"
+            id="firstName"
+            name="firstName"
+            th:name="firstName"
+            th:value="*{firstName}"
+            autofocus
+            autocomplete="off"
+            onblur="firstNameValidation(
+                    document.registerForm)"
+          />
+          <p class="errorMessage" id="firstNameError"></p>
+
+
+          <label for="lastName">Last name:</label>
+          <input
+            class="inputStyle"
+            type="text"
+            id="lastName"
+            name="lastName"
+            th:name="lastName"
+            th:value="*{lastName}"
+            autofocus
+            autocomplete="off"
+            onblur="lastNameValidation(document.registerForm)"
+          />
+
+          <div class="noSurname">
+            <label for="noSurname" class="noSurnameCheckbox">
+              <input
+                type="checkbox"
+                id="noSurname"
+                value="checked"
+                th:name="noSurname"
+                th:value="*{noSurname}"
+                autofocus
+                autocomplete="off"
+                onblur="checkNoSurnameClicked(document.registerForm)"
+              />
+              I have no surname
+            </label>
+          </div>
+
+          <p class="errorMessage" id="lastNameError"></p>
+
+          <label for="email">Email:</label>
+          <input
+            class="inputStyle"
+            type="text"
+            id="email"
+            name="email"
+            th:name="email"
+            th:value="*{email}"
+            autofocus
+            autocomplete="off"
+            onblur="checkEmailValidation(document.registerForm)"
+          />
+          <p class="errorMessage" id="emailError"></p>
+
+          <label for="address">Address:</label>
+          <input
+            class="inputStyle"
+            type="text"
+            id="address"
+            name="address"
+            th:name="address"
+            th:value="*{address}"
+            autofocus
+            autocomplete="off"
+          />
+          <p class="errorMessage" id="addressError"></p>
+
+          <label for="password">Password:</label>
+          <input
+            class="inputStyle"
+            type="password"
+            id="password"
+            name="password"
+            th:name="password"
+            th:value="*{password}"
+            autofocus
+            autocomplete="off"
+            onblur="passwordValidation(document.registerForm)"
+          />
+          <p class="errorMessage" id="passwordError"></p>
+
+          <label for="passwordConfirm">Confirm Password:</label>
+          <input
+            class="inputStyle"
+            type="password"
+            id="passwordConfirm"
+            name="passwordConfirm"
+            th:name="passwordConfirm"
+            th:value="*{passwordConfirm}"
+            autofocus
+            autofill="off"
+            onblur="confirmPasswordValidation(document.registerForm)"
+          />
+          <p class="errorMessage" id="passwordConfirmError"></p>
+
+          <label for="dateOfBirth">Date of Birth:</label>
+          <input
+            class="inputStyle"
+            type="date"
+            id="dateOfBirth"
+            name="dateOfBirth"
+            th:name="dateOfBirth"
+            th:value="*{dateOfBirth}"
+            autofocus
+            autocomplete="off"
+            onblur="ageValidation(document.registerForm)"
+          />
+          <p class="errorMessage" id="dateOfBirthError"></p>
+
+          <input class="inputStyle" id="submit" type="submit" value="Submit" disabled/>
+        </form>
+        <p class="registerLink"> Already have an account?<a id="registerLink" th:href="@{/login}"> Login Here.</a></p>
+      </div>
+    </div>
+  </body>
+</html>

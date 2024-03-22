@@ -2,17 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="headerfiles">
     <meta charset="UTF-8"/>
-    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
 <div th:fragment="header">
-    <h1>Thymeleaf Fragments sample</h1>
+    <h1>Gardener's Grove</h1>
 </div>
 <p class="intro">Go to the next page to see fragments in action</p>
 <footer th:fragment="footer">
-    <a th:href="@{main}">Fragments Index</a> |
-    <a th:href="@{params}">Fragment params</a> |
-    <a th:href="@{../demo}">Back to home</a>
+    <p class="example footer">This is what the footer would look like</p>
 </footer>
 </body>
 </html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script
+            type="text/javascript"
+            src="/javascript/ValidationService.js"
+    ></script>
+  </head>
+  <body>
+    <div id="app_container">
+      <main>
+        <header th:insert="fragments/general.html :: header"></header>
+        <div id="form">
+          <form th:action="@{login}" method="post" name="loginForm">
+            <label for="email">Email Address:</label>
+            <input
+                    class="inputStyle"
+                    type="email"
+                    id="email"
+                    name="email"
+                    th:name="username"
+                    autofocus
+                    onblur="emailValidation(document.loginForm)"
+            />
+            <p class="errorMessage" id="emailError"></p>
+
+            <label for="password">Password:</label>
+            <input class="inputStyle" type="password" id="password" name="password"
+                   th:name="password" >
+              <p class="errorMessage" th:text="${error}"></p>
+
+            <input class="inputStyle" id="sign_in_button" type="submit" value="Sign In">
+          </form>
+        <p class="registerLink"> Don't have an account?<a id="registerLink" th:href="@{/register}"> Register here.</a></p>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
