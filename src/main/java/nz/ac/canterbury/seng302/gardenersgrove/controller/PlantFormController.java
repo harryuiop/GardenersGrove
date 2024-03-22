@@ -85,6 +85,7 @@ public class PlantFormController extends GardensSidebar {
                              @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
                              Model model) {
         logger.info("POST /plantform");
+
         boolean imageIsValid = false;
 
         Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
