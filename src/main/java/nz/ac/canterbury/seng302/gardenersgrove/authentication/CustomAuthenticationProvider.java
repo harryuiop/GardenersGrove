@@ -19,11 +19,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     /**
      * Autowired's users service for custom authentication using our own user objects
      */
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    public CustomAuthenticationProvider() {
+    public CustomAuthenticationProvider(UserService userService) {
         super();
+        this.userService = userService;
     }
 
     /**
@@ -46,18 +46,18 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         // Attempt to retrieve user from the database using email and password
-        Users u = userService.getUserByEmailAndPassword(email, password);
+        Users user = userService.getUserByEmailAndPassword(email, password);
 
         // If user is not found, throw BadCredentialsException
-        if (u == null) {
+        if (user == null) {
             throw new BadCredentialsException("Invalid username or password");
         }
 
         // If user is found, create and return a UsernamePasswordAuthenticationToken
         return new UsernamePasswordAuthenticationToken(
-                u.getUserId(), // User ID - NOTE: This is how you change the principle name for spring secuirty of user entitys
+                user.getUserId(), // User ID - NOTE: This is how you change the principle name for spring secuirty of user entitys
                 null, // Null credentials as they're already authenticated
-                u.getAuthorities() // User's authorities (roles)
+                user.getAuthorities() // User's authorities (roles)
         );
     }
 
