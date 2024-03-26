@@ -11,7 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -25,6 +29,9 @@ public class RegisterController {
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
     ErrorChecker validator = new ErrorChecker();
+
+    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @Autowired
     UserService userService;
@@ -53,8 +60,9 @@ public class RegisterController {
      * @return The name of the register view template.
      */
     @GetMapping("/register")
-    public String showRegisterPage() {
+    public String showRegisterPage(Model model) {
         logger.info("GET /register");
+        model.addAttribute("noSurname", false);
         return "register";
     }
 
@@ -75,11 +83,27 @@ public class RegisterController {
             @RequestParam(name = "email") String email,
             @RequestParam(name = "firstName") String firstName,
             @RequestParam(name = "lastName") String lastName,
+            @RequestParam(name = "noSurname", required = false) Boolean noSurname,
             @RequestParam(name = "address") String address,
             @RequestParam(name = "password") String password,
+            @RequestParam(name = "passwordConfirm") String passwordConfirm,
             @RequestParam(name = "dateOfBirth") String dateOfBirth, Model model
     ) {
-        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, email, address, password, dateOfBirth);
+        if (noSurname == null) {
+            noSurname = false;
+        }
+
+        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email, address, password, passwordConfirm, dateOfBirth);
+
+        Date dob = null;
+        try {
+            dob = readFormat.parse(dateOfBirth);
+        } catch (ParseException exception) {
+            errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
+        }
+
+
+
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
@@ -87,6 +111,7 @@ public class RegisterController {
             model.addAttribute("firstName", firstName);
             model.addAttribute("lastName", lastName);
             model.addAttribute("email", email);
+            model.addAttribute("noSurname", noSurname);
             return "register";
         }
         userService.addUsers(

@@ -31,7 +31,7 @@
             id="firstName"
             name="firstName"
             th:name="firstName"
-            th:value="*{firstName}"
+            th:value="${firstName}"
             autofocus
             autocomplete="off"
           />
@@ -45,7 +45,7 @@
             id="lastName"
             name="lastName"
             th:name="lastName"
-            th:value="*{lastName}"
+            th:value="${lastName}"
             autofocus
             autocomplete="off"
           />
@@ -57,13 +57,29 @@
                 id="noSurname"
                 value="checked"
                 th:name="noSurname"
-                th:value="*{noSurname}"
+                th:checked="${noSurname}"
+                th:value="${noSurname}"
                 autofocus
                 autocomplete="off"
+                onchange="updateCheckboxValue()"
               />
               I have no surname
             </label>
           </div>
+
+          <script>
+            function updateCheckboxValue() {
+              var checkbox = document.getElementById("noSurname");
+              var lastName = document.getElementById("lastName")
+              if (checkbox.checked) {
+                checkbox.value = "true";
+                lastName.disabled = false;
+              } else {
+                checkbox.value = "false";
+                lastName.disabled = true;
+              }
+            }
+          </script>
 
           <p class="errorMessage" id="lastNameError" th:text=${lastNameError}></p>
 
@@ -74,7 +90,7 @@
             id="email"
             name="email"
             th:name="email"
-            th:value="*{email}"
+            th:value="${email}"
             autofocus
             autocomplete="off"
           />
@@ -87,7 +103,7 @@
             id="address"
             name="address"
             th:name="address"
-            th:value="*{address}"
+            th:value="${address}"
             autofocus
             autocomplete="off"
           />
@@ -126,7 +142,7 @@
             id="dateOfBirth"
             name="dateOfBirth"
             th:name="dateOfBirth"
-            th:value="*{dateOfBirth}"
+            th:value="${dateOfBirth}"
             autofocus
             autocomplete="off"
           />

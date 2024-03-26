@@ -8,8 +8,14 @@ import java.util.Map;
  * Checks the validity of the entries into the garden form
  */
 public class ErrorChecker {
-
+    /**
+     * Contains functions to verify the form entries are in correct structure according to acceptance criteria
+     */
     private final FormValuesValidator valuesValidator = new FormValuesValidator();
+    /**
+     * Contains functions to verify user form entries are correctly structured according to accepance criteria
+     */
+    private final UserValidation userValidator = new UserValidation();
 
     /**
      * Checks for valid user entries that meet the given requirements
@@ -66,24 +72,48 @@ public class ErrorChecker {
         return errors;
     }
 
-    public Map<String, String> registerUserFormErrors(String firstName, String lastName, String email, String address,
-                                                      String password, String dateOfBirth)
+    public Map<String, String> registerUserFormErrors(String firstName, String lastName, Boolean noSurname, String email, String address,
+                                                      String password, String passwordConfirm, String dateOfBirth)
     {
         Map<String, String> errors = new HashMap<>();
+        // Checking first name
         if (!valuesValidator.checkBlank(firstName)) {
             errors.put("firstNameError", "First Name cannot be empty");
-        } else if (valuesValidator.checkNameLength(firstName)){
+        } else if (!valuesValidator.checkNameLength(firstName)){
             errors.put("firstNameError", "First Name cannot exceed length of 64 characters");
         } else if (!valuesValidator.checkUserName(firstName)) {
             errors.put("firstNameError", "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
         }
-        if (!valuesValidator.checkBlank(lastName)) {
-            errors.put("lastNameError", "Last Name cannot be empty unless box is ticked");
-        } else if (valuesValidator.checkNameLength(lastName)){
-            errors.put("lastNameError", "Last Name cannot exceed length of 64 characters");
-        } else if (valuesValidator.checkUserName(lastName)) {
-            errors.put("lastNameError", "Last Name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+        // Checking last name
+        if (!noSurname) {
+            if (!valuesValidator.checkBlank(lastName)) {
+                errors.put("lastNameError", "Last Name cannot be empty unless box is ticked");
+            } else if (!valuesValidator.checkNameLength(lastName)) {
+                errors.put("lastNameError", "Last Name cannot exceed length of 64 characters");
+            } else if (!valuesValidator.checkUserName(lastName)) {
+                errors.put("lastNameError", "Last Name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+            }
         }
+        // Checking email
+        if (!valuesValidator.checkBlank(email)) {
+            errors.put("emailError", "Email cannot be empty");
+        } else if (!userValidator.emailIsValid(email)) {
+            errors.put("emailError", "This is not a valid email address");
+        }
+        // Checking password
+        if (!valuesValidator.checkBlank(password)) {
+            errors.put("passwordError", "Password cannot be empty");
+        } else if (!userValidator.passwordIsValid(password)) {
+            errors.put("passwordError", "Password must contain...");
+        } else if (!valuesValidator.checkConfirmPasswords(password, passwordConfirm)) {
+            errors.put("passwordConfirmError", "Passwords are not equal");
+        }
+        // Checking DOB
+        if (!valuesValidator.checkBlank(dateOfBirth)) {
+            errors.put("dateOfBirthError", "Date of Birth cannot be empty");
+        }
+
+
         return errors;
     }
 }

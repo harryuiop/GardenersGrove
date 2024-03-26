@@ -1,6 +1,13 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 public class FormValuesValidator {
+    static String emailPattern = "(([^<>()\\[\\].,;:\\s@\"]+(\\.[^<>()\\[\\].,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z0-9]+\\.)+[a-zA-Z]{2,}))";
+    static String passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
+    static String namePattern = "^[a-zA-Z\\-' ]+$";
+
     /**
      * Checks the String contains valid characters
      *
@@ -33,19 +40,57 @@ public class FormValuesValidator {
         return size == null || size > 0;
     }
 
+    /**
+     * Checks that if the description is not empty then it contains less than 512 characters so it can
+     * fit into the database.
+     * @param description the description of the plant added by the user in the plant form
+     * @return true if the description is shorter than 512 characters otherwise returns false
+     */
     public boolean checkDescription(String description) {
         return description == null || description.length() <= 512;
     }
 
+    /**
+     * Checks that the number of plants if entered is a positive number.
+     * @param count the number entered by the user in the plant form as the number of these plants in said garden
+     * @return true if the number is positive or there is no entry. If the plant is negative returns false
+     */
     public boolean checkCount(Integer count) {
         return count == null || count > 0;
     }
 
-    public boolean checkPassword(String password) {return password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");}
-    public boolean checkUserName(String name) {
-        return name.matches("^[a-zA-Z\\-' ]+$");
-    }
+    /**
+     * Checks that the user's name is less than 64 characters
+     * @param name the name entered in the user form that is to be checked
+     * @return true if the name is less than or equal to 64, false if greater than
+     */
     public boolean checkNameLength(String name) {
-        return name.length() > 64;
+        return name.length() <= 64;
+    }
+
+    /**
+     * Checks the users' name contains only valid characters
+     * @param name the name inputed by the user in the form
+     * @return true if name only include letters and -, otherwise false
+     */
+    public boolean checkUserName(String name) {
+        return name.matches(namePattern);
+    }
+
+    /**
+     * Checks that the values for password and the confirm password are the same.
+     * @param password the password that has been entered by the user and is valid
+     * @param confirmer should be the password re-entered by the user
+     * @return true if the password and confirmer are the same, otherwise false.
+     */
+    public boolean checkConfirmPasswords(String password, String confirmer) {
+        return confirmer.equals(password);
+    }
+
+    public static boolean checkOver13(String dob) {
+        LocalDate dobDate = LocalDate.parse(dob);
+        LocalDate currentDate = LocalDate.now();
+        LocalDate validDate = currentDate.minusYears(13);
+        return dobDate.isBefore(validDate);
     }
 }
