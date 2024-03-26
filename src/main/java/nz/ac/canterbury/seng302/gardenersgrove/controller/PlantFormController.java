@@ -43,6 +43,13 @@ public class PlantFormController extends GardensSidebar {
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+    /**
+     * The PlantFormController constructor need not be called ever.
+     * It is autowired in by Spring at run time to initialise instances of all the necessary services.
+     * @param plantService The Plant database access object.
+     * @param gardenService The Garden database access object.
+     * @param userService The User database access object.
+     */
     @Autowired
     public PlantFormController(PlantService plantService, GardenService gardenService, UserService userService) {
         this.plantService = plantService;
@@ -52,7 +59,7 @@ public class PlantFormController extends GardensSidebar {
     }
 
     /**
-     * Gets form to be displayed, and passes previous form values to the HTML.
+     * Gets form to be displayed and passes previous form values and user/garden information to the HTML.
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
