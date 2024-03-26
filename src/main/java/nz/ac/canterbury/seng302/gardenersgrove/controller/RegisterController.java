@@ -119,6 +119,6 @@ public class RegisterController {
         userService.addUsers(
                 new Users(email, firstName, lastName, address, password, dateOfBirth)
         );
-        return "redirect:/login";
+        return "redirect:/profile";
     }
 }

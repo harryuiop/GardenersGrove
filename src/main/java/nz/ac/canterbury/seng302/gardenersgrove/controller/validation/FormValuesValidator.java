@@ -105,11 +105,11 @@ public class FormValuesValidator {
     }
 
     public boolean emailInUse(String email, UserService userService) {
-        List<Users> users = userService.getAllUsers();
-        for (Users user: users) {
-            if (user.getEmail().equals(email)) {
-                return true;
-            }
+        try {
+            userService.getUserByEmail(email);
+        }
+        catch (Error err) {
+            return true;
         }
         return false;
     }
