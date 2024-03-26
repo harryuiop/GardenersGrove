@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -40,9 +39,6 @@ class EditPlantFormControllerTest {
     private final int originalPlantCount = 1;
 
     private final String originalPlantDescription = "description";
-
-    private final Date originalPlantDate = new Date();
-
 
     @BeforeEach
     void setUp() {
