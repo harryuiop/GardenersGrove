@@ -1,12 +1,13 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class FormValuesValidator {
-    static String emailPattern = "(([^<>()\\[\\].,;:\\s@\"]+(\\.[^<>()\\[\\].,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z0-9]+\\.)+[a-zA-Z]{2,}))";
-    static String passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
     static String namePattern = "^[a-zA-Z\\-' ]+$";
+//    private final UserService userService = new UserService();
 
     /**
      * Checks the String contains valid characters
@@ -23,7 +24,6 @@ public class FormValuesValidator {
      *
      * @param string represents the string being checked
      * @return false to show there are no errors
-     * @throws IllegalArgumentException
      */
     public boolean checkBlank(String string) {
         return !string.isBlank();
@@ -34,7 +34,6 @@ public class FormValuesValidator {
      *
      * @param size the size being checked
      * @return false if there is no error
-     * @throws IllegalArgumentException
      */
     public boolean checkSize(Float size) {
         return size == null || size > 0;
@@ -87,10 +86,25 @@ public class FormValuesValidator {
         return confirmer.equals(password);
     }
 
-    public static boolean checkOver13(String dob) {
-        LocalDate dobDate = LocalDate.parse(dob);
-        LocalDate currentDate = LocalDate.now();
-        LocalDate validDate = currentDate.minusYears(13);
-        return dobDate.isBefore(validDate);
+    /**
+     * Checks that the user is under 100 years old
+     * @param dob The inputted day the user was born in format DD/MM/YYYY in a string
+     * @return true if the user is younger than 100, otherwise false
+     */
+    public boolean checkUnder100(String dob) {
+        try {
+            LocalDate dobDate = LocalDate.parse(dob);
+            LocalDate currentDate = LocalDate.now();
+            LocalDate invalidDate = currentDate.minusYears(120);
+            return !dobDate.isBefore(invalidDate);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+
+    }
+
+    public boolean emailInUse(String email) {
+
+        return true;
     }
 }

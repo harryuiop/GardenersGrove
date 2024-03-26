@@ -5,6 +5,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
 /**
@@ -75,5 +77,9 @@ public class UserService {
      */
     public Users getUserById(int id) {
         return userRepository.findByUserId(id);
+    }
+
+    public List<Users> getAllUsers() {
+        return userRepository.findAll();
     }
 }

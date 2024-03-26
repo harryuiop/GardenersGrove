@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -93,16 +92,19 @@ public class RegisterController {
             noSurname = false;
         }
 
-        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email, address, password, passwordConfirm, dateOfBirth);
-
-        Date dob = null;
+        boolean dateOfBirthValid = true;
         try {
-            dob = readFormat.parse(dateOfBirth);
+            if (dateOfBirth != null && !dateOfBirth.isBlank()) {
+                readFormat.parse(dateOfBirth);
+            }
         } catch (ParseException exception) {
-            errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
+            dateOfBirthValid = false;
         }
 
 
+        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
+                                                                        password, passwordConfirm,
+                                                                        dateOfBirthValid, dateOfBirth);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {

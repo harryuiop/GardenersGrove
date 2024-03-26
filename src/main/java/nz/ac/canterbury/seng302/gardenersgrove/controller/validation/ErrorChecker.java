@@ -1,8 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
 /**
  * Checks the validity of the entries into the garden form
@@ -12,10 +13,6 @@ public class ErrorChecker {
      * Contains functions to verify the form entries are in correct structure according to acceptance criteria
      */
     private final FormValuesValidator valuesValidator = new FormValuesValidator();
-    /**
-     * Contains functions to verify user form entries are correctly structured according to accepance criteria
-     */
-    private final UserValidation userValidator = new UserValidation();
 
     /**
      * Checks for valid user entries that meet the given requirements
@@ -72,8 +69,8 @@ public class ErrorChecker {
         return errors;
     }
 
-    public Map<String, String> registerUserFormErrors(String firstName, String lastName, Boolean noSurname, String email, String address,
-                                                      String password, String passwordConfirm, String dateOfBirth)
+    public Map<String, String> registerUserFormErrors(String firstName, String lastName, Boolean noSurname, String email,
+                                                      String password, String passwordConfirm, boolean validDate, String dateOfBirth)
     {
         Map<String, String> errors = new HashMap<>();
         // Checking first name
@@ -97,20 +94,30 @@ public class ErrorChecker {
         // Checking email
         if (!valuesValidator.checkBlank(email)) {
             errors.put("emailError", "Email cannot be empty");
-        } else if (!userValidator.emailIsValid(email)) {
-            errors.put("emailError", "This is not a valid email address");
+        } else if (!emailIsValid(email)) {
+            errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
+        } else if (valuesValidator.emailInUse(email)){
+            errors.put("emailError", "This email address is already in use");
         }
         // Checking password
         if (!valuesValidator.checkBlank(password)) {
             errors.put("passwordError", "Password cannot be empty");
-        } else if (!userValidator.passwordIsValid(password)) {
-            errors.put("passwordError", "Password must contain...");
+        } else if (!passwordIsValid(password)) {
+            errors.put("passwordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         } else if (!valuesValidator.checkConfirmPasswords(password, passwordConfirm)) {
             errors.put("passwordConfirmError", "Passwords are not equal");
         }
         // Checking DOB
-        if (!valuesValidator.checkBlank(dateOfBirth)) {
-            errors.put("dateOfBirthError", "Date of Birth cannot be empty");
+        if (validDate) {
+            if (!valuesValidator.checkBlank(dateOfBirth)) {
+                errors.put("dateOfBirthError", "Date of Birth cannot be empty");
+            } else if (!dobIsValid(dateOfBirth)) {
+                errors.put("dateOfBirthError", "User cannot be below age 13");
+            } else if (!valuesValidator.checkUnder100(dateOfBirth)) {
+                errors.put("dateOfBirthError", "User cannot be older than 120");
+            }
+        } else {
+            errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
 

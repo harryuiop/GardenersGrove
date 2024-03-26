@@ -73,10 +73,11 @@
               var lastName = document.getElementById("lastName")
               if (checkbox.checked) {
                 checkbox.value = "true";
-                lastName.disabled = false;
+                lastName.value = "";
+                lastName.disabled=true;
               } else {
                 checkbox.value = "false";
-                lastName.disabled = true;
+                lastName.disabled=false;
               }
             }
           </script>
