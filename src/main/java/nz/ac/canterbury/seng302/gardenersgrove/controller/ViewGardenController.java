@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,16 +42,17 @@ public class ViewGardenController extends GardensSidebar {
     }
 
     /**
-     * Set up view garden page.
+     * Set up view garden page and display attributes.
      *
      * @return Thyme leaf html template of the view garden page.
      */
     @GetMapping("/view-garden")
     public String home(@RequestParam(name = "gardenId", required = false) Long gardenId, Model model) {
         logger.info("GET /view-garden");
+        logger.info("Garden Id: " + gardenId);
         this.updateGardensSidebar(model, gardenService);
         model.addAttribute("garden", gardenService.getGardenById(gardenId));
-        model.addAttribute("id", gardenId);
+        model.addAttribute("gardenId", gardenId);
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isPresent()) {
             Garden garden = optionalGarden.get();
@@ -107,7 +109,7 @@ public class ViewGardenController extends GardensSidebar {
 
         this.updateGardensSidebar(model, gardenService);
         model.addAttribute("garden", gardenService.getGardenById(gardenId));
-        model.addAttribute("id", gardenId);
+        model.addAttribute("gardenId", gardenId);
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isPresent()) {
             Garden garden = optionalGarden.get();
