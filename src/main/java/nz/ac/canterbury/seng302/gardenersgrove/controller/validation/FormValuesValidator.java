@@ -1,13 +1,14 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 public class FormValuesValidator {
     static String namePattern = "^[a-zA-Z\\-' ]+$";
-//    private final UserService userService = new UserService();
 
     /**
      * Checks the String contains valid characters
@@ -103,8 +104,13 @@ public class FormValuesValidator {
 
     }
 
-    public boolean emailInUse(String email) {
-
-        return true;
+    public boolean emailInUse(String email, UserService userService) {
+        List<Users> users = userService.getAllUsers();
+        for (Users user: users) {
+            if (user.getEmail().equals(email)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

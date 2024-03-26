@@ -1,5 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,7 +72,8 @@ public class ErrorChecker {
     }
 
     public Map<String, String> registerUserFormErrors(String firstName, String lastName, Boolean noSurname, String email,
-                                                      String password, String passwordConfirm, boolean validDate, String dateOfBirth)
+                                                      String password, String passwordConfirm, boolean validDate, String dateOfBirth,
+                                                      UserService userService)
     {
         Map<String, String> errors = new HashMap<>();
         // Checking first name
@@ -96,7 +99,7 @@ public class ErrorChecker {
             errors.put("emailError", "Email cannot be empty");
         } else if (!emailIsValid(email)) {
             errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
-        } else if (valuesValidator.emailInUse(email)){
+        } else if (valuesValidator.emailInUse(email, userService)){
             errors.put("emailError", "This email address is already in use");
         }
         // Checking password

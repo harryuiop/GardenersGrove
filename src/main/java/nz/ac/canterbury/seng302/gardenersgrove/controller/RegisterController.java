@@ -81,7 +81,7 @@ public class RegisterController {
     public String addNewUser(
             @RequestParam(name = "email") String email,
             @RequestParam(name = "firstName") String firstName,
-            @RequestParam(name = "lastName") String lastName,
+            @RequestParam(name = "lastName", required = false) String lastName,
             @RequestParam(name = "noSurname", required = false) Boolean noSurname,
             @RequestParam(name = "address") String address,
             @RequestParam(name = "password") String password,
@@ -104,7 +104,7 @@ public class RegisterController {
 
         Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
                                                                         password, passwordConfirm,
-                                                                        dateOfBirthValid, dateOfBirth);
+                                                                        dateOfBirthValid, dateOfBirth, userService);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
