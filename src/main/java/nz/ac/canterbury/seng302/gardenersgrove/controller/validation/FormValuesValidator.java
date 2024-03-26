@@ -88,11 +88,11 @@ public class FormValuesValidator {
     }
 
     /**
-     * Checks that the user is under 100 years old
-     * @param dob The inputted day the user was born in format DD/MM/YYYY in a string
+     * Checks that the user is under 120 years old
+     * @param dob The inputted day the user was born in format YYYY/MM/DD in a string
      * @return true if the user is younger than 100, otherwise false
      */
-    public boolean checkUnder100(String dob) {
+    public boolean checkUnder120(String dob) {
         try {
             LocalDate dobDate = LocalDate.parse(dob);
             LocalDate currentDate = LocalDate.now();

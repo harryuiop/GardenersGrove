@@ -1,4 +1,4 @@
-package nz.ac.canterbury.seng302.gardenersgrove.integration;
+package nz.ac.canterbury.seng302.gardenersgrove.unit;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.dobIsValid;
 
 @DataJpaTest
 @Import(FormValuesValidator.class)
@@ -73,5 +75,54 @@ public class FormValuesValidationTest {
     void checkDesc_ValidDesc_returnTrue() {
     String desc = "wdfghjio(*&^%$#f5678";
     Assertions.assertTrue(valuesValidator.checkDescription(desc));
+    }
+
+    @Test
+    void checkValidName_returnTrue() {
+        String name = "Jane";
+        Assertions.assertTrue(valuesValidator.checkUserName(name));
+    }
+
+    @Test
+    void checkInvalidName_returnFalse() {
+        String name = "4eva!";
+        Assertions.assertFalse(valuesValidator.checkUserName((name)));
+    }
+
+    @Test
+    void checkValidNameLength_returnTrue() {
+        String name = "Jane";
+        Assertions.assertTrue(valuesValidator.checkNameLength(name));
+    }
+
+    @Test
+    void checkInvalidNameLength_returnFalse() {
+        String name = "AaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaA";
+        Assertions.assertFalse(valuesValidator.checkNameLength(name));
+    }
+
+    @Test
+    void checkSamePassword_returnTrue() {
+        String password = "abE123!!";
+        Assertions.assertTrue(valuesValidator.checkConfirmPasswords(password, password));
+    }
+
+    @Test
+    void checkDiffPassword_returnFalse() {
+        String pass1 = "Passw0rd$";
+        String pass2 = "pA$$woe4";
+        Assertions.assertFalse(valuesValidator.checkConfirmPasswords(pass1, pass2));
+    }
+
+    @Test
+    void checkUnder120Valid_returnTrue() {
+        String dob = "2000-01-01";
+        Assertions.assertTrue(dobIsValid(dob));
+    }
+
+    @Test
+    void checkOver120Valid_returnTrue() {
+        String dob = "1903-01-01";
+        Assertions.assertFalse(dobIsValid(dob));
     }
 }

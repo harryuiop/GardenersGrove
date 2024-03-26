@@ -116,7 +116,7 @@ public class ErrorChecker {
                 errors.put("dateOfBirthError", "Date of Birth cannot be empty");
             } else if (!dobIsValid(dateOfBirth)) {
                 errors.put("dateOfBirthError", "User cannot be below age 13");
-            } else if (!valuesValidator.checkUnder100(dateOfBirth)) {
+            } else if (!valuesValidator.checkUnder120(dateOfBirth)) {
                 errors.put("dateOfBirthError", "User cannot be older than 120");
             }
         } else {
