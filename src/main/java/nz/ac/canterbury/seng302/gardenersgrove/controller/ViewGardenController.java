@@ -49,16 +49,7 @@ public class ViewGardenController extends GardensSidebar {
     @GetMapping("/view-garden")
     public String home(@RequestParam(name = "gardenId", required = false) Long gardenId, Model model) {
         logger.info("GET /view-garden");
-        logger.info("Garden Id: " + gardenId);
-        this.updateGardensSidebar(model, gardenService);
-        model.addAttribute("garden", gardenService.getGardenById(gardenId));
-        model.addAttribute("gardenId", gardenId);
-        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isPresent()) {
-            Garden garden = optionalGarden.get();
-            List<Plant> plants = garden.getPlants();
-            model.addAttribute("plants", plants);
-        }
+        this.addViewGardenAttributes(model, gardenId);
         return "viewGarden";
     }
 
@@ -107,6 +98,11 @@ public class ViewGardenController extends GardensSidebar {
             }
         }
 
+        this.addViewGardenAttributes(model, gardenId);
+        return "viewGarden";
+    }
+
+    private void addViewGardenAttributes(Model model, Long gardenId) {
         this.updateGardensSidebar(model, gardenService);
         model.addAttribute("garden", gardenService.getGardenById(gardenId));
         model.addAttribute("gardenId", gardenId);
@@ -116,6 +112,5 @@ public class ViewGardenController extends GardensSidebar {
             List<Plant> plants = garden.getPlants();
             model.addAttribute("plants", plants);
         }
-        return "viewGarden";
     }
 }
