@@ -322,3 +322,20 @@ nav button {
 textarea {
     width: 250px;
 }
+
+.userProfile {
+    display: flex;
+    align-items: center;
+}
+
+.userProfileImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    margin: 10px;
+}
+
+.userProfileName {
+    color: var(--light-color);
+}
