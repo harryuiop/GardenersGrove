@@ -71,6 +71,7 @@ public class LogInController {
             @RequestParam(name = "password") String password,
             Model model
     ) {
+
         return "login";
     }
 }

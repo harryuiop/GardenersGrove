@@ -79,7 +79,4 @@ public class UserService {
         return userRepository.findByUserId(id);
     }
 
-    public List<Users> getAllUsers() {
-        return userRepository.findAll();
-    }
 }
