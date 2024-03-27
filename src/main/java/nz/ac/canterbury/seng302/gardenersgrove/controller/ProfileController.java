@@ -1,7 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
@@ -27,7 +27,6 @@ import static java.lang.Integer.parseInt;
 @Controller
 public class ProfileController {
 
-    private static final String UPLOAD_DIRECTORY = "/csse/users/hel46/team-l/src/main/resources/static/css/images";
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
@@ -87,10 +86,19 @@ public class ProfileController {
     @PostMapping("/editProfile")
     public String uploadImage(@RequestParam("image") MultipartFile file,
                               Model model) throws IOException {
-
-        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
-        Files.write(fileNameAndPath, file.getBytes());
-
+        ImageValidator imageValidator = new ImageValidator(file);
+        if (imageValidator.isValid()) {
+            String fileName = ImageStore.storeImage(file);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            int currentPrincipalName = parseInt(auth.getName());
+            User user = userService.getUserById(currentPrincipalName);
+            user.setProfilePictureFileName(fileName);
+            userService.addUsers(user);
+        } else {
+            for (Map.Entry<String, String> entry : imageValidator.getErrorMessages().entrySet()) {
+                model.addAttribute(entry.getKey(), entry.getValue());
+            }
+        }
         return "editProfile";
     }
 
