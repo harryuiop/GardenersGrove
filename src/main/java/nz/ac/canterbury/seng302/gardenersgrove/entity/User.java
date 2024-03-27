@@ -162,6 +162,24 @@ public class User {
     }
 
     /**
+     * Retrieves the file name of the user's profile picture.
+     *
+     * @return The file name of the user's profile picture.
+     */
+    public String getProfilePictureFileName() {
+        return profilePictureFileName;
+    }
+
+    /**
+     * Sets the file name of the user's profile picture.
+     *
+     * @param profilePictureFileName The file name of the user's profile picture.
+     */
+    public void setProfilePictureFileName(String profilePictureFileName) {
+        this.profilePictureFileName = profilePictureFileName;
+    }
+
+    /**
      * Assigns roles to the user.
      * It takes a list of role names as input, creates Authority objects for each role, and adds them to the userRoles list.
      *
