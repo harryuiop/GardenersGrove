@@ -1,11 +1,11 @@
 package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entity class representing a user.
@@ -54,6 +54,9 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_ID", nullable = false)
     private Integer userId;
+
+    @Column(name = "profile_picture_file_name")
+    private String profilePictureFileName;
 
     /*
      * TODO - May be we need to create properties for GrantedAuthority
