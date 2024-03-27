@@ -83,15 +83,17 @@ public class ProfileController {
      * @param file  The multipart file object uploaded by the user
      * @return The name of the editProfile view template.
      */
-    @PostMapping("/editProfile")
+    @PostMapping("/uploadProfileImage")
     public String uploadImage(@RequestParam("image") MultipartFile file,
                               Model model) throws IOException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        int currentPrincipalName = parseInt(auth.getName());
+        User user = userService.getUserById(currentPrincipalName);
+        model.addAttribute("user", user);
+
         ImageValidator imageValidator = new ImageValidator(file);
         if (imageValidator.isValid()) {
             String fileName = ImageStore.storeImage(file);
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            int currentPrincipalName = parseInt(auth.getName());
-            User user = userService.getUserById(currentPrincipalName);
             user.setProfilePictureFileName(fileName);
             userService.addUsers(user);
         } else {
