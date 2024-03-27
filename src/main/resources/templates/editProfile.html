@@ -4,10 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Profile Page</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-    <script
-            type="text/javascript"
-            src="/javascript/ValidationService.js"
-    ></script>
+    <script type="text/javascript" src="/javascript/ValidationService.js"></script>
 </head>
 <body>
 
@@ -160,14 +157,6 @@
         </form>
     </div>
 </div>
-<script>
-    document.getElementById('profilePicture').addEventListener('click', function() {
-        document.getElementById('profilePictureInput').click();
-    });
-
-    document.getElementById('profilePictureInput').addEventListener('change', function() {
-        document.getElementById('uploadProfileImage').submit();
-    });
-</script>
+<script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Profile Page</title>
@@ -10,11 +10,16 @@
     <div class="profileBody">
       <div class="formContainer">
 
-        <img
-          id="profilePhoto"
-          th:src="@{css/images/default_profile_photo.png}"
-          alt="default"
-        />
+        <div id="profilePictureWrapper">
+          <img
+                  id="profilePicture"
+                  th:src="${user.getProfilePictureFilePath()}"
+                  alt="User profile picture"
+          />
+          <div id="profilePictureOverlay">
+            <div id="profilePictureOverlayIcon">+</div>
+          </div>
+        </div>
 
         <h2 th:text="${user.getFirstName() + ' ' + user.getLastName()}"></h2>
         <h3 id="profileDoB" th:text="${user.getDob()}"></h3>
@@ -22,4 +27,5 @@
       </div>
     </div>
   </body>
+  <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
 </html>
