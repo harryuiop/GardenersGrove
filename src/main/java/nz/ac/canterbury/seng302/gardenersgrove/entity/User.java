@@ -12,7 +12,7 @@ import java.util.List;
  * Represents user information including email, name, address, password, and roles.
  */
 @Entity
-public class Users {
+public class User {
 
     /**
      * User email this will be a user ID and has to be unique and exist
@@ -71,7 +71,8 @@ public class Users {
     /**
      * JPA Empty Constructor
      */
-    protected Users() {}
+    protected User() {
+    }
 
     /**
      * User Constructor to initialize user data.
@@ -83,7 +84,7 @@ public class Users {
      * @param password User's password.
      * @param dob      User's date of birth.
      */
-    public Users(
+    public User(
             String email,
             String firstName,
             String lastName,

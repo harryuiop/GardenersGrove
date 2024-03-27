@@ -1,7 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,7 @@ public class LogInController {
      */
     @GetMapping("/login")
     public String getLoginPage() {
-        userService.addUsers(new Users
+        userService.addUsers(new User
                 ("user@gmail.com", "user", "default", "1 test road", "Password1!", "2000-01-01"));
         return "login";
     }

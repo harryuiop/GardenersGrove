@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -36,9 +36,9 @@ public class UserServiceIntegrationTest {
         String password = "Password123!";
         String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
+        User user = userService.addUsers(new User(email,
                 fname, lname, address, password, dob));
         Assertions.assertEquals(user.getEmail(), email);
         Assertions.assertEquals(user.getFirstName(), fname);
@@ -56,9 +56,9 @@ public class UserServiceIntegrationTest {
         String password = "Password123!";
         String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
+        User user = userService.addUsers(new User(email,
                 fname, lname, address, password, dob));
         Assertions.assertNull(user);
     }
@@ -71,9 +71,9 @@ public class UserServiceIntegrationTest {
         String password = "Password123!";
         String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
+        User user = userService.addUsers(new User(email,
                 fname, lname, address, password, dob));
         Assertions.assertNull(user);
     }
@@ -86,9 +86,9 @@ public class UserServiceIntegrationTest {
         String password = "Password123!";
         String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
+        User user = userService.addUsers(new User(email,
                 fname, lname, address, password, dob));
         Assertions.assertNull(user);
     }
@@ -101,9 +101,9 @@ public class UserServiceIntegrationTest {
         String password = "password1";
         String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
+        User user = userService.addUsers(new User(email,
                 fname, lname, address, password, dob));
         Assertions.assertNull(user);
     }
@@ -116,9 +116,9 @@ public class UserServiceIntegrationTest {
         String password = "Password123!";
         String address = "1 Test Road";
         String dob = LocalDate.now().toString();
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
+        User user = userService.addUsers(new User(email,
                 fname, lname, address, password, dob));
         Assertions.assertNull(user);
     }

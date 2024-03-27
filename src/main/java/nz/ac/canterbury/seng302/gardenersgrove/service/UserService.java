@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class UserService {
      * @param newUser The new user data.
      * @return The UserRepository instance with the new user saved.
      */
-    public Users addUsers(Users newUser) {
+    public User addUsers(User newUser) {
         if (emailIsValid(newUser.getEmail()) &&
                 passwordIsValid(newUser.getPassword()) &&
                 nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
@@ -53,7 +53,7 @@ public class UserService {
      * @param password The password of the user.
      * @return The Users object if found, otherwise null.
      */
-    public Users getUserByEmailAndPassword(String email, String password) {
+    public User getUserByEmailAndPassword(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
@@ -63,7 +63,7 @@ public class UserService {
      * @param email The email of the user.
      * @return The Users object if found, otherwise null.
      */
-    public Users getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -73,7 +73,7 @@ public class UserService {
      * @param id The ID of the user.
      * @return The Users object if found, otherwise null.
      */
-    public Users getUserById(int id) {
+    public User getUserById(int id) {
         return userRepository.findByUserId(id);
     }
 }

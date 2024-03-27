@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -53,7 +53,7 @@ public class ProfileController {
     public String getProfilePage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
-        Users user = userService.getUserById(currentPrincipalName);
+        User user = userService.getUserById(currentPrincipalName);
         model.addAttribute("user", user);
 
         return "profile";
@@ -70,7 +70,7 @@ public class ProfileController {
     public String getEditProfilePage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
-        Users user = userService.getUserById(currentPrincipalName);
+        User user = userService.getUserById(currentPrincipalName);
         model.addAttribute("user", user);
         return "editProfile";
     }
@@ -127,7 +127,7 @@ public class ProfileController {
             @RequestParam(name = "dateOfBirth") String dateOfBirth
     ) {
         userService.addUsers(
-                new Users(email, firstName, lastName, address, password, dateOfBirth)
+                new User(email, firstName, lastName, address, password, dateOfBirth)
         );
         return "login";
     }
