@@ -10,6 +10,22 @@
     <a th:href="@{/editProfile}" class="button">Edit Profile</a>
     <div class="profileBody">
       <div class="formContainer">
+        <form
+                id="uploadProfileImage"
+                th:action="@{uploadProfileImage}"
+                method="post"
+                name="profilePhoto"
+                enctype="multipart/form-data"
+        >
+          <input
+                  id="profilePictureInput"
+                  type="file"
+                  name="image"
+                  accept="image/jpeg, image/png, image/svg"
+                  class="formControlFile"
+                  alt="test"
+          />
+        </form>
 
         <div id="profilePictureWrapper">
           <img
