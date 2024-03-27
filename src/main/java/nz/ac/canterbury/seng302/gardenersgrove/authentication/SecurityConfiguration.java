@@ -122,12 +122,12 @@ public class SecurityConfiguration {
                                 .authenticated()
                 )
                 // Define logging in, a POST "/login" endpoint now exists under the hood, after login redirect to user page
-//                .formLogin(formLogin ->
-//                        formLogin
-//                                .loginPage("/login")
-//                                .loginProcessingUrl("/login_test")
-//                                .defaultSuccessUrl("/profile")
-//                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login")
+                                .loginProcessingUrl("/login_test")
+                                .defaultSuccessUrl("/profile")
+                )
                 // Define logging out, a POST "/logout" endpoint now exists under the hood, redirect to "/login", invalidate session and remove cookie
                 .logout(logout ->
                         logout

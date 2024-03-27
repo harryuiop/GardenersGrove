@@ -80,8 +80,10 @@ public class LogInController {
                 model.addAttribute(error.getKey(), error.getValue());
             }
             return "login";
+        } else {
+            Users user = userService.getUserByEmailAndPassword(email, password);
+            model.addAttribute("user", user);
+        return "/profile";
         }
-        logger.info(errors.toString());
-        return "redirect:/homeTemplate";
     }
 }
