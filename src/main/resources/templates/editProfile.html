@@ -13,28 +13,33 @@
 
 <div class="profileBody">
     <div class="formContainer">
-        <h3>Edit Profile Picture</h3>
         <form
+                id="uploadProfileImage"
                 th:action="@{uploadProfileImage}"
                 method="post"
                 name="profilePhoto"
                 enctype="multipart/form-data"
         >
             <input
+                    id="profilePictureInput"
                     type="file"
                     name="image"
                     accept="image/jpeg, image/png, image/svg"
                     class="formControlFile"
                     alt="test"
             />
-            <button type="submit" class="uploadButton">Upload image</button>
         </form>
 
-        <img
-                id="profilePhoto"
-                th:src="${user.getProfilePictureFilePath()}"
-                alt="User profile picture"
-        />
+        <div id="profilePictureWrapper">
+            <img
+                    id="profilePicture"
+                    th:src="${user.getProfilePictureFilePath()}"
+                    alt="User profile picture"
+            />
+            <div id="profilePictureOverlay">
+                <div id="profilePictureOverlayIcon">+</div>
+            </div>
+        </div>
 
         <form
                 th:action="@{confirmProfileChanges}"
@@ -155,5 +160,14 @@
         </form>
     </div>
 </div>
+<script>
+    document.getElementById('profilePicture').addEventListener('click', function() {
+        document.getElementById('profilePictureInput').click();
+    });
+
+    document.getElementById('profilePictureInput').addEventListener('change', function() {
+        document.getElementById('uploadProfileImage').submit();
+    });
+</script>
 </body>
 </html>
