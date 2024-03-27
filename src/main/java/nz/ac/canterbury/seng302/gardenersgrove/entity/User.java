@@ -171,6 +171,20 @@ public class User {
     }
 
     /**
+     * Retrieves the file path of the user's profile.
+     *
+     * @return The path to the user's profile picture,
+     * or to the default picture if they do not have one.
+     */
+    public String getProfilePictureFilePath() {
+        if (profilePictureFileName != null) {
+            return "/uploads/" + profilePictureFileName;
+        } else {
+            return "images/default_profile_photo.png";
+        }
+    }
+
+    /**
      * Sets the file name of the user's profile picture.
      *
      * @param profilePictureFileName The file name of the user's profile picture.
