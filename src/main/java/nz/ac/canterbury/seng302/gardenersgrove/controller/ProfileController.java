@@ -1,23 +1,22 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.ui.Model;
-import org.slf4j.Logger;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static java.lang.Integer.parseInt;
 
@@ -36,7 +35,7 @@ public class ProfileController {
     /**
      * Constructor for ProfileController.
      *
-     * @param userService The UserService responsible for user-related operations.
+     * @param userService           The UserService responsible for user-related operations.
      * @param authenticationManager The AuthenticationManager for managing user authentication.
      */
     public ProfileController(UserService userService, AuthenticationManager authenticationManager) {
@@ -82,13 +81,12 @@ public class ProfileController {
      * photo from the user and saving it to where he global variable UPLOAD_DIRECTORY specify
      *
      * @param model The Model object used for adding attributes to the view.
-     * @param file The multipart file object uploaded by the user
+     * @param file  The multipart file object uploaded by the user
      * @return The name of the editProfile view template.
      */
     @PostMapping("/editProfile")
-    public String uploadImage(Model model,
-                              @RequestParam("image") MultipartFile file
-    ) throws IOException {
+    public String uploadImage(@RequestParam("image") MultipartFile file,
+                              Model model) throws IOException {
 
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
         Files.write(fileNameAndPath, file.getBytes());
@@ -111,11 +109,11 @@ public class ProfileController {
      * Handles POST requests to the "/confirmProfileChanges" URL.
      * Adds a new user with the provided information.
      *
-     * @param email The email of the user.
-     * @param firstName The first name of the user.
-     * @param lastName The last name of the user.
-     * @param address The address of the user.
-     * @param password The password of the user.
+     * @param email       The email of the user.
+     * @param firstName   The first name of the user.
+     * @param lastName    The last name of the user.
+     * @param address     The address of the user.
+     * @param password    The password of the user.
      * @param dateOfBirth The date of birth of the user.
      * @return The name of the login view template.
      */
