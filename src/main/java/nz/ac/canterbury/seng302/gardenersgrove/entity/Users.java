@@ -24,13 +24,13 @@ public class Users {
      * Users First Name
      */
     @Column(name = "First_name", nullable = false)
-    private String fname;
+    private String firstName;
 
     /**
      * Users Last Name This can be Null
      */
     @Column(name = "Last_name")
-    private String lname;
+    private String lastName;
 
     /**
      * User's Home address
@@ -74,23 +74,23 @@ public class Users {
      * User Constructor to initialize user data.
      *
      * @param email    User email (unique identifier).
-     * @param fname    User's first name.
-     * @param lname    User's last name.
+     * @param firstName    User's first name.
+     * @param lastName    User's last name.
      * @param address  User's home address.
      * @param password User's password.
      * @param dob      User's date of birth.
      */
     public Users(
             String email,
-            String fname,
-            String lname,
+            String firstName,
+            String lastName,
             String address,
             String password,
             String dob
     ) {
         this.email = email;
-        this.fname = fname;
-        this.lname = lname;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.address = address;
         this.password = password;
         this.dob = dob;
@@ -110,8 +110,8 @@ public class Users {
      *
      * @return User's first name.
      */
-    public String getFname() {
-        return fname;
+    public String getFirstName() {
+        return firstName;
     }
 
     /**
@@ -119,8 +119,8 @@ public class Users {
      *
      * @return User's last name.
      */
-    public String getLname() {
-        return lname;
+    public String getLastName() {
+        return lastName;
     }
 
     /**
@@ -192,8 +192,8 @@ public class Users {
         return String.format(
                 "User entity {first name: %s last name: %s " +
                         "email: %s password %s} is created",
-                this.fname,
-                this.lname,
+                this.firstName,
+                this.lastName,
                 this.email,
                 this.password
         );

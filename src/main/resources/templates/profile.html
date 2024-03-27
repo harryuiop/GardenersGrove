@@ -16,7 +16,7 @@
           alt="default"
         />
 
-        <h2 th:text="${user.getFname() + ' ' + user.getLname()}"></h2>
+        <h2 th:text="${user.getFirstName() + ' ' + user.getLastName()}"></h2>
         <h3 id="profileDoB" th:text="${user.getDob()}"></h3>
         <h3 id="profileEmail" th:text="${user.getEmail()}"></h3>
       </div>

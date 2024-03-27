@@ -41,8 +41,8 @@ public class UserServiceIntegrationTest {
         Users user = userService.addUsers(new Users(email,
                 fname, lname, address, password, dob));
         Assertions.assertEquals(user.getEmail(), email);
-        Assertions.assertEquals(user.getFname(), fname);
-        Assertions.assertEquals(user.getLname(), lname);
+        Assertions.assertEquals(user.getFirstName(), fname);
+        Assertions.assertEquals(user.getLastName(), lname);
         Assertions.assertEquals(user.getPassword(), password);
         Assertions.assertEquals(user.getAddress(), address);
         Assertions.assertEquals(user.getDob(), dob);

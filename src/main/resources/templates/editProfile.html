@@ -49,7 +49,7 @@
                     id="firstName"
                     name="firstName"
                     th:name="firstName"
-                    th:value="${user.getFname()}"
+                    th:value="${user.getFirstName()}"
                     autofocus
                     onblur="firstNameValidation(
                     document.registerForm,
@@ -65,7 +65,7 @@
                     id="lastName"
                     name="lastName"
                     th:name="lastName"
-                    th:value="${user.getLname()}"
+                    th:value="${user.getLastName()}"
                     autofocus
                     onblur="lastNameValidation(document.registerForm)"
             />

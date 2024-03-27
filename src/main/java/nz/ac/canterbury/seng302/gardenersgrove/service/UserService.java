@@ -38,7 +38,7 @@ public class UserService {
     public Users addUsers(Users newUser) {
         if (emailIsValid(newUser.getEmail()) &&
                 passwordIsValid(newUser.getPassword()) &&
-                    nameIsValid(newUser.getFname(), newUser.getLname()) &&
+                nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
                             dobIsValid(newUser.getDob()) &&
                                 (getUserByEmail(newUser.getEmail()) == null)) {
             return userRepository.save(newUser);
