@@ -17,7 +17,6 @@ public class UserService {
     /**
      * UserRepository instance to send user data to the database.
      */
-    @Autowired
     private UserRepository userRepository;
 
     /**
@@ -25,6 +24,8 @@ public class UserService {
      *
      * @param userRepository The UserRepository instance.
      */
+    @Autowired
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
