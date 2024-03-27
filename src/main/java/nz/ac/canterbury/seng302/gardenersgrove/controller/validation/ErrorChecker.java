@@ -100,7 +100,7 @@ public class ErrorChecker {
             errors.put("emailError", "Email cannot be empty");
         } else if (!emailIsValid(email)) {
             errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
-        } else if (valuesValidator.emailInUse(email, userService)){
+        } else if (!valuesValidator.emailInUse(email, userService)){
             errors.put("emailError", "This email address is already in use");
         }
         // Checking password

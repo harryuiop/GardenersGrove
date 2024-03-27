@@ -105,12 +105,6 @@ public class FormValuesValidator {
     }
 
     public boolean emailInUse(String email, UserService userService) {
-        try {
-            userService.getUserByEmail(email);
-        }
-        catch (Error err) {
-            return true;
-        }
-        return false;
+        return userService.getUserByEmail(email) == null;
     }
 }

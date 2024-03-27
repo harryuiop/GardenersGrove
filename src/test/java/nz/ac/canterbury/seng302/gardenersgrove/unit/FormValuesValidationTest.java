@@ -1,21 +1,31 @@
 package nz.ac.canterbury.seng302.gardenersgrove.unit;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.dobIsValid;
+import java.time.LocalDate;
 
 @DataJpaTest
 @Import(FormValuesValidator.class)
 
 public class FormValuesValidationTest {
     FormValuesValidator valuesValidator = new FormValuesValidator();
+    UserRepository userRepository;
+    UserService userService;
 
+    @BeforeEach
+    void setUP() {
+        userRepository = Mockito.mock(UserRepository.class);
+        userService = new UserService(userRepository);
+    }
     @Test
     void checkString_validString_returnTrue() {
         String string = "qwertyuiopasdfghjklzxcvbnmABC -'";
@@ -116,13 +126,34 @@ public class FormValuesValidationTest {
 
     @Test
     void checkUnder120Valid_returnTrue() {
-        String dob = "2000-01-01";
-        Assertions.assertTrue(dobIsValid(dob));
+        int age = 20;
+        String dob = LocalDate.now().minusYears(age).toString();
+        Assertions.assertTrue(valuesValidator.checkUnder120(dob));
     }
 
     @Test
-    void checkOver120Valid_returnTrue() {
-        String dob = "1903-01-01";
-        Assertions.assertFalse(dobIsValid(dob));
+    void checkOver120Valid_returnFalse() {
+        int age = 121;
+        String dob = LocalDate.now().minusYears(age).toString();
+        Assertions.assertFalse(valuesValidator.checkUnder120(dob));
+    }
+
+    @Test
+    void checkEmailNotInUse_returnTrue() {
+        String email = "jane@doe.nz";
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(null);
+        Assertions.assertTrue(valuesValidator.emailInUse(email, userService));
+    }
+
+    @Test
+    void checkEmailInUse_returnFalse() {
+        String email = "jane@doe.nz";
+        String firstName = "Jane";
+        String lastName = "Doe";
+        String address = "";
+        String password = "abc!1E";
+        String dob = LocalDate.now().minusYears(20).toString();
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(new Users(email, firstName, lastName,address,password,dob));
+        Assertions.assertFalse(valuesValidator.emailInUse(email, userService));
     }
 }
