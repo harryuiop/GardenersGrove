@@ -11,7 +11,7 @@ import java.util.List;
  * Entity class representing a user.
  * Represents user information including email, name, address, password, and roles.
  */
-@Entity
+@Entity(name = "users")
 public class User {
 
     /**
