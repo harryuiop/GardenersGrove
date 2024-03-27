@@ -1,9 +1,9 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Profile Page</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
     <script
             type="text/javascript"
             src="/javascript/ValidationService.js"
@@ -15,25 +15,25 @@
     <div class="formContainer">
         <h3>Edit Profile Picture</h3>
         <form
-                th:action="@{editProfile}"
+                th:action="@{uploadProfileImage}"
                 method="post"
                 name="profilePhoto"
                 enctype="multipart/form-data"
         >
             <input
-                type="file"
-                name="image"
-                accept="image/*"
-                class="formControlFile"
-                alt="test"
+                    type="file"
+                    name="image"
+                    accept="image/jpeg, image/png, image/svg"
+                    class="formControlFile"
+                    alt="test"
             />
             <button type="submit" class="uploadButton">Upload image</button>
         </form>
 
         <img
-            id="profilePhoto"
-            th:src="@{css/images/default_profile_photo.png}"
-            alt="default"
+                id="profilePhoto"
+                th:src="@{user.getProfilePictureFileName()}"
+                alt="User profile picture"
         />
 
         <form
@@ -148,7 +148,7 @@
                     onblur="ageValidation(document.registerForm)"
             />
             <p class="errorMessage" id="dateOfBirthError"></p>
-            <input class="inputStyle" id="submit" type="submit" value="Submit" disabled />
+            <input class="inputStyle" id="submit" type="submit" value="Submit" disabled/>
             <div id="backDiv">
                 <a th:href="@{profile}" type="button" class="inputStyle" id="backbutton">Back</a>
             </div>
