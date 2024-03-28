@@ -6,6 +6,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +33,16 @@ public class EditPlantFormController extends GardensSidebar {
 
     private final PlantService plantService;
     private final GardenService gardenService;
+    private final UserService userService;
     private final ErrorChecker validate;
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
     private Long id;
 
     @Autowired
-    public EditPlantFormController(PlantService plantService, GardenService gardenService) {
+    public EditPlantFormController(PlantService plantService, GardenService gardenService, UserService userService) {
         this.plantService = plantService;
         this.gardenService = gardenService;
+        this.userService = userService;
         this.validate = new ErrorChecker();
     }
 
@@ -51,7 +54,7 @@ public class EditPlantFormController extends GardensSidebar {
     @GetMapping("/plantform/edit")
     public String form(Model model, @RequestParam(name="plantId") Long plantId) {
         logger.info("GET /plantform/edit");
-        this.updateGardensSidebar(model, gardenService);
+        this.updateGardensSidebar(model, gardenService, userService);
         this.id = plantId;
         Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
         if (optionalPlant.isEmpty()) {

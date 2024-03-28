@@ -4,6 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,16 @@ public class EditGardenController extends GardensSidebar {
     ErrorChecker gardenValidator = new ErrorChecker();
 
     private final GardenService gardenService;
+    private final UserService userService;
 
     /**
      * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
      * @param gardenService the linking agent
      */
     @Autowired
-    public EditGardenController(GardenService gardenService) {
+    public EditGardenController(GardenService gardenService, UserService userService) {
         this.gardenService = gardenService;
+        this.userService = userService;
     }
 
     /**
@@ -82,7 +85,7 @@ public class EditGardenController extends GardensSidebar {
     @GetMapping("/edit-garden")
     public String home(@RequestParam(name = "gardenId", required = true) Long gardenId, Model model) {
         logger.info("GET /edit-garden");
-        this.updateGardensSidebar(model, gardenService);
+        this.updateGardensSidebar(model, gardenService, userService);
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isPresent()) {
