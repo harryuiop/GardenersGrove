@@ -37,14 +37,34 @@ public class UserService {
      * @return The UserRepository instance with the new user saved.
      */
     public User addUsers(User newUser) {
-        if (emailIsValid(newUser.getEmail()) &&
-                passwordIsValid(newUser.getPassword()) &&
-                nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
-                            dobIsValid(newUser.getDob()) &&
-                                (getUserByEmail(newUser.getEmail()) == null)) {
+        if (
+                emailIsValid(newUser.getEmail()) &&
+                        passwordIsValid(newUser.getPassword()) &&
+                        nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
+                        dobIsValid(newUser.getDob()) &&
+                        (getUserByEmail(newUser.getEmail()) == null)
+        ) {
             return userRepository.save(newUser);
         }
         return null;
+    }
+
+    /**
+     * Persist changes to a user.
+     *
+     * @param user The user to update.
+     */
+    public boolean updateUser(User user) {
+        if (
+                emailIsValid(user.getEmail()) &&
+                        passwordIsValid(user.getPassword()) &&
+                        nameIsValid(user.getFirstName(), user.getLastName()) &&
+                        dobIsValid(user.getDob())
+        ) {
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
     /**
