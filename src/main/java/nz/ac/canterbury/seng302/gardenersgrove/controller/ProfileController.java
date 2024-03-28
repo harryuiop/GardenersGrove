@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -85,6 +86,7 @@ public class ProfileController {
      */
     @PostMapping("/uploadProfileImage")
     public String uploadImage(@RequestParam("image") MultipartFile file,
+                              HttpServletRequest request,
                               Model model) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
@@ -101,7 +103,7 @@ public class ProfileController {
                 model.addAttribute(entry.getKey(), entry.getValue());
             }
         }
-        return "editProfile";
+        return "redirect:" + request.getHeader("Referer");
     }
 
     /**
@@ -124,7 +126,7 @@ public class ProfileController {
      * @param lastName    The last name of the user.
      * @param address     The address of the user.
      * @param password    The password of the user.
-     * @param dateOfBirth The date of birth of the user.
+     * @param dateOfBirth The user's date of birth.
      * @return The name of the login view template.
      */
     @PostMapping("/confirmProfileChanges")
