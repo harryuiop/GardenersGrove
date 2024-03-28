@@ -52,7 +52,7 @@ public class UserService {
      *
      * @param email    The email of the user.
      * @param password The password of the user.
-     * @return The Users object if found, otherwise null.
+     * @return The User object if found, otherwise null.
      */
     public User getUserByEmailAndPassword(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
@@ -62,7 +62,7 @@ public class UserService {
      * Retrieves a user by email.
      *
      * @param email The email of the user.
-     * @return The Users object if found, otherwise null.
+     * @return The User object if found, otherwise null.
      */
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -72,7 +72,7 @@ public class UserService {
      * Retrieves a user by ID.
      *
      * @param id The ID of the user.
-     * @return The Users object if found, otherwise null.
+     * @return The User object if found, otherwise null.
      */
     public User getUserById(int id) {
         return userRepository.findByUserId(id);

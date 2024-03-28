@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     /**
-     * Autowired's users service for custom authentication using our own user objects
+     * Autowired's UserService for custom authentication using our own user objects
      */
     private final UserService userService;
 

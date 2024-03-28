@@ -21,13 +21,13 @@ public class User {
     private String email;
 
     /**
-     * Users First Name
+     * User's First Name
      */
     @Column(name = "First_name", nullable = false)
     private String firstName;
 
     /**
-     * Users Last Name This can be Null
+     * User's Last Name This can be Null
      */
     @Column(name = "Last_name")
     private String lastName;
@@ -45,7 +45,7 @@ public class User {
     private String password;
 
     /**
-     * Users Date of Birth
+     * User's Date of Birth
      */
     @Column(name = "Date_of_Birth", nullable = false)
     private String dob;
@@ -220,9 +220,9 @@ public class User {
     }
 
     /**
-     * Generates a string representation of the Users object.
+     * Generates a string representation of the User object.
      *
-     * @return A string representation of the Users object.
+     * @return A string representation of the User object.
      */
     public String toString() {
         return String.format(

@@ -25,7 +25,7 @@ public interface UserRepository extends CrudRepository<User, String> {
      *
      * @param email    The email of the user.
      * @param password The password of the user.
-     * @return A Users object if found, otherwise null.
+     * @return A User object if found, otherwise null.
      */
     User findByEmailAndPassword(String email, String password);
 
@@ -33,7 +33,7 @@ public interface UserRepository extends CrudRepository<User, String> {
      * Retrieves a specific user by email.
      *
      * @param email The email of the user.
-     * @return A Users object if found, otherwise null.
+     * @return A User object if found, otherwise null.
      */
     User findByEmail(String email);
 
@@ -41,7 +41,7 @@ public interface UserRepository extends CrudRepository<User, String> {
      * Retrieves a specific user by ID.
      *
      * @param id The ID of the user.
-     * @return A Users object if found, otherwise null.
+     * @return A User object if found, otherwise null.
      */
     User findByUserId(int id);
 }
