@@ -39,7 +39,6 @@ public class ImageValidator {
         if (contentType == null) {
             return false;
         }
-        System.out.println("contentType = " + contentType);
         return ALLOWED_IMAGE_TYPES.contains(contentType.toLowerCase());
     }
 
