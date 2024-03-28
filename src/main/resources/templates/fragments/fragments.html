@@ -21,7 +21,7 @@
 <nav class="gardens-list" th:fragment="gardens">
     <a class="userProfile" th:href="@{/profile}">
         <img
-                th:src="@{images/default_profile_photo.png}"
+                th:src="${user.getProfilePictureFilePath()}"
 
                 class="userProfileImage"
                 alt="user profile image">
