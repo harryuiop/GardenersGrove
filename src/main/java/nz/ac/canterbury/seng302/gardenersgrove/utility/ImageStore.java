@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ImageStore {
@@ -34,6 +35,9 @@ public class ImageStore {
             throw new IOException("No content type");
         }
         String extension = contentType.split("/")[1];
+        if (Objects.equals(extension, "svg+xml")) {
+            extension = "svg";
+        }
         String newFilename = UUID.randomUUID() + "." + extension;
 
         Path path = Paths.get(UPLOAD_DIR + newFilename);
