@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.components;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.springframework.security.core.Authentication;
@@ -20,7 +20,7 @@ public class GardensSidebar {
         model.addAttribute("gardens", gardenService.getAllGardens());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = Integer.parseInt(auth.getName());
-        Users user = userService.getUserById(currentPrincipalName);
+        User user = userService.getUserById(currentPrincipalName);
         model.addAttribute("user", user);
     }
 }
