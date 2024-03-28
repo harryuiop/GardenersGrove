@@ -95,7 +95,7 @@ public class ProfileController {
         if (imageValidator.isValid()) {
             String fileName = ImageStore.storeImage(file);
             user.setProfilePictureFileName(fileName);
-            userService.addUsers(user);
+            userService.updateUser(user);
         } else {
             for (Map.Entry<String, String> entry : imageValidator.getErrorMessages().entrySet()) {
                 model.addAttribute(entry.getKey(), entry.getValue());
