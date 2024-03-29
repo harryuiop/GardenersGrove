@@ -5,7 +5,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
@@ -37,15 +36,18 @@ public class UserService {
      * @param newUser The new user data.
      * @return The UserRepository instance with the new user saved.
      */
-    public Users addUsers(Users newUser) {
-        if (emailIsValid(newUser.getEmail()) &&
-                passwordIsValid(newUser.getPassword()) &&
+    public Users addUsers(Users newUser, boolean checked) {
+        if (!checked) {
+            if (!(emailIsValid(newUser.getEmail()) &&
+                    passwordIsValid(newUser.getPassword()) &&
                     nameIsValid(newUser.getFname(), newUser.getLname()) &&
-                            dobIsValid(newUser.getDob()) &&
-                                (getUserByEmail(newUser.getEmail()) == null)) {
-            return userRepository.save(newUser);
+                    dobIsValid(newUser.getDob()) &&
+                    (getUserByEmail(newUser.getEmail()) == null))) {
+                return null;
+
+            }
         }
-        return null;
+        return userRepository.save(newUser);
     }
 
     /**

@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -53,8 +52,9 @@ public class LogInController {
      */
     @GetMapping("/login")
     public String getLoginPage() {
+        boolean validated = false;
         userService.addUsers(new Users
-                ("user@gmail.com", "user", "default", "1 test road", "Password1!", "2000-01-01"));
+                ("user@gmail.com", "user", "default", "1 test road", "Password1!", "2000-01-01"), validated);
         return "login";
     }
 

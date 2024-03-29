@@ -115,8 +115,9 @@ public class RegisterController {
             model.addAttribute("noSurname", noSurname);
             return "register";
         }
+        boolean validated = true;
         userService.addUsers(
-                new Users(email, firstName, lastName, address, password, dateOfBirth)
+                new Users(email, firstName, lastName, address, password, dateOfBirth), validated
         );
         return "redirect:/profile";
     }

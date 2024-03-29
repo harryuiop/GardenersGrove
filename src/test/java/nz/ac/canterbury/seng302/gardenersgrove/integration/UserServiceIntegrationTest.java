@@ -36,10 +36,11 @@ public class UserServiceIntegrationTest {
         String password = "Password123!";
         String address = "1 Test Road";
         String dob = "2000-01-01";
+        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
                 fname, lname, address, password, dob));
         Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+                fname, lname, address, password, dob), validated);
         Assertions.assertEquals(user.getEmail(), email);
         Assertions.assertEquals(user.getFname(), fname);
         Assertions.assertEquals(user.getLname(), lname);
@@ -56,10 +57,11 @@ public class UserServiceIntegrationTest {
         String password = "Password123!";
         String address = "1 Test Road";
         String dob = "2000-01-01";
+        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
                 fname, lname, address, password, dob));
         Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+                fname, lname, address, password, dob), validated);
         Assertions.assertNull(user);
     }
 
@@ -71,10 +73,11 @@ public class UserServiceIntegrationTest {
         String password = "Password123!";
         String address = "1 Test Road";
         String dob = "2000-01-01";
+        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
                 fname, lname, address, password, dob));
         Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+                fname, lname, address, password, dob), validated);
         Assertions.assertNull(user);
     }
 
@@ -86,10 +89,11 @@ public class UserServiceIntegrationTest {
         String password = "Password123!";
         String address = "1 Test Road";
         String dob = "2000-01-01";
+        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
                 fname, lname, address, password, dob));
         Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+                fname, lname, address, password, dob), validated);
         Assertions.assertNull(user);
     }
 
@@ -101,10 +105,11 @@ public class UserServiceIntegrationTest {
         String password = "password1";
         String address = "1 Test Road";
         String dob = "2000-01-01";
+        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
                 fname, lname, address, password, dob));
         Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+                fname, lname, address, password, dob), validated);
         Assertions.assertNull(user);
     }
 
@@ -115,11 +120,12 @@ public class UserServiceIntegrationTest {
         String lname = "Smith";
         String password = "Password123!";
         String address = "1 Test Road";
+        boolean validated = false;
         String dob = LocalDate.now().toString();
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
                 fname, lname, address, password, dob));
         Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+                fname, lname, address, password, dob), validated);
         Assertions.assertNull(user);
     }
 }
