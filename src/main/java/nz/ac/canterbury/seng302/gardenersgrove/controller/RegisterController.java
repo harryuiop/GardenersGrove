@@ -58,7 +58,6 @@ public class RegisterController {
      * @param email       The email of the user.
      * @param firstName   The first name of the user.
      * @param lastName    The last name of the user.
-     * @param address     The address of the user.
      * @param password    The password of the user.
      * @param dateOfBirth The date of birth of the user.
      * @return Redirects to the login page after successful registration.
@@ -68,12 +67,11 @@ public class RegisterController {
             @RequestParam(name = "email") String email,
             @RequestParam(name = "firstName") String firstName,
             @RequestParam(name = "lastName") String lastName,
-            @RequestParam(name = "address") String address,
             @RequestParam(name = "password") String password,
             @RequestParam(name = "dateOfBirth") String dateOfBirth
     ) {
         userService.addUsers(
-                new User(email, firstName, lastName, address, password, dateOfBirth)
+                        new User(email, firstName, lastName, password, dateOfBirth)
         );
         return "redirect:/login";
     }

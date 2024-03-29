@@ -33,12 +33,6 @@ public class User {
     private String lastName;
 
     /**
-     * User's Home address
-     */
-    @Column(nullable = false)
-    private String address;
-
-    /**
      * User Password for verification
      */
     @Column(nullable = false)
@@ -80,7 +74,6 @@ public class User {
      * @param email    User email (unique identifier).
      * @param firstName    User's first name.
      * @param lastName    User's last name.
-     * @param address  User's home address.
      * @param password User's password.
      * @param dob      User's date of birth.
      */
@@ -88,14 +81,12 @@ public class User {
             String email,
             String firstName,
             String lastName,
-            String address,
             String password,
             String dob
     ) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.address = address;
         this.password = password;
         this.dob = dob;
     }
@@ -125,15 +116,6 @@ public class User {
      */
     public String getLastName() {
         return lastName;
-    }
-
-    /**
-     * Retrieves the user's home address.
-     *
-     * @return User's home address.
-     */
-    public String getAddress() {
-        return address;
     }
 
     /**

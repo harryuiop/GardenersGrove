@@ -124,7 +124,6 @@ public class ProfileController {
      * @param email       The email of the user.
      * @param firstName   The first name of the user.
      * @param lastName    The last name of the user.
-     * @param address     The address of the user.
      * @param password    The password of the user.
      * @param dateOfBirth The user's date of birth.
      * @return The name of the login view template.
@@ -134,12 +133,11 @@ public class ProfileController {
             @RequestParam(name = "email") String email,
             @RequestParam(name = "firstName") String firstName,
             @RequestParam(name = "lastName") String lastName,
-            @RequestParam(name = "address") String address,
             @RequestParam(name = "password") String password,
             @RequestParam(name = "dateOfBirth") String dateOfBirth
     ) {
         userService.addUsers(
-                new User(email, firstName, lastName, address, password, dateOfBirth)
+                        new User(email, firstName, lastName, password, dateOfBirth)
         );
         return "login";
     }

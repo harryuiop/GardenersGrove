@@ -50,7 +50,7 @@ public class LogInController {
     @GetMapping("/login")
     public String getLoginPage() {
         userService.addUsers(new User
-                ("user@gmail.com", "Default", "User", "1 test road", "Password1!", "2000-01-01"));
+                        ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
         return "login";
     }
 
