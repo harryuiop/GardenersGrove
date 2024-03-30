@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,11 @@ public class EmailController {
         this.emailService = emailService;
     }
 
+    @PostMapping("/register/register-email")
+    public String sendRegistrationEmail (@RequestParam("email") String email) {
+        // TODO - Implement this methods
+        return null;
+    }
 
     /**
      * Testing controller and service here
@@ -45,8 +51,9 @@ public class EmailController {
 
         // an email address to send test email.
         String testEmailTo = testEmailAddress;
+        String title = "This is Test email";
 
-        boolean result = emailService.sendEmail(testEmailTo, testHtml, testLink);
+        boolean result = emailService.sendTestEmail(title, testHtml, testLink, testEmailTo);
         logger.info("Email sending test is " + (result ? "Success" : "Fail"));
         return result ? "Success" : "Fail";
     }
