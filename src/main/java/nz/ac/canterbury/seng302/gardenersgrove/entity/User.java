@@ -1,18 +1,18 @@
 package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entity class representing a user.
  * Represents user information including email, name, address, password, and roles.
  */
-@Entity
-public class Users {
+@Entity(name = "users")
+public class User {
 
     /**
      * User email this will be a user ID and has to be unique and exist
@@ -21,22 +21,16 @@ public class Users {
     private String email;
 
     /**
-     * Users First Name
+     * User's First Name
      */
     @Column(name = "First_name", nullable = false)
-    private String fname;
+    private String firstName;
 
     /**
-     * Users Last Name This can be Null
+     * User's Last Name This can be Null
      */
     @Column(name = "Last_name")
-    private String lname;
-
-    /**
-     * User's Home address
-     */
-    @Column(nullable = false)
-    private String address;
+    private String lastName;
 
     /**
      * User Password for verification
@@ -45,7 +39,7 @@ public class Users {
     private String password;
 
     /**
-     * Users Date of Birth
+     * User's Date of Birth
      */
     @Column(name = "Date_of_Birth", nullable = false)
     private String dob;
@@ -54,6 +48,9 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_ID", nullable = false)
     private Integer userId;
+
+    @Column(name = "profile_picture_file_name")
+    private String profilePictureFileName;
 
     /*
      * TODO - May be we need to create properties for GrantedAuthority
@@ -68,30 +65,28 @@ public class Users {
     /**
      * JPA Empty Constructor
      */
-    protected Users() {}
+    protected User() {
+    }
 
     /**
      * User Constructor to initialize user data.
      *
      * @param email    User email (unique identifier).
-     * @param fname    User's first name.
-     * @param lname    User's last name.
-     * @param address  User's home address.
+     * @param firstName    User's first name.
+     * @param lastName    User's last name.
      * @param password User's password.
      * @param dob      User's date of birth.
      */
-    public Users(
+    public User(
             String email,
-            String fname,
-            String lname,
-            String address,
+            String firstName,
+            String lastName,
             String password,
             String dob
     ) {
         this.email = email;
-        this.fname = fname;
-        this.lname = lname;
-        this.address = address;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.dob = dob;
     }
@@ -110,8 +105,8 @@ public class Users {
      *
      * @return User's first name.
      */
-    public String getFname() {
-        return fname;
+    public String getFirstName() {
+        return firstName;
     }
 
     /**
@@ -119,17 +114,8 @@ public class Users {
      *
      * @return User's last name.
      */
-    public String getLname() {
-        return lname;
-    }
-
-    /**
-     * Retrieves the user's home address.
-     *
-     * @return User's home address.
-     */
-    public String getAddress() {
-        return address;
+    public String getLastName() {
+        return lastName;
     }
 
     /**
@@ -155,6 +141,38 @@ public class Users {
      */
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * Retrieves the file name of the user's profile picture.
+     *
+     * @return The file name of the user's profile picture.
+     */
+    public String getProfilePictureFileName() {
+        return profilePictureFileName;
+    }
+
+    /**
+     * Retrieves the file path of the user's profile.
+     *
+     * @return The path to the user's profile picture,
+     * or to the default picture if they do not have one.
+     */
+    public String getProfilePictureFilePath() {
+        if (profilePictureFileName != null) {
+            return "/uploads/" + profilePictureFileName;
+        } else {
+            return "images/default_profile_photo.png";
+        }
+    }
+
+    /**
+     * Sets the file name of the user's profile picture.
+     *
+     * @param profilePictureFileName The file name of the user's profile picture.
+     */
+    public void setProfilePictureFileName(String profilePictureFileName) {
+        this.profilePictureFileName = profilePictureFileName;
     }
 
     /**
@@ -184,16 +202,16 @@ public class Users {
     }
 
     /**
-     * Generates a string representation of the Users object.
+     * Generates a string representation of the User object.
      *
-     * @return A string representation of the Users object.
+     * @return A string representation of the User object.
      */
     public String toString() {
         return String.format(
                 "User entity {first name: %s last name: %s " +
                         "email: %s password %s} is created",
-                this.fname,
-                this.lname,
+                this.firstName,
+                this.lastName,
                 this.email,
                 this.password
         );
