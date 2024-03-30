@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org" lang="">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Add Plant</title>
@@ -19,29 +19,30 @@
                     <label class="form-input" for="plantName"> Plant Name: </label>
                     <input type="text" class="form-control" id="plantName" th:name="plantName"
                            th:value="${plantName}" data-cy="plantName" autofocus>
-                    <h5 th:text=${plantNameError}></h5>
+                    <h5 th:text="${plantNameError}"></h5>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantCount"> Number of these plants to add to garden: </label>
                     <input type="number" step="1" class="form-control" id="plantCount" th:name="plantCount"
                            th:value="${plantCount}" data-cy="plantCount" autofocus>
-                    <h5 th:text=${plantCountError}></h5>
+                    <h5 th:text="${plantCountError}"></h5>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantDescription"> Plant Description: </label>
-                    <textarea form="plant-form" type="text" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                    <textarea form="plant-form"
+                              oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
                               class="form-control" id="plantDescription" th:name="plantDescription"
-                           th:text="${plantDescription}" data-cy="plantDescription" autofocus></textarea>
-                    <h5 th:text=${plantDescriptionError}></h5>
+                              th:text="${plantDescription}" data-cy="plantDescription" autofocus></textarea>
+                    <h5 th:text="${plantDescriptionError}"></h5>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantedDate"> Date Planted: </label>
                     <input type="date" class="form-control" id="plantedDate" th:name="plantedDate"
                            th:value="${plantedDate}" data-cy="plantedDate" autofocus>
-                    <h5 th:text=${plantedDateError}></h5>
+                    <h5 th:text="${plantedDateError}"></h5>
                 </div>
                 <br/>
 

@@ -2,6 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import jakarta.servlet.http.HttpServletRequest;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +56,7 @@ public class LogInController {
     public String getLoginPage() {
         boolean validated = false;
         userService.addUsers(new Users
-                ("user@gmail.com", "user", "default", "1 test road", "Password1!", "2000-01-01"), validated);
+                ("user@gmail.com", "Default", "User", "1 test road", "Password1!", "2000-01-01"), validated);
         return "login";
     }
 

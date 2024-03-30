@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ public class UserService {
     /**
      * UserRepository instance to send user data to the database.
      */
-    @Autowired
     private UserRepository userRepository;
 
     /**
@@ -26,6 +25,8 @@ public class UserService {
      *
      * @param userRepository The UserRepository instance.
      */
+    @Autowired
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -36,7 +37,7 @@ public class UserService {
      * @param newUser The new user data.
      * @return The UserRepository instance with the new user saved.
      */
-    public Users addUsers(Users newUser, boolean checked) {
+    public User addUsers(User newUser, boolean checked) {
         if (!checked) {
             if (!(emailIsValid(newUser.getEmail()) &&
                     passwordIsValid(newUser.getPassword()) &&
@@ -51,13 +52,31 @@ public class UserService {
     }
 
     /**
+     * Persist changes to a user.
+     *
+     * @param user The user to update.
+     */
+    public boolean updateUser(User user) {
+        if (
+                emailIsValid(user.getEmail()) &&
+                        passwordIsValid(user.getPassword()) &&
+                        nameIsValid(user.getFirstName(), user.getLastName()) &&
+                        dobIsValid(user.getDob())
+        ) {
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Retrieves a user by email and password.
      *
      * @param email    The email of the user.
      * @param password The password of the user.
-     * @return The Users object if found, otherwise null.
+     * @return The User object if found, otherwise null.
      */
-    public Users getUserByEmailAndPassword(String email, String password) {
+    public User getUserByEmailAndPassword(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
@@ -65,9 +84,9 @@ public class UserService {
      * Retrieves a user by email.
      *
      * @param email The email of the user.
-     * @return The Users object if found, otherwise null.
+     * @return The User object if found, otherwise null.
      */
-    public Users getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -75,10 +94,9 @@ public class UserService {
      * Retrieves a user by ID.
      *
      * @param id The ID of the user.
-     * @return The Users object if found, otherwise null.
+     * @return The User object if found, otherwise null.
      */
-    public Users getUserById(int id) {
+    public User getUserById(int id) {
         return userRepository.findByUserId(id);
     }
-
 }

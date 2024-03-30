@@ -1,8 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.authentication;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 /**
  * Custom Authentication Provider class, to allow for handling authentication in any way we see fit.
- * In this case using our existing {@link Users}
+ * In this case using our existing {@link User}
  */
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     /**
-     * Autowired's users service for custom authentication using our own user objects
+     * Autowired's UserService for custom authentication using our own user objects
      */
     private final UserService userService;
 
@@ -46,7 +45,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         // Attempt to retrieve user from the database using email and password
-        Users user = userService.getUserByEmailAndPassword(email, password);
+        User user = userService.getUserByEmailAndPassword(email, password);
 
         // If user is not found, throw BadCredentialsException
         if (user == null) {

@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class RegisterController {
     @ResponseBody
     public ResponseEntity<String> emailIsExist(@RequestBody String email) {
         logger.info(String.format("POST /check-email-duplication For %s%n", email));
-        Users user = userService.getUserByEmail(email);
+        User user = userService.getUserByEmail(email);
         String valid = (user != null) ? "true" : "false";
 
         return ResponseEntity.ok(valid);
@@ -71,7 +72,6 @@ public class RegisterController {
      * @param email       The email of the user.
      * @param firstName   The first name of the user.
      * @param lastName    The last name of the user.
-     * @param address     The address of the user.
      * @param password    The password of the user.
      * @param dateOfBirth The date of birth of the user.
      * @return Redirects to the login page after successful registration.
@@ -117,7 +117,7 @@ public class RegisterController {
         }
         boolean validated = true;
         userService.addUsers(
-                new Users(email, firstName, lastName, address, password, dateOfBirth), validated
+                new User(email, firstName, lastName, address, password, dateOfBirth), validated
         );
         return "redirect:/profile";
     }
