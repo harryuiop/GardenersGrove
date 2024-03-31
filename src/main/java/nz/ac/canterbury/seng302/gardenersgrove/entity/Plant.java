@@ -30,8 +30,9 @@ public class Plant {
     @Column
     private String imageFileName;
 
-    @Column()
-    private Long gardenId;
+    @OneToOne()
+    @PrimaryKeyJoinColumn()
+    private Garden garden;
 
     private static final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -42,13 +43,13 @@ public class Plant {
     }
 
 
-    public Plant(String name, Integer count, String description, Date plantedOn, String imageFileName, Long gardenId) {
+    public Plant(String name, Integer count, String description, Date plantedOn, String imageFileName, Garden garden) {
         this.name = name;
         this.count = count;
         this.description = description;
         this.plantedOn = plantedOn;
         this.imageFileName = imageFileName;
-        this.gardenId = gardenId;
+        this.garden = garden;
     }
 
     public Long getId() {
@@ -86,8 +87,8 @@ public class Plant {
         return plantedOn;
     }
 
-    public Long getGardenId() {
-        return gardenId;
+    public Garden getGarden() {
+        return garden;
     }
 
     public void setName(String name) {

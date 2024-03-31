@@ -113,6 +113,10 @@ public class PlantFormController extends GardensSidebar {
             }
         }
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            return "redirect:/";
+        }
+        Garden garden = optionalGarden.get();
 
         Date plantDate = null;
         try {
@@ -123,8 +127,7 @@ public class PlantFormController extends GardensSidebar {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        if (errors.isEmpty() && optionalGarden.isPresent() && imageIsValid) {
-            Garden garden = optionalGarden.get();
+        if (errors.isEmpty() && imageIsValid) {
             String imageFileName = null;
             if (imageFile != null) {
                 try {
@@ -134,7 +137,7 @@ public class PlantFormController extends GardensSidebar {
                     return "plantForm";
                 }
             }
-            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, imageFileName, gardenId);
+            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, imageFileName, garden);
             plantService.savePlant(plant);
             garden.addPlant(plant);
             gardenService.saveGarden(garden);
@@ -148,7 +151,7 @@ public class PlantFormController extends GardensSidebar {
             model.addAttribute("plantCount", plantCount);
             model.addAttribute("plantDescription", plantDescription);
             model.addAttribute("plantedDate", plantedDate);
-            optionalGarden.ifPresent(garden -> model.addAttribute("gardenName", garden.getName()));
+            model.addAttribute("gardenName", garden.getName());
             model.addAttribute("gardenId", gardenId);
             return "plantForm";
         }

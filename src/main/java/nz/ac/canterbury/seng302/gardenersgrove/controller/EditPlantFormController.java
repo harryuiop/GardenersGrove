@@ -2,7 +2,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
@@ -76,7 +75,7 @@ public class EditPlantFormController extends GardensSidebar {
         model.addAttribute("plantDescription", plant.getDescription());
         model.addAttribute("plantedDate", date);
         model.addAttribute("plantId", plantId);
-        model.addAttribute("gardenId", plant.getGardenId());
+        model.addAttribute("gardenId", plant.getGarden().getId());
         return "editPlantForm";
     }
 
@@ -100,7 +99,12 @@ public class EditPlantFormController extends GardensSidebar {
 
         Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
 
-        Optional<Garden> optionalGarden = gardenService.getGardenById(plantService.getPlantById(plantId).get().getGardenId());
+
+        Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
+        if (optionalPlant.isEmpty()) {
+            return "redirect:/";
+        }
+        Plant plant = optionalPlant.get();
 
         Date plantDate = null;
         try {
@@ -111,15 +115,14 @@ public class EditPlantFormController extends GardensSidebar {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        if (errors.isEmpty() && optionalGarden.isPresent()) {
-            Plant plant = plantService.getPlantById(this.id).get();
+        if (errors.isEmpty()) {
             plant.setName(plantName);
             plant.setCount(plantCount);
             plant.setDescription(plantDescription);
             plant.setPlantedOn(plantDate);
             plantService.savePlant(plant);
 
-            return "redirect:/view-garden?gardenId=" + plant.getGardenId();
+            return "redirect:/view-garden?gardenId=" + plant.getGarden().getId();
         } else {
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
@@ -129,8 +132,8 @@ public class EditPlantFormController extends GardensSidebar {
             model.addAttribute("plantDescription", plantDescription);
             model.addAttribute("plantedDate", plantedDate);
             model.addAttribute("plantId", plantId);
-            model.addAttribute("gardenName", gardenService.getGardenById(plantService.getPlantById(plantId).get().getGardenId()).get().getName());
-            model.addAttribute("gardenId", plantService.getPlantById(plantId).get().getGardenId());
+            model.addAttribute("gardenName", plant.getGarden().getName());
+            model.addAttribute("gardenId", plant.getGarden().getId());
             return "editPlantForm";
         }
     }
