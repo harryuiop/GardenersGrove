@@ -30,7 +30,7 @@ public class Plant {
     @Column
     private String imageFileName;
 
-    @ManyToOne()
+    @ManyToOne(optional = false)
     private Garden garden;
 
     private static final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
