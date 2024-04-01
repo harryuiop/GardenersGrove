@@ -149,6 +149,7 @@ public class EditPlantFormController extends GardensSidebar {
 
             return "redirect:/view-garden?gardenId=" + gardenId;
         } else {
+            this.updateGardensSidebar(model, gardenService, userService);
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
             }
