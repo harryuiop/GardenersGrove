@@ -55,8 +55,9 @@ public class ViewGardenController extends GardensSidebar {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isPresent()) {
             Garden garden = optionalGarden.get();
-            List<Plant> plants = garden.getPlants();
-            model.addAttribute("plants", plants);
+            model.addAttribute("plants", plantService.getAllPlantsInGarden(garden));
+        } else {
+            model.addAttribute("plants", List.of());
         }
         return "viewGarden";
     }
@@ -112,8 +113,7 @@ public class ViewGardenController extends GardensSidebar {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isPresent()) {
             Garden garden = optionalGarden.get();
-            List<Plant> plants = garden.getPlants();
-            model.addAttribute("plants", plants);
+            model.addAttribute("plants", plantService.getAllPlantsInGarden(garden));
         }
         return "viewGarden";
     }

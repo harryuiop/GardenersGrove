@@ -139,8 +139,6 @@ public class PlantFormController extends GardensSidebar {
             }
             Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, imageFileName, garden);
             plantService.savePlant(plant);
-            garden.addPlant(plant);
-            gardenService.saveGarden(garden);
             model.addAttribute("gardenId", gardenId);
             return "redirect:/view-garden?gardenId=" + garden.getId();
         } else {
