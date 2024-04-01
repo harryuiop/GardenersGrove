@@ -1,11 +1,11 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +31,13 @@ public class ViewGardenController extends GardensSidebar {
 
     private final GardenService gardenService;
     private final PlantService plantService;
+    private final UserService userService;
 
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
+        this.userService = userService;
     }
 
     /**
@@ -46,6 +48,15 @@ public class ViewGardenController extends GardensSidebar {
     @GetMapping("/view-garden")
     public String home(@RequestParam(name = "gardenId", required = false) Long gardenId, Model model) {
         logger.info("GET /view-garden");
+        this.updateGardensSidebar(model, gardenService, userService);
+        model.addAttribute("garden", gardenService.getGardenById(gardenId));
+        model.addAttribute("id", gardenId);
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isPresent()) {
+            Garden garden = optionalGarden.get();
+            List<Plant> plants = garden.getPlants();
+            model.addAttribute("plants", plants);
+        }
         this.addViewGardenAttributes(model, gardenId);
         return "viewGarden";
     }
@@ -100,7 +111,7 @@ public class ViewGardenController extends GardensSidebar {
     }
 
     private void addViewGardenAttributes(Model model, Long gardenId) {
-        this.updateGardensSidebar(model, gardenService);
+        this.updateGardensSidebar(model, gardenService, userService);
         model.addAttribute("garden", gardenService.getGardenById(gardenId));
         model.addAttribute("gardenId", gardenId);
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);

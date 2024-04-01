@@ -7,6 +7,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,13 +37,15 @@ public class EditPlantFormController extends GardensSidebar {
 
     private final PlantService plantService;
     private final GardenService gardenService;
+    private final UserService userService;
     private final ErrorChecker validate;
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
-    public EditPlantFormController(PlantService plantService, GardenService gardenService) {
+    public EditPlantFormController(PlantService plantService, GardenService gardenService, UserService userService) {
         this.plantService = plantService;
         this.gardenService = gardenService;
+        this.userService = userService;
         this.validate = new ErrorChecker();
     }
 
@@ -54,7 +57,7 @@ public class EditPlantFormController extends GardensSidebar {
     @GetMapping("/plantform/edit")
     public String form(Model model, @RequestParam(name="plantId") Long plantId) {
         logger.info("GET /plantform/edit");
-        this.updateGardensSidebar(model, gardenService);
+        this.updateGardensSidebar(model, gardenService, userService);
         Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
         if (optionalPlant.isEmpty()) {
             return "redirect:/";
@@ -76,7 +79,7 @@ public class EditPlantFormController extends GardensSidebar {
         model.addAttribute("plantedDate", date);
         model.addAttribute("plantId", plantId);
         model.addAttribute("gardenId", plant.getGardenId());
-        model.addAttribute("isPlantImageSet", plant.isImageSet());
+        model.addAttribute("isPlantImageSet", plant.getImageFileName() != null);
         model.addAttribute("plantImage", plant.getImageFilePath());
         return "editPlantForm";
     }

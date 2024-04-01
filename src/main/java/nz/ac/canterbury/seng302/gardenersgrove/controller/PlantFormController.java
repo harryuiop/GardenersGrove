@@ -7,6 +7,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,32 +37,45 @@ public class PlantFormController extends GardensSidebar {
 
     private final PlantService plantService;
     private final GardenService gardenService;
+    private final UserService userService;
     private final ErrorChecker validate;
 
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+    /**
+     * The PlantFormController constructor need not be called ever.
+     * It is autowired in by Spring at run time to initialise instances of all the necessary services.
+     *
+     * @param plantService  The Plant database access object.
+     * @param gardenService The Garden database access object.
+     * @param userService   The User database access object.
+     */
     @Autowired
-    public PlantFormController(PlantService plantService, GardenService gardenService) {
+    public PlantFormController(PlantService plantService, GardenService gardenService, UserService userService) {
         this.plantService = plantService;
         this.gardenService = gardenService;
-        this.validate =  new ErrorChecker();
+        this.userService = userService;
+        this.validate = new ErrorChecker();
     }
 
     /**
-     * Gets form to be displayed, and passes previous form values to the HTML.
+     * Gets form to be displayed and passes previous form values and user/garden information to the HTML.
+     *
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
     @GetMapping("/plantform")
-    public String form(Model model, @RequestParam(name="gardenId") Long gardenId) {
+    public String form(Model model, @RequestParam(name = "gardenId") Long gardenId) {
         logger.info("GET /plantform");
-        this.updateGardensSidebar(model, gardenService);
+        this.updateGardensSidebar(model, gardenService, userService);
         model.addAttribute("plantNameError", "");
         model.addAttribute("plantCountError", "");
         model.addAttribute("plantDescriptionError", "");
         model.addAttribute("plantedDateError", "");
-        model.addAttribute("gardenName", gardenService.getGardenById(gardenId).get().getName());
+        gardenService.getGardenById(gardenId).ifPresent(
+                        garden -> model.addAttribute("gardenName", garden.getName())
+        );
         model.addAttribute("gardenId", gardenId);
         model.addAttribute("plantImage", "");
         return "plantForm";
@@ -69,11 +83,12 @@ public class PlantFormController extends GardensSidebar {
 
     /**
      * Submits form and saves the garden to the database.
-     * @param plantName The name of the plant as input by the user.
-     * @param plantCount The number of plants as input by the user.
+     *
+     * @param plantName        The name of the plant as input by the user.
+     * @param plantCount       The number of plants as input by the user.
      * @param plantDescription The description of the plant as input by the user.
-     * @param plantedDate The date the plant was planted as input by the user.
-     * @param model object that passes data through to the HTML.
+     * @param plantedDate      The date the plant was planted as input by the user.
+     * @param model            object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
      */
     @PostMapping("/plantform")
@@ -82,7 +97,7 @@ public class PlantFormController extends GardensSidebar {
                              @RequestParam(name = "plantDescription", required = false) String plantDescription,
                              @RequestParam(name = "plantedDate", required = false) String plantedDate,
                              @RequestParam(name = "gardenId") Long gardenId,
-                             @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
+                             @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
                              Model model) {
         logger.info("POST /plantform");
 

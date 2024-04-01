@@ -19,7 +19,7 @@ public class Authority {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "email")
-    private Users user;
+    private User user;
 
     @Column
     private String role;
