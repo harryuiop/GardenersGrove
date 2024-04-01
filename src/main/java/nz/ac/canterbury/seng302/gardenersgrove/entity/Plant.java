@@ -30,8 +30,7 @@ public class Plant {
     @Column
     private String imageFileName;
 
-    @OneToOne()
-    @PrimaryKeyJoinColumn()
+    @ManyToOne()
     private Garden garden;
 
     private static final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -41,7 +40,6 @@ public class Plant {
      */
     protected Plant() {
     }
-
 
     public Plant(String name, Integer count, String description, Date plantedOn, String imageFileName, Garden garden) {
         this.name = name;
