@@ -19,10 +19,6 @@ public class PlantService {
         this.plantRepository = plantRepository;
     }
 
-    public List<Plant> getAllPlants() {
-        return plantRepository.findAll();
-    }
-
     public List<Plant> getAllPlantsInGarden(Garden garden) {
         return plantRepository.findAllByGarden(garden);
     }
