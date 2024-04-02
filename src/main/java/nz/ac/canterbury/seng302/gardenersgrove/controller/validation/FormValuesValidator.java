@@ -104,6 +104,13 @@ public class FormValuesValidator {
 
     }
 
+    /**
+     * Checks whether an email is already in use by a user.
+     * @param email The email to be checked.
+     * @param userService An instance of user service, which is used to check if there is a user with the
+     *                    provided email.
+     * @return bool: Whether the email is in use or not.
+     */
     public boolean emailInUse(String email, UserService userService) {
         try {
             userService.getUserByEmail(email);
