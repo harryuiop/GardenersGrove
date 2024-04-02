@@ -1,5 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +50,8 @@ public class ErrorChecker {
     public Map<String, String> plantFormErrors(
                     String plantName,
                     Integer plantCount,
-                    String plantDescription
+                    String plantDescription,
+                    MultipartFile imageFile
     ) {
         HashMap<String, String> errors = new HashMap<>();
 
@@ -64,6 +67,11 @@ public class ErrorChecker {
 
         if (!valuesValidator.checkDescription(plantDescription)) {
             errors.put("plantDescriptionError", "Plant description must be less than 512 characters");
+        }
+
+        ImageValidator imageValidator = new ImageValidator(imageFile);
+        if (imageFile != null && !imageValidator.isValid()) {
+            errors.putAll(imageValidator.getErrorMessages());
         }
 
         return errors;
