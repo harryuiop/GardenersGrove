@@ -2,8 +2,10 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -23,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
+@WithMockUser(value = "1")
 @AutoConfigureMockMvc(addFilters = false)
 class EditPlantFormControllerTest {
 
@@ -35,13 +39,29 @@ class EditPlantFormControllerTest {
     @Autowired
     private GardenRepository gardenRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private final String originalPlantName = "Test Plant";
     private final int originalPlantCount = 1;
 
     private final String originalPlantDescription = "description";
 
+    private boolean userCreated = false;
+
     @BeforeEach
     void setUp() {
+        if (!userCreated) {
+            User user = new User(
+                            "test@domain.net",
+                            "Test",
+                            "User",
+                            "Password1!",
+                            "2000-01-01"
+            );
+            userRepository.save(user);
+            userCreated = true;
+        }
         gardenRepository.deleteAll();
         gardenRepository.save(new Garden("Test Garden", "test location", null));
         long gardenId = gardenRepository.findAll().get(0).getId();
