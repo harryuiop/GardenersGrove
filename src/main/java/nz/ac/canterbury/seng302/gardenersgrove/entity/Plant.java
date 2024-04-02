@@ -71,6 +71,9 @@ public class Plant {
     }
 
     public String getImageFilePath() {
+        if (imageFileName == null) {
+            return "images/default-plant.jpg";
+        }
         return "/uploads/" + imageFileName;
     }
 
@@ -107,15 +110,6 @@ public class Plant {
 
     public void setImageFileName(String imageFileName) {
         this.imageFileName = imageFileName;
-    }
-
-    /**
-     * Check if image has been set to be used in frontend via html.
-     *
-     * @return If image is set.
-     */
-    public boolean isImageSet() {
-        return imageFileName != null;
     }
 
     @Override
