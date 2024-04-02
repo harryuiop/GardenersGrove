@@ -1,14 +1,13 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,6 +57,39 @@ public class PlantFormController extends GardensSidebar {
         this.validate = new ErrorChecker();
     }
 
+    private String loadPlantForm(
+                    String plantNameError,
+                    String plantCountError,
+                    String plantDescriptionError,
+                    String plantedDateError,
+                    String plantImageTypeError,
+                    String plantImageSizeError,
+                    String plantName,
+                    Integer plantCount,
+                    String plantDescription,
+                    Date plantedDate,
+                    String plantImagePath,
+                    Long gardenId,
+                    Model model
+    ) {
+        this.updateGardensSidebar(model, gardenService, userService);
+
+        model.addAttribute("plantNameError", plantNameError);
+        model.addAttribute("plantCountError", plantCountError);
+        model.addAttribute("plantDescriptionError", plantDescriptionError);
+        model.addAttribute("plantedDateError", plantedDateError);
+        model.addAttribute("plantImageTypeError", plantImageTypeError);
+        model.addAttribute("plantImageSizeError", plantImageSizeError);
+
+        model.addAttribute("plantName", plantName);
+        model.addAttribute("plantCount", plantCount);
+        model.addAttribute("plantDescription", plantDescription);
+        model.addAttribute("plantedDate", plantedDate != null ? readFormat.format(plantedDate) : null);
+        model.addAttribute("plantImage", plantImagePath);
+        model.addAttribute("gardenId", gardenId);
+        return "plantForm";
+    }
+
     /**
      * Gets form to be displayed and passes previous form values and user/garden information to the HTML.
      *
@@ -66,19 +97,27 @@ public class PlantFormController extends GardensSidebar {
      * @return thymeleaf HTML gardenForm template.
      */
     @GetMapping("/plantform")
-    public String form(Model model, @RequestParam(name = "gardenId") Long gardenId) {
+    public String form(
+                    @RequestParam(name = "gardenId") Long gardenId,
+                    Model model
+    ) {
         logger.info("GET /plantform");
-        this.updateGardensSidebar(model, gardenService, userService);
-        model.addAttribute("plantNameError", "");
-        model.addAttribute("plantCountError", "");
-        model.addAttribute("plantDescriptionError", "");
-        model.addAttribute("plantedDateError", "");
-        gardenService.getGardenById(gardenId).ifPresent(
-                        garden -> model.addAttribute("gardenName", garden.getName())
+
+        return loadPlantForm(
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        gardenId,
+                        model
         );
-        model.addAttribute("gardenId", gardenId);
-        model.addAttribute("plantImage", "");
-        return "plantForm";
     }
 
     /**
@@ -92,67 +131,60 @@ public class PlantFormController extends GardensSidebar {
      * @return thymeleaf HTML template to redirect to.
      */
     @PostMapping("/plantform")
-    public String submitForm(@RequestParam(name = "plantName") String plantName,
-                             @RequestParam(name = "plantCount", required = false) Integer plantCount,
-                             @RequestParam(name = "plantDescription", required = false) String plantDescription,
-                             @RequestParam(name = "plantedDate", required = false) String plantedDate,
-                             @RequestParam(name = "gardenId") Long gardenId,
-                             @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
-                             Model model) {
+    public String submitForm(
+                    @RequestParam(name = "plantName") String plantName,
+                    @RequestParam(name = "plantCount", required = false) Integer plantCount,
+                    @RequestParam(name = "plantDescription", required = false) String plantDescription,
+                    @RequestParam(name = "plantedDate", required = false) String plantedDate,
+                    @RequestParam(name = "gardenId") Long gardenId,
+                    @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
+                    HttpServletRequest request,
+                    Model model
+    ) {
         logger.info("POST /plantform");
-        boolean imageIsValid = false;
 
-        Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
-
-        ImageValidator imageValidator = new ImageValidator(imageFile);
-        if (imageFile == null || imageValidator.isValid()) {
-            imageIsValid = true;
-        } else {
-            for (Map.Entry<String, String> entry : imageValidator.getErrorMessages().entrySet()) {
-                model.addAttribute(entry.getKey(), entry.getValue());
-            }
-        }
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
-            return "redirect:/";
+            return "redirect:" + request.getHeader("Referer");
         }
         Garden garden = optionalGarden.get();
 
-        Date plantDate = null;
+        Map<String, String> errors = validate.plantFormErrors(
+                        plantName,
+                        plantCount,
+                        plantDescription,
+                        imageFile
+        );
+
+        Date date = null;
         try {
-            if (plantedDate != null && !plantedDate.isBlank()) {
-                plantDate = readFormat.parse(plantedDate);
+            if (plantedDate != null && !plantedDate.isEmpty()) {
+                date = readFormat.parse(plantedDate);
             }
         } catch (ParseException exception) {
-            errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
+            errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
         }
 
-        if (errors.isEmpty() && imageIsValid) {
-            String imageFileName = null;
-            if (imageFile != null) {
-                try {
-                    imageFileName = ImageStore.storeImage(imageFile);
-                } catch (IOException error) {
-                    logger.error("Error saving plant image", error);
-                    return "plantForm";
-                }
-            }
-            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, imageFileName, garden);
-            plantService.savePlant(plant);
-            model.addAttribute("gardenId", gardenId);
-            return "redirect:/view-garden?gardenId=" + garden.getId();
-        } else {
-            this.updateGardensSidebar(model, gardenService, userService);
-            for (Map.Entry<String, String> error : errors.entrySet()) {
-                model.addAttribute(error.getKey(), error.getValue());
-            }
-            model.addAttribute("plantName", plantName);
-            model.addAttribute("plantCount", plantCount);
-            model.addAttribute("plantDescription", plantDescription);
-            model.addAttribute("plantedDate", plantedDate);
-            model.addAttribute("gardenName", garden.getName());
-            model.addAttribute("gardenId", gardenId);
-            return "plantForm";
+        if (!errors.isEmpty()) {
+            return loadPlantForm(
+                            errors.get("plantNameError"),
+                            errors.get("plantCountError"),
+                            errors.get("plantDescriptionError"),
+                            errors.get("plantedDateError"),
+                            errors.get("plantImageTypeError"),
+                            errors.get("plantImageSizeError"),
+                            plantName,
+                            plantCount,
+                            plantDescription,
+                            date,
+                            null,
+                            gardenId,
+                            model
+            );
         }
+
+        Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageFileName, garden);
+        plantService.savePlant(plant);
+        return "redirect:/view-garden?gardenId=" + garden.getId();
     }
 }
