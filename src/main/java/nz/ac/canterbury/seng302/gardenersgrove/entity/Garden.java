@@ -36,7 +36,8 @@ public class Garden {
      * Creates a new Garden object
      *
      * @param name     name of Garden
-     * @param location user's favourite programming language
+     * @param location The name of the physical place where the garden is
+     * @param size     The physical size of the garden in square metres
      */
     public Garden(String name, String location, Float size) {
         this.name = name;
