@@ -30,7 +30,8 @@
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantDescription"> Plant Description: </label>
-                    <textarea form="plant-form" type="text" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                    <textarea form="plant-form"
+                              oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
                               class="form-control" id="plantDescription" th:name="plantDescription"
                               th:text="*{plantDescription}" data-cy="plantDescription" autofocus></textarea>
                     <h5 th:text="${plantDescriptionError}"></h5>
