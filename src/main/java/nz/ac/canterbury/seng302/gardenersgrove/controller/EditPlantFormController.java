@@ -1,7 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
@@ -14,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,78 +36,116 @@ public class EditPlantFormController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
-    private final ErrorChecker validate;
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private Long id;
 
     @Autowired
     public EditPlantFormController(PlantService plantService, GardenService gardenService, UserService userService) {
         this.plantService = plantService;
         this.gardenService = gardenService;
         this.userService = userService;
-        this.validate = new ErrorChecker();
     }
 
-    /**
-     * Gets form to be displayed, and passes previous form values to the HTML.
-     * @param model object that passes data through to the HTML.
-     * @return thymeleaf HTML gardenForm template.
-     */
-    @GetMapping("/plantform/edit")
-    public String form(Model model, @RequestParam(name="plantId") Long plantId) {
-        logger.info("GET /plantform/edit");
+    private String loadPlantForm(
+                    String plantNameError,
+                    String plantCountError,
+                    String plantDescriptionError,
+                    String plantedDateError,
+                    String plantName,
+                    Integer plantCount,
+                    String plantDescription,
+                    Date plantedDate,
+                    Long plantId,
+                    Long gardenId,
+                    Model model
+    ) {
         this.updateGardensSidebar(model, gardenService, userService);
-        this.id = plantId;
-        Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
-        if (optionalPlant.isEmpty()) {
-            return "redirect:/";
-        }
-        Plant plant = optionalPlant.get();
 
-        String date = null;
-        if (plant.getPlantedOn() != null) {
-            date = readFormat.format(plant.getPlantedOn());
-        }
+        model.addAttribute("plantNameError", plantNameError);
+        model.addAttribute("plantCountError", plantCountError);
+        model.addAttribute("plantDescriptionError", plantDescriptionError);
+        model.addAttribute("plantedDateError", plantedDateError);
 
-        model.addAttribute("plantNameError", "");
-        model.addAttribute("plantCountError", "");
-        model.addAttribute("plantDescriptionError", "");
-        model.addAttribute("plantedDateError", "");
-        model.addAttribute("plantName", plant.getName());
-        model.addAttribute("plantCount", plant.getCount());
-        model.addAttribute("plantDescription", plant.getDescription());
-        model.addAttribute("plantedDate", date);
+        model.addAttribute("plantName", plantName);
+        model.addAttribute("plantCount", plantCount);
+        model.addAttribute("plantDescription", plantDescription);
+        model.addAttribute("plantedDate", plantedDate != null ? readFormat.format(plantedDate) : null);
         model.addAttribute("plantId", plantId);
-        model.addAttribute("gardenId", plant.getGarden().getId());
+        model.addAttribute("gardenId", gardenId);
         return "editPlantForm";
     }
 
     /**
-     * Submits form and saves the garden to the database.
-     * @param plantName The name of the plant as input by the user.
-     * @param plantCount The number of plants as input by the user.
-     * @param plantDescription The description of the plant as input by the user.
-     * @param plantedDate The date the plant was planted as input by the user.
+     * Gets form to be displayed, and passes previous form values to the HTML.
+     *
      * @param model object that passes data through to the HTML.
-     * @return thymeleaf HTML template to redirect to.
+     * @return thymeleaf HTML gardenForm template.
      */
-    @PostMapping("/plantform/edit")
-    public String submitForm(@RequestParam(name = "plantName") String plantName,
-                             @RequestParam(name = "plantCount", required = false) Integer plantCount,
-                             @RequestParam(name = "plantDescription", required = false) String plantDescription,
-                             @RequestParam(name = "plantedDate", required = false) String plantedDate,
-                             @RequestParam(name = "plantId") Long plantId,
-                             Model model) {
-        logger.info("POST /plantform/edit");
-
-        Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
-
+    @GetMapping("/plantform/edit")
+    public String form(
+                    @RequestParam(name = "plantId") Long plantId,
+                    HttpServletRequest request,
+                    Model model
+    ) {
+        logger.info("GET /plantform/edit");
 
         Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
         if (optionalPlant.isEmpty()) {
-            return "redirect:/";
+            return "redirect:" + request.getHeader("Referer");
         }
         Plant plant = optionalPlant.get();
+
+        return loadPlantForm(
+                        "",
+                        "",
+                        "",
+                        "",
+                        plant.getName(),
+                        plant.getCount(),
+                        plant.getDescription(),
+                        plant.getPlantedOn(),
+                        plant.getId(),
+                        plant.getGarden().getId(),
+                        model
+        );
+    }
+
+    /**
+     * Submits form and saves the garden to the database.
+     *
+     * @param plantName        The name of the plant as input by the user.
+     * @param plantCount       The number of plants as input by the user.
+     * @param plantDescription The description of the plant as input by the user.
+     * @param plantedDate      The date the plant was planted as input by the user.
+     * @param model            object that passes data through to the HTML.
+     * @return thymeleaf HTML template to redirect to.
+     */
+    @PostMapping("/plantform/edit")
+    public String submitForm(
+                    @RequestParam(name = "plantName") String plantName,
+                    @RequestParam(name = "plantCount", required = false) Integer plantCount,
+                    @RequestParam(name = "plantDescription", required = false) String plantDescription,
+                    @RequestParam(name = "plantedDate", required = false) String plantedDate,
+                    @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
+                    @RequestParam(name = "plantId") Long plantId,
+                    HttpServletRequest request,
+                    Model model
+    ) {
+        logger.info("POST /plantform/edit");
+
+        Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
+        if (optionalPlant.isEmpty()) {
+            return "redirect:" + request.getHeader("Referer");
+        }
+        Plant plant = optionalPlant.get();
+        Garden garden = plant.getGarden();
+
+        ErrorChecker validate = new ErrorChecker();
+        Map<String, String> errors = validate.plantFormErrors(
+                        plantName,
+                        plantCount,
+                        plantDescription,
+                        imageFile
+        );
 
         Date plantDate = null;
         try {
@@ -112,30 +153,31 @@ public class EditPlantFormController extends GardensSidebar {
                 plantDate = readFormat.parse(plantedDate);
             }
         } catch (ParseException exception) {
-            errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
+            errors.put("plantedDateError", "Date is not in valid format, yyyy-MM-dd");
         }
 
-        if (errors.isEmpty()) {
-            plant.setName(plantName);
-            plant.setCount(plantCount);
-            plant.setDescription(plantDescription);
-            plant.setPlantedOn(plantDate);
-            plantService.savePlant(plant);
-
-            return "redirect:/view-garden?gardenId=" + plant.getGarden().getId();
-        } else {
-            this.updateGardensSidebar(model, gardenService, userService);
-            for (Map.Entry<String, String> error : errors.entrySet()) {
-                model.addAttribute(error.getKey(), error.getValue());
-            }
-            model.addAttribute("plantName", plantName);
-            model.addAttribute("plantCount", plantCount);
-            model.addAttribute("plantDescription", plantDescription);
-            model.addAttribute("plantedDate", plantedDate);
-            model.addAttribute("plantId", plantId);
-            model.addAttribute("gardenName", plant.getGarden().getName());
-            model.addAttribute("gardenId", plant.getGarden().getId());
-            return "editPlantForm";
+        if (!errors.isEmpty()) {
+            return loadPlantForm(
+                            errors.get("plantNameError"),
+                            errors.get("plantCountError"),
+                            errors.get("plantDescriptionError"),
+                            errors.get("plantedDateError"),
+                            plantName,
+                            plantCount,
+                            plantDescription,
+                            plantDate,
+                            plantId,
+                            garden.getId(),
+                            model
+            );
         }
+
+        plant.setName(plantName);
+        plant.setCount(plantCount);
+        plant.setDescription(plantDescription);
+        plant.setPlantedOn(plantDate);
+        plantService.savePlant(plant);
+
+        return "redirect:/view-garden?gardenId=" + garden.getId();
     }
 }
