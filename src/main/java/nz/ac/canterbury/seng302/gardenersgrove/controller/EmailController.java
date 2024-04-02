@@ -3,12 +3,12 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Email Controller - Controller for sending email in server side
@@ -30,9 +30,27 @@ public class EmailController {
         this.emailService = emailService;
     }
 
+    /**
+     *
+     * @param email client's Email
+     * @param firstName client's first Name
+     * @param lastName client's last name
+     * @return return web page to verify client's email
+     */
     @PostMapping("/register/register-email")
-    public String sendRegistrationEmail (@RequestParam("email") String email) {
-        // TODO - Implement this methods
+    @ResponseBody
+    public String sendRegistrationEmail (@RequestParam("email") String email,
+                                         @RequestParam("firstName") String firstName,
+                                         @RequestParam("lastName") String lastName) {
+        Random random = new Random();
+        int digit = random.nextInt(10000, 1000000);
+        String token = String.format("%06d", digit);
+        String emailTitle = "GARDENER'S GROVE :: REGISTER YOUR EMAIL ::";
+        Map<String, Object> model = new HashMap<>();
+        model.put("firstName", firstName);
+        model.put("lastName", lastName);
+        model.put("token", token);
+        emailService.sendEmailRegistration(emailTitle, "registrationEmail", model, email);
         return null;
     }
 
