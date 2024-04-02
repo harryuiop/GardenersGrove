@@ -44,7 +44,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${plants.empty}">
+            <tr th:if="${plants.isEmpty()}">
                 <td colspan="5"> No plants have been added yet</td>
             </tr>
             <tr th:each="plant : ${plants}" class="plant-entry">
@@ -66,8 +66,8 @@
                                 </div>
                             </div>
 
-                            <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageTypeError}></h5>
-                            <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageSizeError}></h5>
+                            <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${plantImageTypeError}"></h5>
+                            <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${plantImageSizeError}"></h5>
                         </div>
                         <button class="form-button" type="submit" th:id="${plant.getId()} + submit" style="display: none;">Submit</button>
                     </form>
