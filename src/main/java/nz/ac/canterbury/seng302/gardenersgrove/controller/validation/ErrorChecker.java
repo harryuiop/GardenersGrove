@@ -25,16 +25,16 @@ public class ErrorChecker {
             errors.put("gardenNameError", "Garden name cannot by empty");
         } else if (!valuesValidator.checkCharacters(gardenName)) {
             errors.put(
-                    "gardenNameError",
-                    "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
+                            "gardenNameError",
+                            "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         }
 
         if (!valuesValidator.checkBlank(gardenLocation)) {
             errors.put("gardenLocationError", "Location cannot be empty");
         } else if (!valuesValidator.checkCharacters(gardenLocation)) {
             errors.put(
-                    "gardenLocationError",
-                    "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
+                            "gardenLocationError",
+                            "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         }
 
         if (!valuesValidator.checkSize(gardenSize)) {
@@ -45,13 +45,17 @@ public class ErrorChecker {
     }
 
 
-    public Map<String, String> plantFormErrors(String plantName, Integer plantCount, String plantDescription) {
+    public Map<String, String> plantFormErrors(
+                    String plantName,
+                    Integer plantCount,
+                    String plantDescription
+    ) {
         HashMap<String, String> errors = new HashMap<>();
 
-        if (!valuesValidator.checkBlank(plantName)||!valuesValidator.checkCharacters(plantName)) {
+        if (!valuesValidator.checkBlank(plantName) || !valuesValidator.checkCharacters(plantName)) {
             errors.put(
-                    "plantNameError",
-                    "Plant name cannot be empty and must only include letters, numbers, spaces, dots, hyphens or apostrophes");
+                            "plantNameError",
+                            "Plant name cannot be empty and must only include letters, numbers, spaces, dots, hyphens or apostrophes");
         }
 
         if (!valuesValidator.checkCount(plantCount)) {
