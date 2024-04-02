@@ -2,6 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 /**
  * Entity class reflecting an entry of name, and favourite programming language
  * Note the @link{Entity} annotation required for declaring this as a persistence entity
@@ -20,6 +22,9 @@ public class Garden {
 
     @Column()
     private Float size;
+
+    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
+    private List<Plant> plants;
 
     /**
      * JPA required no-args constructor
