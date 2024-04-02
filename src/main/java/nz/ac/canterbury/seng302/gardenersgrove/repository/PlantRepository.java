@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface PlantRepository extends CrudRepository<Plant, Long> {
     List<Plant> findAllByGarden(Garden garden);
-
-    List<Plant> findAll();
 }
