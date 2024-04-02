@@ -16,7 +16,6 @@ public class FormValuesValidator {
      *
      * @param string represents the string being checked
      * @return false to show there are no errors
-     * @throws IllegalArgumentException
      */
     public boolean checkBlank(String string) {
         return !string.isBlank();
@@ -27,7 +26,6 @@ public class FormValuesValidator {
      *
      * @param size the size being checked
      * @return false if there is no error
-     * @throws IllegalArgumentException
      */
     public boolean checkSize(Float size) {
         return size == null || size > 0;
