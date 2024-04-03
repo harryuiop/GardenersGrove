@@ -3,6 +3,9 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
+
+import static org.mockito.Mockito.when;
 
 @DataJpaTest
 @Import(ErrorChecker.class)
@@ -202,6 +207,63 @@ class ErrorCheckerTest {
         Assertions.assertEquals(correctErrors, errors);
     }
 
+    @Test
+    public void loginFormErrors_ValidInputs_ReturnsEmpty() {
+        UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
+        UserService userService = new UserService(userRepositoryMock);
+
+        String email = "user@gmail.com";
+        String password = "Password1!";
+        when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(
+                new Users(email, "fname", "lname","address", password, "20/20/2003"));
+        Map<String, String> errors = validate.loginFormErrors(email, password, userService);
+        HashMap<String, String> expected = new HashMap<>();
+        Assertions.assertEquals(expected, errors);
+    }
+
+    @Test
+    public void loginFormErrors_AllBlank_ReturnsBothErrors() {
+        UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
+        UserService userService = new UserService(userRepositoryMock);
+
+        String email = "";
+        String password = "";
+        when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(null);
+        Map<String, String> errors = validate.loginFormErrors(email, password, userService);
+        HashMap<String, String> expected = new HashMap<>();
+        expected.put("emailError", "Email address must be in the form ‘jane@doe.nz'");
+        expected.put("invalidError", "The email address is unknown, or the password is invalid");
+        Assertions.assertEquals(expected, errors);
+    }
+
+    @Test
+    public void loginFormErrors_InvalidPassword_ReturnsAccountError() {
+        UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
+        UserService userService = new UserService(userRepositoryMock);
+
+        String email = "user@gmail.com";
+        String password = "iAmABadPassword";
+        when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(null);
+        Map<String, String> errors = validate.loginFormErrors(email, password, userService);
+        HashMap<String, String> expected = new HashMap<>();
+        expected.put("invalidError", "The email address is unknown, or the password is invalid");
+        Assertions.assertEquals(expected, errors);
+    }
+
+    @Test
+    public void loginFormErrors_InvalidEmailFormat_ReturnsBothErrors() {
+        UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
+        UserService userService = new UserService(userRepositoryMock);
+
+        String email = "notAnEmail";
+        String password = "Re4!Password";
+        when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(null);
+        Map<String, String> errors = validate.loginFormErrors(email, password, userService);
+        HashMap<String, String> expected = new HashMap<>();
+        expected.put("emailError", "Email address must be in the form ‘jane@doe.nz'");
+        expected.put("invalidError", "The email address is unknown, or the password is invalid");
+        Assertions.assertEquals(expected, errors);
+    }
     @Test
     void registrationFormErrors_InvalidDupEmail_returnsAlreadyInUse() {
         String firstName = "Jane";

@@ -83,7 +83,7 @@ public class LogInController {
         } else {
             User user = userService.getUserByEmailAndPassword(email, password);
             model.addAttribute("user", user);
-        return "/profile";
+        return "/homeTemplate";
         }
     }
 }

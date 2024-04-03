@@ -128,12 +128,22 @@ public class ErrorChecker {
         return errors;
     }
 
+    /**
+     * Checks the provided information from a user on the login in page. If the email is valid and the password
+     * for that account is correct, then no errors are returned, otherwise, it returns a map of errors and their
+     * descriptions.
+     * @param email The email string provided by the user.
+     * @param password  The password string provided by the user.
+     * @param userService The userService instance used to query the database for checking whether an account
+     *                    exists with the given information.
+     * @return  A HashMap<String, String> of the errors that have occurred based on the outcome of the error checks.
+     */
     public Map<String, String> loginFormErrors(String email, String password, UserService userService) {
         HashMap<String, String> errors = new HashMap<>();
 
         if (!UserValidation.emailIsValid(email)) {
             errors.put("emailError",
-                    "“Email address must be in the form ‘jane@doe.nz'");
+                    "Email address must be in the form ‘jane@doe.nz'");
         }
         User user = userService.getUserByEmailAndPassword(email, password);
 
@@ -141,7 +151,6 @@ public class ErrorChecker {
             errors.put("invalidError",
                     "The email address is unknown, or the password is invalid");
         }
-        System.out.println(errors);
         return errors;
     }
 }
