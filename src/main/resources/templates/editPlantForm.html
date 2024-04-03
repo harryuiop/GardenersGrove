@@ -12,7 +12,8 @@
     <h1 th:text="${gardenName}"></h1>
     <div>
         <div>
-            <form th:action="@{/plantform/edit(plantId=${plantId})}" method="post" id="plant-form">
+            <form th:action="@{/plantform/edit(plantId=${plantId})}" method="post" id="plant-form"
+                  enctype="multipart/form-data">
                 <div class="form-field">
                     <label class="form-input" for="plantName"> Plant Name: </label>
                     <input type="text" class="form-control" id="plantName" th:name="plantName"
@@ -43,6 +44,31 @@
                     <h5 th:text="${plantedDateError}"></h5>
                 </div>
                 <br/>
+
+                <div class="form-field">
+                    <div class="plant-image-container">
+                        <div th:if="${isPlantImageSet}">
+                            <img class="selectedImage" th:src="@{${plantImage}}" alt="Error showing image"/>
+                        </div>
+
+                        <div th:unless="${isPlantImageSet}">
+                            <img class="selectedImage" th:src="@{/images/default-plant.jpg}"/>
+                        </div>
+
+                        <p id="image-selected-message"></p>
+                        <div class="add-image">
+                            <label for="plantImage">
+                                <i class="fas fa-plus-circle"></i>
+                            </label>
+                            <input type="file" class="form-control" id="plantImage" th:name="plantImage"
+                                   accept=".jpg, .svg, .png"
+                                   data-cy="plantImage" onchange="displayImage()" autofocus>
+                        </div>
+                    </div>
+                    <h5 th:text=${plantImageTypeError}></h5>
+                    <h5 th:text=${plantImageSizeError}></h5>
+                </div>
+
                 <button class="form-button" type="submit">Submit!</button>
                 <a th:href="@{/view-garden(gardenId=${gardenId})}">
                     <button class="form-button" type="button">Cancel</button>
@@ -51,5 +77,7 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script th:src="@{/javascript/image.js}"></script>
 </body>
 </html>

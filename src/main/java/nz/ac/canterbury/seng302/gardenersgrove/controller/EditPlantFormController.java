@@ -8,6 +8,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,6 +56,7 @@ public class EditPlantFormController extends GardensSidebar {
                     Integer plantCount,
                     String plantDescription,
                     Date plantedDate,
+                    String plantImage,
                     Long plantId,
                     Long gardenId,
                     Model model
@@ -69,6 +72,7 @@ public class EditPlantFormController extends GardensSidebar {
         model.addAttribute("plantCount", plantCount);
         model.addAttribute("plantDescription", plantDescription);
         model.addAttribute("plantedDate", plantedDate != null ? readFormat.format(plantedDate) : null);
+        model.addAttribute("plantImage", plantImage);
         model.addAttribute("plantId", plantId);
         model.addAttribute("gardenId", gardenId);
         return "editPlantForm";
@@ -103,6 +107,7 @@ public class EditPlantFormController extends GardensSidebar {
                         plant.getCount(),
                         plant.getDescription(),
                         plant.getPlantedOn(),
+                        plant.getImageFilePath(),
                         plant.getId(),
                         plant.getGarden().getId(),
                         model
@@ -166,16 +171,27 @@ public class EditPlantFormController extends GardensSidebar {
                             plantCount,
                             plantDescription,
                             plantDate,
+                            plant.getImageFilePath(),
                             plantId,
                             garden.getId(),
                             model
             );
         }
 
+        String imageFileName = null;
+        if (!imageFile.isEmpty()) {
+            try {
+                imageFileName = ImageStore.storeImage(imageFile);
+            } catch (IOException error) {
+                logger.error("Error saving plant image", error);
+            }
+        }
         plant.setName(plantName);
         plant.setCount(plantCount);
         plant.setDescription(plantDescription);
         plant.setPlantedOn(plantDate);
+        plant.setImageFileName(imageFileName);
+
         plantService.savePlant(plant);
 
         return "redirect:/view-garden?gardenId=" + garden.getId();

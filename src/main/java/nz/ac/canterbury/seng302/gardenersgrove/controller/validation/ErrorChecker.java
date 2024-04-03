@@ -58,7 +58,8 @@ public class ErrorChecker {
         if (!valuesValidator.checkBlank(plantName) || !valuesValidator.checkCharacters(plantName)) {
             errors.put(
                             "plantNameError",
-                            "Plant name cannot be empty and must only include letters, numbers, spaces, dots, hyphens or apostrophes");
+                            "Plant name cannot be empty and must only include letters, numbers, spaces, dots, hyphens or apostrophes"
+            );
         }
 
         if (!valuesValidator.checkCount(plantCount)) {
@@ -70,7 +71,7 @@ public class ErrorChecker {
         }
 
         ImageValidator imageValidator = new ImageValidator(imageFile);
-        if (imageFile != null && !imageValidator.isValid()) {
+        if (imageFile != null && !imageFile.isEmpty() && !imageValidator.isValid()) {
             errors.putAll(imageValidator.getErrorMessages());
         }
 
