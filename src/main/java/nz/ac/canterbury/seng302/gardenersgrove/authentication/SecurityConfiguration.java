@@ -99,12 +99,13 @@ public class SecurityConfiguration {
                                 AntPathRequestMatcher.antMatcher("/register/**"),
                                 AntPathRequestMatcher.antMatcher("/check-email-duplication/**"),
                                 AntPathRequestMatcher.antMatcher("/logout"))
+
                 )
 
                 .authorizeHttpRequests(request ->
                         // Allow "/", "/register", and "/login" to anyone (permitAll)
                         request
-                                .requestMatchers("/", "/register", "/login", "/check-email-duplication")
+                                .requestMatchers("/", "/register", "/home", "/login", "/check-email-duplication")
                                 .permitAll()
                                 // Only allow admins to reach the "/admin" page
                                 .requestMatchers("/admin")
