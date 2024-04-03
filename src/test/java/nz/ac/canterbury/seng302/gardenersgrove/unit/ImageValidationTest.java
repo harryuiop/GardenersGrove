@@ -15,7 +15,7 @@ class ImageValidationTest {
 
     private static MultipartFile mockPng = new MockMultipartFile("plant.png", "plant.png", "image/png", new byte[1]);
     private static MultipartFile mockJpg = new MockMultipartFile("plant.jpg", "plant.jpg", "image/jpeg", new byte[10_000_001]);
-    private static MultipartFile mockSvg = new MockMultipartFile("plant.svg", "plant.svg", "image/svg", new byte[1]);
+    private static MultipartFile mockSvg = new MockMultipartFile("plant.svg", "plant.svg", "image/svg+xml", new byte[1]);
     private static MultipartFile mockGif = new MockMultipartFile("plant.gif", "plant.gif", "image/gif", new byte[1]);
 
     @Test

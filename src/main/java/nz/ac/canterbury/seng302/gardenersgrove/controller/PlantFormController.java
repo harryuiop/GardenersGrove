@@ -100,12 +100,12 @@ public class PlantFormController extends GardensSidebar {
                              @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
                              Model model) {
         logger.info("POST /plantform");
+
         boolean imageIsValid = false;
 
         Map<String, String> errors = validate.plantFormErrors(plantName, plantCount, plantDescription);
 
         ImageValidator imageValidator = new ImageValidator(imageFile);
-        logger.info("bool imageFile", (imageFile.isEmpty()));
         if (imageFile.isEmpty() || imageValidator.isValid()) {
             imageIsValid = true;
         } else {
@@ -142,6 +142,7 @@ public class PlantFormController extends GardensSidebar {
             model.addAttribute("gardenId", gardenId);
             return "redirect:/view-garden?gardenId=" + gardenId;
         } else {
+            this.updateGardensSidebar(model, gardenService, userService);
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
             }

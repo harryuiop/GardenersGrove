@@ -1,12 +1,15 @@
-package nz.ac.canterbury.seng302.gardenersgrove.integration;
+package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -17,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@WithMockUser(value = "1")
+@AutoConfigureMockMvc(addFilters = false)
 class GardenFormControllerTest {
 
     @Autowired
@@ -26,8 +30,24 @@ class GardenFormControllerTest {
     @Autowired
     private GardenRepository gardenRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    private boolean userCreated = false;
+
     @BeforeEach
     void setUp() {
+        if (!userCreated) {
+            User user = new User(
+                            "test@domain.net",
+                            "Test",
+                            "User",
+                            "Password1!",
+                            "2000-01-01"
+            );
+            userRepository.save(user);
+            userCreated = true;
+        }
         gardenRepository.deleteAll();
     }
 

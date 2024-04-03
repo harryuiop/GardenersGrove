@@ -64,6 +64,7 @@ public class EditGardenController extends GardensSidebar {
                 gardenService.saveGarden(garden);
             }
         } else {
+            this.updateGardensSidebar(model, gardenService, userService);
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
             }

@@ -55,11 +55,13 @@ public class ErrorChecker {
     public Map<String, String> plantFormErrors(String plantName, Integer plantCount, String plantDescription) {
         HashMap<String, String> errors = new HashMap<>();
 
+
         if (!valuesValidator.checkBlank(plantName)||!valuesValidator.checkCharacters(plantName)) {
             errors.put(
                     "plantNameError",
                     "Plant name cannot be empty and must only include letters, numbers, spaces, dots, hyphens or apostrophes");
         }
+
 
         if (!valuesValidator.checkCount(plantCount)) {
             errors.put("plantCountError", "Plant count must be positive number");
