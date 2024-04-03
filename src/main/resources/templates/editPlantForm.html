@@ -47,13 +47,7 @@
 
                 <div class="form-field">
                     <div class="plant-image-container">
-                        <div th:if="${isPlantImageSet}">
-                            <img class="selectedImage" th:src="@{${plantImage}}" alt="Error showing image"/>
-                        </div>
-
-                        <div th:unless="${isPlantImageSet}">
-                            <img class="selectedImage" th:src="@{/images/default-plant.jpg}"/>
-                        </div>
+                        <img class="selectedImage" th:src="@{${plantImagePath}}" alt="Error showing image"/>
 
                         <p id="image-selected-message"></p>
                         <div class="add-image">
