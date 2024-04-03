@@ -3,7 +3,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
@@ -39,7 +38,9 @@ public class EditPlantFormController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
+
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private String referer;
 
 
     /**
@@ -126,10 +127,11 @@ public class EditPlantFormController extends GardensSidebar {
                     Model model
     ) {
         logger.info("GET /plantform/edit");
+        this.referer = request.getHeader("Referer");
 
         Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
         if (optionalPlant.isEmpty()) {
-            return "redirect:" + request.getHeader("Referer");
+            return "redirect:" + this.referer;
         }
         Plant plant = optionalPlant.get();
 
@@ -165,14 +167,13 @@ public class EditPlantFormController extends GardensSidebar {
                     @RequestParam(name = "plantedDate", required = false) String plantedDate,
                     @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
                     @RequestParam(name = "plantId") Long plantId,
-                    HttpServletRequest request,
                     Model model
     ) {
         logger.info("POST /plantform/edit");
 
         Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
         if (optionalPlant.isEmpty()) {
-            return "redirect:" + request.getHeader("Referer");
+            return "redirect:" + this.referer;
         }
         Plant plant = optionalPlant.get();
         Garden garden = plant.getGarden();
