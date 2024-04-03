@@ -41,6 +41,14 @@ public class EditPlantFormController extends GardensSidebar {
     private final UserService userService;
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+
+    /**
+     * This constructor is called at runtime by Spring to inject all required dependencies.
+     *
+     * @param plantService  The Plant database access object.
+     * @param gardenService The Garden database access object.
+     * @param userService   The User database access object.
+     */
     @Autowired
     public EditPlantFormController(PlantService plantService, GardenService gardenService, UserService userService) {
         this.plantService = plantService;
@@ -48,6 +56,26 @@ public class EditPlantFormController extends GardensSidebar {
         this.userService = userService;
     }
 
+    /**
+     * Load all necessary attributes into the model for Thymeleaf to show in the HTML.
+     *
+     * @param plantNameError        An error message associated with the plant name.
+     * @param plantCountError       An error message associated with the plant count.
+     * @param plantDescriptionError An error message associated with the plant description.
+     * @param plantedDateError      An error message associated with the plant date.
+     * @param plantImageTypeError   An error message associated with the plant image type.
+     * @param plantImageSizeError   An error message associated with the plant image size.
+     * @param plantName             The name of the plant.
+     * @param plantCount            The number of this plant that appear in the garden.
+     * @param plantDescription      The description of the plant.
+     * @param plantedDate           The date the plant was planted.
+     * @param plantImagePath        The path to the image of the plant.
+     * @param plantId               The plant's ID number.
+     * @param gardenName            The name of the garden the plant is in.
+     * @param gardenId              The garden's ID number.
+     * @param model                 The Thymeleaf model to add attributes to.
+     * @return The name of the Thymeleaf template to render.
+     */
     private String loadPlantForm(
                     String plantNameError,
                     String plantCountError,
