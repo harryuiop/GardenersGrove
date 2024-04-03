@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.ui.Model;
 
 import java.io.IOException;
 import java.util.Map;
@@ -134,13 +133,12 @@ public class ProfileController {
             @RequestParam(name = "email") String email,
             @RequestParam(name = "firstName") String firstName,
             @RequestParam(name = "lastName") String lastName,
-            @RequestParam(name = "address") String address,
             @RequestParam(name = "password") String password,
             @RequestParam(name = "dateOfBirth") String dateOfBirth
     ) {
         boolean checked = true;
         userService.addUsers(
-                new Users(email, firstName, lastName, address, password, dateOfBirth), checked
+                new User(email, firstName, lastName, password, dateOfBirth), checked
         );
         return "login";
     }

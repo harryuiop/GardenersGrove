@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 
 import java.util.HashMap;
@@ -135,7 +135,7 @@ public class ErrorChecker {
             errors.put("emailError",
                     "“Email address must be in the form ‘jane@doe.nz'");
         }
-        Users user = userService.getUserByEmailAndPassword(email, password);
+        User user = userService.getUserByEmailAndPassword(email, password);
 
         if (user == null) {
             errors.put("invalidError",

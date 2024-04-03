@@ -18,7 +18,7 @@ public class UserService {
     /**
      * UserRepository instance to send user data to the database.
      */
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     /**
      * Constructor for UserService.
@@ -41,7 +41,7 @@ public class UserService {
         if (!checked) {
             if (!(emailIsValid(newUser.getEmail()) &&
                     passwordIsValid(newUser.getPassword()) &&
-                    nameIsValid(newUser.getFname(), newUser.getLname()) &&
+                    nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
                     dobIsValid(newUser.getDob()) &&
                     (getUserByEmail(newUser.getEmail()) == null))) {
                 return null;

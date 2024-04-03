@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,6 @@ class RegistrationControllerTest {
         String lastName = "Smith";
         Boolean noSurname = false;
         String email = "john@smith.co.nz";
-        String address = "1 place street";
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
@@ -47,20 +46,18 @@ class RegistrationControllerTest {
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .param("noSurname", String.valueOf(noSurname))
-                        .param("address", address)
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/profile*"));
 
-        List<Users> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
         assertEquals(1, allUsers.size());
-        Users user = allUsers.get(0);
-        assertEquals(firstName, user.getFname());
-        assertEquals(lastName, user.getLname());
+        User user = allUsers.get(0);
+        assertEquals(firstName, user.getFirstName());
+        assertEquals(lastName, user.getLastName());
         assertEquals(email, user.getEmail());
-        assertEquals(address, user.getAddress());
         assertEquals(password, user.getPassword());
         assertEquals(dateOfBirth, user.getDob());
     }
@@ -71,7 +68,6 @@ class RegistrationControllerTest {
         String lastName = "";
         Boolean noSurname = true;
         String email = "john@smith.co.nz";
-        String address = "1 place street";
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
@@ -81,20 +77,18 @@ class RegistrationControllerTest {
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .param("noSurname", String.valueOf(noSurname))
-                        .param("address", address)
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/profile*"));
 
-        List<Users> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
         assertEquals(1, allUsers.size());
-        Users user = allUsers.get(0);
-        assertEquals(firstName, user.getFname());
-        assertEquals(lastName, user.getLname());
+        User user = allUsers.get(0);
+        assertEquals(firstName, user.getFirstName());
+        assertEquals(lastName, user.getLastName());
         assertEquals(email, user.getEmail());
-        assertEquals(address, user.getAddress());
         assertEquals(password, user.getPassword());
         assertEquals(dateOfBirth, user.getDob());
     }
@@ -105,7 +99,6 @@ class RegistrationControllerTest {
         String lastName = "Smith";
         Boolean noSurname = false;
         String email = "john@smith.co.nz";
-        String address = "1 place street";
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
@@ -115,14 +108,13 @@ class RegistrationControllerTest {
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .param("noSurname", String.valueOf(noSurname))
-                        .param("address", address)
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("register"));
 
-        List<Users> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
         assertTrue(allUsers.isEmpty());
     }
 
@@ -132,7 +124,6 @@ class RegistrationControllerTest {
         String lastName = "   ";
         Boolean noSurname = false;
         String email = "john@smith.co.nz";
-        String address = "1 place street";
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
@@ -142,14 +133,13 @@ class RegistrationControllerTest {
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .param("noSurname", String.valueOf(noSurname))
-                        .param("address", address)
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("register"));
 
-        List<Users> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
         assertTrue(allUsers.isEmpty());
     }
 
@@ -159,7 +149,6 @@ class RegistrationControllerTest {
         String lastName = "Smith";
         Boolean noSurname = false;
         String email = "@jws.co.nz";
-        String address = "1 place street";
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
@@ -169,14 +158,13 @@ class RegistrationControllerTest {
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .param("noSurname", String.valueOf(noSurname))
-                        .param("address", address)
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("register"));
 
-        List<Users> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
         assertTrue(allUsers.isEmpty());
     }
 
@@ -186,7 +174,6 @@ class RegistrationControllerTest {
         String lastName = "Smith";
         Boolean noSurname = false;
         String email = "john@smith.co.nz";
-        String address = "1 place street";
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(12));
@@ -196,14 +183,13 @@ class RegistrationControllerTest {
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .param("noSurname", String.valueOf(noSurname))
-                        .param("address", address)
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("register"));
 
-        List<Users> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
         assertTrue(allUsers.isEmpty());
     }
 
@@ -213,7 +199,6 @@ class RegistrationControllerTest {
         String lastName = "Smith";
         Boolean noSurname = false;
         String email = "john@smith.co.nz";
-        String address = "1 place street";
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(121));
@@ -223,14 +208,13 @@ class RegistrationControllerTest {
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .param("noSurname", String.valueOf(noSurname))
-                        .param("address", address)
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("register"));
 
-        List<Users> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
         assertTrue(allUsers.isEmpty());
     }
 
@@ -240,7 +224,6 @@ class RegistrationControllerTest {
         String lastName = "Smith";
         Boolean noSurname = false;
         String email = "john@smith.co.nz";
-        String address = "1 place street";
         String password = "password";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
@@ -250,14 +233,13 @@ class RegistrationControllerTest {
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .param("noSurname", String.valueOf(noSurname))
-                        .param("address", address)
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("register"));
 
-        List<Users> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
         assertTrue(allUsers.isEmpty());
     }
 
@@ -267,7 +249,6 @@ class RegistrationControllerTest {
         String lastName = "Smith";
         Boolean noSurname = false;
         String email = "john@smith.co.nz";
-        String address = "1 place street";
         String password = "Password100%";
         String passwordConfirm = "password%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
@@ -277,14 +258,13 @@ class RegistrationControllerTest {
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .param("noSurname", String.valueOf(noSurname))
-                        .param("address", address)
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("register"));
 
-        List<Users> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
         assertTrue(allUsers.isEmpty());
     }
 }

@@ -1,8 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
-import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
@@ -55,8 +53,8 @@ public class LogInController {
     @GetMapping("/login")
     public String getLoginPage() {
         boolean validated = false;
-        userService.addUsers(new Users
-                ("user@gmail.com", "Default", "User", "1 test road", "Password1!", "2000-01-01"), validated);
+        userService.addUsers(new User
+                ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"), validated);
         return "login";
     }
 
@@ -83,7 +81,7 @@ public class LogInController {
             }
             return "login";
         } else {
-            Users user = userService.getUserByEmailAndPassword(email, password);
+            User user = userService.getUserByEmailAndPassword(email, password);
             model.addAttribute("user", user);
         return "/profile";
         }

@@ -1,11 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 
 public class FormValuesValidator {
     static String namePattern = "^[a-zA-Z\\-' ]+$";

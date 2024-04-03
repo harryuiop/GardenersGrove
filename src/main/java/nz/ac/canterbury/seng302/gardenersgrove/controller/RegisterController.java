@@ -1,7 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
@@ -82,7 +81,6 @@ public class RegisterController {
             @RequestParam(name = "firstName") String firstName,
             @RequestParam(name = "lastName", required = false) String lastName,
             @RequestParam(name = "noSurname", required = false) Boolean noSurname,
-            @RequestParam(name = "address") String address,
             @RequestParam(name = "password") String password,
             @RequestParam(name = "passwordConfirm") String passwordConfirm,
             @RequestParam(name = "dateOfBirth") String dateOfBirth, Model model
@@ -117,7 +115,7 @@ public class RegisterController {
         }
         boolean validated = true;
         userService.addUsers(
-                new User(email, firstName, lastName, address, password, dateOfBirth), validated
+                new User(email, firstName, lastName, password, dateOfBirth), validated
         );
         return "redirect:/profile";
     }
