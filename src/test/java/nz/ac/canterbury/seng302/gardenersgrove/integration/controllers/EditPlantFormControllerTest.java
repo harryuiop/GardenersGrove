@@ -22,8 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -65,9 +64,8 @@ class EditPlantFormControllerTest {
         }
         gardenRepository.deleteAll();
         gardenRepository.save(new Garden("Test Garden", "test location", null));
-        long gardenId = gardenRepository.findAll().get(0).getId();
-        plantRepository.deleteAll();
-        plantRepository.save(new Plant("Test Plant", 1, "description", new Date(), null, gardenId));
+        Garden garden = gardenRepository.findAll().get(0);
+        plantRepository.save(new Plant("Test Plant", 1, "description", new Date(), null, garden));
     }
 
     @Test
@@ -94,7 +92,7 @@ class EditPlantFormControllerTest {
         assertEquals(originalPlantName, updatedPlant.getName());
         assertEquals(originalPlantCount, updatedPlant.getCount());
         assertEquals(originalPlantDescription, updatedPlant.getDescription());
-        assertFalse(updatedPlant.isImageSet());
+        assertNull(updatedPlant.getImageFileName());
     }
 
     @Test
@@ -120,7 +118,7 @@ class EditPlantFormControllerTest {
         assertEquals(originalPlantName, updatedPlant.getName());
         assertNull(updatedPlant.getCount());
         assertEquals(originalPlantDescription, updatedPlant.getDescription());
-        assertFalse(updatedPlant.isImageSet());
+        assertNull(updatedPlant.getImageFileName());
     }
 
     @Test
@@ -146,7 +144,7 @@ class EditPlantFormControllerTest {
         assertEquals(originalPlantName, updatedPlant.getName());
         assertEquals(originalPlantCount, updatedPlant.getCount());
         assertNull(updatedPlant.getDescription());
-        assertFalse(updatedPlant.isImageSet());
+        assertNull(updatedPlant.getImageFileName());
     }
 
     @Test
@@ -174,7 +172,7 @@ class EditPlantFormControllerTest {
         assertEquals(originalPlantName, updatedPlant.getName());
         assertEquals(originalPlantCount, updatedPlant.getCount());
         assertEquals(originalPlantDescription, updatedPlant.getDescription());
-        assertFalse(updatedPlant.isImageSet());
+        assertNull(updatedPlant.getImageFileName());
     }
 
     @Test
@@ -202,7 +200,7 @@ class EditPlantFormControllerTest {
         assertEquals(originalPlantName, updatedPlant.getName());
         assertEquals(originalPlantCount, updatedPlant.getCount());
         assertEquals(originalPlantDescription, updatedPlant.getDescription());
-        assertFalse(updatedPlant.isImageSet());
+        assertNull(updatedPlant.getImageFileName());
     }
 
     @Test
@@ -229,7 +227,7 @@ class EditPlantFormControllerTest {
         assertEquals(originalPlantName, updatedPlant.getName());
         assertEquals(originalPlantCount, updatedPlant.getCount());
         assertEquals(originalPlantDescription, updatedPlant.getDescription());
-        assertFalse(updatedPlant.isImageSet());
+        assertNull(updatedPlant.getImageFileName());
     }
 
     @Test
@@ -256,7 +254,7 @@ class EditPlantFormControllerTest {
         assertEquals(originalPlantName, updatedPlant.getName());
         assertEquals(originalPlantCount, updatedPlant.getCount());
         assertEquals(originalPlantDescription, updatedPlant.getDescription());
-        assertFalse(updatedPlant.isImageSet());
+        assertNull(updatedPlant.getImageFileName());
     }
 
     @Test
@@ -283,7 +281,7 @@ class EditPlantFormControllerTest {
         assertEquals(originalPlantName, updatedPlant.getName());
         assertEquals(originalPlantCount, updatedPlant.getCount());
         assertEquals(originalPlantDescription, updatedPlant.getDescription());
-        assertFalse(updatedPlant.isImageSet());
+        assertNull(updatedPlant.getImageFileName());
     }
 
     @Test
@@ -310,7 +308,7 @@ class EditPlantFormControllerTest {
         assertEquals(originalPlantName, updatedPlant.getName());
         assertEquals(originalPlantCount, updatedPlant.getCount());
         assertEquals(originalPlantDescription, updatedPlant.getDescription());
-        assertTrue(updatedPlant.isImageSet());
+        assertNotNull(updatedPlant.getImageFileName());
     }
 
 
