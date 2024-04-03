@@ -44,7 +44,7 @@ public class EditPlantFormController extends GardensSidebar {
 
 
     /**
-     * This constructor is called at runtime by Spring to inject all required dependencies.
+     * Spring calls this constructor at runtime to inject all required dependencies.
      *
      * @param plantService  The Plant database access object.
      * @param gardenService The Garden database access object.
