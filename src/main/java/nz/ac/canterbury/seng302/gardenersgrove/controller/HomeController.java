@@ -38,16 +38,16 @@ public class HomeController {
      * @return a redirect to the login page
      */
     @GetMapping("/")
-    public String getRootPage(Model model) {
+    public String getLandingPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean loggedIn;
         if (auth != null && auth.isAuthenticated()) {
             int currentPrincipalName = parseInt(auth.getName());
             User user = userService.getUserById(currentPrincipalName);
-            boolean loggedIn = true;
-            model.addAttribute("loggedInStatus", loggedIn);
-            return "index";
+            loggedIn = user != null;
+        } else {
+            loggedIn = false;
         }
-        boolean loggedIn = false;
         model.addAttribute("loggedInStatus", loggedIn);
         return "index";
     }
