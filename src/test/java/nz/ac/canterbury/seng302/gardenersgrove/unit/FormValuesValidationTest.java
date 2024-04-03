@@ -1,7 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.unit;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -150,10 +150,9 @@ public class FormValuesValidationTest {
         String email = "jane@doe.nz";
         String firstName = "Jane";
         String lastName = "Doe";
-        String address = "";
         String password = "abc!1E";
         String dob = LocalDate.now().minusYears(20).toString();
-        Mockito.when(userRepository.findByEmail(email)).thenReturn(new Users(email, firstName, lastName,address,password,dob));
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(new User(email, firstName, lastName,password,dob));
         Assertions.assertFalse(valuesValidator.emailInUse(email, userService));
     }
 }
