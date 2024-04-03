@@ -38,7 +38,7 @@ public class LogInController {
      */
     @GetMapping("/")
     public String getRootPage() {
-        return "login";
+        return "home";
     }
 
     /**
