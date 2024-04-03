@@ -53,12 +53,15 @@ public class EditPlantFormController extends GardensSidebar {
                     String plantCountError,
                     String plantDescriptionError,
                     String plantedDateError,
+                    String plantImageTypeError,
+                    String plantImageSizeError,
                     String plantName,
                     Integer plantCount,
                     String plantDescription,
                     Date plantedDate,
-                    String plantImage,
+                    String plantImagePath,
                     Long plantId,
+                    String gardenName,
                     Long gardenId,
                     Model model
     ) {
@@ -68,13 +71,16 @@ public class EditPlantFormController extends GardensSidebar {
         model.addAttribute("plantCountError", plantCountError);
         model.addAttribute("plantDescriptionError", plantDescriptionError);
         model.addAttribute("plantedDateError", plantedDateError);
+        model.addAttribute("plantImageTypeError", plantImageTypeError);
+        model.addAttribute("plantImageSizeError", plantImageSizeError);
 
         model.addAttribute("plantName", plantName);
         model.addAttribute("plantCount", plantCount);
         model.addAttribute("plantDescription", plantDescription);
         model.addAttribute("plantedDate", plantedDate != null ? readFormat.format(plantedDate) : null);
-        model.addAttribute("plantImage", plantImage);
+        model.addAttribute("plantImagePath", plantImagePath);
         model.addAttribute("plantId", plantId);
+        model.addAttribute("gardenName", gardenName);
         model.addAttribute("gardenId", gardenId);
         return "editPlantForm";
     }
@@ -100,16 +106,14 @@ public class EditPlantFormController extends GardensSidebar {
         Plant plant = optionalPlant.get();
 
         return loadPlantForm(
-                        "",
-                        "",
-                        "",
-                        "",
+                        "", "", "", "", "", "",
                         plant.getName(),
                         plant.getCount(),
                         plant.getDescription(),
                         plant.getPlantedOn(),
                         plant.getImageFilePath(),
                         plant.getId(),
+                        plant.getGarden().getName(),
                         plant.getGarden().getId(),
                         model
         );
@@ -164,16 +168,19 @@ public class EditPlantFormController extends GardensSidebar {
 
         if (!errors.isEmpty()) {
             return loadPlantForm(
-                            errors.get("plantNameError"),
-                            errors.get("plantCountError"),
-                            errors.get("plantDescriptionError"),
-                            errors.get("plantedDateError"),
+                            errors.getOrDefault("plantNameError", ""),
+                            errors.getOrDefault("plantCountError", ""),
+                            errors.getOrDefault("plantDescriptionError", ""),
+                            errors.getOrDefault("plantedDateError", ""),
+                            errors.getOrDefault("plantImageTypeError", ""),
+                            errors.getOrDefault("plantImageSizeError", ""),
                             plantName,
                             plantCount,
                             plantDescription,
                             plantDate,
                             plant.getImageFilePath(),
                             plantId,
+                            garden.getName(),
                             garden.getId(),
                             model
             );
