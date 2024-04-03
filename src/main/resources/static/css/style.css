@@ -109,13 +109,58 @@ label {
     margin-bottom: 20px;
 }
 
-#profilePhoto {
+#profilePictureInput {
+    display: none;
+}
+
+#profilePicture {
     border: 1px solid #ccc;
-    border-radius: 3px;
-    box-sizing: border-box;
     border-radius: 50%;
-    width: 280px;
+    width: 15rem;
     height: auto;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+#profilePictureWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+#profilePictureOverlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: rgba(0,0,0,0.5);
+    pointer-events: none;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+#profilePictureWrapper:hover #profilePictureOverlay {
+    opacity: 1;
+}
+
+#profilePictureOverlayIcon {
+    color: white;
+    font-size: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    box-sizing: border-box;
 }
 
 #editProfileCancelButton {
@@ -324,4 +369,21 @@ nav button {
 
 textarea {
     width: 250px;
+}
+
+.userProfile {
+    display: flex;
+    align-items: center;
+}
+
+.userProfileImage {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    margin: 1rem;
+}
+
+.userProfileName {
+    color: var(--light-color);
 }
