@@ -2,6 +2,9 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Entity class reflecting an entry of name, and favourite programming language
  * Note the @link{Entity} annotation required for declaring this as a persistence entity
@@ -21,6 +24,9 @@ public class Garden {
     @Column()
     private Float size;
 
+    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
+    private List<Plant> plants;
+
     /**
      * JPA required no-args constructor
      */
@@ -31,12 +37,14 @@ public class Garden {
      * Creates a new Garden object
      *
      * @param name     name of Garden
-     * @param location user's favourite programming language
+     * @param location The name of the physical place where the garden is
+     * @param size     The physical size of the garden in square metres
      */
     public Garden(String name, String location, Float size) {
         this.name = name;
         this.location = location;
         this.size = size;
+        this.plants = new ArrayList<>();
     }
 
 
