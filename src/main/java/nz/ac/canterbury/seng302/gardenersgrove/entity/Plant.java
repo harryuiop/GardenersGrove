@@ -72,7 +72,7 @@ public class Plant {
 
     public String getImageFilePath() {
         if (imageFileName == null) {
-            return "images/default-plant.jpg";
+            return "/images/default-plant.jpg";
         }
         return "/uploads/" + imageFileName;
     }
