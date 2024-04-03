@@ -3,9 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -215,7 +213,7 @@ class ErrorCheckerTest {
         String email = "user@gmail.com";
         String password = "Password1!";
         when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(
-                new Users(email, "fname", "lname","address", password, "20/20/2003"));
+                new User(email, "fname", "lname", password, "20/20/2003"));
         Map<String, String> errors = validate.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         Assertions.assertEquals(expected, errors);
