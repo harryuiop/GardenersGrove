@@ -8,7 +8,7 @@
 <body>
     <div>
         <h1>Gardener Grove</h1>
-        <div th:switch="${msg}">
+        <div th:switch="${loggedInStatus}">
             <div th:case="true">
                 <a th:href="@{login}">Sign In</a> <br>
                 <a th:href="@{register}">Register</a>

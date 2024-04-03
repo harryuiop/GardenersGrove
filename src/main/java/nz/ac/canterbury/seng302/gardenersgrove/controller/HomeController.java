@@ -40,11 +40,15 @@ public class HomeController {
     @GetMapping("/")
     public String getRootPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (auth != null && auth.isAuthenticated()) {
-        int currentPrincipalName = parseInt(auth.getName());
-        User user = userService.getUserById(currentPrincipalName);
-//        boolean loggedIn = true;
-        model.addAttribute("msg", "test");
+        if (auth != null && auth.isAuthenticated()) {
+            int currentPrincipalName = parseInt(auth.getName());
+            User user = userService.getUserById(currentPrincipalName);
+            boolean loggedIn = true;
+            model.addAttribute("loggedInStatus", loggedIn);
+            return "index";
+        }
+        boolean loggedIn = false;
+        model.addAttribute("loggedInStatus", loggedIn);
         return "index";
     }
 }
