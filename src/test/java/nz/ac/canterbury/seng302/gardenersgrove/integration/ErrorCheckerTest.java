@@ -294,7 +294,7 @@ class ErrorCheckerTest {
                 password, otherpass, validDate, dateOfBirth,
                 userService);
         HashMap<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("passwordConfirmError", "Passwords are not equal");
+        correctErrors.put("passwordConfirmError", "Passwords do not match");
         Assertions.assertEquals(correctErrors, errors);
     }
     @Test
@@ -310,7 +310,7 @@ class ErrorCheckerTest {
                 password, password, validDate, dateOfBirth,
                 userService);
         Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("dateOfBirthError", "User cannot be below age 13");
+        correctErrors.put("dateOfBirthError", "You must be 13 years or older to create an account");
         Assertions.assertEquals(correctErrors, errors);
     }
     @Test
@@ -326,7 +326,7 @@ class ErrorCheckerTest {
                 password, password, validDate, dateOfBirth,
                 userService);
         Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("dateOfBirthError", "User cannot be older than 120");
+        correctErrors.put("dateOfBirthError", "The maximum age allowed is 120 years");
         Assertions.assertEquals(correctErrors, errors);
     }
 }
