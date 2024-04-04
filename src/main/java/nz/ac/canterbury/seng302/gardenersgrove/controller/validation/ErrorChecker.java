@@ -111,16 +111,16 @@ public class ErrorChecker {
         } else if (!passwordIsValid(password)) {
             errors.put("passwordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         } else if (!valuesValidator.checkConfirmPasswords(password, passwordConfirm)) {
-            errors.put("passwordConfirmError", "Passwords are not equal");
+            errors.put("passwordConfirmError", "Passwords do not match");
         }
         // Checking DOB
         if (validDate) {
             if (!valuesValidator.checkBlank(dateOfBirth)) {
                 errors.put("dateOfBirthError", "Date of Birth cannot be empty");
             } else if (!dobIsValid(dateOfBirth)) {
-                errors.put("dateOfBirthError", "User cannot be below age 13");
+                errors.put("dateOfBirthError", "You must be 13 years or older to create an account");
             } else if (!valuesValidator.checkUnder120(dateOfBirth)) {
-                errors.put("dateOfBirthError", "User cannot be older than 120");
+                errors.put("dateOfBirthError", "The maximum age allowed is 120 years");
             }
         } else {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
