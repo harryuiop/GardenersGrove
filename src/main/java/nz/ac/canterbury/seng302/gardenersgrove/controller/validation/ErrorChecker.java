@@ -51,7 +51,14 @@ public class ErrorChecker {
         return errors;
     }
 
-
+    /**
+     * Checks the provided information for adding plants to a garden.
+     *
+     * @param plantName The string name of the plant.
+     * @param plantCount The integer number of plants to be added.
+     * @param plantDescription  The string description of the plant.
+     * @return A HashMap<String, String> of the errors that have occurred based on the outcome of the error checks.
+     */
     public Map<String, String> plantFormErrors(String plantName, Integer plantCount, String plantDescription) {
         HashMap<String, String> errors = new HashMap<>();
 
@@ -74,6 +81,22 @@ public class ErrorChecker {
         return errors;
     }
 
+    /**
+     * Checks the provided information on the register page. If any fields are invalid, it returns
+     * a map of errors and their descriptions.
+     *
+     * @param firstName The first name string.
+     * @param lastName The last name string.
+     * @param noSurname Whether the noLastName box was ticked.
+     * @param email The email string.
+     * @param password  The password string.
+     * @param passwordConfirm The confirm password string.
+     * @param validDate Whether the date is valid or not.
+     * @param dateOfBirth The date of birth string.
+     * @param userService The userService instance used to query the database for checking whether an account
+     * exists with the given information.
+     * @return  A HashMap<String, String> of the errors that have occurred based on the outcome of the error checks.
+     */
     public Map<String, String> registerUserFormErrors(String firstName, String lastName, Boolean noSurname, String email,
                                                       String password, String passwordConfirm, boolean validDate, String dateOfBirth,
                                                       UserService userService)
