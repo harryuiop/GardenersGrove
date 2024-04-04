@@ -38,7 +38,6 @@ public class PlantFormController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
-    private final ErrorChecker validate;
 
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -56,7 +55,6 @@ public class PlantFormController extends GardensSidebar {
         this.plantService = plantService;
         this.gardenService = gardenService;
         this.userService = userService;
-        this.validate = new ErrorChecker();
     }
 
     private String loadPlantForm(
@@ -142,7 +140,7 @@ public class PlantFormController extends GardensSidebar {
         }
         Garden garden = optionalGarden.get();
 
-        Map<String, String> errors = validate.plantFormErrors(
+        Map<String, String> errors = ErrorChecker.plantFormErrors(
                         plantName,
                         plantCount,
                         plantDescription,

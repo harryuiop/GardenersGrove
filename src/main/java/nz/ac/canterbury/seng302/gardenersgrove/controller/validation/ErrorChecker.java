@@ -18,7 +18,7 @@ public class ErrorChecker {
      * @param gardenSize     represents the size given
      * @return a mapping of the error labels and messages
      */
-    public Map<String, String> gardenFormErrors(String gardenName, String gardenLocation, Float gardenSize) {
+    public static Map<String, String> gardenFormErrors(String gardenName, String gardenLocation, Float gardenSize) {
         HashMap<String, String> errors = new HashMap<>();
 
         if (!FormValuesValidator.checkBlank(gardenName)) {
@@ -45,7 +45,7 @@ public class ErrorChecker {
     }
 
 
-    public Map<String, String> plantFormErrors(
+    public static Map<String, String> plantFormErrors(
                     String plantName,
                     Integer plantCount,
                     String plantDescription,

@@ -178,8 +178,7 @@ public class EditPlantFormController extends GardensSidebar {
         Plant plant = optionalPlant.get();
         Garden garden = plant.getGarden();
 
-        ErrorChecker validate = new ErrorChecker();
-        Map<String, String> errors = validate.plantFormErrors(
+        Map<String, String> errors = ErrorChecker.plantFormErrors(
                         plantName,
                         plantCount,
                         plantDescription,
