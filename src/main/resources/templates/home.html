@@ -10,8 +10,9 @@
         <h1>Gardener Grove</h1>
         <div th:switch="${loggedInStatus}">
             <div th:case="true">
-                <a th:href="@{profile.html}">Profile</a> <br>
-                <p>*this profile button will be broken until persistent database is implemented*</p>
+                <a th:href="@{profile}">Profile</a> <br>
+                <p>*this profile button will be broken until persistent database is implemented
+                so to test clear your web browsers cookies after each program launch*</p>
             </div>
 
             <div th:case="false">
