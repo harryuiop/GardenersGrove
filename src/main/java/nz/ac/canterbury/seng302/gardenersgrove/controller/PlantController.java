@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,19 +28,26 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Controller for form example.
- * Note the @link{Autowired} annotation giving us access to the @link{FormService} class automatically
- */
 @Controller
-public class PlantFormController extends GardensSidebar {
-    Logger logger = LoggerFactory.getLogger(PlantFormController.class);
+public class PlantController extends GardensSidebar {
+    Logger logger = LoggerFactory.getLogger(PlantController.class);
 
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
 
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private String referer;
+
+    private Optional<Plant> plantFromStringId(String plantId) {
+        long id;
+        try {
+            id = Long.parseLong(plantId);
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+        return plantService.getPlantById(id);
+    }
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -50,12 +58,11 @@ public class PlantFormController extends GardensSidebar {
      * @param userService   The User database access object.
      */
     @Autowired
-    public PlantFormController(PlantService plantService, GardenService gardenService, UserService userService) {
+    public PlantController(PlantService plantService, GardenService gardenService, UserService userService) {
         this.plantService = plantService;
         this.gardenService = gardenService;
         this.userService = userService;
     }
-
     private String loadPlantForm(
                     String plantNameError,
                     String plantCountError,
@@ -69,6 +76,7 @@ public class PlantFormController extends GardensSidebar {
                     String plantDescription,
                     Date plantedDate,
                     String plantImagePath,
+                    String plantId,
                     String gardenName,
                     Long gardenId,
                     Model model
@@ -86,11 +94,36 @@ public class PlantFormController extends GardensSidebar {
         model.addAttribute("plantName", plantName);
         model.addAttribute("plantCount", plantCount);
         model.addAttribute("plantDescription", plantDescription);
-        model.addAttribute("plantedDate", plantedDate != null ? dateFormat.format(plantedDate) : null);
+        model.addAttribute("plantedDate", plantedDate != null ? readFormat.format(plantedDate) : null);
         model.addAttribute("plantImage", plantImagePath);
+        model.addAttribute("plantId", plantId);
+
         model.addAttribute("gardenName", gardenName);
         model.addAttribute("gardenId", gardenId);
         return "plantForm";
+    }
+
+
+    @GetMapping("/plant/new")
+    public String createPlant(
+                    @RequestParam(name = "gardenId") Long gardenId,
+                    HttpServletRequest request,
+                    Model model
+    ) {
+        logger.info("GET /plant/new");
+
+        this.referer = request.getHeader("Referer");
+
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            return "redirect:" + this.referer;
+        }
+        Garden garden = optionalGarden.get();
+        return loadPlantForm(
+                        "", "", "", "", "", "", "",
+                        null, null, null, null, null, "new",
+                        garden.getName(), garden.getId(), model
+        );
     }
 
     /**
@@ -99,18 +132,32 @@ public class PlantFormController extends GardensSidebar {
      * @param model object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
-    @GetMapping("/plantform")
-    public String form(
-                    @RequestParam(name = "gardenId") Long gardenId,
+    @GetMapping("/plant/{plantId}")
+    public String editPlant(
+                    @PathVariable Long plantId,
+                    HttpServletRequest request,
                     Model model
     ) {
-        logger.info("GET /plantform");
+        logger.info("GET /plant/" + plantId);
+
+        this.referer = request.getHeader("Referer");
+
+        Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
+        if (optionalPlant.isEmpty()) {
+            return "redirect:" + this.referer;
+        }
+        Plant plant = optionalPlant.get();
 
         return loadPlantForm(
                         "", "", "", "", "", "", "",
-                        null, null, null, null, null,
-                        garden.getName(),
-                        gardenId,
+                        plant.getName(),
+                        plant.getCount(),
+                        plant.getDescription(),
+                        plant.getPlantedOn(),
+                        plant.getImageFilePath(),
+                        plantId.toString(),
+                        plant.getGarden().getName(),
+                        plant.getGarden().getId(),
                         model
         );
     }
@@ -125,22 +172,28 @@ public class PlantFormController extends GardensSidebar {
      * @param model            object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
      */
-    @PostMapping("/plantform")
-    public String submitForm(
+    @PostMapping("/plant/{plantId}")
+    public String submitPlant(
+                    @PathVariable String plantId,
                     @RequestParam(name = "plantName") String plantName,
                     @RequestParam(name = "plantCount", required = false) Integer plantCount,
                     @RequestParam(name = "plantDescription", required = false) String plantDescription,
                     @RequestParam(name = "plantedDate", required = false) String plantedDate,
                     @RequestParam(name = "gardenId") Long gardenId,
                     @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
-                    HttpServletRequest request,
                     Model model
     ) {
-        logger.info("POST /plantform");
+        logger.info("POST /plant/" + plantId);
+
+
+        Optional<Plant> optionalPlant = this.plantFromStringId(plantId);
+        if (optionalPlant.isEmpty() && !plantId.equals("new")) {
+            return "redirect:" + this.referer;
+        }
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
-            return "redirect:" + request.getHeader("Referer");
+            return "redirect:" + this.referer;
         }
         Garden garden = optionalGarden.get();
 
@@ -154,11 +207,12 @@ public class PlantFormController extends GardensSidebar {
         Date date = null;
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
-                date = dateFormat.parse(plantedDate);
+                date = readFormat.parse(plantedDate);
             }
         } catch (ParseException exception) {
             errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
         }
+
         String imageFileName = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
@@ -168,7 +222,6 @@ public class PlantFormController extends GardensSidebar {
                 errors.put("plantImageUploadError", "Uploading image failed, please try again.");
             }
         }
-
         if (!errors.isEmpty()) {
             return loadPlantForm(
                             errors.getOrDefault("plantNameError", ""),
@@ -177,19 +230,29 @@ public class PlantFormController extends GardensSidebar {
                             errors.getOrDefault("plantedDateError", ""),
                             errors.getOrDefault("plantImageTypeError", ""),
                             errors.getOrDefault("plantImageSizeError", ""),
-                            errors.getOrDefault("plantImageError", ""),
+                            errors.getOrDefault("plantImageUploadError", ""),
                             plantName,
                             plantCount,
                             plantDescription,
                             date,
                             imageFileName != null ? "/uploads/" + imageFileName : "/images/default-plant.png",
+                            plantId,
                             garden.getName(),
                             gardenId,
                             model
             );
         }
-
-        Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageFileName, garden);
+        Plant plant;
+        if (optionalPlant.isPresent()) {
+            plant = optionalPlant.get();
+            plant.setName(plantName);
+            plant.setCount(plantCount);
+            plant.setDescription(plantDescription);
+            plant.setPlantedOn(date);
+            plant.setImageFileName(imageFileName);
+        } else {
+            plant = new Plant(plantName, plantCount, plantDescription, date, imageFileName, garden);
+        }
         plantService.savePlant(plant);
         return "redirect:/view-garden?gardenId=" + garden.getId();
     }

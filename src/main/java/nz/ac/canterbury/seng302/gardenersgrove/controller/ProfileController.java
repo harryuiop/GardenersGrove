@@ -5,7 +5,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValida
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -29,23 +28,20 @@ import static java.lang.Integer.parseInt;
 public class ProfileController {
 
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
 
 
     /**
      * Constructor for ProfileController.
      *
      * @param userService           The UserService responsible for user-related operations.
-     * @param authenticationManager The AuthenticationManager for managing user authentication.
      */
-    public ProfileController(UserService userService, AuthenticationManager authenticationManager) {
+    public ProfileController(UserService userService) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
     }
 
 
     /**
-     * Get mapping for the profile page
+     * Handles GET requests to the "/profile" URL.
      *
      * @return the profile page with the corresponding information
      */
@@ -60,13 +56,13 @@ public class ProfileController {
     }
 
     /**
-     * Handles GET requests to the "/profile" URL.
+     * Handles GET requests to the "/editProfile" URL.
      * Displays the user's profile page.
      *
      * @param model The Model object used for adding attributes to the view.
      * @return The name of the profile view template.
      */
-    @GetMapping("editProfile")
+    @GetMapping("/editProfile")
     public String getEditProfilePage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
@@ -76,18 +72,21 @@ public class ProfileController {
     }
 
     /**
-     * Handles GET requests to the "/editProfile" URL.
+     * Handles POST requests to the "/uploadProfileImage" URL.
      * This method is responsible for dealing with grabbing the uploaded profile
-     * photo from the user and saving it to where he global variable UPLOAD_DIRECTORY specify
+     * photo from the user and saving it to the server.
      *
-     * @param model The Model object used for adding attributes to the view.
      * @param file  The multipart file object uploaded by the user
+     * @param request The HTTP request object.
+     * @param model The Model object used for adding attributes to the view.
      * @return The name of the editProfile view template.
      */
     @PostMapping("/uploadProfileImage")
-    public String uploadImage(@RequestParam("image") MultipartFile file,
-                              HttpServletRequest request,
-                              Model model) throws IOException {
+    public String uploadImage(
+                    @RequestParam("image") MultipartFile file,
+                    HttpServletRequest request,
+                    Model model
+    ) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
         User user = userService.getUserById(currentPrincipalName);
@@ -130,11 +129,11 @@ public class ProfileController {
      */
     @PostMapping("/confirmProfileChanges")
     public String addNewUser(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "firstName") String firstName,
-            @RequestParam(name = "lastName") String lastName,
-            @RequestParam(name = "password") String password,
-            @RequestParam(name = "dateOfBirth") String dateOfBirth
+                    @RequestParam(name = "email") String email,
+                    @RequestParam(name = "firstName") String firstName,
+                    @RequestParam(name = "lastName") String lastName,
+                    @RequestParam(name = "password") String password,
+                    @RequestParam(name = "dateOfBirth") String dateOfBirth
     ) {
         userService.addUsers(
                         new User(email, firstName, lastName, password, dateOfBirth)
