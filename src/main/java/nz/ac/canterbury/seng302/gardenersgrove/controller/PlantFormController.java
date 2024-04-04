@@ -63,11 +63,13 @@ public class PlantFormController extends GardensSidebar {
                     String plantedDateError,
                     String plantImageTypeError,
                     String plantImageSizeError,
+                    String plantImageUploadError,
                     String plantName,
                     Integer plantCount,
                     String plantDescription,
                     Date plantedDate,
                     String plantImagePath,
+                    String gardenName,
                     Long gardenId,
                     Model model
     ) {
@@ -79,12 +81,14 @@ public class PlantFormController extends GardensSidebar {
         model.addAttribute("plantedDateError", plantedDateError);
         model.addAttribute("plantImageTypeError", plantImageTypeError);
         model.addAttribute("plantImageSizeError", plantImageSizeError);
+        model.addAttribute("plantImageUploadError", plantImageUploadError);
 
         model.addAttribute("plantName", plantName);
         model.addAttribute("plantCount", plantCount);
         model.addAttribute("plantDescription", plantDescription);
         model.addAttribute("plantedDate", plantedDate != null ? dateFormat.format(plantedDate) : null);
         model.addAttribute("plantImage", plantImagePath);
+        model.addAttribute("gardenName", gardenName);
         model.addAttribute("gardenId", gardenId);
         return "plantForm";
     }
@@ -103,8 +107,9 @@ public class PlantFormController extends GardensSidebar {
         logger.info("GET /plantform");
 
         return loadPlantForm(
-                        "", "", "", "", "", "",
+                        "", "", "", "", "", "", "",
                         null, null, null, null, null,
+                        garden.getName(),
                         gardenId,
                         model
         );
@@ -160,23 +165,25 @@ public class PlantFormController extends GardensSidebar {
                 imageFileName = ImageStore.storeImage(imageFile);
             } catch (IOException error) {
                 logger.error("Error saving plant image", error);
-                errors.put("plantImageTypeError", "Uploading image failed, please try again.");
+                errors.put("plantImageUploadError", "Uploading image failed, please try again.");
             }
         }
 
         if (!errors.isEmpty()) {
             return loadPlantForm(
-                            errors.get("plantNameError"),
-                            errors.get("plantCountError"),
-                            errors.get("plantDescriptionError"),
-                            errors.get("plantedDateError"),
-                            errors.get("plantImageTypeError"),
-                            errors.get("plantImageSizeError"),
+                            errors.getOrDefault("plantNameError", ""),
+                            errors.getOrDefault("plantCountError", ""),
+                            errors.getOrDefault("plantDescriptionError", ""),
+                            errors.getOrDefault("plantedDateError", ""),
+                            errors.getOrDefault("plantImageTypeError", ""),
+                            errors.getOrDefault("plantImageSizeError", ""),
+                            errors.getOrDefault("plantImageError", ""),
                             plantName,
                             plantCount,
                             plantDescription,
                             date,
-                            imageFileName != null ? "/uploads/" + imageFileName : "images/default-plant.png",
+                            imageFileName != null ? "/uploads/" + imageFileName : "/images/default-plant.png",
+                            garden.getName(),
                             gardenId,
                             model
             );
