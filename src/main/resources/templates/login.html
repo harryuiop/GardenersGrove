@@ -20,7 +20,7 @@
                     type="text"
                     id="email"
                     name="email"
-                    th:name="email"
+                    th:name="username"
                     th:value="*{email}"
                     autofocus
             />
@@ -34,7 +34,7 @@
                    th:name="password"
                    th:value="password"
             >
-            <p class="errorMessage" id="passwordError" th:text=${invalidError}></p>
+            <p class="errorMessage" id="invalidError" th:text=${invalidError}></p>
 
             <input class="inputStyle" id="sign_in_button" type="submit" value="Sign In">
           </form>

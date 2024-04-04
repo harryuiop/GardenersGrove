@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -83,6 +84,8 @@ public class SecurityConfiguration {
                 "/javascript/**",
         };
 
+
+
         // Configure security rules for HTTP requests
         http
                 .authorizeHttpRequests(auth ->
@@ -125,8 +128,9 @@ public class SecurityConfiguration {
                 .formLogin(formLogin ->
                         formLogin
                                 .loginPage("/login")
-                                .loginProcessingUrl("/login_test")
-                                .defaultSuccessUrl("/profile")
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/view-all")
+                                .failureHandler(authenticationFailureHandler())
                 )
                 // Define logging out, a POST "/logout" endpoint now exists under the hood, redirect to "/login", invalidate session and remove cookie
                 .logout(logout ->
@@ -137,6 +141,11 @@ public class SecurityConfiguration {
                                 .deleteCookies("JSESSIONID")
                 );
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
     }
 
 }

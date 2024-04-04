@@ -1,1 +1,0 @@
-// To use for checking that a user exists.

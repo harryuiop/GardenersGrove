@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +42,8 @@ public class LogInController {
      */
     @GetMapping("/")
     public String getRootPage() {
+        boolean validated = false;
+        userService.addUsers(new User("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"), validated);
         return "login";
     }
 
@@ -51,7 +54,16 @@ public class LogInController {
      * @return The name of the login view template.
      */
     @GetMapping("/login")
-    public String getLoginPage() {
+    public String getLoginPage(
+            @RequestParam(required = false) String error,
+            Model model
+    ) {
+        if (error != null && error.equals("Invalid")) {
+            model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
+        }
+        if (error != null && error.equals("Bad_Credentials")) {
+            model.addAttribute("emailError", "Email address must be in the form ‘jane@doe.nz’");
+        }
         boolean validated = false;
         userService.addUsers(new User
                 ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"), validated);
@@ -69,7 +81,7 @@ public class LogInController {
     */
     @PostMapping("/login")
     public String processLoginForm(
-            @RequestParam(name = "email") String email,
+            @RequestParam(name = "username") String email,
             @RequestParam(name = "password") String password,
             Model model
     ) {
@@ -83,7 +95,8 @@ public class LogInController {
         } else {
             User user = userService.getUserByEmailAndPassword(email, password);
             model.addAttribute("user", user);
-        return "/homeTemplate";
+
+        return "/login";
         }
     }
 }

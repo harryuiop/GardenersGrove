@@ -41,7 +41,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (
                 email == null || email.isEmpty() || password == null || password.isEmpty()
         ) {
-            throw new BadCredentialsException("Bad Credentials");
+            throw new BadCredentialsException("Bad_Credentials");
         }
 
         // Attempt to retrieve user from the database using email and password
@@ -49,7 +49,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // If user is not found, throw BadCredentialsException
         if (user == null) {
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException("Invalid");
         }
 
         // If user is found, create and return a UsernamePasswordAuthenticationToken
