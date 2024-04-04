@@ -6,12 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * Controller for the root/home page. This controls what each user will see client side
+ * depending on authentication status and permissions.
+ */
 @Controller
 public class HomeController {
 
     /**
      * Handles GET requests to the "/" URL.
-     * Displays the login page.
+     * Displays the login page with different HTML attributes depending on permissions and authentication status.
      *
      * @return a redirect to the login page
      */

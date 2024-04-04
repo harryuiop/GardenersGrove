@@ -143,6 +143,17 @@ public class ProfileController {
     }
 
     /**
+     * Handles POST requests to the "/logout" URL.
+     * Invalidate the users HTTP session and deletes the cookies (done within SecurityConfiguration.java)
+     *
+     * @return The name of the login view template
+     */
+    @PostMapping("/logout")
+    public String logoutUser() {
+        return "login";
+    }
+
+    /**
      * Handles requests to the "/profile" URL.
      * Displays the profile page.
      *
