@@ -211,19 +211,22 @@ input[type=text], input[type=password] {
     font-size: 1.2rem;
 }
 
-.registerLink {
+
+#registerLink {
+    font-style: italic;
+    margin-left: 0.5rem;
     font-size: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 1rem 1rem 0.5rem 1rem;
+    justify-content: center;
 }
 
-#registerLink {
-    font-style: italic;
-    margin-left: 0.5rem;
+.cancelOnLogin {
+    display: flex;
+    justify-content: center;
 }
-
 
 /* Team-r styling */
 /* Title at top of page */

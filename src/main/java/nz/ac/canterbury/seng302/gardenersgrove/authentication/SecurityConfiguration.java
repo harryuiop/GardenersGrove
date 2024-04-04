@@ -1,12 +1,16 @@
 package nz.ac.canterbury.seng302.gardenersgrove.authentication;
 
+import nz.ac.canterbury.seng302.gardenersgrove.authentication.CustomAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -80,8 +84,6 @@ public class SecurityConfiguration {
                 "/javascript/**",
         };
 
-
-
         // Configure security rules for HTTP requests
         http
                 .authorizeHttpRequests(auth ->
@@ -93,19 +95,14 @@ public class SecurityConfiguration {
                         headers.frameOptions(Customizer.withDefaults()).disable()
                 )
                 .csrf(csrf ->
-                        csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2/**"))
+                        csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2/**"),
+                                AntPathRequestMatcher.antMatcher("/login/**"),
+                                AntPathRequestMatcher.antMatcher("/register/**"),
+                                AntPathRequestMatcher.antMatcher("/check-email-duplication/**"),
+                                AntPathRequestMatcher.antMatcher("/logout"))
+
                 )
-                .csrf(csrf ->
-                        csrf.ignoringRequestMatchers(
-                                AntPathRequestMatcher.antMatcher("/login/**")
-                        )
-                )
-                .csrf(csrf ->
-                        csrf.ignoringRequestMatchers(
-                                AntPathRequestMatcher.antMatcher("/register/**")
-                        )
-                ).csrf(csrf -> csrf.ignoringRequestMatchers(
-                        AntPathRequestMatcher.antMatcher("/check-email-duplication/**")))
+
                 .authorizeHttpRequests(request ->
                         // Allow "/", "/register", and "/login" to anyone (permitAll)
                         request
