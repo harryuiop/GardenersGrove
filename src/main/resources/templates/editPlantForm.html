@@ -11,6 +11,8 @@
 <div class="content">
     <h1 th:text="${gardenName}"></h1>
     <div>
+        <div cass="forumContentsDiv">
+            <form th:action="@{/plantform/edit(plantId=${plantId})}" method="post" id="plant-form">
         <div>
             <form th:action="@{/plantform/edit(plantId=${plantId})}" method="post" id="plant-form" enctype="multipart/form-data">
                 <div class="form-field">

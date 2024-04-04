@@ -5,6 +5,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
 /**
@@ -17,7 +18,7 @@ public class UserService {
     /**
      * UserRepository instance to send user data to the database.
      */
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     /**
      * Constructor for UserService.
@@ -36,17 +37,18 @@ public class UserService {
      * @param newUser The new user data.
      * @return The UserRepository instance with the new user saved.
      */
-    public User addUsers(User newUser) {
-        if (
-                emailIsValid(newUser.getEmail()) &&
-                        passwordIsValid(newUser.getPassword()) &&
-                        nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
-                        dobIsValid(newUser.getDob()) &&
-                        (getUserByEmail(newUser.getEmail()) == null)
-        ) {
-            return userRepository.save(newUser);
+    public User addUsers(User newUser, boolean checked) {
+        if (!checked) {
+            if (!(emailIsValid(newUser.getEmail()) &&
+                    passwordIsValid(newUser.getPassword()) &&
+                    nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
+                    dobIsValid(newUser.getDob()) &&
+                    (getUserByEmail(newUser.getEmail()) == null))) {
+                return null;
+
+            }
         }
-        return null;
+        return userRepository.save(newUser);
     }
 
     /**
