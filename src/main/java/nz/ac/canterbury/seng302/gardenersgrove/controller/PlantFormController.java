@@ -39,8 +39,7 @@ public class PlantFormController extends GardensSidebar {
     private final GardenService gardenService;
     private final UserService userService;
 
-    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -84,7 +83,7 @@ public class PlantFormController extends GardensSidebar {
         model.addAttribute("plantName", plantName);
         model.addAttribute("plantCount", plantCount);
         model.addAttribute("plantDescription", plantDescription);
-        model.addAttribute("plantedDate", plantedDate != null ? readFormat.format(plantedDate) : null);
+        model.addAttribute("plantedDate", plantedDate != null ? dateFormat.format(plantedDate) : null);
         model.addAttribute("plantImage", plantImagePath);
         model.addAttribute("gardenId", gardenId);
         return "plantForm";
@@ -150,7 +149,7 @@ public class PlantFormController extends GardensSidebar {
         Date date = null;
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
-                date = readFormat.parse(plantedDate);
+                date = dateFormat.parse(plantedDate);
             }
         } catch (ParseException exception) {
             errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
