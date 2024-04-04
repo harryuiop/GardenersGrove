@@ -42,9 +42,7 @@ public class LogInController {
      */
     @GetMapping("/")
     public String getRootPage() {
-        boolean validated = false;
-        userService.addUsers(new User("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"), validated);
-        return "login";
+        return "home";
     }
 
     /**

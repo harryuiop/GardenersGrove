@@ -129,7 +129,7 @@ public class SecurityConfiguration {
                 .logout(logout ->
                         logout
                                 .logoutUrl("/logout")
-                                .logoutSuccessUrl("/login")
+                                .logoutSuccessUrl("/home")
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                 );
