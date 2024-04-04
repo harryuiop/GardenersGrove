@@ -7,7 +7,7 @@ public class FormValuesValidator {
      * @param string represents the string being checked for correct characters
      * @return whether it is valid or not.
      */
-    public boolean checkCharacters(String string) {
+    public static boolean checkCharacters(String string) {
         return string.matches("[a-zA-Z0-9 .,\\-']*");
     }
 
@@ -17,7 +17,7 @@ public class FormValuesValidator {
      * @param string represents the string being checked
      * @return false to show there are no errors
      */
-    public boolean checkBlank(String string) {
+    public static boolean checkBlank(String string) {
         return !string.isBlank();
     }
 
@@ -27,15 +27,15 @@ public class FormValuesValidator {
      * @param size the size being checked
      * @return false if there is no error
      */
-    public boolean checkSize(Float size) {
+    public static boolean checkSize(Float size) {
         return size == null || size > 0;
     }
 
-    public boolean checkDescription(String description) {
+    public static boolean checkDescription(String description) {
         return description == null || description.length() <= 512;
     }
 
-    public boolean checkCount(Integer count) {
+    public static boolean checkCount(Integer count) {
         return count == null || count > 0;
     }
 }

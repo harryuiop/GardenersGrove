@@ -10,8 +10,6 @@ import java.util.Map;
  */
 public class ErrorChecker {
 
-    private final FormValuesValidator valuesValidator = new FormValuesValidator();
-
     /**
      * Checks for valid user entries that meet the given requirements
      *
@@ -23,23 +21,23 @@ public class ErrorChecker {
     public Map<String, String> gardenFormErrors(String gardenName, String gardenLocation, Float gardenSize) {
         HashMap<String, String> errors = new HashMap<>();
 
-        if (!valuesValidator.checkBlank(gardenName)) {
+        if (!FormValuesValidator.checkBlank(gardenName)) {
             errors.put("gardenNameError", "Garden name cannot by empty");
-        } else if (!valuesValidator.checkCharacters(gardenName)) {
+        } else if (!FormValuesValidator.checkCharacters(gardenName)) {
             errors.put(
                             "gardenNameError",
                             "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         }
 
-        if (!valuesValidator.checkBlank(gardenLocation)) {
+        if (!FormValuesValidator.checkBlank(gardenLocation)) {
             errors.put("gardenLocationError", "Location cannot be empty");
-        } else if (!valuesValidator.checkCharacters(gardenLocation)) {
+        } else if (!FormValuesValidator.checkCharacters(gardenLocation)) {
             errors.put(
                             "gardenLocationError",
                             "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         }
 
-        if (!valuesValidator.checkSize(gardenSize)) {
+        if (!FormValuesValidator.checkSize(gardenSize)) {
             errors.put("gardenSizeError", "Garden size must be a positive number");
         }
 
@@ -55,18 +53,18 @@ public class ErrorChecker {
     ) {
         HashMap<String, String> errors = new HashMap<>();
 
-        if (!valuesValidator.checkBlank(plantName) || !valuesValidator.checkCharacters(plantName)) {
+        if (!FormValuesValidator.checkBlank(plantName) || !FormValuesValidator.checkCharacters(plantName)) {
             errors.put(
                             "plantNameError",
                             "Plant name cannot be empty and must only include letters, numbers, spaces, dots, hyphens or apostrophes"
             );
         }
 
-        if (!valuesValidator.checkCount(plantCount)) {
+        if (!FormValuesValidator.checkCount(plantCount)) {
             errors.put("plantCountError", "Plant count must be positive number");
         }
 
-        if (!valuesValidator.checkDescription(plantDescription)) {
+        if (!FormValuesValidator.checkDescription(plantDescription)) {
             errors.put("plantDescriptionError", "Plant description must be less than 512 characters");
         }
 
