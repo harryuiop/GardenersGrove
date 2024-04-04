@@ -49,8 +49,10 @@ public class LogInController {
 
     /**
      * Handles GET requests to the "/login" URL.
-     * Displays the login page.
-     *
+     * Displays the login page. Will display the appropriate errors passed in through the params on
+     * authentication failure.
+     * @param error The authentication error.
+     * @param model The th model.
      * @return The name of the login view template.
      */
     @GetMapping("/login")
