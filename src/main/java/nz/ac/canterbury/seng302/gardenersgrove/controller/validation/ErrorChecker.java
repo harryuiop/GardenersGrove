@@ -1,9 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -110,46 +109,46 @@ public class ErrorChecker {
     {
         Map<String, String> errors = new HashMap<>();
         // Checking first name
-        if (!valuesValidator.checkBlank(firstName)) {
+        if (!FormValuesValidator.checkBlank(firstName)) {
             errors.put("firstNameError", "First Name cannot be empty");
-        } else if (!valuesValidator.checkNameLength(firstName)){
+        } else if (!FormValuesValidator.checkNameLength(firstName)) {
             errors.put("firstNameError", "First Name cannot exceed length of 64 characters");
-        } else if (!valuesValidator.checkUserName(firstName)) {
+        } else if (!FormValuesValidator.checkUserName(firstName)) {
             errors.put("firstNameError", "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
         }
         // Checking last name
         if (!noSurname) {
-            if (!valuesValidator.checkBlank(lastName)) {
+            if (!FormValuesValidator.checkBlank(lastName)) {
                 errors.put("lastNameError", "Last Name cannot be empty unless box is ticked");
-            } else if (!valuesValidator.checkNameLength(lastName)) {
+            } else if (!FormValuesValidator.checkNameLength(lastName)) {
                 errors.put("lastNameError", "Last Name cannot exceed length of 64 characters");
-            } else if (!valuesValidator.checkUserName(lastName)) {
+            } else if (!FormValuesValidator.checkUserName(lastName)) {
                 errors.put("lastNameError", "Last Name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
             }
         }
         // Checking email
-        if (!valuesValidator.checkBlank(email)) {
+        if (!FormValuesValidator.checkBlank(email)) {
             errors.put("emailError", "Email cannot be empty");
         } else if (!emailIsValid(email)) {
             errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
-        } else if (!valuesValidator.emailInUse(email, userService)){
+        } else if (!FormValuesValidator.emailInUse(email, userService)) {
             errors.put("emailError", "This email address is already in use");
         }
         // Checking password
-        if (!valuesValidator.checkBlank(password)) {
+        if (!FormValuesValidator.checkBlank(password)) {
             errors.put("passwordError", "Password cannot be empty");
         } else if (!passwordIsValid(password)) {
             errors.put("passwordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        } else if (!valuesValidator.checkConfirmPasswords(password, passwordConfirm)) {
+        } else if (!FormValuesValidator.checkConfirmPasswords(password, passwordConfirm)) {
             errors.put("passwordConfirmError", "Passwords do not match");
         }
         // Checking DOB
         if (validDate) {
-            if (!valuesValidator.checkBlank(dateOfBirth)) {
+            if (!FormValuesValidator.checkBlank(dateOfBirth)) {
                 errors.put("dateOfBirthError", "Date of Birth cannot be empty");
             } else if (!dobIsValid(dateOfBirth)) {
                 errors.put("dateOfBirthError", "You must be 13 years or older to create an account");
-            } else if (!valuesValidator.checkUnder120(dateOfBirth)) {
+            } else if (!FormValuesValidator.checkUnder120(dateOfBirth)) {
                 errors.put("dateOfBirthError", "The maximum age allowed is 120 years");
             }
         } else {

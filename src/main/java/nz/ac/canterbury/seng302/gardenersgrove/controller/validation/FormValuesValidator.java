@@ -9,9 +9,6 @@ import java.time.format.DateTimeParseException;
  * This class is used to provide static methods for validation of fields.
  */
 public class FormValuesValidator {
-    private FormValuesValidator() {
-        throw new
-    }
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
     static String namePattern = "^[a-zA-Z\\-' ]+$";
 

@@ -23,7 +23,6 @@ public class LogInController {
     private static final Logger logger = LoggerFactory.getLogger(LogInController.class);
     @Autowired
     private final UserService userService;
-    ErrorChecker validator = new ErrorChecker();
 
     /**
     * Constructor for LogInController.
@@ -85,7 +84,7 @@ public class LogInController {
             @RequestParam(name = "password") String password,
             Model model
     ) {
-        Map<String, String> errors = validator.loginFormErrors(email, password, userService);
+        Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {

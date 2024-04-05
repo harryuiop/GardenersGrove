@@ -25,8 +25,6 @@ public class RegisterController {
 
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-    ErrorChecker validator = new ErrorChecker();
-
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
@@ -81,7 +79,7 @@ public class RegisterController {
         }
 
 
-        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                                                                         password, passwordConfirm,
                                                                         dateOfBirthValid, dateOfBirth, userService);
 

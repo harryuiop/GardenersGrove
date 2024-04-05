@@ -25,13 +25,11 @@ public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
     private final GardenService gardenService;
     private final UserService userService;
-    private final ErrorChecker Validator;
 
     @Autowired
     public GardenFormController(GardenService gardenService, UserService userService) {
         this.gardenService = gardenService;
         this.userService = userService;
-        this.Validator = new ErrorChecker();
     }
 
     /**
@@ -65,7 +63,7 @@ public class GardenFormController extends GardensSidebar {
                              @RequestParam(name = "gardenSize", required = false) Float gardenSize,
                              Model model) {
         logger.info("POST /form");
-        Map<String, String> errors = Validator.gardenFormErrors(gardenName, gardenLocation, gardenSize);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(gardenName, gardenLocation, gardenSize);
         if (errors.isEmpty()) {
             Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
             gardenService.saveGarden(garden);
