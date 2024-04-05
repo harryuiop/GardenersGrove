@@ -94,6 +94,7 @@ let lastNameValidation = function (form) {
   let lastNameInput = form.lastName;
   let errorMessage = document.getElementById("lastNameError");
   let noSurnameButton = document.getElementById("noSurname");
+
   if (noSurnameButton.checked === true) {
     // Sets the validation to valid if the no surname checkbox is ticked.
     setValidStyle(lastNameInput, errorMessage);

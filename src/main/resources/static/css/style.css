@@ -31,17 +31,17 @@ body {
 }
 
 .button:hover {
-    background-color: var(--light-neutral);
+  background-color: var(--light-neutral);
 }
 
 /* -------------------- Register page specific -------------------- */
 
 .forumContentsDiv {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
 }
 
 label {
@@ -67,7 +67,7 @@ label {
 }
 
 #submit:hover {
-    background-color: #BBB;
+  background-color: #BBB;
 }
 
 #back {
@@ -95,18 +95,18 @@ label {
 /* -------------------- Profile page specific -------------------- */
 
 .formContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .formControlFile {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .uploadButton {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 #profilePictureInput {
@@ -164,7 +164,7 @@ label {
 }
 
 #editProfileCancelButton {
-    right: 185px;
+  right: 185px;
     font-weight: lighter;
 }
 

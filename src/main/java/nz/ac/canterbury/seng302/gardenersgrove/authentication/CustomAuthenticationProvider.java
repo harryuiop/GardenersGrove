@@ -8,6 +8,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.emailIsValid;
+
 /**
  * Custom Authentication Provider class, to allow for handling authentication in any way we see fit.
  * In this case using our existing {@link User}
@@ -39,9 +41,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // Check if either email or password is null or empty
         if (
-                email == null || email.isEmpty() || password == null || password.isEmpty()
+                email == null || email.isEmpty() || !emailIsValid(email) ||
+                        password == null || password.isEmpty()
         ) {
-            throw new BadCredentialsException("Bad Credentials");
+            throw new BadCredentialsException("Bad_Credentials");
         }
 
         // Attempt to retrieve user from the database using email and password
@@ -49,7 +52,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // If user is not found, throw BadCredentialsException
         if (user == null) {
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException("Invalid");
         }
 
         // If user is found, create and return a UsernamePasswordAuthenticationToken
