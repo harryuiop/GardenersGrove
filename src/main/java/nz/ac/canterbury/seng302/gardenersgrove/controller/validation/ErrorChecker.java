@@ -14,10 +14,6 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
  */
 public class ErrorChecker {
 
-    private ErrorChecker() {
-        throw new IllegalStateException("Utility class");
-    }
-
     /**
      * Checks for valid user entries that meet the given requirements
      *
