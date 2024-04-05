@@ -135,8 +135,9 @@ public class ProfileController {
                     @RequestParam(name = "password") String password,
                     @RequestParam(name = "dateOfBirth") String dateOfBirth
     ) {
+        boolean checked = true;
         userService.addUsers(
-                        new User(email, firstName, lastName, password, dateOfBirth)
+                new User(email, firstName, lastName, password, dateOfBirth), checked
         );
         return "login";
     }

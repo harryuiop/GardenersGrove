@@ -6,11 +6,11 @@
   <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div th:insert="fragments/fragments :: title">Header</div>
-<nav th:insert="fragments/fragments :: gardens">Gardens</nav>
+<div th:insert="~{fragments/fragments :: title}">Header</div>
+<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
 <div class="content">
   <div>
-    <div>
+    <div class="forumContentsDiv">
       <form th:action="@{edit-garden(gardenId=${gardenId})}" method="post">
         <div class="form-field">
           <label class="form-input" for="gardenName"> Garden Name: </label>
