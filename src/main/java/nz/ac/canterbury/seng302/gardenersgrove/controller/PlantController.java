@@ -121,7 +121,7 @@ public class PlantController extends GardensSidebar {
         Garden garden = optionalGarden.get();
         return loadPlantForm(
                         "", "", "", "", "", "", "",
-                        null, null, null, null, null, "new",
+                        null, null, null, null, "/images/default-plant.jpg", "new",
                         garden.getName(), garden.getId(), model
         );
     }
