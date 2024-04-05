@@ -10,7 +10,7 @@ import java.time.format.DateTimeParseException;
  */
 public class FormValuesValidator {
     private FormValuesValidator() {
-        throw new
+        throw new IllegalStateException("Utility class");
     }
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
     static String namePattern = "^[a-zA-Z\\-' ]+$";
