@@ -1,0 +1,150 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit Profile</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <script type="text/javascript" src="/javascript/ValidationService.js"></script>
+    <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
+</head>
+<body>
+
+<div class="profileBody">
+    <div class="formContainer">
+        <form
+                id="uploadProfileImage"
+                th:action="@{uploadProfileImage}"
+                method="post"
+                name="profilePhoto"
+                enctype="multipart/form-data"
+        >
+            <input
+                    id="profilePictureInput"
+                    type="file"
+                    name="image"
+                    accept="image/jpeg, image/png, image/svg+xml"
+                    class="formControlFile"
+                    alt="test"
+            />
+        </form>
+
+        <div id="profilePictureWrapper">
+            <img
+                    id="profilePicture"
+                    th:src="${user.getProfilePictureFilePath()}"
+                    alt="User profile picture"
+            />
+            <div id="profilePictureOverlay">
+                <div id="profilePictureOverlayIcon">+</div>
+            </div>
+        </div>
+
+        <form
+                th:action="@{confirmProfileChanges}"
+                method="post"
+                name="registerForm"
+                id="editProfileForm"
+        >
+            <label for="firstName">First name:</label>
+            <input
+                    class="inputStyle"
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    th:name="firstName"
+                    th:value="${user.getFirstName()}"
+                    autofocus
+                    onblur="firstNameValidation(
+                    document.registerForm,
+                    document.getElementById('firstNameError'))"
+            />
+            <p class="errorMessage" id="firstNameError"></p>
+
+
+            <label for="lastName">Last name:</label>
+            <input
+                    class="inputStyle"
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    th:name="lastName"
+                    th:value="${user.getLastName()}"
+                    autofocus
+                    onblur="lastNameValidation(document.registerForm)"
+            />
+
+            <div class="noSurname">
+                <label for="noSurname" class="noSurnameCheckbox">
+                    <input
+                            type="checkbox"
+                            id="noSurname"
+                            value="checked"
+                            autofocus
+                            onblur="checkNoSurnameClicked(document.registerForm)"
+                    />
+                    I have no surname
+                </label>
+            </div>
+
+            <p class="errorMessage" id="lastNameError"></p>
+
+            <label for="email">Email:</label>
+            <input
+                    class="inputStyle"
+                    type="text"
+                    id="email"
+                    name="email"
+                    readonly
+                    th:name="email"
+                    th:value="${user.getEmail()}"
+                    autofocus
+                    onblur="emailValidation(document.registerForm)"
+            />
+            <p class="errorMessage" id="emailError"></p>
+
+            <label for="password">Password:</label>
+            <input
+                    class="inputStyle"
+                    type="password"
+                    id="password"
+                    name="password"
+                    th:name="password"
+                    th:value="${user.getPassword}"
+                    autofocus
+                    onblur="passwordValidation(document.registerForm)"
+            />
+            <p class="errorMessage" id="passwordError"></p>
+
+            <label for="passwordConfirm">Confirm Password:</label>
+            <input
+                    class="inputStyle"
+                    type="password"
+                    id="passwordConfirm"
+                    name="passwordConfirm"
+                    th:name="passwordConfirm"
+                    autofocus
+                    onblur="confirmPasswordValidation(document.registerForm)"
+            />
+            <p class="errorMessage" id="passwordConfirmError"></p>
+
+            <label for="dateOfBirth">Date of Birth:</label>
+            <input
+                    class="inputStyle"
+                    type="date"
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    th:name="dateOfBirth"
+                    th:value="${user.getDob()}"
+                    autofocus
+                    onblur="ageValidation(document.registerForm)"
+            />
+            <p class="errorMessage" id="dateOfBirthError"></p>
+            <input class="inputStyle" id="submit" type="submit" value="Submit" disabled/>
+            <div id="backDiv">
+                <a th:href="@{profile}" type="button" class="inputStyle" id="backbutton">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

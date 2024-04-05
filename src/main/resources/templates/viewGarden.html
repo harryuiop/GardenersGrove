@@ -1,33 +1,31 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta http-equiv="Content-Type" context="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Gardens' Grove</title>
-    <link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-<div th:insert="~{fragmentExample/fragments :: title}">Header</div>
-<nav th:insert="~{fragmentExample/fragments :: gardens}">Gardens</nav>
+<div th:insert="~{fragments/fragments :: title}">Header</div>
+<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
 <h4>View Gardens</h4>
 
 <div class="content" >
-    <div th:if="${garden.isPresent()}" >
-        <h2 th:text="${garden.get().name}"></h2>
+    <h2 th:text="${garden.getName()}"></h2>
 
-        <article class="in-line"><p>Name: </p>
-            <p th:text="${garden.get().name}"></p></article>
-        <article class="in-line"><p>Location: </p>
-            <p th:text="${garden.get().location}"></p></article>
-        <article class="in-line"><p>Size: </p>
-            <p th:text="${garden.get().getSize() != null ? garden.get().size : 'unspecified'}"></p>
-        </article>
+    <article class="in-line"><p>Name: </p>
+        <p th:text="${garden.getName()}"></p></article>
+    <article class="in-line"><p>Location: </p>
+        <p th:text="${garden.getLocation()}"></p></article>
+    <article class="in-line"><p>Size: </p>
+        <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
+    </article>
 
-    </div>
-    <a th:href="@{/edit-garden(gardenId=${id})}">
+    <a th:href="@{/edit-garden(gardenId=${garden.getId()})}">
         <button class="form-button" type="button">Edit Garden</button>
     </a>
-    <a th:href="@{/plantform(gardenId=${garden.get().getId()})}">
+    <a th:href="@{/plantform(gardenId=${garden.getId()})}">
         <button class="form-button" type="button">Add Plant</button>
     </a>
 
@@ -44,7 +42,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${plants.empty}">
+            <tr th:if="${plants.isEmpty()}">
                 <td colspan="5"> No plants have been added yet</td>
             </tr>
             <tr th:each="plant : ${plants}" class="plant-entry">
@@ -68,13 +66,13 @@
                                     <label th:for="${plant.getId()}" class="plus-button">
                                         <i class="fas fa-plus-circle"></i>
                                     </label>
-                                    <input type="file" class="form-control" th:id="${plant.getId()}" th:name="plantImage" accept=".jpg, .svg, .png"
+                                    <input type="file" class="form-control" th:id="${plant.getId()}" th:name="plantImage" accept="image/jpeg, image/png, image/svg+xml"
                                            th:value="*{plantImage}" data-cy="plantImage" onchange="submitForm(id)" autofocus>
                                 </div>
                             </div>
 
-                            <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageTypeError}></h5>
-                            <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text=${plantImageSizeError}></h5>
+                            <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text="${plantImageTypeError}"></h5>
+                            <h5 th:if="${plant.getId} == ${selectedPlantId}" th:text="${plantImageSizeError}"></h5>
                         </div>
                         <button class="form-button" type="submit" th:id="${plant.getId()} + submit" style="display: none;">Submit</button>
                     </form>
@@ -90,10 +88,6 @@
             </tbody>
         </table>
     </div>
-    <div th:unless="${garden.isPresent()}">
-        <p>Garden does not exist. Please select or create another garden.</p>
-    </div>
-
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>

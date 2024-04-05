@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org" lang="">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Add Plant</title>
-    <link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-<div th:insert="~{fragmentExample/fragments :: title}">Header</div>
-<nav th:insert="~{fragmentExample/fragments :: gardens}">Gardens</nav>
+<div th:insert="~{fragments/fragments :: title}">Header</div>
+<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
 <div class="content">
     <h1 th:text="${gardenName}"></h1>
     <div>
-        <div>
+        <div class="forumContentsDiv">
             <form th:action="@{/plantform(gardenId=${gardenId})}" method="post" id="plant-form" enctype="multipart/form-data">
                 <div class="form-field">
                     <label class="form-input" for="plantName"> Plant Name: </label>
@@ -46,7 +46,7 @@
 
                 <div class="form-field">
                     <div class="plant-image-container">
-                        <img id="selectedImage" th:src="@{/images/default-plant.jpg}"  alt="Plant Image">
+                        <img class="selectedImage" th:src="@{/images/default-plant.jpg}"  alt="Plant Image">
                         <p id = "image-selected-message"></p>
                         <div class="add-image">
                             <label for="plantImage">
@@ -72,24 +72,6 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-<script>
-    function displayImage() {
-
-        console.log("Image Uploaded");
-
-        const input = document.getElementById('plantImage');
-        const img = document.getElementById('selectedImage');
-        const file = input.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            img.src = e.target.result;
-        }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    }
-</script>
+<script th:src="@{/javascript/image.js}"></script>
 </body>
 </html>
