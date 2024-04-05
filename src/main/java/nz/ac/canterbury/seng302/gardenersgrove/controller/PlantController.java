@@ -249,7 +249,9 @@ public class PlantController extends GardensSidebar {
             plant.setCount(plantCount);
             plant.setDescription(plantDescription);
             plant.setPlantedOn(date);
-            plant.setImageFileName(imageFileName);
+            if (imageFileName != null) {
+                plant.setImageFileName(imageFileName);
+            }
         } else {
             plant = new Plant(plantName, plantCount, plantDescription, date, imageFileName, garden);
         }
