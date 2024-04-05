@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @WithMockUser(value = "1")
 @AutoConfigureMockMvc(addFilters = false)
-class EditPlantFormControllerTest {
+class PlantControllerEditTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -75,7 +75,7 @@ class EditPlantFormControllerTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
@@ -102,7 +102,7 @@ class EditPlantFormControllerTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantDescription", plant.getDescription())
@@ -128,7 +128,7 @@ class EditPlantFormControllerTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
@@ -155,7 +155,7 @@ class EditPlantFormControllerTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", invalidPlantName)
                                         .param("plantCount", String.valueOf(plant.getCount()))
@@ -163,7 +163,7 @@ class EditPlantFormControllerTest {
                                         .param("gardenId", Long.toString(gardenId))
                                         .param("plantId", Long.toString(plantId)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editPlantForm"));
+                        .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
 
         List<Plant> allPlants = plantRepository.findAll();
@@ -184,7 +184,7 @@ class EditPlantFormControllerTest {
         long plantId = plant.getId();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plantCount))
@@ -192,7 +192,7 @@ class EditPlantFormControllerTest {
                                         .param("gardenId", Long.toString(gardenId))
                                         .param("plantId", Long.toString(plantId)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editPlantForm"));
+                        .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -211,7 +211,7 @@ class EditPlantFormControllerTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
@@ -219,7 +219,7 @@ class EditPlantFormControllerTest {
                                         .param("gardenId", Long.toString(gardenId))
                                         .param("plantId", Long.toString(plantId)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editPlantForm"));
+                        .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -238,7 +238,7 @@ class EditPlantFormControllerTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
@@ -246,7 +246,7 @@ class EditPlantFormControllerTest {
                                         .param("gardenId", Long.toString(gardenId))
                                         .param("plantId", Long.toString(plantId)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editPlantForm"));
+                        .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -265,7 +265,7 @@ class EditPlantFormControllerTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
                                         .file(new MockMultipartFile("plantImage", "mock.gif", MediaType.IMAGE_GIF_VALUE, fakeImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
@@ -273,7 +273,7 @@ class EditPlantFormControllerTest {
                                         .param("gardenId", Long.toString(gardenId))
                                         .param("plantId", Long.toString(plantId)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editPlantForm"));
+                        .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -292,7 +292,7 @@ class EditPlantFormControllerTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
