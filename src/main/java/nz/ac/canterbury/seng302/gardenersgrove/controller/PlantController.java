@@ -39,6 +39,12 @@ public class PlantController extends GardensSidebar {
 
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    /**
+     * Converts a string plantId to an optional plant.
+     *
+     * @param plantId The string plantId to convert.
+     * @return An optional plant containing the plant if the conversion was successful, otherwise an empty optional.
+     */
     private Optional<Plant> plantFromStringId(String plantId) {
         long id;
         try {
@@ -51,7 +57,7 @@ public class PlantController extends GardensSidebar {
 
     /**
      * The PlantFormController constructor need not be called ever.
-     * It is autowired in by Spring at run time to initialise instances of all the necessary services.
+     * It is autowired in by Spring at run time to inject instances of all the necessary dependencies.
      *
      * @param plantService  The Plant database access object.
      * @param gardenService The Garden database access object.
@@ -63,6 +69,28 @@ public class PlantController extends GardensSidebar {
         this.gardenService = gardenService;
         this.userService = userService;
     }
+
+    /**
+     * Loads the plant form with the given errors and pre-filled values.
+     *
+     * @param plantNameError        The error message for the plant name form field.
+     * @param plantCountError       The error message for the plant count form field.
+     * @param plantDescriptionError The error message for the plant description form field.
+     * @param plantedDateError      The error message for the planted date form field.
+     * @param plantImageTypeError   The error message for the plant image type.
+     * @param plantImageSizeError   The error message for the plant image size.
+     * @param plantImageUploadError The error message for the plant image upload.
+     * @param plantName             The name to pre-fill the form with.
+     * @param plantCount            The count to pre-fill the form with.
+     * @param plantDescription      The description to pre-fill the form with.
+     * @param plantedDate           The date to pre-fill the form with.
+     * @param plantImagePath        The path to the image to show on the form.
+     * @param plantId               The of the plant to submit the form to.
+     * @param gardenName            The name of the garden the plant is in.
+     * @param gardenId              The id of the garden the plant is in.
+     * @param model                 The model to pass the data to the HTML.
+     * @return The name of the HTML template to render.
+     */
     private String loadPlantForm(
                     String plantNameError,
                     String plantCountError,
@@ -103,6 +131,13 @@ public class PlantController extends GardensSidebar {
         return "plantForm";
     }
 
+    /**
+     * Serves the plant form to the user, passing user/garden information to the HTML.
+     *
+     * @param gardenId The id of the garden to place the plant in.
+     * @param model    object that passes data through to the HTML.
+     * @return thymeleaf HTML gardenForm template.
+     */
     @GetMapping("/plant/new")
     public String createPlant(
                     @RequestParam(name = "gardenId") Long gardenId,
@@ -123,9 +158,11 @@ public class PlantController extends GardensSidebar {
     }
 
     /**
-     * Gets form to be displayed and passes previous form values and user/garden information to the HTML.
+     * Serves the plant form to the user, passing user/garden information to the HTML,
+     * with existing plant information pre-filled.
      *
-     * @param model object that passes data through to the HTML.
+     * @param plantId The id of the plant to edit.
+     * @param model   object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
     @GetMapping("/plant/{plantId}")
@@ -156,12 +193,16 @@ public class PlantController extends GardensSidebar {
     }
 
     /**
-     * Submits form and saves the garden to the database.
+     * Submits form and saves the plant to the database.
      *
+     * @param plantId          The id of the plant being submitted.
      * @param plantName        The name of the plant as input by the user.
      * @param plantCount       The number of plants as input by the user.
      * @param plantDescription The description of the plant as input by the user.
      * @param plantedDate      The date the plant was planted as input by the user.
+     *                         Must be in ISO format (yyyy-MM-dd).
+     * @param imageFile        The image file uploaded by the user.
+     * @param gardenId         The id of the garden the plant is in.
      * @param model            object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
      */
@@ -172,8 +213,8 @@ public class PlantController extends GardensSidebar {
                     @RequestParam(name = "plantCount", required = false) Integer plantCount,
                     @RequestParam(name = "plantDescription", required = false) String plantDescription,
                     @RequestParam(name = "plantedDate", required = false) String plantedDate,
-                    @RequestParam(name = "gardenId") Long gardenId,
                     @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
+                    @RequestParam(name = "gardenId") Long gardenId,
                     Model model
     ) throws NoSuchPlantException, NoSuchGardenException {
         logger.info("POST /plant/" + plantId);
