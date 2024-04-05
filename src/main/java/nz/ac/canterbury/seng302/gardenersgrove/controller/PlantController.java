@@ -1,7 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchPlantException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
@@ -37,7 +38,6 @@ public class PlantController extends GardensSidebar {
     private final UserService userService;
 
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private String referer;
 
     private Optional<Plant> plantFromStringId(String plantId) {
         long id;
@@ -103,20 +103,16 @@ public class PlantController extends GardensSidebar {
         return "plantForm";
     }
 
-
     @GetMapping("/plant/new")
     public String createPlant(
                     @RequestParam(name = "gardenId") Long gardenId,
-                    HttpServletRequest request,
                     Model model
-    ) {
+    ) throws NoSuchGardenException {
         logger.info("GET /plant/new");
-
-        this.referer = request.getHeader("Referer");
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
-            return "redirect:" + this.referer;
+            throw new NoSuchGardenException("Unable to find garden with id " + gardenId + ".");
         }
         Garden garden = optionalGarden.get();
         return loadPlantForm(
@@ -135,16 +131,13 @@ public class PlantController extends GardensSidebar {
     @GetMapping("/plant/{plantId}")
     public String editPlant(
                     @PathVariable Long plantId,
-                    HttpServletRequest request,
                     Model model
-    ) {
+    ) throws NoSuchPlantException {
         logger.info("GET /plant/" + plantId);
-
-        this.referer = request.getHeader("Referer");
 
         Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
         if (optionalPlant.isEmpty()) {
-            return "redirect:" + this.referer;
+            throw new NoSuchPlantException("Unable to find plant with id " + plantId + ".");
         }
         Plant plant = optionalPlant.get();
 
@@ -182,18 +175,18 @@ public class PlantController extends GardensSidebar {
                     @RequestParam(name = "gardenId") Long gardenId,
                     @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
                     Model model
-    ) {
+    ) throws NoSuchPlantException, NoSuchGardenException {
         logger.info("POST /plant/" + plantId);
 
 
         Optional<Plant> optionalPlant = this.plantFromStringId(plantId);
         if (optionalPlant.isEmpty() && !plantId.equals("new")) {
-            return "redirect:" + this.referer;
+            throw new NoSuchPlantException("Unable to find plant with id " + plantId + ".");
         }
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
-            return "redirect:" + this.referer;
+            throw new NoSuchGardenException("Unable to find garden with id " + gardenId + ".");
         }
         Garden garden = optionalGarden.get();
 
