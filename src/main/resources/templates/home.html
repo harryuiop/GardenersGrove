@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Home Page</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
     <div>
         <h1>Gardener Grove</h1>
-        <div>
-            <a th:href="@{login}">Sign In</a> <br>
-            <a th:href="@{register}">Register</a>
+        <div th:switch="${loggedInStatus}">
+            <div th:case="true">
+                <a th:href="@{profile}">Profile</a> <br>
+                <p>*this profile button will be broken if you did not sign out until persistent
+                    database is implemented so to <br> test clear your web browsers cookies after
+                    each program launch or sign out via the sidebar*</p>
+            </div>
+
+            <div th:case="false">
+                <a th:href="@{login}">Sign In</a> <br>
+                <a th:href="@{register}">Register</a>
+            </div>
         </div>
     </div>
 </body>
