@@ -1,9 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
 import jakarta.mail.internet.MimeMessage;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.HomeController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,11 +13,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 public class EmailSenderService {
-    Logger logger = LoggerFactory.getLogger(HomeController.class);
+
 
     private JavaMailSender javaMailSender;
     private TemplateEngine templateEngine;
@@ -44,10 +44,9 @@ public class EmailSenderService {
      * @return true if email send successfully false otherwise
      */
     private boolean sendEmail(String emailTitle, String htmlContent, String sendTo) {
-        logger.info("Server is being ready to send an email.");
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
 
             // create an email
             messageHelper.setFrom(sender);
@@ -57,24 +56,38 @@ public class EmailSenderService {
 
             // send an email
             javaMailSender.send(message);
-            logger.info("Email created and send successfully.");
             return true;
         } catch (Exception e) {
-            logger.error(e.toString());
             return false;
         }
 
 
     }
 
-    public boolean sendEmailRegistration(String emailTitle, String template, Map<String, Object> model, String sendTo) {
+    /**
+     * method to send verification email to register user account
+     * @param user User Entity
+     */
+    public boolean sendRegistrationEmail (User user, String template) {
+
+        Random random = new Random();
+        int digit = random.nextInt(10000, 1000000);
+        String token = String.format("%06d", digit);
+        user.setToken(token);   // assign the token to user
+        String emailTitle = "GARDENER'S GROVE :: REGISTER YOUR EMAIL ::";
+
+        // model for email contents
+        Map<String, Object> model = new HashMap<>();
+        model.put("firstName", user.getFirstName());
+        model.put("lastName", user.getLastName());
+        model.put("token", user.getToken());
 
         // create email content
         Context context = new Context();
         context.setVariables(model);
         String htmlContent = templateEngine.process(template, context);
 
-        return this.sendEmail(emailTitle, htmlContent, sendTo);
+        return this.sendEmail(emailTitle, htmlContent, user.getEmail());
     }
 
 
@@ -87,13 +100,10 @@ public class EmailSenderService {
      * @return boolean true if success to send the email, false otherwise
      */
     public boolean sendTestEmail(String emailTitle, File file, String link, String sendTo) {
-        logger.info("Preparing to send an verification Email");
-
         try {
             String htmlContent = getEmailContent(file, link);
             return this.sendEmail(emailTitle, htmlContent, sendTo);
         } catch (IOException e) {
-            logger.error(e.toString());
             return false;
         }
     }

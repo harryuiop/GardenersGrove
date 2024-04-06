@@ -31,31 +31,7 @@ public class EmailController {
     }
 
     /**
-     *
-     * @param email client's Email
-     * @param firstName client's first Name
-     * @param lastName client's last name
-     * @return return web page to verify client's email
-     */
-    @PostMapping("/register/register-email")
-    @ResponseBody
-    public String sendRegistrationEmail (@RequestParam("email") String email,
-                                         @RequestParam("firstName") String firstName,
-                                         @RequestParam("lastName") String lastName) {
-        Random random = new Random();
-        int digit = random.nextInt(10000, 1000000);
-        String token = String.format("%06d", digit);
-        String emailTitle = "GARDENER'S GROVE :: REGISTER YOUR EMAIL ::";
-        Map<String, Object> model = new HashMap<>();
-        model.put("firstName", firstName);
-        model.put("lastName", lastName);
-        model.put("token", token);
-        emailService.sendEmailRegistration(emailTitle, "registrationEmail", model, email);
-        return null;
-    }
-
-    /**
-     * Testing controller and service here
+     * Manual testing about sending email and email service
      * use url: http://localhost:8080/send-test-email?emailAddress={email address to send} to test
      * @return String "Success" if success "Fail" otherwise
      */
@@ -68,10 +44,9 @@ public class EmailController {
         String testLink = "http://localhost:8080/";
 
         // an email address to send test email.
-        String testEmailTo = testEmailAddress;
         String title = "This is Test email";
 
-        boolean result = emailService.sendTestEmail(title, testHtml, testLink, testEmailTo);
+        boolean result = emailService.sendTestEmail(title, testHtml, testLink, testEmailAddress);
         logger.info("Email sending test is " + (result ? "Success" : "Fail"));
         return result ? "Success" : "Fail";
     }
