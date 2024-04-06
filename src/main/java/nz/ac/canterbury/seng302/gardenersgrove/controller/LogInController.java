@@ -35,17 +35,6 @@ public class LogInController {
     }
 
     /**
-     * Handles GET requests to the "/" URL.
-     * Displays the login page.
-     *
-     * @return a redirect to the login page
-     */
-    @GetMapping("/")
-    public String getRootPage() {
-        return "home";
-    }
-
-    /**
      * Handles GET requests to the "/login" URL.
      * Displays the login page. Will display the appropriate errors passed in through the params on
      * authentication failure.
