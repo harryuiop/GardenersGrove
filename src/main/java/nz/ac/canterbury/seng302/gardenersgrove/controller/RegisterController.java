@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class RegisterController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    EmailSenderService emailSenderService;
 
 
     /**
@@ -96,9 +100,12 @@ public class RegisterController {
             return "register";
         }
         boolean validated = true;
-        userService.addUsers(
-                new User(email, firstName, lastName, password, dateOfBirth), validated
-        );
+        User newUser = new User(email, firstName, lastName, password, dateOfBirth);
+        userService.addUsers(newUser, validated);
+
+        // send verification email
+        emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");
+
         return "redirect:/profile";
     }
 }
