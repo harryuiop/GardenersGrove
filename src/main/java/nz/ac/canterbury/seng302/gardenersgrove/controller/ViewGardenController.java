@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -64,9 +65,7 @@ public class ViewGardenController extends GardensSidebar {
         if (optionalGarden.isEmpty()) {
             return "redirect:" + request.getHeader("Referer");
         }
-        Garden garden = optionalGarden.get();
-
-        this.addViewGardenAttributes(model, garden);
+        this.addViewGardenAttributes(model, optionalGarden.get());
         return "viewGarden";
     }
 
@@ -132,6 +131,6 @@ public class ViewGardenController extends GardensSidebar {
 
         model.addAttribute("garden", garden);
         model.addAttribute("gardenId", garden.getId());
-        model.addAttribute("plants", garden.getPlants());
+        model.addAttribute("plants", plantService.getAllPlantsInGarden(garden));
     }
 }

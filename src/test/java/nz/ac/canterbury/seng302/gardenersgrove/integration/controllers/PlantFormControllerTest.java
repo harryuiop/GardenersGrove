@@ -265,8 +265,7 @@ class PlantFormControllerTest {
                         .param("plantDescription", plantDescription)
                         .param("plantedDate", plantedDate)
                         .param("gardenId", Long.toString(gardenId)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("plantForm"));
+                        .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
 
         List<Plant> allPlants = plantRepository.findAll();
         assertTrue(allPlants.isEmpty());

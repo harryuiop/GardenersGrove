@@ -78,7 +78,7 @@ public class EditPlantFormController extends GardensSidebar {
         model.addAttribute("plantDescription", plant.getDescription());
         model.addAttribute("plantedDate", date);
         model.addAttribute("plantId", plantId);
-        model.addAttribute("gardenId", plant.getGardenId());
+        model.addAttribute("gardenId", plant.getGarden().getId());
         model.addAttribute("isPlantImageSet", plant.getImageFileName() != null);
         model.addAttribute("plantImage", plant.getImageFilePath());
         return "editPlantForm";
@@ -102,7 +102,6 @@ public class EditPlantFormController extends GardensSidebar {
                              @RequestParam(name = "plantImage", required=false) MultipartFile imageFile,
                              Model model) {
         logger.info("POST /plantform/edit");
-        Long gardenId = plantService.getPlantById(plantId).get().getGardenId();
 
         boolean imageIsValid = false;
 
@@ -117,7 +116,11 @@ public class EditPlantFormController extends GardensSidebar {
             }
         }
 
-        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
+        if (optionalPlant.isEmpty()) {
+            return "redirect:/";
+        }
+        Plant plant = optionalPlant.get();
 
         Date plantDate = null;
         try {
@@ -128,8 +131,7 @@ public class EditPlantFormController extends GardensSidebar {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        if (errors.isEmpty() && optionalGarden.isPresent() && imageIsValid) {
-            Plant plant = plantService.getPlantById(plantId).get();
+        if (errors.isEmpty() && imageIsValid) {
             String imageFileName = null;
             if (!imageFile.isEmpty()) {
                 try {
@@ -147,7 +149,7 @@ public class EditPlantFormController extends GardensSidebar {
 
             plantService.savePlant(plant);
 
-            return "redirect:/view-garden?gardenId=" + gardenId;
+            return "redirect:/view-garden?gardenId=" + plant.getGarden().getId();
         } else {
             this.updateGardensSidebar(model, gardenService, userService);
             for (Map.Entry<String, String> error : errors.entrySet()) {
@@ -158,8 +160,8 @@ public class EditPlantFormController extends GardensSidebar {
             model.addAttribute("plantDescription", plantDescription);
             model.addAttribute("plantedDate", plantedDate);
             model.addAttribute("plantId", plantId);
-            model.addAttribute("gardenName", gardenService.getGardenById(plantService.getPlantById(plantId).get().getGardenId()).get().getName());
-            model.addAttribute("gardenId", plantService.getPlantById(plantId).get().getGardenId());
+            model.addAttribute("gardenName", plant.getGarden().getName());
+            model.addAttribute("gardenId", plant.getGarden().getId());
             return "editPlantForm";
         }
     }
