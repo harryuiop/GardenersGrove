@@ -21,6 +21,15 @@ dependencies {
 	implementation 'com.h2database:h2'
 
 
+	// Parse JSON in Java
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
+
+
+	// Library for ISO 3166-1 alpha-2 country codes
+	implementation 'org.apache.commons:commons-lang3:3.12.0' // Use the latest version
+
+
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
