@@ -34,7 +34,6 @@ public class ProfileController {
         this.userService = userService;
     }
 
-
     /**
      * Get mapping for the profile page
      *
@@ -155,25 +154,25 @@ public class ProfileController {
         return "login";
     }
 
-    /**
-     * Handles requests to the "/profile" URL.
-     * Displays the profile page.
-     *
-     * @return The name of the profile view template.
-     */
-    @RequestMapping("/profile")
-    public String displayImage() {
-        return "profile";
-    }
-
-    /**
-     * Handles requests to the "/editProfile" URL.
-     * Displays the editProfile page.
-     *
-     * @return The name of the editProfile view template.
-     */
-    @RequestMapping("/editProfile")
-    public String displayEditImage() {
-        return "editProfile";
-    }
+//    /**
+//     * Handles requests to the "/profile" URL.
+//     * Displays the profile page.
+//     *
+//     * @return The name of the profile view template.
+//     */
+//    @RequestMapping("/profile")
+//    public String displayImage() {
+//        return "profile";
+//    }
+//
+//    /**
+//     * Handles requests to the "/editProfile" URL.
+//     * Displays the editProfile page.
+//     *
+//     * @return The name of the editProfile view template.
+//     */
+//    @RequestMapping("/editProfile")
+//    public String displayEditImage() {
+//        return "editProfile";
+//    }
 }
