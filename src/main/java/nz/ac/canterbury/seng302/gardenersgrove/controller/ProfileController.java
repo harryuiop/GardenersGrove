@@ -6,8 +6,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Map;
 
-import static java.lang.Integer.parseInt;
-
 /**
  * Controller class handling profile-related requests and actions.
  * Responsible for displaying user profile pages, editing profiles, and uploading profile photos.
@@ -29,8 +25,6 @@ import static java.lang.Integer.parseInt;
 public class ProfileController {
 
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
-
 
     /**
      * Constructor for ProfileController.
@@ -40,7 +34,6 @@ public class ProfileController {
      */
     public ProfileController(UserService userService, AuthenticationManager authenticationManager) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
     }
 
 
@@ -72,9 +65,11 @@ public class ProfileController {
     }
 
     /**
-     *  ToDO: fill out
-     * @param model
-     * @return
+     *  Handles GET requests to the "/editPassword" URL.
+     *  Displays a form in which the user is able to change their password
+     *
+     * @param model The Model object used for adding attributes to the view.
+     * @return The name of the editPassword view template
      */
     @GetMapping("/editPassword")
     public String editPassword(Model model) {
@@ -143,8 +138,6 @@ public class ProfileController {
     ) {
         User prevUpdateUser = userService.getAuthenticatedUser(userService);
         model.addAttribute(prevUpdateUser);
-
-
 
         boolean checked = true;
         userService.addUsers(

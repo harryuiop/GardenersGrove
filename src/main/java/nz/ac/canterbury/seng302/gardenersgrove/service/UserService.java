@@ -102,9 +102,10 @@ public class UserService {
     }
 
     /**
-     * Todo: fill out
+     * Retrieves the user object of the currently logged-in user
+     *
      * @param userService
-     * @return
+     * @return The User object if found
      */
     public User getAuthenticatedUser(UserService userService) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
