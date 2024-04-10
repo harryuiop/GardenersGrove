@@ -179,8 +179,8 @@ public class User {
     }
 
     /**
-     *
-     * @return
+     * getting user's valid token
+     * @return user's valid token
      */
     public String getToken() {
         return this.token;
