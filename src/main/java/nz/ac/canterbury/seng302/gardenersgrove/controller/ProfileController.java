@@ -51,9 +51,7 @@ public class ProfileController {
      */
     @GetMapping("/profile")
     public String getProfilePage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        int currentPrincipalName = parseInt(auth.getName());
-        User user = userService.getUserById(currentPrincipalName);
+        User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
 
         return "profile";
@@ -66,14 +64,24 @@ public class ProfileController {
      * @param model The Model object used for adding attributes to the view.
      * @return The name of the profile view template.
      */
-    @GetMapping("editProfile")
+    @GetMapping("/editProfile")
     public String getEditProfilePage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        int currentPrincipalName = parseInt(auth.getName());
-        User user = userService.getUserById(currentPrincipalName);
+        User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
         return "editProfile";
     }
+
+    /**
+     *  ToDO: fill out
+     * @param model
+     * @return
+     */
+    @GetMapping("/editPassword")
+    public String editPassword(Model model) {
+        User user = userService.getAuthenticatedUser(userService);
+        model.addAttribute("user", user);
+
+        return "editPassword"; }
 
     /**
      * Handles GET requests to the "/editProfile" URL.
@@ -88,9 +96,7 @@ public class ProfileController {
     public String uploadImage(@RequestParam("image") MultipartFile file,
                               HttpServletRequest request,
                               Model model) throws IOException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        int currentPrincipalName = parseInt(auth.getName());
-        User user = userService.getUserById(currentPrincipalName);
+        User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
 
         ImageValidator imageValidator = new ImageValidator(file);
@@ -124,7 +130,6 @@ public class ProfileController {
      * @param email       The email of the user.
      * @param firstName   The first name of the user.
      * @param lastName    The last name of the user.
-     * @param password    The password of the user.
      * @param dateOfBirth The user's date of birth.
      * @return The name of the login view template.
      */
@@ -133,14 +138,19 @@ public class ProfileController {
             @RequestParam(name = "email") String email,
             @RequestParam(name = "firstName") String firstName,
             @RequestParam(name = "lastName") String lastName,
-            @RequestParam(name = "password") String password,
-            @RequestParam(name = "dateOfBirth") String dateOfBirth
+            @RequestParam(name = "dateOfBirth") String dateOfBirth,
+            Model model
     ) {
+        User prevUpdateUser = userService.getAuthenticatedUser(userService);
+        model.addAttribute(prevUpdateUser);
+
+
+
         boolean checked = true;
         userService.addUsers(
-                new User(email, firstName, lastName, password, dateOfBirth), checked
+                new User(email, firstName, lastName, prevUpdateUser.getPassword(), dateOfBirth), checked
         );
-        return "login";
+        return "profile";
     }
 
     /**

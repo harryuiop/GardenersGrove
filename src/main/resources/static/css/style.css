@@ -34,6 +34,31 @@ body {
   background-color: var(--light-neutral);
 }
 
+.hrefDiv {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.hrefButtons {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    background-color: #CCC;
+    color: #fff;
+    text-decoration: none;
+    width: calc(100% - 10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hrefButtons:hover {
+    background-color: #BBB;
+}
+
 /* -------------------- Register page specific -------------------- */
 
 .forumContentsDiv {
