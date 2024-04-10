@@ -144,6 +144,19 @@ public class ProfileController {
         return "profile";
     }
 
+    @PostMapping("/confirmEditPassword")
+    public String confirmEditPassword (
+            @RequestParam(name = "oldPassword") String oldPassword,
+            @RequestParam(name = "newPassword") String newPassword,
+            @RequestParam(name = "retypeNewPassword") String retypeNewPassword,
+            Model model
+    ) {
+        User user = userService.getAuthenticatedUser(userService);
+        model.addAttribute(user);
+
+
+    }
+
     /**
      * Handles POST requests to the "/logout" URL.
      * Invalidate the users HTTP session and deletes the cookies (done within SecurityConfiguration.java)
@@ -153,27 +166,5 @@ public class ProfileController {
     @PostMapping("/logout")
     public String logoutUser() {
         return "login";
-    }
-
-    /**
-     * Handles requests to the "/profile" URL.
-     * Displays the profile page.
-     *
-     * @return The name of the profile view template.
-     */
-    @RequestMapping("/profile")
-    public String displayImage() {
-        return "profile";
-    }
-
-    /**
-     * Handles requests to the "/editProfile" URL.
-     * Displays the editProfile page.
-     *
-     * @return The name of the editProfile view template.
-     */
-    @RequestMapping("/editProfile")
-    public String displayEditImage() {
-        return "editProfile";
     }
 }

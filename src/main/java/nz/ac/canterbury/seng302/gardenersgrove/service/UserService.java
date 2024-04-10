@@ -62,7 +62,8 @@ public class UserService {
         if (
                 emailIsValid(user.getEmail()) &&
                 nameIsValid(user.getFirstName(), user.getLastName()) &&
-                dobIsValid(user.getDob())
+                dobIsValid(user.getDob()) &&
+                passwordIsValid(user.getPassword())
         ) {
             userRepository.save(user);
             return true;
