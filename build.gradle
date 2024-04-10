@@ -27,6 +27,16 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+//bootRun {
+//	systemProperty "spring.mail.username", System.getenv("SPRING_MAIL_USERNAME")
+//	systemProperty "spring.mail.password", System.getenv("SPRING_MAIL_PASSWORD")
+//}
+//
+//test {
+//	systemProperty "spring.mail.username", System.getenv("SPRING_MAIL_USERNAME")
+//	systemProperty "spring.mail.password", System.getenv("SPRING_MAIL_PASSWORD")
+//}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
