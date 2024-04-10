@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +24,7 @@ import java.util.Map;
 public class ProfileController {
 
     private final UserService userService;
+    private final ErrorChecker validator = new ErrorChecker();
 
     /**
      * Constructor for ProfileController.
@@ -33,7 +34,6 @@ public class ProfileController {
     public ProfileController(UserService userService) {
         this.userService = userService;
     }
-
 
     /**
      * Get mapping for the profile page
@@ -154,7 +154,21 @@ public class ProfileController {
         User user = userService.getAuthenticatedUser(userService);
         model.addAttribute(user);
 
+        Map<String, String> errors = validator.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
 
+        if (!errors.isEmpty()) {
+            for (Map.Entry<String, String> error : errors.entrySet()) {
+                model.addAttribute(error.getKey(), error.getValue());
+            }
+            model.addAttribute("oldPassword", oldPassword);
+            model.addAttribute("newPassword", newPassword);
+            model.addAttribute("retypeNewPassword", retypeNewPassword);
+            return "editPassword";
+        }
+
+        user.setPassword(newPassword);
+        userService.updateUser(user);
+        return "editProfile";
     }
 
     /**

@@ -5,6 +5,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
@@ -175,6 +176,43 @@ public class ErrorChecker {
         if (user == null) {
             errors.put("invalidError",
                     "The email address is unknown, or the password is invalid");
+        }
+        return errors;
+    }
+
+    public Map<String, String> editPasswordFormErrors(String oldPassword,
+                                                      String newPassword,
+                                                      String retypeNewPassword,
+                                                      User user
+    ) {
+        Map<String, String> errors = new HashMap<>();
+
+        // Checking old password
+        if (!valuesValidator.checkBlank(oldPassword)) {
+            errors.put("oldPasswordError", "Password cannot be empty");
+        } else if (!passwordIsValid(oldPassword)) {
+            errors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        } else if (!Objects.equals(user.getPassword(), oldPassword)) {
+            errors.put("oldPasswordError", "Your old password is incorrect");
+        }
+
+        // Checking new password
+        if (!valuesValidator.checkBlank(newPassword)) {
+            errors.put("newPasswordError", "Password cannot be empty");
+        } else if (!passwordIsValid(newPassword)) {
+            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        }
+
+        // Checking retyped new password
+        if (!valuesValidator.checkBlank(retypeNewPassword)) {
+            errors.put("retypeNewPasswordError", "Password cannot be empty");
+        } else if (!passwordIsValid(retypeNewPassword)) {
+            errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        }
+
+        // Check that the new password and the retyped new password match
+        if (!valuesValidator.checkConfirmPasswords(newPassword, retypeNewPassword)) {
+            errors.put("passwordConfirmError", "The new passwords do not match");
         }
         return errors;
     }

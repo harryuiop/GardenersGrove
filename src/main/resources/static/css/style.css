@@ -423,3 +423,7 @@ textarea {
 .signOutButton {
 
 }
+
+#editPassword {
+    max-width: 272.6px;
+}

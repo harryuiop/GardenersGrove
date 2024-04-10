@@ -176,6 +176,15 @@ public class User {
     }
 
     /**
+     * Sets the user's password
+     *
+     * @param password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
      * Assigns roles to the user.
      * It takes a list of role names as input, creates Authority objects for each role, and adds them to the userRoles list.
      *

@@ -13,7 +13,7 @@
       <main>
         <header th:insert="~{fragments/general.html :: header}"></header>
         <div id="form">
-          <form th:action="@{login}" method="post" name="loginForm">
+          <form th:action="@{login}" method="post" name="loginForm" autocomplete="off">
             <label for="email">Email Address:</label>
             <input
                     class="inputStyle"
@@ -33,6 +33,7 @@
                    name="password"
                    th:name="password"
                    th:value="password"
+
             >
             <p class="errorMessage" id="invalidError" th:text=${invalidError}></p>
 

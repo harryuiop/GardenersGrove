@@ -103,6 +103,13 @@ public class UserService {
     }
 
     /**
+     * Deletes a user by User object.
+     *
+     * @param user The user to delete
+     */
+    public void deleteUser(User user) { userRepository.delete(user); }
+
+    /**
      * Retrieves the user object of the currently logged-in user
      *
      * @param userService The UserService object in use
