@@ -27,12 +27,6 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
-// Code written arbitrarily to avoid pipeline testing failure
-// In Gitlab, the need to add values to Settings->CI/CD is confirmed, but do not have permission to do so, therefore write this code until it is resolved
-test {
-	systemProperty "spring.mail.username", System.getenv("SPRING_MAIL_USERNAME")
-	systemProperty "spring.mail.password", System.getenv("SPRING_MAIL_PASSWORD")
-}
 
 tasks.named('test') {
 	useJUnitPlatform()
