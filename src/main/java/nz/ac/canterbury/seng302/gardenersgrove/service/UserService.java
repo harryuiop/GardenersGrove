@@ -104,7 +104,7 @@ public class UserService {
     /**
      * Retrieves the user object of the currently logged-in user
      *
-     * @param userService
+     * @param userService The UserService object in use
      * @return The User object if found
      */
     public User getAuthenticatedUser(UserService userService) {

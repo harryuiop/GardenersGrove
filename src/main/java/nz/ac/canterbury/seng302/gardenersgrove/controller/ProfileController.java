@@ -5,7 +5,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValida
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
