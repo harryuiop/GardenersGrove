@@ -30,9 +30,8 @@ public class ProfileController {
      * Constructor for ProfileController.
      *
      * @param userService           The UserService responsible for user-related operations.
-     * @param authenticationManager The AuthenticationManager for managing user authentication.
      */
-    public ProfileController(UserService userService, AuthenticationManager authenticationManager) {
+    public ProfileController(UserService userService) {
         this.userService = userService;
     }
 
