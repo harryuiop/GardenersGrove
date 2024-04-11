@@ -180,6 +180,7 @@ public class User {
 
     /**
      * getting user's valid token
+     *
      * @return user's valid token
      */
     public String getToken() {
@@ -188,6 +189,7 @@ public class User {
 
     /**
      * Retrieve creation timestamp
+     *
      * @return Timestamp type of creation date
      */
     public Timestamp getCreationDateInMillisecond() {
@@ -196,6 +198,7 @@ public class User {
 
     /**
      * check if client's account is registered.
+     *
      * @return boolean about client's current status of registration
      */
     public boolean isConfirmed() {
@@ -213,6 +216,7 @@ public class User {
 
     /**
      * Setter method about client's registration token
+     *
      * @param token to authenticate the client's identity
      */
     public void setToken (String token) {
@@ -221,7 +225,8 @@ public class User {
 
     /**
      * setter method to change status of client's registration
-     * @param confirmation
+     *
+     * @param confirmation a bool type variable to be changed
      */
     public void setConfirmation(boolean confirmation) {
         this.confirmation = confirmation;

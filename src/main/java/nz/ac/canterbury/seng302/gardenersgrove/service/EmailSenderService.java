@@ -2,6 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.service;
 
 import jakarta.mail.internet.MimeMessage;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,18 +19,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Service about sending email in server side
+ *
+ */
 @Service
 public class EmailSenderService {
 
-
+    Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
     private JavaMailSender javaMailSender;
     private TemplateEngine templateEngine;
 
-    // email address that send FROM
+    // Sets the email address that the email will be sent FROM
     @Value("${spring.mail.username}") private String sender;
 
     /**
      * constructor EmailSenderService
+     *
      * @param javaMailSender JavaMailSender that will be autowired
      */
     public EmailSenderService(JavaMailSender javaMailSender, TemplateEngine templateEngine) {
@@ -38,6 +45,7 @@ public class EmailSenderService {
 
     /**
      * Sending an email to a user
+     *
      * @param emailTitle Email title
      * @param htmlContent Email contents in html format
      * @param sendTo recipient
@@ -45,6 +53,7 @@ public class EmailSenderService {
      */
     private boolean sendEmail(String emailTitle, String htmlContent, String sendTo) {
         try {
+            logger.info("Start Sending an email to a recipient");
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
 
@@ -56,8 +65,11 @@ public class EmailSenderService {
 
             // send an email
             javaMailSender.send(message);
+            logger.debug("Success");
             return true;
         } catch (Exception e) {
+            logger.debug("Fail");
+            logger.error(e.toString());
             return false;
         }
 
@@ -66,10 +78,12 @@ public class EmailSenderService {
 
     /**
      * method to send verification email to register user account
+     *
      * @param user User Entity
      */
     public boolean sendRegistrationEmail (User user, String template) {
 
+        // generate token
         Random random = new Random();
         int digit = random.nextInt(10000, 1000000);
         String token = String.format("%06d", digit);
@@ -92,7 +106,8 @@ public class EmailSenderService {
 
 
     /**
-     * Sending a test email
+     * Sending a test email using test.html as a body of the email.
+     *
      * @param emailTitle email title
      * @param file html file that will be an email contents
      * @param link link that will be provided to a user
@@ -101,28 +116,15 @@ public class EmailSenderService {
      */
     public boolean sendTestEmail(String emailTitle, File file, String link, String sendTo) {
         try {
-            String htmlContent = getEmailContent(file, link);
-            return this.sendEmail(emailTitle, htmlContent, sendTo);
+            byte[] content = Files.readAllBytes(file.toPath());
+            String message = new String(content, StandardCharsets.UTF_8);
+            String pastATag = "<a id=\"link\">";
+            String replacement = String.format("<a id=\"link\" href=\"%s\">", link);
+            message = message.replaceAll(pastATag, replacement);
+            return this.sendEmail(emailTitle, message, sendTo);
         } catch (IOException e) {
             return false;
         }
     }
 
-    /**
-     * extract a html source as string and return it.
-     * This is one way if we do not want to use thymeleaf.
-     * @param file html file that will be an email contents
-     * @param link link that will be provided to a user
-     * @return a string with html format to send as email contents
-     */
-    private String getEmailContent (File file, String link) throws IOException {
-
-        byte[] content = Files.readAllBytes(file.toPath());
-        String message = new String(content, StandardCharsets.UTF_8);
-        String pastATag = "<a id=\"link\">";
-        String replacement = String.format("<a id=\"link\" href=\"%s\">", link);
-        message = message.replaceAll(pastATag, replacement);
-        return message;
-
-    }
 }

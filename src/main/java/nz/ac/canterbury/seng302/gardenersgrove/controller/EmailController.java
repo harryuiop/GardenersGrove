@@ -16,7 +16,8 @@ import java.util.Random;
 @RestController
 public class EmailController {
 
-    Logger logger = LoggerFactory.getLogger(GardenFormController.class);
+    Logger logger = LoggerFactory.getLogger(EmailController.class);
+
     /**
      * Email Service
      */
@@ -24,6 +25,7 @@ public class EmailController {
 
     /**
      * Constructor of EmailController
+     *
      * @param emailService @link{EmailSenderService} that brings html email contents and send to receiver
      */
     public EmailController (EmailSenderService emailService) {
@@ -33,6 +35,7 @@ public class EmailController {
     /**
      * Manual testing about sending email and email service
      * use url: http://localhost:8080/send-test-email?emailAddress={email address to send} to test
+     *
      * @return String "Success" if success "Fail" otherwise
      */
     @RequestMapping("/send-test-email")
