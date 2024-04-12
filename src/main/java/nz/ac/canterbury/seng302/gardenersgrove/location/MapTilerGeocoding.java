@@ -121,8 +121,6 @@ public class MapTilerGeocoding {
         SearchResult searchResult = mapper.readValue(jsonInput, SearchResult.class);
         System.out.println(searchResult.features.get(0).place_name);*/
 
-        //CountryCode cc = CountryCode.getByCode("JP");
-
         /*String sampleResponse = mapTilerGeocoding.sampleResponse;
         ObjectMapper mapper = new ObjectMapper();
         SearchResult searchResult = mapper.readValue(sampleResponse, SearchResult.class);
