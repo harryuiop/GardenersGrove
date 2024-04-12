@@ -32,7 +32,6 @@ function updateAutocomplete(query) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
             renderAutocomplete(data);
         })
         .catch(error => {

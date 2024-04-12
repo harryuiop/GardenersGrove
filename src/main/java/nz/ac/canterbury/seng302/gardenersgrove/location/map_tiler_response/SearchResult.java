@@ -27,6 +27,7 @@ public class SearchResult {
     public Map<String, List<Map<String, String>>> getAutocompleteSuggestions() {
         Map<String, List<Map<String, String>>> json = new HashMap<>();
         List<Map<String, String>> locationList = new ArrayList<>();
+        if (features == null || features.isEmpty()) return json;
         for (Feature feature : features) {
             String streetAddress = feature.getStreetAddress();
             if (streetAddress == null) streetAddress = "";

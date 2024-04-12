@@ -8,6 +8,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.location.CountryCode;
 import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Feature;
 import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.LocationService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,14 @@ import java.util.Map;
 public class GardenFormController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
     private final GardenService gardenService;
+    private final LocationService locationService;
     private final UserService userService;
     private final ErrorChecker Validator;
 
     @Autowired
-    public GardenFormController(GardenService gardenService, UserService userService) {
+    public GardenFormController(GardenService gardenService, LocationService locationService, UserService userService) {
         this.gardenService = gardenService;
+        this.locationService = locationService;
         this.userService = userService;
         this.Validator = new ErrorChecker();
     }
@@ -84,25 +87,28 @@ public class GardenFormController extends GardensSidebar {
             // Whatever is submitted through the form is what is sent to the database
             // Still need to call API here to get coordinates to store in database (DONE)
             // Javascript/HTML will handle autocomplete and auto-filled text
-            // can use Java's built-in Nashorn JavaScript engine
             // Need to show nice error message if location is not found with API (per ACs)
 
             // ******** Get Location Response and save to db ********** //
             MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
             // Country code allows more accurate searching by filtering by just that country
             String countryCode = CountryCode.getAlphaTwoCountryCodeFromName(country);
-            Location location = new Location(country, city);
+            Location locationEntity = new Location(country, city);
             Feature locationFeature;
+            String query;
             if (streetAddress != null) {
-                locationFeature = mapTilerGeocoding.getFirstSearchResult(streetAddress, countryCode);
+                query = streetAddress + " " + city + " " + country;
             } else {
-                locationFeature = mapTilerGeocoding.getFirstSearchResult("", countryCode);
+                query = city + " " + country;
             }
-            location.setLngLat(locationFeature.getCenter());
-            // TODO Update text fields if necessary (Javascript?)
-            // TODO Send other relevant info to database
-            // TODO Fix testing AND DO testing
-            Garden garden = new Garden(gardenName, location, gardenSize);
+            locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode);
+            locationEntity.setLngLat(locationFeature.getCenter());
+            locationEntity.setSuburb(suburb);
+            locationEntity.setPostcode(Integer.parseInt(postcode));
+            locationEntity.setStreetAddress(streetAddress);
+
+            locationService.saveLocation(locationEntity);
+            Garden garden = new Garden(gardenName, locationEntity, gardenSize);
             gardenService.saveGarden(garden);
             return "redirect:/view-garden?gardenId=" + garden.getId();
         }
