@@ -16,7 +16,8 @@ import java.util.List;
  */
 public class MapTilerGeocoding {
     //Currently not working and not sure why :(
-    @Value("${apiKey}") String apiKey;
+    @Value("${apiKey}")
+    private String apiKey;
 
     /**
      * Send API request, given input query by user and country code for filtering.
@@ -113,8 +114,6 @@ public class MapTilerGeocoding {
 
     // Testing purposes only.
     public static void main(String[] args) throws JsonProcessingException {
-        //MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
-        //mapTilerGeocoding.sendRequest("london");
         /*String jsonInput = mapTilerGeocoding.sampleResponse;
         System.out.println(jsonInput);
 
