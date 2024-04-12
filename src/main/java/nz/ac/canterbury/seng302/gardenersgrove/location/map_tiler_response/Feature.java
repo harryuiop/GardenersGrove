@@ -1,7 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.List;
 
 /**
@@ -9,7 +7,6 @@ import java.util.List;
  * Note: Jackson (for deserializing JSON to Java Objects) requires getters to have same name
  * as variables (or have public variables).
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Feature {
     private List<Double> center;
     private double relevance;

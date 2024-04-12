@@ -1,13 +1,10 @@
 package nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.List;
 
 /**
  * Collection of features/locations from the search result.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchResult {
     private List<Feature> features;
 

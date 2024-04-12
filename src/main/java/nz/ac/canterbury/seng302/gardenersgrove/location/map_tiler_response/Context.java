@@ -1,7 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 /**
  * Response from MapTiler API. A context contains additional information about a single
  * location/feature. This is used for
@@ -10,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * - city, id starts with county
  * - suburb, id starts with municipality
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Context {
     private String id;
     private String text;
