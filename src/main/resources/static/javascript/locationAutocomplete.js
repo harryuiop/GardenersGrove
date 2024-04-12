@@ -1,4 +1,8 @@
 const streetAddressField = document.getElementById('streetAddress');
+const countryField = document.getElementById('country');
+const cityField = document.getElementById('city');
+const suburbField = document.getElementById('suburb');
+const postcodeField = document.getElementById('postcode');
 const autocompleteList = document.getElementById('autocomplete-list');
 const debounceTimeMs = 500;
 
@@ -49,8 +53,11 @@ function renderAutocomplete(data) {
 
         let streetAddress = item.streetAddress;
         let outerLocation = item.outerLocation;
-        console.log("sa: " + streetAddress);
-        console.log("ol: " + outerLocation);
+        let country = item.country;
+        let city = item.city;
+        let suburb = item.suburb;
+        let postcode = item.postcode;
+
         let isStreetAddressPrimary = streetAddress ? true : false;
         if (isStreetAddressPrimary) {
             primaryTextElement.innerHTML = streetAddress;
@@ -61,7 +68,12 @@ function renderAutocomplete(data) {
 
         // Update input box on selection.
         suggestionElement.addEventListener('click', function() {
-            streetAddressField.value = streetAddress + outerLocation;
+            streetAddressField.value = streetAddress;
+            if (country) countryField.value = country;
+            if (city) cityField.value = city;
+            if (suburb) suburbField.value = suburb;
+            if (postcode) postcodeField.value = postcode
+
             removeAutocompleteBox();
         });
 

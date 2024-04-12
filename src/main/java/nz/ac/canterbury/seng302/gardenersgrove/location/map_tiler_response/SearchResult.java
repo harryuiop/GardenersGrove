@@ -21,9 +21,8 @@ public class SearchResult {
 
     /**
      * Get the location names only from the search result.
-     * @return Hashmap in format: locations : [streetName, outerLocationName], where outerLocation
-     * is the suburb, city, country.
-     * To be used as JSON when called from JavaScript.
+     * @return Hashmap in format: locations : [streetName, outerLocation, country, city, suburb, postcode], where outerLocation
+     * is the suburb, city, country. To be used as JSON when called from JavaScript.
      */
     public Map<String, List<Map<String, String>>> getAutocompleteSuggestions() {
         Map<String, List<Map<String, String>>> json = new HashMap<>();
@@ -34,6 +33,10 @@ public class SearchResult {
             Map<String, String> locationMap = new HashMap<>();
             locationMap.put("streetAddress", streetAddress);
             locationMap.put("outerLocation", feature.getOuterLocation());
+            locationMap.put("country", feature.getCountry());
+            locationMap.put("city", feature.getCity());
+            locationMap.put("suburb", feature.getSuburb());
+            locationMap.put("postcode", feature.getPostcode());
             locationList.add(locationMap);
         }
         json.put("locations", locationList);

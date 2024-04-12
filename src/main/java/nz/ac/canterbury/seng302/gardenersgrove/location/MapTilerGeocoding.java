@@ -12,8 +12,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,16 +101,14 @@ public class MapTilerGeocoding {
         return null;
     }
 
+    /**
+     * Get autocomplete results from user input.
+     * @param query User input (in street address field)
+     * @return JSON like output to be handled in JavaScript.
+     */
     @GetMapping("/searchresults")
     public Map<String, List<Map<String, String>>> getSearchResults(@RequestParam String query) {
         SearchResult searchResult = getSearchResult(query, null);
         return searchResult.getAutocompleteSuggestions();
-    }
-
-    // Testing purposes only.
-    public static void main(String[] args) {
-        MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
-        SearchResult sR = mapTilerGeocoding.getSearchResult("London", "nz");
-        mapTilerGeocoding.logger.info("" + sR.getFeatures());
     }
 }
