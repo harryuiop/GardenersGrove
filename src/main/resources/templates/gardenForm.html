@@ -43,6 +43,7 @@
                     <label class="inputStyle" for="streetAddress"> Street Address: </label>
                     <input type="text" class="form-control" id="streetAddress" th:name="streetAddress"
                            th:value="*{streetAddress}" data-cy="streetAddress" autofocus>
+                    <div id="autocomplete-list" class="inputStyle"></div>
                 </div>
                 <br/>
                 <div class="form-field">
@@ -66,5 +67,6 @@
         </div>
     </div>
 </div>
+<script th:src="@{/javascript/locationAutocomplete.js}"></script>
 </body>
 </html>

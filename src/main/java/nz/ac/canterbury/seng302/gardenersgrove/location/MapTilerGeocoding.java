@@ -4,15 +4,24 @@ import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Searc
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Geocode locations from a query using the MapTiler API.
  */
+@RestController
+@RequestMapping("/maptiler")
 public class MapTilerGeocoding {
     //Currently not working and not sure why :(
     @Value("${apiKey}")
@@ -92,6 +101,18 @@ public class MapTilerGeocoding {
         }
         logger.info("No locations found from search result.");
         return null;
+    }
+
+    @GetMapping("/searchresults")
+    public Map<String, List<String>> getSearchResults(@RequestParam String query) {
+        /*SearchResult searchResult = getSearchResult(query, null);
+        return searchResult.getAutocompleteSuggestions();*/
+        Map<String, List<String>> json = new HashMap<>();
+        List<String> myList = new ArrayList<>();
+        myList.add("Burger");
+        myList.add("Cheese");
+        json.put("name", myList);
+        return json;
     }
 
     // Testing purposes only.
