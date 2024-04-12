@@ -80,4 +80,9 @@ public class Location {
         this.lng = lngLat.get(0);
         this.lat = lngLat.get(1);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s, %s, %s, %s, %d", streetAddress, suburb, city, country, postcode);
+    }
 }

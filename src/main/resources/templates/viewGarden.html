@@ -17,7 +17,7 @@
     <article class="in-line"><p>Name: </p>
         <p th:text="${garden.getName()}"></p></article>
     <article class="in-line"><p>Location: </p>
-        <p th:text="${garden.getLocation()}"></p></article>
+        <p th:text="${garden.getLocationString()}"></p></article>
     <article class="in-line"><p>Size: </p>
         <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
     </article>

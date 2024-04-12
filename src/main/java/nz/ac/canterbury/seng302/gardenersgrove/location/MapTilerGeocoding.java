@@ -94,11 +94,12 @@ public class MapTilerGeocoding {
      */
     public Feature getFirstSearchResult(String query, String countryCode) {
         List<Feature> features = getSearchResult(query, countryCode).getFeatures();
-        if (!features.isEmpty()) {
-            return features.get(0);
+        if (features == null || features.isEmpty()) {
+            logger.info("No locations found from search result.");
+            return null;
         }
-        logger.info("No locations found from search result.");
-        return null;
+        return features.get(0);
+
     }
 
     /**

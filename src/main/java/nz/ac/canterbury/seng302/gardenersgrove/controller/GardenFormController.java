@@ -102,7 +102,7 @@ public class GardenFormController extends GardensSidebar {
                 query = city + " " + country;
             }
             locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode);
-            locationEntity.setLngLat(locationFeature.getCenter());
+            if (locationFeature != null) locationEntity.setLngLat(locationFeature.getCenter());
             locationEntity.setSuburb(suburb);
             locationEntity.setPostcode(Integer.parseInt(postcode));
             locationEntity.setStreetAddress(streetAddress);

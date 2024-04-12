@@ -73,6 +73,14 @@ public class Garden {
         return location;
     }
 
+    /**
+     * Used in frontend to show full location.
+     * @return Location in string format.
+     */
+    public String getLocationString() {
+        return location.toString();
+    }
+
     public Float getSize() {
         return size;
     }

@@ -92,7 +92,7 @@ public class EditGardenController extends GardensSidebar {
         if (optionalGarden.isPresent()) {
             Garden garden = optionalGarden.get();
             model.addAttribute("displayGardenName", garden.getName());
-            model.addAttribute("displayGardenLocation", garden.getLocation());
+            model.addAttribute("displayGardenLocation", garden.getLocationString());
             model.addAttribute("displayGardenSize", garden.getSize());
             model.addAttribute("gardenId", gardenId);
         }
