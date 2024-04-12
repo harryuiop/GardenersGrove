@@ -21,16 +21,22 @@ public class SearchResult {
 
     /**
      * Get the location names only from the search result.
-     * @return Single valued hashmap of name: locations.
+     * @return Hashmap in format: locations : [streetName, outerLocationName], where outerLocation
+     * is the suburb, city, country.
      * To be used as JSON when called from JavaScript.
      */
-    public Map<String, List<String>> getAutocompleteSuggestions() {
-        Map<String, List<String>> json = new HashMap<>();
-        List<String> locationList = new ArrayList<>();
+    public Map<String, List<Map<String, String>>> getAutocompleteSuggestions() {
+        Map<String, List<Map<String, String>>> json = new HashMap<>();
+        List<Map<String, String>> locationList = new ArrayList<>();
         for (Feature feature : features) {
-            locationList.add(feature.toString());
+            String streetAddress = feature.getStreetAddress();
+            if (streetAddress == null) streetAddress = "";
+            Map<String, String> locationMap = new HashMap<>();
+            locationMap.put("streetAddress", streetAddress);
+            locationMap.put("outerLocation", feature.getOuterLocation());
+            locationList.add(locationMap);
         }
-        json.put("name", locationList);
+        json.put("locations", locationList);
         return json;
     }
 }

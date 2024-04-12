@@ -28,7 +28,7 @@ function updateAutocomplete(query) {
             return response.json();
         })
         .then(data => {
-            console.log(data); // Handle the response data
+            console.log(data);
             renderAutocomplete(data);
         })
         .catch(error => {
@@ -38,16 +38,35 @@ function updateAutocomplete(query) {
 
 function renderAutocomplete(data) {
     autocompleteList.innerHTML = '';
-    let dataList = data.name
+    let dataList = data.locations;
     showAutocompleteBox()
     dataList.forEach(item => {
-        console.log("ac: " + item);
-        const suggestionElement = document.createElement('div');
-        suggestionElement.textContent = item;
+        let suggestionElement = document.createElement("div");
+        let primaryTextElement = document.createElement("div");
+        let secondaryTextElement = document.createElement("div", );
+        primaryTextElement.classList.add("primary-text");
+        secondaryTextElement.classList.add("secondary-text");
+
+        let streetAddress = item.streetAddress;
+        let outerLocation = item.outerLocation;
+        console.log("sa: " + streetAddress);
+        console.log("ol: " + outerLocation);
+        let isStreetAddressPrimary = streetAddress ? true : false;
+        if (isStreetAddressPrimary) {
+            primaryTextElement.innerHTML = streetAddress;
+            secondaryTextElement.innerHTML = outerLocation;
+        } else {
+            primaryTextElement.innerHTML = outerLocation;
+        }
+
+        // Update input box on selection.
         suggestionElement.addEventListener('click', function() {
-            streetAddressField.value = item.name;
+            streetAddressField.value = streetAddress + outerLocation;
             removeAutocompleteBox();
         });
+
+        suggestionElement.appendChild(primaryTextElement);
+        if (isStreetAddressPrimary) suggestionElement.appendChild(secondaryTextElement);
         autocompleteList.appendChild(suggestionElement);
     });
 }

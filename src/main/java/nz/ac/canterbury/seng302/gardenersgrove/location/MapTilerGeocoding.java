@@ -104,15 +104,9 @@ public class MapTilerGeocoding {
     }
 
     @GetMapping("/searchresults")
-    public Map<String, List<String>> getSearchResults(@RequestParam String query) {
-        /*SearchResult searchResult = getSearchResult(query, null);
-        return searchResult.getAutocompleteSuggestions();*/
-        Map<String, List<String>> json = new HashMap<>();
-        List<String> myList = new ArrayList<>();
-        myList.add("Burger");
-        myList.add("Cheese");
-        json.put("name", myList);
-        return json;
+    public Map<String, List<Map<String, String>>> getSearchResults(@RequestParam String query) {
+        SearchResult searchResult = getSearchResult(query, null);
+        return searchResult.getAutocompleteSuggestions();
     }
 
     // Testing purposes only.

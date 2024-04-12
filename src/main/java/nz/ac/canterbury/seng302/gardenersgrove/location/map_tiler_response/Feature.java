@@ -111,6 +111,20 @@ public class Feature {
         return context;
     }
 
+    /**
+     * Get the suburb, city, country. Whitespace for any null values.
+     * @return The suburb, city, country.
+     */
+    public String getOuterLocation() {
+        String suburbValue = getSuburb();
+        if (suburbValue == null) suburbValue = "";
+        String cityValue = getCity();
+        if (cityValue == null) cityValue = "";
+        String countryValue = getCountry();
+        if (countryValue == null) countryValue = "";
+        return String.format("%s, %s, %s", suburbValue, cityValue, countryValue);
+    }
+
     @Override
     public String toString() {
         return String.format("%s, %s %s, %s, %s",
