@@ -38,6 +38,7 @@ public class Feature {
      * @return The text content result, for example, 8140.
      */
     private String getContextTextFromId(String id) {
+        if (context == null || context.isEmpty()) return null;
         for (Context contextResult : context) {
             if (contextResult.getId().startsWith(id)) {
                 return contextResult.getText();
@@ -116,13 +117,14 @@ public class Feature {
      * @return The suburb, city, country.
      */
     public String getOuterLocation() {
+        StringBuilder outerLocation = new StringBuilder();
         String suburbValue = getSuburb();
-        if (suburbValue == null) suburbValue = "";
+        if (suburbValue != null) outerLocation.append(suburbValue).append(" ");
         String cityValue = getCity();
-        if (cityValue == null) cityValue = "";
+        if (cityValue != null) outerLocation.append(cityValue).append(" ");
         String countryValue = getCountry();
-        if (countryValue == null) countryValue = "";
-        return String.format("%s, %s, %s", suburbValue, cityValue, countryValue);
+        if (countryValue != null) outerLocation.append(countryValue);
+        return outerLocation.toString().trim();
     }
 
     @Override
