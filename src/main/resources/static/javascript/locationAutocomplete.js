@@ -23,6 +23,12 @@ streetAddressField.addEventListener('input', function() {
     }, debounceTimeMs);
 });
 
+/**
+ * Call Java function to get the API response,
+ * only if maximum number of requests in given rate limit timeframe has not yet been reached.
+ *
+ * @param query Input from street address search box.
+ */
 function updateAutocomplete(query) {
     fetch(`/maptiler/searchresults?query=${query}`)
         .then(response => {
@@ -39,9 +45,19 @@ function updateAutocomplete(query) {
         });
 }
 
+/**
+ * Show the autocomplete box with the suggestions from API request.
+ * Fill in any relevant fields if selection is made.
+ *
+ * @param data Raw data from API Request.
+ */
 function renderAutocomplete(data) {
-    autocompleteList.innerHTML = '';
     let dataList = data.locations;
+    if (!dataList || dataList.length === 0) {
+        console.log("No data, or maximum number of requests in set timeframe reached");
+        return;
+    }
+    autocompleteList.innerHTML = '';
     showAutocompleteBox()
     dataList.forEach(item => {
         let suggestionElement = document.createElement("div");
