@@ -24,8 +24,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/maptiler")
 public class MapTilerGeocoding {
-    //Currently not working and not sure why :(
-    @Value("${apiKey}")
+
+    @Value("${maptiler.api.key}")
     private String apiKey;
 
     private final int locationLimit = 3; // Max amount of locations returned by API
@@ -49,7 +49,6 @@ public class MapTilerGeocoding {
      * @throws UnsupportedEncodingException Invalid url. From query or countryCode input.
      */
     private String generateRequestURL(String query, String countryCode) throws UnsupportedEncodingException {
-        String apiKey = "my_api_key";
         StringBuilder urlBuilder = new StringBuilder("https://api.maptiler.com/geocoding/");
         urlBuilder.append(URLEncoder.encode(query, "UTF-8")).append(".json?");
 
