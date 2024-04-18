@@ -31,14 +31,14 @@ public class GardenFormController extends GardensSidebar {
     private final GardenService gardenService;
     private final LocationService locationService;
     private final UserService userService;
-    private final ErrorChecker Validator;
+    private final ErrorChecker gardenValidator;
 
     @Autowired
     public GardenFormController(GardenService gardenService, LocationService locationService, UserService userService) {
         this.gardenService = gardenService;
         this.locationService = locationService;
         this.userService = userService;
-        this.Validator = new ErrorChecker();
+        this.gardenValidator = new ErrorChecker();
     }
 
     /**
@@ -80,7 +80,8 @@ public class GardenFormController extends GardensSidebar {
                              Model model) {
         logger.info("POST /form");
         // This needs the gardenLocation removed
-        Map<String, String> errors = Validator.gardenFormErrors(gardenName, "g", gardenSize);
+        Map<String, String> errors = gardenValidator.gardenFormErrors(gardenName, gardenSize,
+                country, city, streetAddress, suburb, postcode);
         if (errors.isEmpty()) {
 
             // *********************** THE THINKING  ********************* //

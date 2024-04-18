@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +22,20 @@ public class ErrorChecker {
      * Checks for valid user entries that meet the given requirements
      *
      * @param gardenName     represents the name given
-     * @param gardenLocation represents the location given
      * @param gardenSize     represents the size given
+     * @param country user entered country
+     * @param city user entered city
+     * @param streetAddress user entered street address
+     * @param suburb user entered suburb
+     * @param postcode user entered postcode
      * @return a mapping of the error labels and messages
      */
-    public Map<String, String> gardenFormErrors(String gardenName, String gardenLocation, Float gardenSize) {
+    public Map<String, String> gardenFormErrors(String gardenName, Float gardenSize,
+                                                String country,
+                                                String city,
+                                                String streetAddress,
+                                                String suburb,
+                                                String postcode) {
         HashMap<String, String> errors = new HashMap<>();
 
         if (!valuesValidator.checkBlank(gardenName)) {
@@ -36,19 +46,38 @@ public class ErrorChecker {
             "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         }
 
-        if (!valuesValidator.checkBlank(gardenLocation)) {
-            errors.put("gardenLocationError", "Location cannot be empty");
-        } else if (!valuesValidator.checkCharacters(gardenLocation)) {
-            errors.put(
-                    "gardenLocationError",
-                    "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
-        }
-
         if (!valuesValidator.checkSize(gardenSize)) {
             errors.put("gardenSizeError", "Garden size must be a positive number");
         }
 
+        validateLocationField(country, "countryError", "Country", true, errors);
+        validateLocationField(city, "cityError", "City", true, errors);
+        validateLocationField(streetAddress, "streetAddressError", "Street Address", false, errors);
+        validateLocationField(suburb, "suburbError", "Suburb", false, errors);
+        validateLocationField(postcode, "postcodeError", "Postcode", false, errors);
+
         return errors;
+    }
+
+    /**
+     * Update error hashmap for location based errors as they are similar.
+     *
+     * @param fieldValue User inputted text
+     * @param errorName Name of error add to Hashmap (to be used to update frontend html)
+     * @param fieldName Field name used for frontend error text
+     * @param fieldRequired If the field is required or not
+     * @param errors Error hashmap to update
+     */
+    private void validateLocationField(String fieldValue, String errorName, String fieldName,
+                                    boolean fieldRequired, HashMap<String, String> errors) {
+        if (!valuesValidator.checkBlank(fieldValue) && fieldRequired) {
+            errors.put(errorName, String.format("%s cannot be empty", fieldName));
+        } else if (!valuesValidator.checkCharacters(fieldValue)) {
+            errors.put(
+                    errorName,
+                    String.format("%s must only include letters, numbers, spaces, " +
+                            "commas, dots, hyphens or apostrophes", fieldName));
+        }
     }
 
     /**

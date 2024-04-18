@@ -28,7 +28,7 @@ import java.util.Optional;
 @Controller
 public class EditGardenController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(EditGardenController.class);
-    ErrorChecker gardenValidator = new ErrorChecker();
+    private final ErrorChecker gardenValidator = new ErrorChecker();
 
     private final GardenService gardenService;
     private final UserService userService;
@@ -71,7 +71,8 @@ public class EditGardenController extends GardensSidebar {
                              @RequestParam(name = "gardenId") Long gardenId,
                              Model model) {
         logger.info("POST /edit-garden");
-        Map<String, String> errors = gardenValidator.gardenFormErrors(gardenName, "gardenLocation", gardenSize);
+        Map<String, String> errors = gardenValidator.gardenFormErrors(gardenName, gardenSize,
+                country, city, streetAddress, suburb, postcode);
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (errors.isEmpty()) {
             if (optionalGarden.isPresent()) {
@@ -118,7 +119,7 @@ public class EditGardenController extends GardensSidebar {
      * @return thymeleaf editGarden
      */
     @GetMapping("/edit-garden")
-    public String home(@RequestParam(name = "gardenId", required = true) Long gardenId, Model model) {
+    public String home(@RequestParam(name = "gardenId") Long gardenId, Model model) {
         logger.info("GET /edit-garden");
         this.updateGardensSidebar(model, gardenService, userService);
 

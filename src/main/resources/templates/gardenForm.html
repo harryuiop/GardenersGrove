@@ -31,18 +31,21 @@
                     <label class="inputStyle" for="country"> Country: </label>
                     <input type="text" class="form-control" id="country" th:name="country"
                            th:value="*{country}" data-cy="country" autofocus>
+                    <p class="errorMessage" th:text=${countryError}></p>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="inputStyle" for="city"> City: </label>
                     <input type="text" class="form-control" id="city" th:name="city"
                            th:value="*{city}" data-cy="city" autofocus>
+                    <p class="errorMessage" th:text=${cityError}></p>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="inputStyle" for="streetAddress"> Street Address: </label>
                     <input type="text" class="form-control" id="streetAddress" th:name="streetAddress"
                            th:value="*{streetAddress}" data-cy="streetAddress" autofocus>
+                    <p class="errorMessage" th:text=${streetAddressError}></p>
                     <div id="autocomplete-list" class="inputStyle"></div>
                 </div>
                 <br/>
@@ -50,12 +53,14 @@
                     <label class="inputStyle" for="suburb"> Suburb: </label>
                     <input type="text" class="form-control" id="suburb" th:name="suburb"
                            th:value="*{suburb}" data-cy="suburb" autofocus>
+                    <p class="errorMessage" th:text=${suburbError}></p>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="inputStyle" for="postcode"> Postcode: </label>
                     <input type="text" class="form-control" id="postcode" th:name="postcode"
                            th:value="*{postcode}" data-cy="postcode" autofocus>
+                    <p class="errorMessage" th:text=${postcodeError}></p>
                 </div>
 
                 <br>
