@@ -88,7 +88,6 @@ public class MapTilerGeocoding {
             } else {
                 logger.error("Error occurred during parsing response. Please check API Key is valid.");
             }
-            e.printStackTrace();
             return new SearchResult();
         }
     }

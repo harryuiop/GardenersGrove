@@ -72,6 +72,26 @@ public class Location {
         this.postcode = postcode;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public String getSuburb() {
+        return suburb;
+    }
+
+    public int getPostcode() {
+        return postcode;
+    }
+
     /**
      * Set longitude, latitude coordinates for location.
      * @param lngLat Double List with first value lng, second value lat.

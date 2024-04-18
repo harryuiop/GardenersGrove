@@ -118,8 +118,12 @@ public class GardenFormController extends GardensSidebar {
                 model.addAttribute(error.getKey(), error.getValue());
             }
             model.addAttribute("gardenName", gardenName);
-            model.addAttribute("gardenLocation", "g"); // Also needing removal
             model.addAttribute("gardenSize", gardenSize);
+            model.addAttribute("country", country);
+            model.addAttribute("city", city);
+            model.addAttribute("streetAddress", streetAddress);
+            model.addAttribute("suburb", suburb);
+            model.addAttribute("postcode", postcode);
             return "gardenForm";
         }
     }

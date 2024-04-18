@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
@@ -36,7 +37,7 @@ class EditGardenControllerTest {
 
     private final String initialGardenName = "Test Garden";
 
-    private final String initialGardenLocation = "Test Location";
+    private final Location initialGardenLocation = new Location("New Zealand", "Christchurch");
 
     private final float initialGardenSize = 100.0f;
 
