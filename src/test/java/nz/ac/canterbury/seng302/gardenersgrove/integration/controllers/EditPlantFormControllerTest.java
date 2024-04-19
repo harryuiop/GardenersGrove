@@ -4,19 +4,15 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
-import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Feature;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.LocationRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -56,9 +52,6 @@ class EditPlantFormControllerTest {
 
     private final String originalPlantDescription = "description";
 
-    @Autowired
-    private MapTilerGeocoding mapTilerGeocodingMock = Mockito.mock(MapTilerGeocoding.class);
-
     private boolean userCreated = false;
 
     @BeforeEach
@@ -94,9 +87,6 @@ class EditPlantFormControllerTest {
         byte[] emptyImageBytes = new byte[0];
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
-
-        Mockito.when(mapTilerGeocodingMock.getFirstSearchResult(Mockito.any(), Mockito.any(), Mockito.any()))
-                .thenReturn(new Feature());
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))

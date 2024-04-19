@@ -72,10 +72,10 @@ class ErrorCheckerTest {
         Assertions.assertEquals(correctErrors, errors);
     }
     @Test
-    void gardenFormErrors_blankLocation_returnsBlankError() {
+    void gardenFormErrors_noCountry_returnsBlankError() {
         String name = "Garden 1";
         Float size = 1.5f;
-        String country = "New Zealand";
+        String country = "";
         String city = "Christchurch";
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
@@ -83,7 +83,7 @@ class ErrorCheckerTest {
         Map<String, String> errors = errorChecker.gardenFormErrors(name, size,
                 country, city, streetAddress, suburb, postcode);
         Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("gardenLocationError", "Location cannot be empty");
+        correctErrors.put("countryError", "Country cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
     }
 
@@ -103,10 +103,10 @@ class ErrorCheckerTest {
     }
 
     @Test
-    void gardenFormErrors_blankNameAndLocation_returnsBlankErrors() {
+    void gardenFormErrors_blankNameAndNoCountry_returnsBlankErrors() {
         String name = "";
         Float size = 1.5f;
-        String country = "New Zealand";
+        String country = "";
         String city = "Christchurch";
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
@@ -115,7 +115,7 @@ class ErrorCheckerTest {
                 country, city, streetAddress, suburb, postcode);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
-        correctErrors.put("gardenLocationError", "Location cannot be empty");
+        correctErrors.put("countryError", "Country cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
     }
 
@@ -138,10 +138,10 @@ class ErrorCheckerTest {
     }
 
     @Test
-    void gardenFormErrors_invalidLocationInputs_returnsInvalidChar() {
+    void gardenFormErrors_invalidCountry_returnsInvalidChar() {
         String name = "Garden 1";
         Float size = 1.5f;
-        String country = "New Zealand";
+        String country = "New %^";
         String city = "Christchurch";
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
@@ -150,17 +150,17 @@ class ErrorCheckerTest {
                 country, city, streetAddress, suburb, postcode);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
-                "gardenLocationError",
-                "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+                "countryError",
+                "Country must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
         );
         Assertions.assertEquals(correctErrors, errors);
     }
 
     @Test
-    void gardenFormErrors_blankNameInvalidLocation_returnsBlankAndInvalidError() {
+    void gardenFormErrors_blankNameInvalidCountry_returnsBlankAndInvalidError() {
         String name = "  ";
         Float size = 1.5f;
-        String country = "New Zealand";
+        String country = "New $3%^";
         String city = "Christchurch";
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
@@ -170,8 +170,8 @@ class ErrorCheckerTest {
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         correctErrors.put(
-                "gardenLocationError",
-                "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+                "countryError",
+                "Country must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
         );
         Assertions.assertEquals(correctErrors, errors);
     }

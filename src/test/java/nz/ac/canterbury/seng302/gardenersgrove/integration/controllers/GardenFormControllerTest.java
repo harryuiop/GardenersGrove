@@ -68,7 +68,8 @@ class GardenFormControllerTest {
                 .param("city", city)
                 .param("streetAddress", streetAddress)
                 .param("suburb", suburb)
-                .param("postcode", postcode))
+                .param("postcode", postcode)
+                .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
 
@@ -101,7 +102,8 @@ class GardenFormControllerTest {
                 .param("city", city)
                 .param("streetAddress", streetAddress)
                 .param("suburb", suburb)
-                .param("postcode", postcode))
+                .param("postcode", postcode)
+                .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -126,7 +128,8 @@ class GardenFormControllerTest {
                 .param("city", city)
                 .param("streetAddress", streetAddress)
                 .param("suburb", suburb)
-                .param("postcode", postcode))
+                .param("postcode", postcode)
+                .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -151,7 +154,8 @@ class GardenFormControllerTest {
                 .param("city", city)
                 .param("streetAddress", streetAddress)
                 .param("suburb", suburb)
-                .param("postcode", postcode))
+                .param("postcode", postcode)
+                .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -174,7 +178,8 @@ class GardenFormControllerTest {
                         .param("city", city)
                         .param("streetAddress", streetAddress)
                         .param("suburb", suburb)
-                        .param("postcode", postcode))
+                        .param("postcode", postcode)
+                        .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
 
