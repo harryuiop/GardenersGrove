@@ -64,20 +64,18 @@ public class ViewGardenController extends GardensSidebar {
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
-            return "redirect:" + request.getHeader("Referer");
+            throw new NoSuchGardenException(gardenId);
         }
-        this.addViewGardenAttributes(model, optionalGarden.get());
-        return "viewGarden";
-    }
-
-    private void savePlantImage(Plant plant, MultipartFile image) {
-        try {
-            String fileName = ImageStore.storeImage(image);
-            plant.setImageFileName(fileName);
-            plantService.savePlant(plant);
-        } catch (IOException error) {
-            logger.error("Error saving plant image", error);
-        }
+        return loadGardenPage(
+                        optionalGarden.get(),
+                        editGardenUri(String.valueOf(gardenId)),
+                        newPlantUri(String.valueOf(gardenId)),
+                        plantService.getAllPlantsInGarden(optionalGarden.get()),
+                        "",
+                        "",
+                        EDIT_PLANT_URI_STRING,
+                        model
+        );
     }
 
     /**

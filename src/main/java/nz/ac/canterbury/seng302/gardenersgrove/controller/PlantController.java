@@ -147,7 +147,7 @@ public class PlantController extends GardensSidebar {
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
-            throw new NoSuchGardenException("Unable to find garden with id " + gardenId + ".");
+            throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
         return loadPlantForm(
@@ -227,7 +227,7 @@ public class PlantController extends GardensSidebar {
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
-            throw new NoSuchGardenException("Unable to find garden with id " + gardenId + ".");
+            throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
 
