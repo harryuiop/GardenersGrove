@@ -4,7 +4,9 @@ import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Searc
 import nz.ac.canterbury.seng302.gardenersgrove.utility.RateLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +29,6 @@ public class MapTilerGeocoding {
 
     @Value("${maptiler.api.key}")
     private String apiKey;
-
     private final int locationLimit = 3; // Max amount of locations returned by API
 
     private final RateLimiter rateLimiter = new RateLimiter(30, 5);
@@ -48,14 +49,20 @@ public class MapTilerGeocoding {
      * @return String url.
      * @throws UnsupportedEncodingException Invalid url. From query or countryCode input.
      */
-    private String generateRequestURL(String query, String countryCode) throws UnsupportedEncodingException {
+    private String generateRequestURL(String query, String countryCode, String setApiKey) throws UnsupportedEncodingException {
+        if (setApiKey != null) apiKey = setApiKey;
+
         StringBuilder urlBuilder = new StringBuilder("https://api.maptiler.com/geocoding/");
         urlBuilder.append(URLEncoder.encode(query, "UTF-8")).append(".json?");
+
 
         if (countryCode != null && !countryCode.isEmpty()) {
             urlBuilder.append("country=").append(URLEncoder.encode(countryCode, "UTF-8")).append("&");
         }
-        urlBuilder.append("proximity=ip&fuzzyMatch=true&limit=" + locationLimit + "&key=").append(URLEncoder.encode(apiKey, "UTF-8"));
+
+        urlBuilder.append("proximity=ip&fuzzyMatch=true&limit=" + locationLimit + "&key=");
+        System.out.println("apiKey: " + apiKey);
+        urlBuilder.append(URLEncoder.encode(apiKey, "UTF-8"));
         return urlBuilder.toString();
     }
 
@@ -78,10 +85,12 @@ public class MapTilerGeocoding {
      * @return Search Result object, collection of locations or empty object is error occurs
      * when generating SearchResult object.
      */
-    public SearchResult getSearchResult(String query, String countryCode) {
+    private SearchResult getSearchResult(String query, String countryCode, String apiKey) {
         try {
-            String requestUrl = generateRequestURL(query, countryCode);
-            return parseResponseJSON(requestUrl);
+            String requestUrl = generateRequestURL(query, countryCode, apiKey);
+            System.out.println("HERE: " + requestUrl);
+            return new SearchResult();
+            //return parseResponseJSON(requestUrl);
         } catch (Exception e) {
             if (e instanceof UnsupportedEncodingException) {
                 logger.error("Unsupported encoding exception when generating request url.");
@@ -99,8 +108,8 @@ public class MapTilerGeocoding {
      * @param countryCode ISO 3166-1 alpha-2 country code or null if not set.
      * @return Feature object which is information about a specific location.
      */
-    public Feature getFirstSearchResult(String query, String countryCode) {
-        List<Feature> features = getSearchResult(query, countryCode).getFeatures();
+    public Feature getFirstSearchResult(String query, String countryCode, String apiKey) {
+        List<Feature> features = getSearchResult(query, countryCode, apiKey).getFeatures();
         if (features == null || features.isEmpty()) {
             logger.info("No locations found from search result.");
             return null;
@@ -119,7 +128,7 @@ public class MapTilerGeocoding {
     @GetMapping("/searchresults")
     public Map<String, List<Map<String, String>>> getSearchResults(@RequestParam String query) {
         if (rateLimiter.allowRequest()) {
-            SearchResult searchResult = getSearchResult(query, null);
+            SearchResult searchResult = getSearchResult(query, null, null);
             return searchResult.getAutocompleteSuggestions();
         } else {
             return new HashMap<>();

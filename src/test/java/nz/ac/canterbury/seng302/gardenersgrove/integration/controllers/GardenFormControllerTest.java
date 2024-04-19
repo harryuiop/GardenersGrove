@@ -54,13 +54,21 @@ class GardenFormControllerTest {
     @Test
     void submitForm_allValid_gardenSaved() throws Exception {
         String gardenName = "Test Garden";
-        String gardenLocation = "Test Location";
         float gardenSize = 100.0f;
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
-                        .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", Float.toString(gardenSize)))
+                .param("gardenName", gardenName)
+                .param("gardenSize", Float.toString(gardenSize))
+                .param("country", country)
+                .param("city", city)
+                .param("streetAddress", streetAddress)
+                .param("suburb", suburb)
+                .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
 
@@ -68,20 +76,32 @@ class GardenFormControllerTest {
         assertEquals(1, allGardens.size());
         Garden garden = allGardens.get(0);
         assertEquals(gardenName, garden.getName());
-        assertEquals(gardenLocation, garden.getLocation());
         assertEquals(gardenSize, garden.getSize());
+        assertEquals(country, garden.getLocation().getCountry());
+        assertEquals(city, garden.getLocation().getCity());
+        assertEquals(streetAddress, garden.getLocation().getStreetAddress());
+        assertEquals(suburb, garden.getLocation().getSuburb());
+        assertEquals(postcode, Integer.toString(garden.getLocation().getPostcode()));
     }
 
     @Test
     void submitForm_invalidName_gardenNotSaved() throws Exception {
         String gardenName = "Test&Garden";
-        String gardenLocation = "Test Location";
         float gardenSize = 4f;
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
-                        .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", Float.toString(gardenSize)))
+                .param("gardenName", gardenName)
+                .param("gardenSize", Float.toString(gardenSize))
+                .param("country", country)
+                .param("city", city)
+                .param("streetAddress", streetAddress)
+                .param("suburb", suburb)
+                .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -90,15 +110,23 @@ class GardenFormControllerTest {
     }
 
     @Test
-    void submitForm_invalidLocation_gardenNotSaved() throws Exception {
+    void submitForm_invalidLocation_noCountry_gardenNotSaved() throws Exception {
         String gardenName = "Test Garden";
-        String gardenLocation = "Test^Location";
         float gardenSize = 4f;
+        String country = "";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
-                        .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", Float.toString(gardenSize)))
+                .param("gardenName", gardenName)
+                .param("gardenSize", Float.toString(gardenSize))
+                .param("country", country)
+                .param("city", city)
+                .param("streetAddress", streetAddress)
+                .param("suburb", suburb)
+                .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -109,13 +137,21 @@ class GardenFormControllerTest {
     @Test
     void submitForm_invalidSize_gardenNotSaved() throws Exception {
         String gardenName = "Test Garden";
-        String gardenLocation = "Test Location";
         float gardenSize = -1f;
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
-                        .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", Float.toString(gardenSize)))
+                .param("gardenName", gardenName)
+                .param("gardenSize", Float.toString(gardenSize))
+                .param("country", country)
+                .param("city", city)
+                .param("streetAddress", streetAddress)
+                .param("suburb", suburb)
+                .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -126,11 +162,19 @@ class GardenFormControllerTest {
     @Test
     void submitForm_noSize_gardenSaved() throws Exception {
         String gardenName = "Test Garden";
-        String gardenLocation = "Test Location";
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
                         .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation))
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", streetAddress)
+                        .param("suburb", suburb)
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
 
@@ -139,7 +183,11 @@ class GardenFormControllerTest {
         assertEquals(1, allGardens.size());
         Garden garden = allGardens.get(0);
         assertEquals(gardenName, garden.getName());
-        assertEquals(gardenLocation, garden.getLocation());
         assertNull(garden.getSize());
+        assertEquals(country, garden.getLocation().getCountry());
+        assertEquals(city, garden.getLocation().getCity());
+        assertEquals(streetAddress, garden.getLocation().getStreetAddress());
+        assertEquals(suburb, garden.getLocation().getSuburb());
+        assertEquals(postcode, Integer.toString(garden.getLocation().getPostcode()));
     }
 }

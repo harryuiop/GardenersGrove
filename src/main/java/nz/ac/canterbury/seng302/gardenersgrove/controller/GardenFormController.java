@@ -13,11 +13,13 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -27,6 +29,10 @@ import java.util.Map;
  */
 @Controller
 public class GardenFormController extends GardensSidebar {
+
+    @Value("${maptiler.api.key}")
+    private String apiKey;
+
     Logger logger = LoggerFactory.getLogger(GardenFormController.class);
     private final GardenService gardenService;
     private final LocationService locationService;
@@ -102,7 +108,9 @@ public class GardenFormController extends GardensSidebar {
             } else {
                 query = city + " " + country;
             }
-            locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode);
+            logger.info(apiKey);
+            locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode, apiKey);
+            logger.info(locationFeature.toString());
             if (locationFeature != null) locationEntity.setLngLat(locationFeature.getCenter());
             locationEntity.setSuburb(suburb);
             locationEntity.setPostcode(Integer.parseInt(postcode));

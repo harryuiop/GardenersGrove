@@ -1,16 +1,22 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
+import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Feature;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.LocationRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -42,10 +48,16 @@ class EditPlantFormControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LocationRepository locationRepository;
+
     private final String originalPlantName = "Test Plant";
     private final int originalPlantCount = 1;
 
     private final String originalPlantDescription = "description";
+
+    @Autowired
+    private MapTilerGeocoding mapTilerGeocodingMock = Mockito.mock(MapTilerGeocoding.class);
 
     private boolean userCreated = false;
 
@@ -63,7 +75,14 @@ class EditPlantFormControllerTest {
             userCreated = true;
         }
         gardenRepository.deleteAll();
-        gardenRepository.save(new Garden("Test Garden", "test location", null));
+        locationRepository.deleteAll();
+
+        Location gardenLocation = new Location("New Zealand", "Christchurch");
+        gardenLocation.setStreetAddress("90 Ilam Road");
+        gardenLocation.setSuburb("Ilam");
+        gardenLocation.setPostcode(8041);
+
+        gardenRepository.save(new Garden("Test Garden", gardenLocation, null));
         long gardenId = gardenRepository.findAll().get(0).getId();
         plantRepository.deleteAll();
         plantRepository.save(new Plant("Test Plant", 1, "description", new Date(), null, gardenId));
@@ -76,6 +95,9 @@ class EditPlantFormControllerTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
+        Mockito.when(mapTilerGeocodingMock.getFirstSearchResult(Mockito.any(), Mockito.any(), Mockito.any()))
+                .thenReturn(new Feature());
+
         mockMvc.perform(MockMvcRequestBuilders.multipart("/plantform/edit")
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                         .param("plantName", plant.getName())
@@ -85,6 +107,8 @@ class EditPlantFormControllerTest {
                         .param("plantId", Long.toString(plantId)))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+
+
 
 
         List<Plant> allPlants = plantRepository.findAll();

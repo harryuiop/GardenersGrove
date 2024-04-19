@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.junit.jupiter.api.Assertions;
@@ -22,13 +23,16 @@ class GardenServiceTest {
     @Test
     void gardenRepositoryGardenCreation() {
         GardenService gardenService = new GardenService(gardenRepository);
-        Garden garden = gardenService.saveGarden(new Garden("Test Garden", "Test location", 100f));
+
+        Location gardenLocation = new Location("New Zealand", "Christchurch");
+        Garden garden = gardenService.saveGarden(new Garden("Test Garden", gardenLocation, 100f));
         List<Garden> gardens = gardenRepository.findAll();
+        Garden outputGarden = gardens.get(0);
 
         Assertions.assertEquals(1, gardens.size());
-        Assertions.assertEquals(garden.getId(), gardens.get(0).getId());
-        Assertions.assertEquals("Test Garden", gardens.get(0).getName());
-        Assertions.assertEquals("Test location", gardens.get(0).getLocation());
-        Assertions.assertEquals(100, gardens.get(0).getSize());
+        Assertions.assertEquals(garden.getId(), outputGarden.getId());
+        Assertions.assertEquals("Test Garden", outputGarden.getName());
+        Assertions.assertEquals(gardenLocation.toString(), outputGarden.getLocation().toString());
+        Assertions.assertEquals(100, outputGarden.getSize());
     }
 }

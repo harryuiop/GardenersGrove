@@ -83,8 +83,8 @@ public class FormValuesValidationTest {
 
     @Test
     void checkDesc_ValidDesc_returnTrue() {
-    String desc = "wdfghjio(*&^%$#f5678";
-    Assertions.assertTrue(valuesValidator.checkDescription(desc));
+        String desc = "wdfghjio(*&^%$#f5678";
+        Assertions.assertTrue(valuesValidator.checkDescription(desc));
     }
 
     @Test

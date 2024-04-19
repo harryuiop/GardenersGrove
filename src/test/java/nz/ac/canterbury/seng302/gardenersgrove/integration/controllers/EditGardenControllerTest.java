@@ -4,6 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.LocationRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,13 +34,26 @@ class EditGardenControllerTest {
     private GardenRepository gardenRepository;
 
     @Autowired
+    private LocationRepository locationRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     private final String initialGardenName = "Test Garden";
 
-    private final Location initialGardenLocation = new Location("New Zealand", "Christchurch");
-
     private final float initialGardenSize = 100.0f;
+
+    private final String initialCountry = "New Zealand";
+
+    private final String initialCity = "Christchurch";
+
+    private final String initialStreetAddress = "90 Ilam Road";
+
+    private final String initialSuburb = "Ilam";
+
+    private final int initialPostcode = 8041;
+
+    private Location initialGardenLocation;
 
     private Long gardenId;
     private boolean userCreated = false;
@@ -48,16 +62,23 @@ class EditGardenControllerTest {
     void setUp() {
         if (!userCreated) {
             User user = new User(
-                            "test@domain.net",
-                            "Test",
-                            "User",
-                            "Password1!",
-                            "2000-01-01"
+                    "test@domain.net",
+                    "Test",
+                    "User",
+                    "Password1!",
+                    "2000-01-01"
             );
             userRepository.save(user);
             userCreated = true;
         }
         gardenRepository.deleteAll();
+        locationRepository.deleteAll();
+
+        initialGardenLocation = new Location(initialCountry, initialCity);
+        initialGardenLocation.setStreetAddress(initialStreetAddress);
+        initialGardenLocation.setSuburb(initialSuburb);
+        initialGardenLocation.setPostcode(initialPostcode);
+
         Garden garden = new Garden(initialGardenName, initialGardenLocation, initialGardenSize);
         gardenRepository.save(garden);
         gardenId = garden.getId();
@@ -66,122 +87,149 @@ class EditGardenControllerTest {
     @Test
     void submitEditForm_unchanged_gardenUnchanged() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
-                                        .param("gardenName", initialGardenName)
-                                        .param("gardenLocation", initialGardenLocation)
-                                        .param("gardenSize", Float.toString(initialGardenSize)))
-                        .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .param("gardenName", initialGardenName)
+                        .param("gardenSize", Float.toString(initialGardenSize))
+                        .param("country", initialCountry)
+                        .param("city", initialCity)
+                        .param("streetAddress", initialStreetAddress)
+                        .param("suburb", initialSuburb)
+                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("ignoreApiCall", "true"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
-        assertEquals(initialGardenLocation, garden.getLocation());
+        assertEquals(initialGardenLocation.toString(), garden.getLocation().toString());
         assertEquals(initialGardenSize, garden.getSize());
+
     }
 
     @Test
     void submitEditForm_allValid_gardenUpdated() throws Exception {
         String newGardenName = "New Test Garden";
-        String newGardenLocation = "New Test Location";
         float newGardenSize = 10.0f;
+        String newCountry = "Australia";
+        String newCity = "Sydney";
+        String newStreetAddress = "1 Smith Road";
+        String newSuburb = "Newtown";
+        String newPostcode = "2042";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
-                                        .param("gardenName", newGardenName)
-                                        .param("gardenLocation", newGardenLocation)
-                                        .param("gardenSize", Float.toString(newGardenSize)))
-                        .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .param("gardenName", newGardenName)
+                        .param("gardenSize", Float.toString(newGardenSize))
+                        .param("country", newCountry)
+                        .param("city", newCity)
+                        .param("streetAddress", newStreetAddress)
+                        .param("suburb", newSuburb)
+                        .param("postcode",newPostcode)
+                        .param("ignoreApiCall", "true"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());
         Garden garden = allGardens.get(0);
         assertEquals(newGardenName, garden.getName());
-        assertEquals(newGardenLocation, garden.getLocation());
+        assertEquals(newCountry, garden.getLocation().getCountry());
+        assertEquals(newCity, garden.getLocation().getCity());
+        assertEquals(newStreetAddress, garden.getLocation().getStreetAddress());
+        assertEquals(newSuburb, garden.getLocation().getSuburb());
+        assertEquals(newPostcode, Integer.toString(garden.getLocation().getPostcode()));
         assertEquals(newGardenSize, garden.getSize());
     }
 
     @Test
     void submitEditForm_invalidName_gardenNotUpdated() throws Exception {
         String newGardenName = "Test&Garden";
-        String newGardenLocation = "Test Location";
-        float newGardenSize = 4f;
 
         mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
-                                        .param("gardenName", newGardenName)
-                                        .param("gardenLocation", newGardenLocation)
-                                        .param("gardenSize", Float.toString(newGardenSize)))
-                        .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editGarden"));
+                        .param("gardenName", newGardenName)
+                        .param("gardenSize", Float.toString(initialGardenSize))
+                        .param("country", initialCountry)
+                        .param("city", initialCity)
+                        .param("streetAddress", initialStreetAddress)
+                        .param("suburb", initialSuburb)
+                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("ignoreApiCall", "true"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("editGarden"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
-        assertEquals(initialGardenLocation, garden.getLocation());
         assertEquals(initialGardenSize, garden.getSize());
+        assertEquals(initialGardenLocation.toString(), garden.getLocation().toString());
         assertEquals(1, allGardens.size());
     }
 
     @Test
-    void submitEditForm_invalidLocation_gardenNotUpdated() throws Exception {
-        String newGardenName = "Test Garden";
-        String newGardenLocation = "Test^Location";
-        float newGardenSize = 4f;
+    void submitEditForm_invalidLocation_noCountry_gardenNotUpdated() throws Exception {
+        String newGardenName = "New Garden";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
-                                        .param("gardenName", newGardenName)
-                                        .param("gardenLocation", newGardenLocation)
-                                        .param("gardenSize", Float.toString(newGardenSize)))
-                        .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editGarden"));
+                        .param("gardenName", newGardenName)
+                        .param("gardenSize", Float.toString(initialGardenSize))
+                        .param("country", "")
+                        .param("city", initialCity)
+                        .param("streetAddress", initialStreetAddress)
+                        .param("suburb", initialSuburb)
+                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("ignoreApiCall", "true"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("editGarden"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
-        assertEquals(initialGardenLocation, garden.getLocation());
+        assertEquals(initialGardenLocation.toString(), garden.getLocation().toString());
         assertEquals(initialGardenSize, garden.getSize());
         assertEquals(1, allGardens.size());
     }
 
     @Test
     void submitEditForm_invalidSize_gardenNotUpdated() throws Exception {
-        String newGardenName = "Test Garden";
-        String newGardenLocation = "Test Location";
         float newGardenSize = -1f;
 
         mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
-                                        .param("gardenName", newGardenName)
-                                        .param("gardenLocation", newGardenLocation)
-                                        .param("gardenSize", Float.toString(newGardenSize)))
-                        .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editGarden"));
+                        .param("gardenName", initialGardenName)
+                        .param("gardenSize", Float.toString(newGardenSize))
+                        .param("country", initialCountry)
+                        .param("city", initialCity)
+                        .param("streetAddress", initialStreetAddress)
+                        .param("suburb", initialSuburb)
+                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("ignoreApiCall", "true"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("editGarden"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
-        assertEquals(initialGardenLocation, garden.getLocation());
+        assertEquals(initialGardenLocation.toString(), garden.getLocation().toString());
         assertEquals(initialGardenSize, garden.getSize());
         assertEquals(1, allGardens.size());
     }
 
     @Test
     void submitForm_noSize_gardenSaved() throws Exception {
-        String gardenName = "Test Garden";
-        String gardenLocation = "Test Location";
-
         mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
-                                        .param("gardenName", gardenName)
-                                        .param("gardenLocation", gardenLocation)
-                                        .param("gardenSize", ""))
-                        .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
-
+                        .param("gardenName", initialGardenName)
+                        .param("gardenSize", "")
+                        .param("country", initialCountry)
+                        .param("city", initialCity)
+                        .param("streetAddress", initialStreetAddress)
+                        .param("suburb", initialSuburb)
+                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("ignoreApiCall", "true"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());
         Garden garden = allGardens.get(0);
-        assertEquals(initialGardenName, garden.getName());
-        assertEquals(initialGardenLocation, garden.getLocation());
         assertNull(garden.getSize());
     }
 }

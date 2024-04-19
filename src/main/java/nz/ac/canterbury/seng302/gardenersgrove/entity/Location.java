@@ -12,9 +12,6 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "location")
-    private Garden garden;
-
     @Column(nullable = false)
     private String country;
 
