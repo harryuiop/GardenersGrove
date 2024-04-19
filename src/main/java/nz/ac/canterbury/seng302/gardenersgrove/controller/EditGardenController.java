@@ -13,6 +13,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,9 @@ import java.util.Optional;
  */
 @Controller
 public class EditGardenController extends GardensSidebar {
+    @Value("${maptiler.api.key}")
+    private String apiKey;
+
     Logger logger = LoggerFactory.getLogger(EditGardenController.class);
     private final ErrorChecker gardenValidator = new ErrorChecker();
 
@@ -72,6 +76,7 @@ public class EditGardenController extends GardensSidebar {
                              @RequestParam(name = "gardenId") Long gardenId,
                              @RequestParam(name = "ignoreApiCall", required = false) Boolean ignoreApiCall,
                              Model model) {
+        if (ignoreApiCall == null) ignoreApiCall = false;
         logger.info("POST /edit-garden");
         Map<String, String> errors = gardenValidator.gardenFormErrors(gardenName, gardenSize,
                 country, city, streetAddress, suburb, postcode);
@@ -128,6 +133,8 @@ public class EditGardenController extends GardensSidebar {
      * @param city Input city by form box.
      */
     private void updateLocationCoordinates(Location location, String streetAddress, String country, String city) {
+        MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
+
         // Country code allows more accurate searching by filtering by just that country
         String countryCode = CountryCode.getAlphaTwoCountryCodeFromName(country);
 
@@ -138,9 +145,7 @@ public class EditGardenController extends GardensSidebar {
         } else {
             query = city + " " + country;
         }
-        RestTemplate restTemplate = new RestTemplate();
-        locationFeature = restTemplate.getForObject("/maptiler/get-first-search-result?query=" + query + "&countryCode=" + countryCode,
-                Feature.class);
+        locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode, apiKey);
         if (locationFeature != null) location.setLngLat(locationFeature.getCenter());
     }
 

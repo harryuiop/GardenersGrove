@@ -83,35 +83,32 @@ public class GardenFormController extends GardensSidebar {
                              @RequestParam(name = "streetAddress", required = false) String streetAddress,
                              @RequestParam(name = "suburb", required = false) String suburb,
                              @RequestParam(name = "postcode", required = false) String postcode,
+                             @RequestParam(name = "ignoreApiCall", required = false) Boolean ignoreApiCall,
                              Model model) {
         logger.info("POST /form");
+        if (ignoreApiCall == null) ignoreApiCall = false;
         // This needs the gardenLocation removed
         Map<String, String> errors = gardenValidator.gardenFormErrors(gardenName, gardenSize,
                 country, city, streetAddress, suburb, postcode);
         if (errors.isEmpty()) {
-
-            // *********************** THE THINKING  ********************* //
-            // Whatever is submitted through the form is what is sent to the database
-            // Still need to call API here to get coordinates to store in database (DONE)
-            // Javascript/HTML will handle autocomplete and auto-filled text
-            // Need to show nice error message if location is not found with API (per ACs)
-
-            // ******** Get Location Response and save to db ********** //
-            MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
-            // Country code allows more accurate searching by filtering by just that country
-            String countryCode = CountryCode.getAlphaTwoCountryCodeFromName(country);
             Location locationEntity = new Location(country, city);
-            Feature locationFeature;
-            String query;
-            if (streetAddress != null) {
-                query = streetAddress + " " + city + " " + country;
-            } else {
-                query = city + " " + country;
+
+            if (!ignoreApiCall) {
+                MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
+                // Country code allows more accurate searching by filtering by just that country
+                String countryCode = CountryCode.getAlphaTwoCountryCodeFromName(country);
+
+                Feature locationFeature;
+                String query;
+                if (streetAddress != null) {
+                    query = streetAddress + " " + city + " " + country;
+                } else {
+                    query = city + " " + country;
+                }
+                locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode, apiKey);
+                if (locationFeature != null) locationEntity.setLngLat(locationFeature.getCenter());
             }
-            logger.info(apiKey);
-            locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode, apiKey);
-            logger.info(locationFeature.toString());
-            if (locationFeature != null) locationEntity.setLngLat(locationFeature.getCenter());
+
             locationEntity.setSuburb(suburb);
             locationEntity.setPostcode(Integer.parseInt(postcode));
             locationEntity.setStreetAddress(streetAddress);

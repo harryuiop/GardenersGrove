@@ -30,7 +30,7 @@ streetAddressField.addEventListener('input', function() {
  * @param query Input from street address search box.
  */
 function updateAutocomplete(query) {
-    fetch(`/maptiler/searchresults?query=${query}`)
+    fetch(`/maptiler/search-results?query=${query}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
