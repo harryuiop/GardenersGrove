@@ -196,11 +196,11 @@ public class PlantController extends GardensSidebar {
     @PostMapping(NEW_PLANT_URI_STRING)
     public String submitNewPlant(
                     @PathVariable long gardenId,
-                    @RequestParam(name = "plantName") String plantName,
-                    @RequestParam(name = "plantCount", required = false) Integer plantCount,
-                    @RequestParam(name = "plantDescription", required = false) String plantDescription,
-                    @RequestParam(name = "plantedDate", required = false) String plantedDate,
-                    @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
+                    @RequestParam String plantName,
+                    @RequestParam(required = false) Integer plantCount,
+                    @RequestParam(required = false) String plantDescription,
+                    @RequestParam(required = false) String plantedDate,
+                    @RequestParam(required = false) MultipartFile imageFile,
                     Model model
     ) throws NoSuchGardenException {
         logger.info("POST {}", newPlantUri(gardenId));
@@ -288,11 +288,11 @@ public class PlantController extends GardensSidebar {
     public String submitPlantEdits(
                     @PathVariable long plantId,
                     @PathVariable long gardenId,
-                    @RequestParam(name = "plantName") String plantName,
-                    @RequestParam(name = "plantCount", required = false) Integer plantCount,
-                    @RequestParam(name = "plantDescription", required = false) String plantDescription,
-                    @RequestParam(name = "plantedDate", required = false) String plantedDate,
-                    @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
+                    @RequestParam String plantName,
+                    @RequestParam(required = false) Integer plantCount,
+                    @RequestParam(required = false) String plantDescription,
+                    @RequestParam(required = false) String plantedDate,
+                    @RequestParam(required = false) MultipartFile imageFile,
                     Model model
     ) throws NoSuchPlantException {
         logger.info("POST {}", editPlantUri(gardenId, plantId));
