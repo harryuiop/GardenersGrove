@@ -88,6 +88,23 @@ class ErrorCheckerTest {
     }
 
     @Test
+    void gardenFormErrors_noCity_returnsBlankError() {
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String country = "New Zealand";
+        String city = "";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(name, size,
+                country, city, streetAddress, suburb, postcode);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("cityError", "City cannot be empty");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+
+    @Test
     void gardenFormErrors_blankSize_returnsNull() {
         String name = "Garden 1";
         Float size = null;
