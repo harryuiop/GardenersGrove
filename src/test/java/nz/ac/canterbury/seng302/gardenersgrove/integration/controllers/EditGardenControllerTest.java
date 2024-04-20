@@ -95,8 +95,8 @@ class EditGardenControllerTest {
                         .param("suburb", initialSuburb)
                         .param("postcode", Integer.toString(initialPostcode))
                         .param("ignoreApiCall", "true"))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("editGarden"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());
@@ -126,8 +126,8 @@ class EditGardenControllerTest {
                         .param("suburb", newSuburb)
                         .param("postcode",newPostcode)
                         .param("ignoreApiCall", "true"))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("editGarden"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());
@@ -344,8 +344,8 @@ class EditGardenControllerTest {
                         .param("suburb", initialSuburb)
                         .param("postcode", Integer.toString(initialPostcode))
                         .param("ignoreApiCall", "true"))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("editGarden"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());

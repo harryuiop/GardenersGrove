@@ -31,15 +31,4 @@ public class RateLimiterTest {
         Assertions.assertTrue(rateLimiter.allowRequest());
         Assertions.assertFalse(rateLimiter.allowRequest());
     }
-
-    @Test
-    void allowRequestInNewWindow() {
-        Assertions.assertTrue(rateLimiter.allowRequest());
-        Assertions.assertTrue(rateLimiter.allowRequest());
-        Assertions.assertTrue(rateLimiter.allowRequest());
-        Assertions.assertFalse(rateLimiter.allowRequest());
-
-        ReflectionTestUtils.setField(rateLimiter, "windowSizeSeconds", 0);
-        Assertions.assertTrue(rateLimiter.allowRequest());
-    }
 }

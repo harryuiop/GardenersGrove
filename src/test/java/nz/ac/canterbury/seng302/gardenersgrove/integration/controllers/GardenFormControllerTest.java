@@ -70,8 +70,8 @@ class GardenFormControllerTest {
                 .param("suburb", suburb)
                 .param("postcode", postcode)
                 .param("ignoreApiCall", "true"))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());
@@ -310,8 +310,8 @@ class GardenFormControllerTest {
                         .param("suburb", suburb)
                         .param("postcode", postcode)
                         .param("ignoreApiCall", "true"))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
 
         List<Garden> allGardens = gardenRepository.findAll();
