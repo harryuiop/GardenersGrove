@@ -70,6 +70,32 @@
     </div>
   </div>
 </div>
+<!-- No location message modal -->
+<div th:if="${noLocationFound}">
+  <div id="noLocationFoundModal" class="modal">
+    <div class="modal-content">
+      <p>No matching location found, location-based services may not work.</p>
+      <span>
+                <form th:action="@{back-to-form(gardenId=${gardenId})}" method="post">
+                    <button id="backToFormBtn" onclick="backToForm()">Edit garden</button>
+                    <button type="submit" id="backToForm" style="display: none;"></button>
+                </form>
+                <form th:action="@{view-garden-from-edit(gardenId=${gardenId})}" method="post">
+                    <button id="useLocationBtn" onclick="submitViewGardenRedirectForm()">Continue</button>
+                    <button type="submit" id="viewGardenRedirect" style="display: none;"></button>
+                </form>
+            </span>
+    </div>
+  </div>
+</div>
 <script th:src="@{/javascript/locationAutocomplete.js}"></script>
+<script>
+  function backToForm() {
+    document.getElementById("backToForm").click();
+  }
+  function submitViewGardenRedirectForm() {
+    document.getElementById("viewGardenRedirect").click();
+  }
+</script>
 </body>
 </html>

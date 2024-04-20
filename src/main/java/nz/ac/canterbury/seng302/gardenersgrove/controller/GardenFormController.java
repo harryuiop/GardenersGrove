@@ -150,13 +150,14 @@ public class GardenFormController extends GardensSidebar {
      *
      * @return thymeleaf HTML gardenForm template or view garden redirect.
      */
-    @PostMapping("/view-garden-redirect")
-    public String goToViewGarden() {
+    @PostMapping("/view-garden-from-create")
+    public String goToViewGarden(Model model) {
         logger.info("POST /goToViewGardenForm");
         if (gardenId > 0) {
             return "redirect:/view-garden?gardenId=" + gardenId;
         }
         logger.info("Garden id not set, returning to garden form page.");
+        model.addAttribute("noLocationFound", false);
         return "gardenForm";
     }
 
@@ -166,12 +167,13 @@ public class GardenFormController extends GardensSidebar {
      * @return thymeleaf HTML gardenForm template or edit garden redirect.
      */
     @PostMapping("/edit-garden-redirect")
-    public String goToEditGarden() {
+    public String goToEditGarden(Model model) {
         logger.info("POST /goToEditGardenForm");
         if (gardenId > 0) {
             return "redirect:/edit-garden?gardenId=" + gardenId;
         }
         logger.info("Garden id not set (Garden not created), returning to garden form page.");
+        model.addAttribute("noLocationFound", false);
         return "gardenForm";
     }
 }

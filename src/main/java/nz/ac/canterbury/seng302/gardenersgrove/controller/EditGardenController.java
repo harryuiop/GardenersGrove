@@ -82,6 +82,8 @@ public class EditGardenController extends GardensSidebar {
                 country, city, streetAddress, suburb, postcode);
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (errors.isEmpty()) {
+            boolean showLocationNotFoundBox = true;
+
             if (optionalGarden.isPresent()) {
                 Garden garden = optionalGarden.get();
                 Location locationEntity = garden.getLocation();
@@ -90,7 +92,7 @@ public class EditGardenController extends GardensSidebar {
                 if (locationEntity.getStreetAddress() == null ||
                         !locationEntity.getStreetAddress().equals(streetAddress)) {
                     if (!ignoreApiCall) {
-                        updateLocationCoordinates(locationEntity, streetAddress, country, city);
+                        showLocationNotFoundBox = updateLocationCoordinates(locationEntity, streetAddress, country, city);
                     }
                 }
 
@@ -105,23 +107,27 @@ public class EditGardenController extends GardensSidebar {
                 garden.setSize(gardenSize);
                 garden.setLocation(locationEntity);
                 gardenService.saveGarden(garden);
+                if (showLocationNotFoundBox) {
+                    model.addAttribute("noLocationFound", true);
+                } else {
+                    return "redirect:/view-garden?gardenId=" + gardenId;
+                }
             }
         } else {
-            this.updateGardensSidebar(model, gardenService, userService);
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
             }
-            model.addAttribute("gardenName", gardenName);
-            model.addAttribute("gardenSize", gardenSize);
-            model.addAttribute("country", country);
-            model.addAttribute("city", city);
-            model.addAttribute("streetAddress",streetAddress);
-            model.addAttribute("suburb", suburb);
-            model.addAttribute("postcode", postcode);
-            model.addAttribute("gardenId", gardenId);
-            return "editGarden";
         }
-        return "redirect:/view-garden?gardenId=" + gardenId;
+        this.updateGardensSidebar(model, gardenService, userService);
+        model.addAttribute("gardenName", gardenName);
+        model.addAttribute("gardenSize", gardenSize);
+        model.addAttribute("country", country);
+        model.addAttribute("city", city);
+        model.addAttribute("streetAddress",streetAddress);
+        model.addAttribute("suburb", suburb);
+        model.addAttribute("postcode", postcode);
+        model.addAttribute("gardenId", gardenId);
+        return "editGarden";
     }
 
     /**
@@ -131,8 +137,9 @@ public class EditGardenController extends GardensSidebar {
      * @param streetAddress Input street address by form box.
      * @param country Input country by form box.
      * @param city Input city by form box.
+     * @return True if no location message modal should be shown.
      */
-    private void updateLocationCoordinates(Location location, String streetAddress, String country, String city) {
+    private boolean updateLocationCoordinates(Location location, String streetAddress, String country, String city) {
         MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
 
         // Country code allows more accurate searching by filtering by just that country
@@ -146,7 +153,11 @@ public class EditGardenController extends GardensSidebar {
             query = city + " " + country;
         }
         locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode, apiKey);
-        if (locationFeature != null) location.setLngLat(locationFeature.getCenter());
+        if (locationFeature != null) {
+            location.setLngLat(locationFeature.getCenter());
+            return false;
+        }
+        return true;
     }
 
 
@@ -161,6 +172,7 @@ public class EditGardenController extends GardensSidebar {
     public String home(@RequestParam(name = "gardenId") Long gardenId, Model model) {
         logger.info("GET /edit-garden");
         this.updateGardensSidebar(model, gardenService, userService);
+        model.addAttribute("noLocationFound", false);
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isPresent()) {
@@ -175,5 +187,30 @@ public class EditGardenController extends GardensSidebar {
             model.addAttribute("gardenId", gardenId);
         }
         return "editGarden";
+    }
+
+    /**
+     * Go to view garden page if garden has been created.
+     *
+     * @return thymeleaf HTML gardenForm template or view garden redirect.
+     */
+    @PostMapping("/view-garden-from-edit")
+    public String goToViewGarden(@RequestParam(name = "gardenId") Long gardenId) {
+        logger.info("POST /goToViewGardenForm");
+        if (gardenId > 0) {
+            return "redirect:/view-garden?gardenId=" + gardenId;
+        }
+        logger.info("Garden id not set, returning to edit garden form page.");
+        return "redirect:/edit-garden?gardenId=" + gardenId;
+    }
+
+    /**
+     * Go to edit garden page if garden has been created.
+     *
+     * @return thymeleaf HTML gardenForm template or edit garden redirect.
+     */
+    @PostMapping("/back-to-form")
+    public String goToEditGarden(@RequestParam(name = "gardenId") Long gardenId) {
+        return "redirect:/edit-garden?gardenId=" + gardenId;
     }
 }
