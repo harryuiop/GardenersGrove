@@ -180,6 +180,31 @@ public class PlantController extends GardensSidebar {
         );
     }
 
+    private LocalDate parseDate(String dateString, Map<String, String> errors) {
+        LocalDate date = null;
+        try {
+            if (dateString != null && !dateString.isBlank()) {
+                date = LocalDate.parse(dateString);
+            }
+        } catch (DateTimeParseException exception) {
+            errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
+        }
+        return date;
+    }
+
+    private String saveImage(MultipartFile image, Map<String, String> errors) {
+        String imageFileName = null;
+        if (errors.isEmpty() && image != null && !image.isEmpty()) {
+            try {
+                imageFileName = ImageStore.storeImage(image);
+            } catch (IOException error) {
+                logger.error("Error saving plant image", error);
+                errors.put("plantImageUploadError", "Uploading image failed, please try again.");
+            }
+        }
+        return imageFileName;
+    }
+
     /**
      * Submits form and saves the plant to the database.
      *
@@ -188,7 +213,7 @@ public class PlantController extends GardensSidebar {
      * @param plantDescription The description of the plant as input by the user.
      * @param plantedDate      The date the plant was planted as input by the user.
      *                         Must be in ISO format (yyyy-MM-dd).
-     * @param imageFile        The image file uploaded by the user.
+     * @param plantImage        The image file uploaded by the user.
      * @param gardenId         The id of the garden the plant is in.
      * @param model            object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
@@ -200,7 +225,7 @@ public class PlantController extends GardensSidebar {
                     @RequestParam(required = false) Integer plantCount,
                     @RequestParam(required = false) String plantDescription,
                     @RequestParam(required = false) String plantedDate,
-                    @RequestParam(required = false) MultipartFile imageFile,
+                    @RequestParam(required = false) MultipartFile plantImage,
                     Model model
     ) throws NoSuchGardenException {
         logger.info("POST {}", newPlantUri(gardenId));
@@ -215,37 +240,13 @@ public class PlantController extends GardensSidebar {
                         plantName,
                         plantCount,
                         plantDescription,
-                        imageFile
+                        plantImage
         );
 
-        LocalDate date = null;
-        try {
-            if (plantedDate != null && !plantedDate.isBlank()) {
-                date = LocalDate.parse(plantedDate);
-            }
-        } catch (DateTimeParseException exception) {
-            errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
-        }
-
-        String imageFileName = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                imageFileName = ImageStore.storeImage(imageFile);
-            } catch (IOException error) {
-                logger.error("Error saving plant image", error);
-                errors.put("plantImageUploadError", "Uploading image failed, please try again.");
-            }
-        }
+        LocalDate date = parseDate(plantedDate, errors);
+        String imageFileName = saveImage(plantImage, errors);
 
         if (!errors.isEmpty()) {
-            if (imageFileName != null) {
-                try {
-                    ImageStore.deleteImage(imageFileName);
-                } catch (IOException exception) {
-                    logger.error("Couldn't delete image");
-                    logger.error(exception.getMessage());
-                }
-            }
             return loadPlantForm(
                             errors.getOrDefault("plantNameError", ""),
                             errors.getOrDefault("plantCountError", ""),
@@ -279,7 +280,7 @@ public class PlantController extends GardensSidebar {
      * @param plantDescription The description of the plant as input by the user.
      * @param plantedDate      The date the plant was planted as input by the user.
      *                         Must be in ISO format (yyyy-MM-dd).
-     * @param imageFile        The image file uploaded by the user.
+     * @param plantImage        The image file uploaded by the user.
      * @param gardenId         The id of the garden the plant is in.
      * @param model            object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
@@ -292,7 +293,7 @@ public class PlantController extends GardensSidebar {
                     @RequestParam(required = false) Integer plantCount,
                     @RequestParam(required = false) String plantDescription,
                     @RequestParam(required = false) String plantedDate,
-                    @RequestParam(required = false) MultipartFile imageFile,
+                    @RequestParam(required = false) MultipartFile plantImage,
                     Model model
     ) throws NoSuchPlantException {
         logger.info("POST {}", editPlantUri(gardenId, plantId));
@@ -309,36 +310,13 @@ public class PlantController extends GardensSidebar {
                         plantName,
                         plantCount,
                         plantDescription,
-                        imageFile
+                        plantImage
         );
 
-        LocalDate date = null;
-        try {
-            if (plantedDate != null && !plantedDate.isBlank()) {
-                date = LocalDate.parse(plantedDate);
-            }
-        } catch (DateTimeParseException exception) {
-            errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
-        }
+        LocalDate date = parseDate(plantedDate, errors);
+        String imageFileName = saveImage(plantImage, errors);
 
-        String imageFileName = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                imageFileName = ImageStore.storeImage(imageFile);
-            } catch (IOException error) {
-                logger.error("Error saving plant image", error);
-                errors.put("plantImageUploadError", "Uploading image failed, please try again.");
-            }
-        }
         if (!errors.isEmpty()) {
-            try {
-                if (imageFileName != null) {
-                    ImageStore.deleteImage(imageFileName);
-                }
-            } catch (IOException exception) {
-                logger.error("Couldn't delete image");
-                logger.error(exception.getMessage());
-            }
             return loadPlantForm(
                             errors.getOrDefault("plantNameError", ""),
                             errors.getOrDefault("plantCountError", ""),
