@@ -2,9 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Entity class representing a plant in a garden
@@ -25,7 +23,7 @@ public class Plant {
     private String description;
 
     @Column()
-    private Date plantedOn;
+    private LocalDate plantedOn;
 
     @Column
     private String imageFileName;
@@ -33,15 +31,13 @@ public class Plant {
     @ManyToOne(optional = false)
     private Garden garden;
 
-    private static final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
-
     /**
      * JPA required no-args constructor
      */
     protected Plant() {
     }
 
-    public Plant(String name, Integer count, String description, Date plantedOn, String imageFileName, Garden garden) {
+    public Plant(String name, Integer count, String description, LocalDate plantedOn, String imageFileName, Garden garden) {
         this.name = name;
         this.count = count;
         this.description = description;
@@ -74,14 +70,7 @@ public class Plant {
         return "/uploads/" + imageFileName;
     }
 
-    public String getDateString() {
-        if (plantedOn == null) {
-            return null;
-        }
-        return printFormat.format(plantedOn);
-    };
-
-    public Date getPlantedOn() {
+    public LocalDate getPlantedOn() {
         return plantedOn;
     }
 
@@ -101,7 +90,7 @@ public class Plant {
         this.description = description;
     }
 
-    public void setPlantedOn(Date plantedOn) {
+    public void setPlantedOn(LocalDate plantedOn) {
         this.plantedOn = plantedOn;
     }
 
