@@ -48,7 +48,6 @@ public class GardenController extends GardensSidebar {
      * @param gardenNameError     The error message for the garden name form field.
      * @param gardenLocationError The error message for the garden location form field.
      * @param gardenSizeError     The error message for the garden size form field.
-     * @param gardenId            The ID of the garden to submit the form for.
      * @param gardenName          The name of the garden to pre-fill the form with.
      * @param gardenLocation      The location of the garden to pre-fill the form with.
      * @param gardenSize          The size of the garden to pre-fill the form with.
@@ -60,7 +59,6 @@ public class GardenController extends GardensSidebar {
                     String gardenNameError,
                     String gardenLocationError,
                     String gardenSizeError,
-                    String gardenId,
                     String gardenName,
                     String gardenLocation,
                     Float gardenSize,
@@ -73,7 +71,6 @@ public class GardenController extends GardensSidebar {
         model.addAttribute("gardenLocationError", gardenLocationError);
         model.addAttribute("gardenSizeError", gardenSizeError);
 
-        model.addAttribute("gardenId", gardenId);
         model.addAttribute("gardenName", gardenName);
         model.addAttribute("gardenLocation", gardenLocation);
         model.addAttribute("gardenSize", gardenSize);
@@ -94,7 +91,7 @@ public class GardenController extends GardensSidebar {
         logger.info("GET {}", newGardenUri());
         return loadGardenForm(
                         "", "", "",
-                        "new", null, null, null,
+                        "new", null, null,
                         newGardenUri(), request.getHeader("Referer"),
                         model
         );
@@ -125,7 +122,7 @@ public class GardenController extends GardensSidebar {
                             errors.getOrDefault("gardenNameError", ""),
                             errors.getOrDefault("gardenLocationError", ""),
                             errors.getOrDefault("gardenSizeError", ""),
-                            "new", gardenName, gardenLocation, gardenSize,
+                            gardenName, gardenLocation, gardenSize,
                             newGardenUri(), request.getHeader("Referer"),
                             model
             );
@@ -160,7 +157,7 @@ public class GardenController extends GardensSidebar {
 
         return loadGardenForm(
                         "", "", "",
-                        gardenId.toString(), garden.getName(), garden.getLocation(), garden.getSize(),
+                        garden.getName(), garden.getLocation(), garden.getSize(),
                         editGardenUri(gardenId), request.getHeader("Referer"),
                         model
         );
@@ -199,7 +196,7 @@ public class GardenController extends GardensSidebar {
                             errors.getOrDefault("gardenNameError", ""),
                             errors.getOrDefault("gardenLocationError", ""),
                             errors.getOrDefault("gardenSizeError", ""),
-                            String.valueOf(gardenId), gardenName, gardenLocation, gardenSize,
+                            gardenName, gardenLocation, gardenSize,
                             editGardenUri(gardenId), request.getHeader("Referer"),
                             model
             );
