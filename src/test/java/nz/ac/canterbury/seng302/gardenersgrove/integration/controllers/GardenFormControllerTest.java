@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.newGardenUri;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -57,12 +59,12 @@ class GardenFormControllerTest {
         String gardenLocation = "Test Location";
         float gardenSize = 100.0f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
                         .param("gardenSize", Float.toString(gardenSize)))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());
@@ -78,7 +80,7 @@ class GardenFormControllerTest {
         String gardenLocation = "Test Location";
         float gardenSize = 4f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
                         .param("gardenSize", Float.toString(gardenSize)))
@@ -95,7 +97,7 @@ class GardenFormControllerTest {
         String gardenLocation = "Test^Location";
         float gardenSize = 4f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
                         .param("gardenSize", Float.toString(gardenSize)))
@@ -112,7 +114,7 @@ class GardenFormControllerTest {
         String gardenLocation = "Test Location";
         float gardenSize = -1f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation)
                         .param("gardenSize", Float.toString(gardenSize)))
@@ -128,11 +130,11 @@ class GardenFormControllerTest {
         String gardenName = "Test Garden";
         String gardenLocation = "Test Location";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenLocation", gardenLocation))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
 
         List<Garden> allGardens = gardenRepository.findAll();

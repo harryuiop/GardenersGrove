@@ -22,6 +22,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.editPlantUri;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -75,15 +77,13 @@ class PlantControllerEditTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(gardenId, plantId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
-                                        .param("plantDescription", plant.getDescription())
-                                        .param("gardenId", Long.toString(gardenId))
-                                        .param("plantId", Long.toString(plantId)))
+                                        .param("plantDescription", plant.getDescription()))
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
 
         List<Plant> allPlants = plantRepository.findAll();
@@ -102,14 +102,12 @@ class PlantControllerEditTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(gardenId, plantId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
-                                        .param("plantDescription", plant.getDescription())
-                                        .param("gardenId", Long.toString(gardenId))
-                                        .param("plantId", Long.toString(plantId)))
+                                        .param("plantDescription", plant.getDescription()))
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
 
         List<Plant> allPlants = plantRepository.findAll();
@@ -128,14 +126,12 @@ class PlantControllerEditTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(gardenId, plantId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
-                                        .param("plantCount", String.valueOf(plant.getCount()))
-                                        .param("gardenId", Long.toString(gardenId))
-                                        .param("plantId", Long.toString(plantId)))
+                                        .param("plantCount", String.valueOf(plant.getCount())))
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
 
         List<Plant> allPlants = plantRepository.findAll();
@@ -155,13 +151,11 @@ class PlantControllerEditTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(gardenId, plantId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", invalidPlantName)
                                         .param("plantCount", String.valueOf(plant.getCount()))
-                                        .param("plantDescription", plant.getDescription())
-                                        .param("gardenId", Long.toString(gardenId))
-                                        .param("plantId", Long.toString(plantId)))
+                                        .param("plantDescription", plant.getDescription()))
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
@@ -184,13 +178,11 @@ class PlantControllerEditTest {
         long plantId = plant.getId();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(gardenId, plantId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plantCount))
-                                        .param("plantDescription", plant.getDescription())
-                                        .param("gardenId", Long.toString(gardenId))
-                                        .param("plantId", Long.toString(plantId)))
+                                        .param("plantDescription", plant.getDescription()))
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
@@ -211,13 +203,11 @@ class PlantControllerEditTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(gardenId, plantId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
-                                        .param("plantDescription", plantDescription)
-                                        .param("gardenId", Long.toString(gardenId))
-                                        .param("plantId", Long.toString(plantId)))
+                                        .param("plantDescription", plantDescription))
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
@@ -238,13 +228,11 @@ class PlantControllerEditTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(gardenId, plantId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
-                                        .param("plantDescription", plant.getDescription())
-                                        .param("gardenId", Long.toString(gardenId))
-                                        .param("plantId", Long.toString(plantId)))
+                                        .param("plantDescription", plant.getDescription()))
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
@@ -265,13 +253,11 @@ class PlantControllerEditTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(gardenId, plantId))
                                         .file(new MockMultipartFile("plantImage", "mock.gif", MediaType.IMAGE_GIF_VALUE, fakeImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
-                                        .param("plantDescription", plant.getDescription())
-                                        .param("gardenId", Long.toString(gardenId))
-                                        .param("plantId", Long.toString(plantId)))
+                                        .param("plantDescription", plant.getDescription()))
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
@@ -292,15 +278,13 @@ class PlantControllerEditTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
         long plantId = plant.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/" + plantId)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(gardenId, plantId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                                         .param("plantName", plant.getName())
                                         .param("plantCount", String.valueOf(plant.getCount()))
-                                        .param("plantDescription", plant.getDescription())
-                                        .param("gardenId", Long.toString(gardenId))
-                                        .param("plantId", Long.toString(plantId)))
+                                        .param("plantDescription", plant.getDescription()))
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());

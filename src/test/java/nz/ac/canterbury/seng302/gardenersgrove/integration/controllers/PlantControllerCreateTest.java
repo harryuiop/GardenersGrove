@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 import java.util.Random;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.newPlantUri;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -71,15 +73,14 @@ class PlantControllerCreateTest {
         new Random().nextBytes(fakeImageBytes);
         long gardenId = gardenRepository.findAll().get(0).getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -99,14 +100,13 @@ class PlantControllerCreateTest {
         new Random().nextBytes(fakeImageBytes);
         long gardenId = gardenRepository.findAll().get(0).getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -126,14 +126,13 @@ class PlantControllerCreateTest {
         new Random().nextBytes(fakeImageBytes);
         long gardenId = gardenRepository.findAll().get(0).getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -153,14 +152,13 @@ class PlantControllerCreateTest {
         new Random().nextBytes(fakeImageBytes);
         long gardenId = gardenRepository.findAll().get(0).getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
-                        .param("plantDescription", plantDescription)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantDescription", plantDescription))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -183,13 +181,12 @@ class PlantControllerCreateTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
@@ -208,13 +205,12 @@ class PlantControllerCreateTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
@@ -233,13 +229,12 @@ class PlantControllerCreateTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
@@ -258,13 +253,12 @@ class PlantControllerCreateTest {
         long gardenId = -1;
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", String.valueOf(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                         .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
         List<Plant> allPlants = plantRepository.findAll();
@@ -281,15 +275,14 @@ class PlantControllerCreateTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", Integer.toString(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Plant> allPlants = plantRepository.findAll();
         assertEquals(1, allPlants.size());
@@ -311,13 +304,12 @@ class PlantControllerCreateTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", Integer.toString(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
@@ -336,13 +328,12 @@ class PlantControllerCreateTest {
         long gardenId = gardenRepository.findAll().get(0).getId();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/plant/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                         .file(new MockMultipartFile("plantImage", "mock.gif", MediaType.IMAGE_GIF_VALUE, fakeImageBytes))
                         .param("plantName", plantName)
                         .param("plantCount", Integer.toString(plantCount))
                         .param("plantDescription", plantDescription)
-                        .param("plantedDate", plantedDate)
-                        .param("gardenId", Long.toString(gardenId)))
+                                        .param("plantedDate", plantedDate))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("plantForm"));
 
