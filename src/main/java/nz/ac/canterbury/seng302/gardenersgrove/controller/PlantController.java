@@ -23,10 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,8 +37,6 @@ public class PlantController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
-
-    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -90,7 +86,7 @@ public class PlantController extends GardensSidebar {
                     String plantName,
                     Integer plantCount,
                     String plantDescription,
-                    Date plantedDate,
+                    LocalDate plantedDate,
                     String plantImagePath,
                     String plantId,
                     String gardenName,
@@ -111,7 +107,7 @@ public class PlantController extends GardensSidebar {
         model.addAttribute("plantName", plantName);
         model.addAttribute("plantCount", plantCount);
         model.addAttribute("plantDescription", plantDescription);
-        model.addAttribute("plantedDate", plantedDate != null ? readFormat.format(plantedDate) : null);
+        model.addAttribute("plantedDate", plantedDate != null ? plantedDate.toString() : null);
         model.addAttribute("plantImagePath", plantImagePath);
         model.addAttribute("plantId", plantId);
 
@@ -226,12 +222,12 @@ public class PlantController extends GardensSidebar {
                         imageFile
         );
 
-        Date date = null;
+        LocalDate date = null;
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
-                date = readFormat.parse(plantedDate);
+                date = LocalDate.parse(plantedDate);
             }
-        } catch (ParseException exception) {
+        } catch (DateTimeParseException exception) {
             errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
         }
 
@@ -321,12 +317,12 @@ public class PlantController extends GardensSidebar {
                         imageFile
         );
 
-        Date date = null;
+        LocalDate date = null;
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
-                date = readFormat.parse(plantedDate);
+                date = LocalDate.parse(plantedDate);
             }
-        } catch (ParseException exception) {
+        } catch (DateTimeParseException exception) {
             errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
         }
 
