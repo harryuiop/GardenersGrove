@@ -13,7 +13,7 @@ import java.util.Map;
 public class ImageValidator {
     protected static final int MAX_IMAGE_SIZE_BYTES = 10_000_000;
 
-    protected static final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList("image/jpeg", "image/png", "image/svg");
+    protected static final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList("image/jpeg", "image/png", "image/svg+xml");
 
     private final MultipartFile image;
 

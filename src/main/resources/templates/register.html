@@ -9,14 +9,17 @@
     <title>Register</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <script
-      type="text/javascript"˘
+      type="text/javascript"
       src="/javascript/ValidationService.js"
     ></script>
   </head>
   <body>
+
     <div class="registerBody">
-      <div id="forumContentsDiv">
         <h1 id="registerH1">Register</h1>
+      <a th:href="@{/}" class="button">Return Home</a>
+      <div class="forumContentsDiv">
+        <h1>Register</h1>
         <form
           th:action="@{register}"
           method="post"
@@ -29,13 +32,11 @@
             id="firstName"
             name="firstName"
             th:name="firstName"
-            th:value="*{firstName}"
+            th:value="${firstName}"
             autofocus
             autocomplete="off"
-            onblur="firstNameValidation(
-                    document.registerForm)"
           />
-          <p class="errorMessage" id="firstNameError"></p>
+          <p class="errorMessage" id="firstNameError" th:text=${firstNameError}></p>
 
 
           <label for="lastName">Last name:</label>
@@ -45,10 +46,9 @@
             id="lastName"
             name="lastName"
             th:name="lastName"
-            th:value="*{lastName}"
+            th:value="${lastName}"
             autofocus
             autocomplete="off"
-            onblur="lastNameValidation(document.registerForm)"
           />
 
           <div class="noSurname">
@@ -58,16 +58,32 @@
                 id="noSurname"
                 value="checked"
                 th:name="noSurname"
-                th:value="*{noSurname}"
+                th:checked="${noSurname}"
+                th:value="${noSurname}"
                 autofocus
                 autocomplete="off"
-                onblur="checkNoSurnameClicked(document.registerForm)"
+                onchange="updateCheckboxValue()"
               />
               I have no surname
             </label>
           </div>
 
-          <p class="errorMessage" id="lastNameError"></p>
+          <script>
+            function updateCheckboxValue() {
+              var checkbox = document.getElementById("noSurname");
+              var lastName = document.getElementById("lastName")
+              if (checkbox.checked) {
+                checkbox.value = "true";
+                lastName.value = "";
+                lastName.disabled=true;
+              } else {
+                checkbox.value = "false";
+                lastName.disabled=false;
+              }
+            }
+          </script>
+
+          <p class="errorMessage" id="lastNameError" th:text=${lastNameError}></p>
 
           <label for="email">Email:</label>
           <input
@@ -76,12 +92,11 @@
             id="email"
             name="email"
             th:name="email"
-            th:value="*{email}"
+            th:value="${email}"
             autofocus
             autocomplete="off"
-            onblur="checkEmailValidation(document.registerForm)"
           />
-          <p class="errorMessage" id="emailError"></p>
+          <p class="errorMessage" id="emailError" th:text=${emailError}></p>
 
           <label for="address">Address:</label>
           <input
@@ -90,11 +105,11 @@
             id="address"
             name="address"
             th:name="address"
-            th:value="*{address}"
+            th:value="${address}"
             autofocus
             autocomplete="off"
           />
-          <p class="errorMessage" id="addressError"></p>
+          <p class="errorMessage" id="addressError" th:text=${addressErrors}></p>
 
           <label for="password">Password:</label>
           <input
@@ -106,9 +121,8 @@
             th:value="*{password}"
             autofocus
             autocomplete="off"
-            onblur="passwordValidation(document.registerForm)"
           />
-          <p class="errorMessage" id="passwordError"></p>
+          <p class="errorMessage" id="passwordError" th:text=${passwordError}></p>
 
           <label for="passwordConfirm">Confirm Password:</label>
           <input
@@ -120,9 +134,8 @@
             th:value="*{passwordConfirm}"
             autofocus
             autofill="off"
-            onblur="confirmPasswordValidation(document.registerForm)"
           />
-          <p class="errorMessage" id="passwordConfirmError"></p>
+          <p class="errorMessage" id="passwordConfirmError" th:text=${passwordConfirmError}></p>
 
           <label for="dateOfBirth">Date of Birth:</label>
           <input
@@ -131,14 +144,13 @@
             id="dateOfBirth"
             name="dateOfBirth"
             th:name="dateOfBirth"
-            th:value="*{dateOfBirth}"
+            th:value="${dateOfBirth}"
             autofocus
             autocomplete="off"
-            onblur="ageValidation(document.registerForm)"
           />
-          <p class="errorMessage" id="dateOfBirthError"></p>
+          <p class="errorMessage" id="dateOfBirthError" th:text=${dateOfBirthError}></p>
 
-          <input class="inputStyle" id="submit" type="submit" value="Submit" disabled/>
+          <input class="inputStyle" id="submit" type="submit" value="Submit"/>
         </form>
         <p class="registerLink"> Already have an account?<a id="registerLink" th:href="@{/login}"> Login Here.</a></p>
       </div>

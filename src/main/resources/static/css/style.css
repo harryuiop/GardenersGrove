@@ -31,17 +31,17 @@ body {
 }
 
 .button:hover {
-    background-color: var(--light-neutral);
+  background-color: var(--light-neutral);
 }
 
 /* -------------------- Register page specific -------------------- */
 
 .forumContentsDiv {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
 }
 
 label {
@@ -67,7 +67,7 @@ label {
 }
 
 #submit:hover {
-    background-color: #BBB;
+  background-color: #BBB;
 }
 
 #back {
@@ -95,31 +95,76 @@ label {
 /* -------------------- Profile page specific -------------------- */
 
 .formContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .formControlFile {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .uploadButton {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
-#profilePhoto {
+#profilePictureInput {
+    display: none;
+}
+
+#profilePicture {
     border: 1px solid #ccc;
-    border-radius: 3px;
-    box-sizing: border-box;
     border-radius: 50%;
-    width: 280px;
+    width: 15rem;
     height: auto;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+#profilePictureWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+#profilePictureOverlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: rgba(0,0,0,0.5);
+    pointer-events: none;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+#profilePictureWrapper:hover #profilePictureOverlay {
+    opacity: 1;
+}
+
+#profilePictureOverlayIcon {
+    color: white;
+    font-size: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    box-sizing: border-box;
 }
 
 #editProfileCancelButton {
-    right: 185px;
+  right: 185px;
     font-weight: lighter;
 }
 
@@ -166,19 +211,22 @@ input[type=text], input[type=password] {
     font-size: 1.2rem;
 }
 
-.registerLink {
+
+#registerLink {
+    font-style: italic;
+    margin-left: 0.5rem;
     font-size: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 1rem 1rem 0.5rem 1rem;
+    justify-content: center;
 }
 
-#registerLink {
-    font-style: italic;
-    margin-left: 0.5rem;
+.cancelOnLogin {
+    display: flex;
+    justify-content: center;
 }
-
 
 /* Team-r styling */
 /* Title at top of page */
@@ -321,4 +369,25 @@ nav button {
 
 textarea {
     width: 250px;
+}
+
+.userProfile {
+    display: flex;
+    align-items: center;
+}
+
+.userProfileImage {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    margin: 1rem;
+}
+
+.userProfileName {
+    color: var(--light-color);
+}
+
+.signOutButton {
+
 }

@@ -1,28 +1,38 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * This is a basic spring boot controller, note the @link{Controller} annotation which defines this.
- * This controller defines endpoints as functions with specific HTTP mappings
+ * Controller for the root/home page. This controls what each user will see client side
+ * depending on authentication status and permissions.
  */
 @Controller
-public class HomeController extends GardensSidebar {
-    Logger logger = LoggerFactory.getLogger(HomeController.class);
+public class HomeController {
 
-    private final GardenService gardenService;
+    /**
+     * Handles GET requests to the "/" URL.
+     * Displays the login page with different HTML attributes depending on permissions and authentication status.
+     *
+     * @return a redirect to the login page
+     */
+    @GetMapping("/")
+    public String getLandingPage(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    @Autowired
-    public HomeController(GardenService gardenService) {
-        this.gardenService = gardenService;
+        // The home page is authorized to any user, logged in or not thus all users are technically authenticated,
+        // so we must check that the principle is linked to an actual user (which would return an int if true)
+        if (auth.getPrincipal() == "anonymousUser") {
+            boolean loggedIn = false;
+            model.addAttribute("loggedInStatus", loggedIn);
+            return "home";
+        }
+
+        boolean loggedIn = true;
+        model.addAttribute("loggedInStatus", loggedIn);
+        return "home";
     }
 }

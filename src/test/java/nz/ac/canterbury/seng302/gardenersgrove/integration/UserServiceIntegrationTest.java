@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Users;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -31,95 +31,94 @@ public class UserServiceIntegrationTest {
     @Test
     public void addUser_allValid_returnCorrectUser() {
         String email = "user@gmail.com";
-        String fname = "John";
+        String firstName = "John";
         String lname = "Smith";
         String password = "Password123!";
-        String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
-                fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+        boolean validated = false;
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
+                firstName, lname, password, dob));
+        User user = userService.addUsers(new User(email,
+                firstName, lname, password, dob), validated);
         Assertions.assertEquals(user.getEmail(), email);
-        Assertions.assertEquals(user.getFname(), fname);
-        Assertions.assertEquals(user.getLname(), lname);
+        Assertions.assertEquals(user.getFirstName(), firstName);
+        Assertions.assertEquals(user.getLastName(), lname);
         Assertions.assertEquals(user.getPassword(), password);
-        Assertions.assertEquals(user.getAddress(), address);
         Assertions.assertEquals(user.getDob(), dob);
     }
 
     @Test
     public void addUser_invalidEmail_returnNullUser() {
         String email = "usergmail.com";
-        String fname = "John";
+        String firstName = "John";
         String lname = "Smith";
         String password = "Password123!";
-        String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
-                fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+        boolean validated = false;
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
+                firstName, lname, password, dob));
+        User user = userService.addUsers(new User(email,
+                firstName, lname, password, dob), validated);
         Assertions.assertNull(user);
     }
 
     @Test
-    public void addUser_invalidFname_returnNullUser() {
+    public void addUser_invalidfirstName_returnNullUser() {
         String email = "user@gmail.com";
-        String fname = "John67";
+        String firstName = "John67";
         String lname = "Smith";
         String password = "Password123!";
-        String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
-                fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+        boolean validated = false;
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
+                firstName, lname, password, dob));
+        User user = userService.addUsers(new User(email,
+                firstName, lname, password, dob), validated);
         Assertions.assertNull(user);
     }
 
     @Test
     public void addUser_invalidLname_returnNullUser() {
         String email = "user@gmail.com";
-        String fname = "John";
+        String firstName = "John";
         String lname = "Smith;;";
         String password = "Password123!";
-        String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
-                fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+        boolean validated = false;
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
+                firstName, lname, password, dob));
+        User user = userService.addUsers(new User(email,
+                firstName, lname, password, dob), validated);
         Assertions.assertNull(user);
     }
 
     @Test
     public void addUser_invalidPassword_returnNullUser() {
         String email = "user@gmail.com";
-        String fname = "John";
+        String firstName = "John";
         String lname = "Smith";
         String password = "password1";
-        String address = "1 Test Road";
         String dob = "2000-01-01";
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
-                fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+        boolean validated = false;
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
+                firstName, lname, password, dob));
+        User user = userService.addUsers(new User(email,
+                firstName, lname, password, dob), validated);
         Assertions.assertNull(user);
     }
 
     @Test
     public void addUser_invalidDob_returnNullUser() {
         String email = "user@gmail.com";
-        String fname = "John";
+        String firstName = "John";
         String lname = "Smith";
         String password = "Password123!";
-        String address = "1 Test Road";
+        boolean validated = false;
         String dob = LocalDate.now().toString();
-        when(userRepositoryMock.save(Mockito.any())).thenReturn(new Users(email,
-                fname, lname, address, password, dob));
-        Users user = userService.addUsers(new Users(email,
-                fname, lname, address, password, dob));
+        when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
+                firstName, lname, password, dob));
+        User user = userService.addUsers(new User(email,
+                firstName, lname, password, dob), validated);
         Assertions.assertNull(user);
     }
 }
