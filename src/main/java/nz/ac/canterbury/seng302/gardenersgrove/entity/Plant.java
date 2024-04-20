@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Entity class representing a plant in a garden
@@ -16,13 +17,13 @@ public class Plant {
     @Column(nullable = false)
     private String name;
 
-    @Column()
+    @Column
     private Integer count;
 
     @Column(length = 512)
     private String description;
 
-    @Column()
+    @Column
     private LocalDate plantedOn;
 
     @Column
@@ -30,6 +31,8 @@ public class Plant {
 
     @ManyToOne(optional = false)
     private Garden garden;
+
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     /**
      * JPA required no-args constructor
@@ -68,6 +71,13 @@ public class Plant {
 
     public String getImageFilePath() {
         return "/uploads/" + imageFileName;
+    }
+
+    public String getDateString() {
+        if (plantedOn == null) {
+            return null;
+        }
+        return plantedOn.format(dateFormatter);
     }
 
     public LocalDate getPlantedOn() {
