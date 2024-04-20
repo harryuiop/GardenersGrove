@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
@@ -65,7 +65,7 @@ class PlantControllerEditTest {
         gardenRepository.deleteAll();
         gardenRepository.save(new Garden("Test Garden", "test location", null));
         Garden garden = gardenRepository.findAll().get(0);
-        plantRepository.save(new Plant("Test Plant", 1, "description", new Date(), null, garden));
+        plantRepository.save(new Plant("Test Plant", 1, "description", LocalDate.now(), null, garden));
     }
 
     @Test

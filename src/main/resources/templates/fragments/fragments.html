@@ -42,6 +42,12 @@
         </tr>
         </tbody>
     </table>
+
+    <form th:action="@{/logout}"
+          method="post"
+          name="registerForm">
+        <input class="inputStyle" id="signOutButton" type="submit" value="Logout">
+    </form>
 </nav>
 
 </body>

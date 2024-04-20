@@ -119,14 +119,14 @@ public class SecurityConfiguration {
                         formLogin
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                        .defaultSuccessUrl(VIEW_ALL_GARDENS_URI_STRING)
+                                .defaultSuccessUrl("/")
                                 .failureHandler(new LoginAuthenticationFailureHandler())
                 )
                 // Define logging out, a POST "/logout" endpoint now exists under the hood, redirect to "/login", invalidate session and remove cookie
                 .logout(logout ->
                         logout
                                 .logoutUrl("/logout")
-                                .logoutSuccessUrl("/home")
+                                .logoutSuccessUrl("/")
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                 );
