@@ -39,6 +39,8 @@ public class GardenFormController extends GardensSidebar {
     private final UserService userService;
     private final ErrorChecker gardenValidator;
 
+    private long gardenId = 0;
+
     @Autowired
     public GardenFormController(GardenService gardenService, LocationService locationService, UserService userService) {
         this.gardenService = gardenService;
@@ -90,9 +92,10 @@ public class GardenFormController extends GardensSidebar {
         // This needs the gardenLocation removed
         Map<String, String> errors = gardenValidator.gardenFormErrors(gardenName, gardenSize,
                 country, city, streetAddress, suburb, postcode);
-        if (errors.isEmpty()) {
-            Location locationEntity = new Location(country, city);
 
+        if (errors.isEmpty()) {
+            boolean showLocationNotFoundBox = true;
+            Location locationEntity = new Location(country, city);
             if (!ignoreApiCall) {
                 MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
                 // Country code allows more accurate searching by filtering by just that country
@@ -106,7 +109,10 @@ public class GardenFormController extends GardensSidebar {
                     query = city + " " + country;
                 }
                 locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode, apiKey);
-                if (locationFeature != null) locationEntity.setLngLat(locationFeature.getCenter());
+                if (locationFeature != null) {
+                    locationEntity.setLngLat(locationFeature.getCenter());
+                    showLocationNotFoundBox = false;
+                }
             }
 
             locationEntity.setSuburb(suburb);
@@ -116,21 +122,56 @@ public class GardenFormController extends GardensSidebar {
             locationService.saveLocation(locationEntity);
             Garden garden = new Garden(gardenName, locationEntity, gardenSize);
             gardenService.saveGarden(garden);
-            return "redirect:/view-garden?gardenId=" + garden.getId();
+            gardenId = garden.getId();
+            if (showLocationNotFoundBox) {
+                model.addAttribute("noLocationFound", true);
+            } else {
+                return "redirect:/view-garden?gardenId=" + gardenId;
+            }
         }
         else {
-            this.updateGardensSidebar(model, gardenService, userService);
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
             }
-            model.addAttribute("gardenName", gardenName);
-            model.addAttribute("gardenSize", gardenSize);
-            model.addAttribute("country", country);
-            model.addAttribute("city", city);
-            model.addAttribute("streetAddress", streetAddress);
-            model.addAttribute("suburb", suburb);
-            model.addAttribute("postcode", postcode);
-            return "gardenForm";
         }
+        this.updateGardensSidebar(model, gardenService, userService);
+        model.addAttribute("gardenName", gardenName);
+        model.addAttribute("gardenSize", gardenSize);
+        model.addAttribute("country", country);
+        model.addAttribute("city", city);
+        model.addAttribute("streetAddress", streetAddress);
+        model.addAttribute("suburb", suburb);
+        model.addAttribute("postcode", postcode);
+        return "gardenForm";
+    }
+
+    /**
+     * Go to view garden page if garden has been created.
+     *
+     * @return thymeleaf HTML gardenForm template or view garden redirect.
+     */
+    @PostMapping("/view-garden-redirect")
+    public String goToViewGarden() {
+        logger.info("POST /goToViewGardenForm");
+        if (gardenId > 0) {
+            return "redirect:/view-garden?gardenId=" + gardenId;
+        }
+        logger.info("Garden id not set, returning to garden form page.");
+        return "gardenForm";
+    }
+
+    /**
+     * Go to edit garden page if garden has been created.
+     *
+     * @return thymeleaf HTML gardenForm template or edit garden redirect.
+     */
+    @PostMapping("/edit-garden-redirect")
+    public String goToEditGarden() {
+        logger.info("POST /goToEditGardenForm");
+        if (gardenId > 0) {
+            return "redirect:/edit-garden?gardenId=" + gardenId;
+        }
+        logger.info("Garden id not set (Garden not created), returning to garden form page.");
+        return "gardenForm";
     }
 }
