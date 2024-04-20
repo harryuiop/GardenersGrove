@@ -60,10 +60,10 @@ class GardenFormControllerTest {
         float gardenSize = 100.0f;
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
-                        .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", Float.toString(gardenSize)))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                                        .param("gardenName", gardenName)
+                                        .param("gardenLocation", gardenLocation)
+                                        .param("gardenSize", Float.toString(gardenSize)))
+                        .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                         .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Garden> allGardens = gardenRepository.findAll();
@@ -81,11 +81,11 @@ class GardenFormControllerTest {
         float gardenSize = 4f;
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
-                        .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", Float.toString(gardenSize)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+                                        .param("gardenName", gardenName)
+                                        .param("gardenLocation", gardenLocation)
+                                        .param("gardenSize", Float.toString(gardenSize)))
+                        .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertTrue(allGardens.isEmpty());
@@ -98,11 +98,11 @@ class GardenFormControllerTest {
         float gardenSize = 4f;
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
-                        .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", Float.toString(gardenSize)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+                                        .param("gardenName", gardenName)
+                                        .param("gardenLocation", gardenLocation)
+                                        .param("gardenSize", Float.toString(gardenSize)))
+                        .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertTrue(allGardens.isEmpty());
@@ -115,11 +115,11 @@ class GardenFormControllerTest {
         float gardenSize = -1f;
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
-                        .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation)
-                        .param("gardenSize", Float.toString(gardenSize)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+                                        .param("gardenName", gardenName)
+                                        .param("gardenLocation", gardenLocation)
+                                        .param("gardenSize", Float.toString(gardenSize)))
+                        .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertTrue(allGardens.isEmpty());
@@ -131,9 +131,9 @@ class GardenFormControllerTest {
         String gardenLocation = "Test Location";
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
-                        .param("gardenName", gardenName)
-                        .param("gardenLocation", gardenLocation))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                                        .param("gardenName", gardenName)
+                                        .param("gardenLocation", gardenLocation))
+                        .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                         .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
 
