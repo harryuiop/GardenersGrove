@@ -1,8 +1,10 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.springframework.security.core.Authentication;
@@ -25,9 +27,10 @@ import static java.lang.Integer.parseInt;
  * Responsible for displaying user profile pages, editing profiles, and uploading profile photos.
  */
 @Controller
-public class ProfileController {
+public class ProfileController extends GardensSidebar {
 
     private final UserService userService;
+    private final GardenService gardenService;
 
 
     /**
@@ -35,8 +38,9 @@ public class ProfileController {
      *
      * @param userService           The UserService responsible for user-related operations.
      */
-    public ProfileController(UserService userService) {
+    public ProfileController(UserService userService, GardenService gardenService) {
         this.userService = userService;
+        this.gardenService = gardenService;
     }
 
 
@@ -47,11 +51,7 @@ public class ProfileController {
      */
     @GetMapping("/profile")
     public String getProfilePage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        int currentPrincipalName = parseInt(auth.getName());
-        User user = userService.getUserById(currentPrincipalName);
-        model.addAttribute("user", user);
-
+        this.updateGardensSidebar(model, gardenService, userService);
         return "profile";
     }
 
