@@ -174,6 +174,63 @@ class ErrorCheckerTest {
     }
 
     @Test
+    void gardenFormErrors_invalidCity_returnsInvalidChar() {
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String country = "New Zealand";
+        String city = "%^";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(name, size,
+                country, city, streetAddress, suburb, postcode);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        correctErrors.put(
+                "cityError",
+                "City must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+        );
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void gardenFormErrors_invalidStreetAddress_returnsInvalidChar() {
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam% Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(name, size,
+                country, city, streetAddress, suburb, postcode);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        correctErrors.put(
+                "streetAddressError",
+                "Street Address must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+        );
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void gardenFormErrors_invalidSuburb_returnsInvalidChar() {
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam&";
+        String postcode = "8041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(name, size,
+                country, city, streetAddress, suburb, postcode);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        correctErrors.put(
+                "suburbError",
+                "Suburb must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+        );
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
     void gardenFormErrors_blankNameInvalidCountry_returnsBlankAndInvalidError() {
         String name = "  ";
         Float size = 1.5f;
