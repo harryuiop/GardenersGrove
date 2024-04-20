@@ -83,7 +83,7 @@ public class ViewGardenController extends GardensSidebar {
                     @PathVariable long gardenId,
                     Model model
     ) throws NoSuchGardenException {
-        logger.info("GET {}", viewGardenUri(String.valueOf(gardenId)));
+        logger.info("GET {}", viewGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -91,8 +91,8 @@ public class ViewGardenController extends GardensSidebar {
         }
         return loadGardenPage(
                         optionalGarden.get(),
-                        editGardenUri(String.valueOf(gardenId)),
-                        newPlantUri(String.valueOf(gardenId)),
+                        editGardenUri(gardenId),
+                        newPlantUri(gardenId),
                         plantService.getAllPlantsInGarden(optionalGarden.get()),
                         model
         );
@@ -115,7 +115,7 @@ public class ViewGardenController extends GardensSidebar {
                     @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
                     RedirectAttributes redirectAttributes
     ) throws NoSuchPlantException {
-        logger.info("POST {}", uploadPlantImageUri(String.valueOf(gardenId), String.valueOf(plantId)));
+        logger.info("POST {}", uploadPlantImageUri(gardenId, plantId));
 
         Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
         if (optionalPlant.isEmpty()) {
@@ -143,6 +143,6 @@ public class ViewGardenController extends GardensSidebar {
             }
         }
 
-        return "redirect:" + viewGardenUri(String.valueOf(gardenId));
+        return "redirect:" + viewGardenUri(gardenId);
     }
 }

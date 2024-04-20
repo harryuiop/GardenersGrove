@@ -88,7 +88,7 @@ public class PlantController extends GardensSidebar {
                     String plantDescription,
                     LocalDate plantedDate,
                     String plantImagePath,
-                    String plantId,
+                    Long plantId,
                     String gardenName,
                     URI formSubmissionUri,
                     URI cancelButtonUri,
@@ -129,7 +129,7 @@ public class PlantController extends GardensSidebar {
                     @PathVariable long gardenId,
                     Model model
     ) throws NoSuchGardenException {
-        logger.info("GET {}", newPlantUri(String.valueOf(gardenId)));
+        logger.info("GET {}", newPlantUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -138,9 +138,9 @@ public class PlantController extends GardensSidebar {
         Garden garden = optionalGarden.get();
         return loadPlantForm(
                         "", "", "", "", "", "", "",
-                        null, null, null, null, "/images/default-plant.jpg", "new",
+                        null, null, null, null, "/images/default-plant.jpg", null,
                         garden.getName(),
-                        editPlantUri(String.valueOf(gardenId), "new"), viewGardenUri(String.valueOf(gardenId)),
+                        newPlantUri(gardenId), viewGardenUri(gardenId),
                         model
         );
     }
@@ -159,7 +159,7 @@ public class PlantController extends GardensSidebar {
                     @PathVariable long plantId,
                     Model model
     ) throws NoSuchPlantException {
-        logger.info("GET {}", editPlantUri(String.valueOf(gardenId), String.valueOf(plantId)));
+        logger.info("GET {}", editPlantUri(gardenId, plantId));
 
         Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
         if (optionalPlant.isEmpty()) {
@@ -176,10 +176,10 @@ public class PlantController extends GardensSidebar {
                         plant.getDescription(),
                         plant.getPlantedOn(),
                         plant.getImageFilePath(),
-                        String.valueOf(plantId),
+                        plantId,
                         plant.getGarden().getName(),
-                        editPlantUri(String.valueOf(gardenId), String.valueOf(plantId)),
-                        viewGardenUri(String.valueOf(gardenId)),
+                        editPlantUri(gardenId, plantId),
+                        viewGardenUri(gardenId),
                         model
         );
     }
@@ -207,7 +207,7 @@ public class PlantController extends GardensSidebar {
                     @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
                     Model model
     ) throws NoSuchGardenException {
-        logger.info("POST {}", newPlantUri(String.valueOf(gardenId)));
+        logger.info("POST {}", newPlantUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -265,14 +265,14 @@ public class PlantController extends GardensSidebar {
                             "/images/default-plant.jpg",
                             null,
                             garden.getName(),
-                            newPlantUri(String.valueOf(gardenId)),
-                            viewGardenUri(String.valueOf(gardenId)),
+                            newPlantUri(gardenId),
+                            viewGardenUri(gardenId),
                             model
             );
         }
         Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageFileName, garden);
         plantService.savePlant(plant);
-        return "redirect:" + viewGardenUri(String.valueOf(garden.getId()));
+        return "redirect:" + viewGardenUri(garden.getId());
     }
 
     /**
@@ -300,7 +300,7 @@ public class PlantController extends GardensSidebar {
                     @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
                     Model model
     ) throws NoSuchPlantException {
-        logger.info("POST {}", editPlantUri(String.valueOf(gardenId), String.valueOf(plantId)));
+        logger.info("POST {}", editPlantUri(gardenId, plantId));
 
         Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
         if (optionalPlant.isEmpty()) {
@@ -357,10 +357,10 @@ public class PlantController extends GardensSidebar {
                             plantDescription,
                             date,
                             plant.getImageFilePath(),
-                            String.valueOf(plantId),
+                            plantId,
                             plant.getGarden().getName(),
-                            editPlantUri(String.valueOf(gardenId), String.valueOf(plantId)),
-                            viewGardenUri(String.valueOf(gardenId)),
+                            editPlantUri(gardenId, plantId),
+                            viewGardenUri(gardenId),
                             model
             );
         }
@@ -373,6 +373,6 @@ public class PlantController extends GardensSidebar {
             plant.setImageFileName(imageFileName);
         }
         plantService.savePlant(plant);
-        return "redirect:" + viewGardenUri(String.valueOf(plant.getGarden().getId()));
+        return "redirect:" + viewGardenUri(plant.getGarden().getId());
     }
 }

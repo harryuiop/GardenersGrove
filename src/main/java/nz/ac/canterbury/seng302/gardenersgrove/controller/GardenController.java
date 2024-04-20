@@ -133,7 +133,7 @@ public class GardenController extends GardensSidebar {
 
         Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
         gardenService.saveGarden(garden);
-        return "redirect:" + viewGardenUri(garden.getId().toString());
+        return "redirect:" + viewGardenUri(garden.getId());
     }
 
     /**
@@ -150,7 +150,7 @@ public class GardenController extends GardensSidebar {
                     HttpServletRequest request,
                     Model model
     ) throws NoSuchGardenException {
-        logger.info("GET {}", editGardenUri(gardenId.toString()));
+        logger.info("GET {}", editGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -161,7 +161,7 @@ public class GardenController extends GardensSidebar {
         return loadGardenForm(
                         "", "", "",
                         gardenId.toString(), garden.getName(), garden.getLocation(), garden.getSize(),
-                        editGardenUri(String.valueOf(gardenId)), request.getHeader("Referer"),
+                        editGardenUri(gardenId), request.getHeader("Referer"),
                         model
         );
     }
@@ -185,7 +185,7 @@ public class GardenController extends GardensSidebar {
                     HttpServletRequest request,
                     Model model
     ) throws NoSuchGardenException {
-        logger.info("POST {}", editGardenUri(String.valueOf(gardenId)));
+        logger.info("POST {}", editGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -200,7 +200,7 @@ public class GardenController extends GardensSidebar {
                             errors.getOrDefault("gardenLocationError", ""),
                             errors.getOrDefault("gardenSizeError", ""),
                             String.valueOf(gardenId), gardenName, gardenLocation, gardenSize,
-                            editGardenUri(String.valueOf(gardenId)), request.getHeader("Referer"),
+                            editGardenUri(gardenId), request.getHeader("Referer"),
                             model
             );
         }
@@ -210,6 +210,6 @@ public class GardenController extends GardensSidebar {
         garden.setSize(gardenSize);
 
         gardenService.saveGarden(garden);
-        return "redirect:" + viewGardenUri(String.valueOf(garden.getId()));
+        return "redirect:" + viewGardenUri(garden.getId());
     }
 }

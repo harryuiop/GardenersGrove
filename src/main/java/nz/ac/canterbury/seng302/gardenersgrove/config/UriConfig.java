@@ -23,23 +23,23 @@ public class UriConfig {
         return URI.create(NEW_GARDEN_URI_STRING);
     }
 
-    public static URI viewGardenUri(String gardenId) {
+    public static URI viewGardenUri(long gardenId) {
         return VIEW_GARDEN_URI.expand(gardenId);
     }
 
-    public static URI editGardenUri(String gardenId) {
+    public static URI editGardenUri(long gardenId) {
         return EDIT_GARDEN_URI.expand(gardenId);
     }
 
-    public static URI newPlantUri(String gardenId) {
+    public static URI newPlantUri(long gardenId) {
         return NEW_PLANT_URI.expand(gardenId);
     }
 
-    public static URI editPlantUri(String gardenId, String plantId) {
+    public static URI editPlantUri(long gardenId, long plantId) {
         return EDIT_PLANT_URI.expand(gardenId, plantId);
     }
 
-    public static URI uploadPlantImageUri(String gardenId, String plantId) {
+    public static URI uploadPlantImageUri(long gardenId, long plantId) {
         return UPLOAD_PLANT_IMAGE_URI.expand(gardenId, plantId);
     }
 
