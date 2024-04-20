@@ -68,7 +68,6 @@ public class PlantController extends GardensSidebar {
      * @param plantDescription      The description to pre-fill the form with.
      * @param plantedDate           The date to pre-fill the form with.
      * @param plantImagePath        The path to the image to show on the form.
-     * @param plantId               The of the plant to submit the form to.
      * @param gardenName            The name of the garden the plant is in.
      * @param formSubmissionUri     The URI to submit the form to.
      * @param cancelButtonUri       The URI to direct to if the user presses the cancel button.
@@ -88,7 +87,6 @@ public class PlantController extends GardensSidebar {
                     String plantDescription,
                     LocalDate plantedDate,
                     String plantImagePath,
-                    Long plantId,
                     String gardenName,
                     URI formSubmissionUri,
                     URI cancelButtonUri,
@@ -109,7 +107,6 @@ public class PlantController extends GardensSidebar {
         model.addAttribute("plantDescription", plantDescription);
         model.addAttribute("plantedDate", plantedDate != null ? plantedDate.toString() : null);
         model.addAttribute("plantImagePath", plantImagePath);
-        model.addAttribute("plantId", plantId);
 
         model.addAttribute("gardenName", gardenName);
         model.addAttribute("formSubmissionUri", formSubmissionUri);
@@ -138,7 +135,7 @@ public class PlantController extends GardensSidebar {
         Garden garden = optionalGarden.get();
         return loadPlantForm(
                         "", "", "", "", "", "", "",
-                        null, null, null, null, "/images/default-plant.jpg", null,
+                        null, null, null, null, "/images/default-plant.jpg",
                         garden.getName(),
                         newPlantUri(gardenId), viewGardenUri(gardenId),
                         model
@@ -176,7 +173,6 @@ public class PlantController extends GardensSidebar {
                         plant.getDescription(),
                         plant.getPlantedOn(),
                         plant.getImageFilePath(),
-                        plantId,
                         plant.getGarden().getName(),
                         editPlantUri(gardenId, plantId),
                         viewGardenUri(gardenId),
@@ -263,7 +259,6 @@ public class PlantController extends GardensSidebar {
                             plantDescription,
                             date,
                             "/images/default-plant.jpg",
-                            null,
                             garden.getName(),
                             newPlantUri(gardenId),
                             viewGardenUri(gardenId),
@@ -357,7 +352,6 @@ public class PlantController extends GardensSidebar {
                             plantDescription,
                             date,
                             plant.getImageFilePath(),
-                            plantId,
                             plant.getGarden().getName(),
                             editPlantUri(gardenId, plantId),
                             viewGardenUri(gardenId),
