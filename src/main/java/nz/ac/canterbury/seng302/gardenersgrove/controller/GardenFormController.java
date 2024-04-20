@@ -37,6 +37,7 @@ public class GardenFormController extends GardensSidebar {
     /**
      * Gets form to be displayed, and passes previous form values to the HTML.
      * @param model object that passes data through to the HTML.
+     * @param url string to redirect to if the cancel button is selected
      * @return thymeleaf HTML gardenForm template.
      */
     @GetMapping("/gardenform")
@@ -54,7 +55,7 @@ public class GardenFormController extends GardensSidebar {
 
 
     /**
-     * Submits form and saves the garden to the database.
+     * Submits form and saves the garden to the database or redirects to the previous page if cancelled.
      * @param gardenName The name of the garden as input by the user.
      * @param gardenLocation The location of the garden as input by the user.
      * @param gardenSize The size of the garden as input by the user.
