@@ -15,7 +15,7 @@
     <h1 th:text="${gardenName}"></h1>
     <div>
         <div class="forumContentsDiv">
-            <form th:action="@{/plant/{plantId}(plantId=${plantId},gardenId=${gardenId})}" method="post" id="plant-form" enctype="multipart/form-data">
+            <form th:action="@{${formSubmissionUri}}" method="post" id="plant-form" enctype="multipart/form-data">
                 <div class="form-field">
                     <label class="form-input" for="plantName"> Plant Name: </label>
                     <input type="text" class="form-control" id="plantName" th:name="plantName"
@@ -49,7 +49,7 @@
 
                 <div class="form-field">
                     <div class="plant-image-container">
-                        <img class="selectedImage" th:src="@{${plantImage}}" alt="Plant Image">
+                        <img class="selectedImage" th:src="@{${plantImagePath}}" alt="Plant Image">
                         <p id="image-selected-message"></p>
                         <div class="add-image">
                             <label for="plantImage">
@@ -67,7 +67,7 @@
 
                 <br>
                 <button class="form-button" type="submit">Submit!</button>
-                <a th:href="@{/view-garden(gardenId=${gardenId})}">
+                <a th:href="@{${cancelButtonUri}}">
                     <button class="form-button" type="button">Cancel</button>
                 </a>
             </form>

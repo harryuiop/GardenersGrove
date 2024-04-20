@@ -22,10 +22,10 @@
         <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
     </article>
 
-    <a th:href="@{/edit-garden(gardenId=${garden.getId()})}">
+    <a th:href="@{${editGardenUri}}">
         <button class="form-button" type="button">Edit Garden</button>
     </a>
-    <a th:href="@{/plant/new(gardenId=${garden.getId()})}">
+    <a th:href="@{${newPlantUri}}">
         <button class="form-button" type="button">Add Plant</button>
     </a>
 
@@ -48,7 +48,8 @@
             <tr th:each="plant : ${plants}" class="plant-entry">
                 <td>
                     <p th:value="${plant.getId()}"></p>
-                    <form th:action="@{/view-garden(gardenId=${gardenId})}" method="post" enctype="multipart/form-data">
+                    <form th:action="@{${uploadPlantImageUriString}(gardenId=${garden.getId()},plantId=${plant.getId()})}"
+                          method="post" enctype="multipart/form-data">
                         <div class="form-field">
                             <div class="plant-image-container">
                                 <img th:src="@{${plant.getImageFilePath()}}" alt="Image of plant"/>
@@ -67,6 +68,7 @@
 
                             <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${plantImageTypeError}"></h5>
                             <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${plantImageSizeError}"></h5>
+                            <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${plantImageUploadError}"></h5>
                         </div>
                         <button class="form-button" type="submit" th:id="${plant.getId()} + submit" style="display: none;">Submit</button>
                     </form>
@@ -75,7 +77,7 @@
                 <td><span th:text="${plant.getDescription()}"> Description </span></td>
                 <td><span th:text="${plant.getCount()}"> Count </span></td>
                 <td><span th:text="${plant.getDateString()}"> Date Planted </span></td>
-                <td><a th:href="@{/plant/{plantId}(plantId = ${plant.getId()})}">
+                <td><a th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
                     <button type="button">Edit</button>
                 </a></td>
             </tr>

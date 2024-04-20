@@ -27,6 +27,10 @@ public class PlantService {
         return plantRepository.findById(id);
     }
 
+    public Optional<Plant> getPlantByGardenIdAndPlantId(long gardenId, long plantId) {
+        return plantRepository.findByGardenIdAndId(gardenId, plantId);
+    }
+
     public Plant savePlant(Plant plant) {
         return plantRepository.save(plant);
     }

@@ -44,4 +44,9 @@ public class ImageStore {
 
         return newFilename;
     }
+
+    public static void deleteImage(String filename) throws IOException {
+        Path path = Paths.get(UPLOAD_DIR + filename);
+        Files.delete(path);
+    }
 }

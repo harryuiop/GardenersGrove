@@ -86,7 +86,7 @@ public class FormValuesValidator {
     /**
      * Checks that the values for password and the confirm password are the same.
      *
-     * @param password the password that has been entered by the user and is valid
+     * @param password  the password that has been entered by the user and is valid
      * @param confirmer should be the password re-entered by the user
      * @return true if the password and confirmer are the same, otherwise false.
      */
@@ -115,7 +115,7 @@ public class FormValuesValidator {
     /**
      * Checks whether an email is already in use by a user.
      *
-     * @param email The email to be checked.
+     * @param email       The email to be checked.
      * @param userService An instance of user service, which is used to check if there is a user with the
      *                    provided email.
      * @return bool: Whether the email is in use or not.

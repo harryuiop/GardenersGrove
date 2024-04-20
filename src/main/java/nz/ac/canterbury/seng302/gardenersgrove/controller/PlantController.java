@@ -22,12 +22,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 @Controller
 public class PlantController extends GardensSidebar {
@@ -38,22 +41,6 @@ public class PlantController extends GardensSidebar {
     private final UserService userService;
 
     private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-    /**
-     * Converts a string plantId to an optional plant.
-     *
-     * @param plantId The string plantId to convert.
-     * @return An optional plant containing the plant if the conversion was successful, otherwise an empty optional.
-     */
-    private Optional<Plant> plantFromStringId(String plantId) {
-        long id;
-        try {
-            id = Long.parseLong(plantId);
-        } catch (NumberFormatException e) {
-            return Optional.empty();
-        }
-        return plantService.getPlantById(id);
-    }
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -87,7 +74,8 @@ public class PlantController extends GardensSidebar {
      * @param plantImagePath        The path to the image to show on the form.
      * @param plantId               The of the plant to submit the form to.
      * @param gardenName            The name of the garden the plant is in.
-     * @param gardenId              The id of the garden the plant is in.
+     * @param formSubmissionUri     The URI to submit the form to.
+     * @param cancelButtonUri       The URI to direct to if the user presses the cancel button.
      * @param model                 The model to pass the data to the HTML.
      * @return The name of the HTML template to render.
      */
@@ -106,7 +94,8 @@ public class PlantController extends GardensSidebar {
                     String plantImagePath,
                     String plantId,
                     String gardenName,
-                    Long gardenId,
+                    URI formSubmissionUri,
+                    URI cancelButtonUri,
                     Model model
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
@@ -123,11 +112,12 @@ public class PlantController extends GardensSidebar {
         model.addAttribute("plantCount", plantCount);
         model.addAttribute("plantDescription", plantDescription);
         model.addAttribute("plantedDate", plantedDate != null ? readFormat.format(plantedDate) : null);
-        model.addAttribute("plantImage", plantImagePath);
+        model.addAttribute("plantImagePath", plantImagePath);
         model.addAttribute("plantId", plantId);
 
         model.addAttribute("gardenName", gardenName);
-        model.addAttribute("gardenId", gardenId);
+        model.addAttribute("formSubmissionUri", formSubmissionUri);
+        model.addAttribute("cancelButtonUri", cancelButtonUri);
         return "plantForm";
     }
 
@@ -138,12 +128,12 @@ public class PlantController extends GardensSidebar {
      * @param model    object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
-    @GetMapping("/plant/new")
+    @GetMapping(NEW_PLANT_URI_STRING)
     public String createPlant(
-                    @RequestParam(name = "gardenId") Long gardenId,
+                    @PathVariable long gardenId,
                     Model model
     ) throws NoSuchGardenException {
-        logger.info("GET /plant/new");
+        logger.info("GET {}", newPlantUri(String.valueOf(gardenId)));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -153,7 +143,9 @@ public class PlantController extends GardensSidebar {
         return loadPlantForm(
                         "", "", "", "", "", "", "",
                         null, null, null, null, "/images/default-plant.jpg", "new",
-                        garden.getName(), garden.getId(), model
+                        garden.getName(),
+                        editPlantUri(String.valueOf(gardenId), "new"), viewGardenUri(String.valueOf(gardenId)),
+                        model
         );
     }
 
@@ -165,16 +157,19 @@ public class PlantController extends GardensSidebar {
      * @param model   object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
-    @GetMapping("/plant/{plantId}")
+    @GetMapping(EDIT_PLANT_URI_STRING)
     public String editPlant(
-                    @PathVariable Long plantId,
+                    @PathVariable long gardenId,
+                    @PathVariable long plantId,
                     Model model
     ) throws NoSuchPlantException {
-        logger.info("GET /plant/" + plantId);
+        logger.info("GET {}", editPlantUri(String.valueOf(gardenId), String.valueOf(plantId)));
 
-        Optional<Plant> optionalPlant = plantService.getPlantById(plantId);
+        Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
         if (optionalPlant.isEmpty()) {
-            throw new NoSuchPlantException("Unable to find plant with id " + plantId + ".");
+            throw new NoSuchPlantException(
+                            "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
+            );
         }
         Plant plant = optionalPlant.get();
 
@@ -185,9 +180,10 @@ public class PlantController extends GardensSidebar {
                         plant.getDescription(),
                         plant.getPlantedOn(),
                         plant.getImageFilePath(),
-                        plantId.toString(),
+                        String.valueOf(plantId),
                         plant.getGarden().getName(),
-                        plant.getGarden().getId(),
+                        editPlantUri(String.valueOf(gardenId), String.valueOf(plantId)),
+                        viewGardenUri(String.valueOf(gardenId)),
                         model
         );
     }
@@ -195,7 +191,6 @@ public class PlantController extends GardensSidebar {
     /**
      * Submits form and saves the plant to the database.
      *
-     * @param plantId          The id of the plant being submitted.
      * @param plantName        The name of the plant as input by the user.
      * @param plantCount       The number of plants as input by the user.
      * @param plantDescription The description of the plant as input by the user.
@@ -206,24 +201,17 @@ public class PlantController extends GardensSidebar {
      * @param model            object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
      */
-    @PostMapping("/plant/{plantId}")
-    public String submitPlant(
-                    @PathVariable String plantId,
+    @PostMapping(NEW_PLANT_URI_STRING)
+    public String submitNewPlant(
+                    @PathVariable long gardenId,
                     @RequestParam(name = "plantName") String plantName,
                     @RequestParam(name = "plantCount", required = false) Integer plantCount,
                     @RequestParam(name = "plantDescription", required = false) String plantDescription,
                     @RequestParam(name = "plantedDate", required = false) String plantedDate,
                     @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
-                    @RequestParam(name = "gardenId") Long gardenId,
                     Model model
-    ) throws NoSuchPlantException, NoSuchGardenException {
-        logger.info("POST /plant/" + plantId);
-
-
-        Optional<Plant> optionalPlant = this.plantFromStringId(plantId);
-        if (optionalPlant.isEmpty() && !plantId.equals("new")) {
-            throw new NoSuchPlantException("Unable to find plant with id " + plantId + ".");
-        }
+    ) throws NoSuchGardenException {
+        logger.info("POST {}", newPlantUri(String.valueOf(gardenId)));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -256,7 +244,16 @@ public class PlantController extends GardensSidebar {
                 errors.put("plantImageUploadError", "Uploading image failed, please try again.");
             }
         }
+
         if (!errors.isEmpty()) {
+            if (imageFileName != null) {
+                try {
+                    ImageStore.deleteImage(imageFileName);
+                } catch (IOException exception) {
+                    logger.error("Couldn't delete image");
+                    logger.error(exception.getMessage());
+                }
+            }
             return loadPlantForm(
                             errors.getOrDefault("plantNameError", ""),
                             errors.getOrDefault("plantCountError", ""),
@@ -269,27 +266,117 @@ public class PlantController extends GardensSidebar {
                             plantCount,
                             plantDescription,
                             date,
-                            imageFileName != null ? "/uploads/" + imageFileName : "/images/default-plant.png",
-                            plantId,
+                            "/images/default-plant.jpg",
+                            null,
                             garden.getName(),
-                            gardenId,
+                            newPlantUri(String.valueOf(gardenId)),
+                            viewGardenUri(String.valueOf(gardenId)),
                             model
             );
         }
-        Plant plant;
-        if (optionalPlant.isPresent()) {
-            plant = optionalPlant.get();
-            plant.setName(plantName);
-            plant.setCount(plantCount);
-            plant.setDescription(plantDescription);
-            plant.setPlantedOn(date);
-            if (imageFileName != null) {
-                plant.setImageFileName(imageFileName);
+        Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageFileName, garden);
+        plantService.savePlant(plant);
+        return "redirect:" + viewGardenUri(String.valueOf(garden.getId()));
+    }
+
+    /**
+     * Submits form and saves the plant to the database.
+     *
+     * @param plantId          The id of the plant being submitted.
+     * @param plantName        The name of the plant as input by the user.
+     * @param plantCount       The number of plants as input by the user.
+     * @param plantDescription The description of the plant as input by the user.
+     * @param plantedDate      The date the plant was planted as input by the user.
+     *                         Must be in ISO format (yyyy-MM-dd).
+     * @param imageFile        The image file uploaded by the user.
+     * @param gardenId         The id of the garden the plant is in.
+     * @param model            object that passes data through to the HTML.
+     * @return thymeleaf HTML template to redirect to.
+     */
+    @PostMapping(EDIT_PLANT_URI_STRING)
+    public String submitPlantEdits(
+                    @PathVariable long plantId,
+                    @PathVariable long gardenId,
+                    @RequestParam(name = "plantName") String plantName,
+                    @RequestParam(name = "plantCount", required = false) Integer plantCount,
+                    @RequestParam(name = "plantDescription", required = false) String plantDescription,
+                    @RequestParam(name = "plantedDate", required = false) String plantedDate,
+                    @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
+                    Model model
+    ) throws NoSuchPlantException {
+        logger.info("POST {}", editPlantUri(String.valueOf(gardenId), String.valueOf(plantId)));
+
+        Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
+        if (optionalPlant.isEmpty()) {
+            throw new NoSuchPlantException(
+                            "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
+            );
+        }
+        Plant plant = optionalPlant.get();
+
+        Map<String, String> errors = ErrorChecker.plantFormErrors(
+                        plantName,
+                        plantCount,
+                        plantDescription,
+                        imageFile
+        );
+
+        Date date = null;
+        try {
+            if (plantedDate != null && !plantedDate.isBlank()) {
+                date = readFormat.parse(plantedDate);
             }
-        } else {
-            plant = new Plant(plantName, plantCount, plantDescription, date, imageFileName, garden);
+        } catch (ParseException exception) {
+            errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
+        }
+
+        String imageFileName = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                imageFileName = ImageStore.storeImage(imageFile);
+            } catch (IOException error) {
+                logger.error("Error saving plant image", error);
+                errors.put("plantImageUploadError", "Uploading image failed, please try again.");
+            }
+        }
+        if (!errors.isEmpty()) {
+            try {
+                if (imageFileName != null) {
+                    ImageStore.deleteImage(imageFileName);
+                }
+            } catch (IOException exception) {
+                logger.error("Couldn't delete image");
+                logger.error(exception.getMessage());
+            }
+            return loadPlantForm(
+                            errors.getOrDefault("plantNameError", ""),
+                            errors.getOrDefault("plantCountError", ""),
+                            errors.getOrDefault("plantDescriptionError", ""),
+                            errors.getOrDefault("plantedDateError", ""),
+                            errors.getOrDefault("plantImageTypeError", ""),
+                            errors.getOrDefault("plantImageSizeError", ""),
+                            errors.getOrDefault("plantImageUploadError", ""),
+                            plantName,
+                            plantCount,
+                            plantDescription,
+                            date,
+                            plant.getImageFilePath(),
+                            String.valueOf(plantId),
+                            plant.getGarden().getName(),
+                            editPlantUri(String.valueOf(gardenId), String.valueOf(plantId)),
+                            viewGardenUri(String.valueOf(gardenId)),
+                            model
+            );
+        }
+
+        plant.setName(plantName);
+        plant.setCount(plantCount);
+        plant.setDescription(plantDescription);
+        plant.setPlantedOn(date);
+        if (imageFileName != null) {
+            plant.setImageFileName(imageFileName);
         }
         plantService.savePlant(plant);
-        return "redirect:/view-garden?gardenId=" + garden.getId();
+        return "redirect:" + viewGardenUri(String.valueOf(plant.getGarden().getId()));
     }
 }
