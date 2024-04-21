@@ -76,8 +76,7 @@ class EditPlantFormControllerTest {
         gardenLocation.setSuburb("Ilam");
         gardenLocation.setPostcode("8041");
 
-        gardenRepository.save(new Garden("Test Garden", gardenLocation, null));
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        Garden garden = gardenRepository.save(new Garden("Test Garden", gardenLocation, null));
         plantRepository.deleteAll();
         plantRepository.save(new Plant(
                         originalPlantName, originalPlantCount, originalPlantDescription, originalPlantedDate, null, garden
