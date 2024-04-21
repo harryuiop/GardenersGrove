@@ -180,6 +180,13 @@ public class PlantController extends GardensSidebar {
         );
     }
 
+    /**
+     * Parse the date string into a {@link LocalDate} object.
+     *
+     * @param dateString The string to parse.
+     * @param errors     The map of errors to update with any error.
+     * @return The parsed date if parse was successful or {@code null} if not.
+     */
     private LocalDate parseDate(String dateString, Map<String, String> errors) {
         LocalDate date = null;
         try {
@@ -192,6 +199,13 @@ public class PlantController extends GardensSidebar {
         return date;
     }
 
+    /**
+     * Save the image to disk if there are no form errors and the image file isn't empty.
+     *
+     * @param image  The file to write to disk.
+     * @param errors The map of errors to update with any error.
+     * @return The name of the file if save was successful or {@code null} if not.
+     */
     private String saveImage(MultipartFile image, Map<String, String> errors) {
         String imageFileName = null;
         if (errors.isEmpty() && image != null && !image.isEmpty()) {
@@ -213,7 +227,7 @@ public class PlantController extends GardensSidebar {
      * @param plantDescription The description of the plant as input by the user.
      * @param plantedDate      The date the plant was planted as input by the user.
      *                         Must be in ISO format (yyyy-MM-dd).
-     * @param plantImage        The image file uploaded by the user.
+     * @param plantImage       The image file uploaded by the user.
      * @param gardenId         The id of the garden the plant is in.
      * @param model            object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
@@ -280,7 +294,7 @@ public class PlantController extends GardensSidebar {
      * @param plantDescription The description of the plant as input by the user.
      * @param plantedDate      The date the plant was planted as input by the user.
      *                         Must be in ISO format (yyyy-MM-dd).
-     * @param plantImage        The image file uploaded by the user.
+     * @param plantImage       The image file uploaded by the user.
      * @param gardenId         The id of the garden the plant is in.
      * @param model            object that passes data through to the HTML.
      * @return thymeleaf HTML template to redirect to.
