@@ -25,8 +25,7 @@ public class Garden {
     @Column()
     private Float size;
 
-    @Column(nullable = false)
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
     private List<Plant> plants;
 
     /**
@@ -38,8 +37,9 @@ public class Garden {
     /**
      * Creates a new Garden object
      *
-     * @param name name of Garden
-     * @param location user's favourite programming language
+     * @param name     name of Garden
+     * @param location The details of the physical place where the garden is
+     * @param size     The physical size of the garden in square metres
      */
     public Garden(String name, Location location, Float size) {
         this.name = name;

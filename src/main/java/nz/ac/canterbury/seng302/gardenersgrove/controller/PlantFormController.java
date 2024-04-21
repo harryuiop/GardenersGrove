@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,9 +37,6 @@ public class PlantFormController extends GardensSidebar {
     private final GardenService gardenService;
     private final UserService userService;
     private final ErrorChecker validate;
-
-    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -114,18 +109,21 @@ public class PlantFormController extends GardensSidebar {
             }
         }
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            return "redirect:/";
+        }
+        Garden garden = optionalGarden.get();
 
-        Date plantDate = null;
+        LocalDate plantDate = null;
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
-                plantDate = readFormat.parse(plantedDate);
+                plantDate = LocalDate.parse(plantedDate);
             }
-        } catch (ParseException exception) {
+        } catch (DateTimeParseException exception) {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
-        if (errors.isEmpty() && optionalGarden.isPresent() && imageIsValid) {
-            Garden garden = optionalGarden.get();
+        if (errors.isEmpty() && imageIsValid) {
             String imageFileName = null;
             if (!imageFile.isEmpty()) {
                 try {
@@ -135,10 +133,8 @@ public class PlantFormController extends GardensSidebar {
                     return "plantForm";
                 }
             }
-            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, imageFileName, gardenId);
+            Plant plant = new Plant(plantName, plantCount, plantDescription, plantDate, imageFileName, garden);
             plantService.savePlant(plant);
-            garden.addPlant(plant);
-            gardenService.saveGarden(garden);
             model.addAttribute("gardenId", gardenId);
             return "redirect:/view-garden?gardenId=" + gardenId;
         } else {
@@ -150,7 +146,7 @@ public class PlantFormController extends GardensSidebar {
             model.addAttribute("plantCount", plantCount);
             model.addAttribute("plantDescription", plantDescription);
             model.addAttribute("plantedDate", plantedDate);
-            optionalGarden.ifPresent(garden -> model.addAttribute("gardenName", garden.getName()));
+            model.addAttribute("gardenName", garden.getName());
             model.addAttribute("gardenId", gardenId);
             return "plantForm";
         }

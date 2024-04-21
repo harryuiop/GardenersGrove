@@ -1,8 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
-
+import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +21,10 @@ public class PlantService {
 
     public List<Plant> getAllPlants() {
         return plantRepository.findAll();
+    }
+
+    public List<Plant> getAllPlantsInGarden(Garden garden) {
+        return plantRepository.findAllByGarden(garden);
     }
 
     public Optional<Plant> getPlantById(Long id) {

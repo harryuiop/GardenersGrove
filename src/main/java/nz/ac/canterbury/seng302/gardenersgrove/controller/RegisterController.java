@@ -8,11 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 
 /**
@@ -26,8 +27,6 @@ public class RegisterController {
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
     ErrorChecker validator = new ErrorChecker();
-
-    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     UserService userService;
@@ -74,9 +73,9 @@ public class RegisterController {
         boolean dateOfBirthValid = true;
         try {
             if (dateOfBirth != null && !dateOfBirth.isBlank()) {
-                readFormat.parse(dateOfBirth);
+                LocalDate.parse(dateOfBirth);
             }
-        } catch (ParseException exception) {
+        } catch (DateTimeParseException exception) {
             dateOfBirthValid = false;
         }
 

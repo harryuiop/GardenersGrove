@@ -459,3 +459,7 @@ textarea {
 .modal-buttons #backToFormBtn:hover {
     background-color: darkred;
 }
+
+.signOutButton {
+
+}
