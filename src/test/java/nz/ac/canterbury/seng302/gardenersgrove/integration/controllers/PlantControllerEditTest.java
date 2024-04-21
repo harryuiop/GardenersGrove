@@ -88,7 +88,7 @@ class PlantControllerEditTest {
                                         .param("gardenId", Long.toString(plant.getGarden().getId()))
                                         .param("plantId", Long.toString(plant.getId())))
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
 
         List<Plant> allPlants = plantRepository.findAll();
