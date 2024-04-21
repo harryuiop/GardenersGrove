@@ -73,7 +73,7 @@ class EditPlantFormControllerTest {
         Location gardenLocation = new Location("New Zealand", "Christchurch");
         gardenLocation.setStreetAddress("90 Ilam Road");
         gardenLocation.setSuburb("Ilam");
-        gardenLocation.setPostcode(8041);
+        gardenLocation.setPostcode("8041");
 
         gardenRepository.save(new Garden("Test Garden", gardenLocation, null));
         long gardenId = gardenRepository.findAll().get(0).getId();

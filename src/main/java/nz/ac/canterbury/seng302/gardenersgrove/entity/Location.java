@@ -25,7 +25,7 @@ public class Location {
     private String suburb;
 
     @Column()
-    private int postcode;
+    private String postcode;
 
     @Column()
     private double lat;
@@ -65,7 +65,7 @@ public class Location {
         this.suburb = suburb;
     }
 
-    public void setPostcode(int postcode) {
+    public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
 
@@ -85,7 +85,7 @@ public class Location {
         return suburb;
     }
 
-    public int getPostcode() {
+    public String getPostcode() {
         return postcode;
     }
 
@@ -100,6 +100,6 @@ public class Location {
 
     @Override
     public String toString() {
-        return String.format("%s, %s, %s, %s, %d", streetAddress, suburb, city, country, postcode);
+        return String.format("%s, %s, %s, %s, %s", streetAddress, suburb, city, country, postcode);
     }
 }

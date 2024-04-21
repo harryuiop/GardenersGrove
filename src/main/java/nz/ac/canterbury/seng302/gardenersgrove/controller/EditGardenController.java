@@ -99,7 +99,7 @@ public class EditGardenController extends GardensSidebar {
                 locationEntity.setCountry(country);
                 locationEntity.setSuburb(suburb);
                 locationEntity.setCity(city);
-                locationEntity.setPostcode(Integer.parseInt(postcode));
+                locationEntity.setPostcode(postcode);
                 locationEntity.setStreetAddress(streetAddress);
                 locationService.saveLocation(locationEntity);
 

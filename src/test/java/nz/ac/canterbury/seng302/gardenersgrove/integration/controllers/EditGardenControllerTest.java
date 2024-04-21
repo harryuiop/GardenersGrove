@@ -51,7 +51,7 @@ class EditGardenControllerTest {
 
     private final String initialSuburb = "Ilam";
 
-    private final int initialPostcode = 8041;
+    private final String initialPostcode = "8041";
 
     private Location initialGardenLocation;
 
@@ -93,7 +93,7 @@ class EditGardenControllerTest {
                         .param("city", initialCity)
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
@@ -137,7 +137,7 @@ class EditGardenControllerTest {
         assertEquals(newCity, garden.getLocation().getCity());
         assertEquals(newStreetAddress, garden.getLocation().getStreetAddress());
         assertEquals(newSuburb, garden.getLocation().getSuburb());
-        assertEquals(newPostcode, Integer.toString(garden.getLocation().getPostcode()));
+        assertEquals(newPostcode, garden.getLocation().getPostcode());
         assertEquals(newGardenSize, garden.getSize());
     }
 
@@ -152,7 +152,7 @@ class EditGardenControllerTest {
                         .param("city", initialCity)
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
@@ -176,7 +176,7 @@ class EditGardenControllerTest {
                         .param("city", initialCity)
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
@@ -200,7 +200,7 @@ class EditGardenControllerTest {
                         .param("city", initialCity)
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
@@ -224,7 +224,7 @@ class EditGardenControllerTest {
                         .param("city", "")
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
@@ -248,7 +248,7 @@ class EditGardenControllerTest {
                         .param("city", newCity)
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
@@ -272,7 +272,7 @@ class EditGardenControllerTest {
                         .param("city", initialCity)
                         .param("streetAddress", newStreetAddress)
                         .param("suburb", initialSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
@@ -296,7 +296,7 @@ class EditGardenControllerTest {
                         .param("city", initialCity)
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", newSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
@@ -320,7 +320,7 @@ class EditGardenControllerTest {
                         .param("city", initialCity)
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));
@@ -342,7 +342,7 @@ class EditGardenControllerTest {
                         .param("city", initialCity)
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
-                        .param("postcode", Integer.toString(initialPostcode))
+                        .param("postcode", initialPostcode)
                         .param("ignoreApiCall", "true"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("editGarden"));

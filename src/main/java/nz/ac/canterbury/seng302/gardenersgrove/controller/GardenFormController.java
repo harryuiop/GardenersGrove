@@ -116,7 +116,7 @@ public class GardenFormController extends GardensSidebar {
             }
 
             locationEntity.setSuburb(suburb);
-            locationEntity.setPostcode(Integer.parseInt(postcode));
+            locationEntity.setPostcode(postcode);
             locationEntity.setStreetAddress(streetAddress);
 
             locationService.saveLocation(locationEntity);

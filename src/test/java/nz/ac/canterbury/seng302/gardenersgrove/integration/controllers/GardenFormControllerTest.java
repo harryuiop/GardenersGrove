@@ -82,7 +82,7 @@ class GardenFormControllerTest {
         assertEquals(city, garden.getLocation().getCity());
         assertEquals(streetAddress, garden.getLocation().getStreetAddress());
         assertEquals(suburb, garden.getLocation().getSuburb());
-        assertEquals(postcode, Integer.toString(garden.getLocation().getPostcode()));
+        assertEquals(postcode, garden.getLocation().getPostcode());
     }
 
     @Test
@@ -323,6 +323,6 @@ class GardenFormControllerTest {
         assertEquals(city, garden.getLocation().getCity());
         assertEquals(streetAddress, garden.getLocation().getStreetAddress());
         assertEquals(suburb, garden.getLocation().getSuburb());
-        assertEquals(postcode, Integer.toString(garden.getLocation().getPostcode()));
+        assertEquals(postcode, garden.getLocation().getPostcode());
     }
 }
