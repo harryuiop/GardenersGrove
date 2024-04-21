@@ -417,9 +417,45 @@ textarea {
 }
 
 .modal-content {
-    background-color: #fefefe;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    background-color: white;
     margin: auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    border: 3px solid #888;
+    border-radius: 10px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-buttons form {
+    margin-left: 10px;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-buttons #useLocationBtn {
+    background-color: green;
+}
+
+.modal-buttons #useLocationBtn:hover {
+    background-color: darkgreen;
+}
+
+.modal-buttons #backToFormBtn {
+    background-color: red;
+}
+
+.modal-buttons #backToFormBtn:hover {
+    background-color: darkred;
 }
