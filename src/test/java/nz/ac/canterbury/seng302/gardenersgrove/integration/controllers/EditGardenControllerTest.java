@@ -310,6 +310,30 @@ class EditGardenControllerTest {
     }
 
     @Test
+    void submitEditForm_invalidLocation_invalidPostcode_gardenNotUpdated() throws Exception {
+        String newPostcode = "g%$#";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
+                        .param("gardenName", initialGardenName)
+                        .param("gardenSize", Float.toString(initialGardenSize))
+                        .param("country", initialCountry)
+                        .param("city", initialCity)
+                        .param("streetAddress", initialStreetAddress)
+                        .param("suburb", initialSuburb)
+                        .param("postcode", newPostcode)
+                        .param("ignoreApiCall", "true"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("editGarden"));
+
+        List<Garden> allGardens = gardenRepository.findAll();
+        Garden garden = allGardens.get(0);
+        assertEquals(initialGardenName, garden.getName());
+        assertEquals(initialGardenLocation.getPostcode(), garden.getLocation().getPostcode());
+        assertEquals(initialGardenSize, garden.getSize());
+        assertEquals(1, allGardens.size());
+    }
+
+    @Test
     void submitEditForm_invalidSize_gardenNotUpdated() throws Exception {
         float newGardenSize = -1f;
 

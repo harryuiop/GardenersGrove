@@ -231,6 +231,25 @@ class ErrorCheckerTest {
     }
 
     @Test
+    void gardenFormErrors_invalidPostcode_returnsInvalidChar() {
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8&041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(name, size,
+                country, city, streetAddress, suburb, postcode);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        correctErrors.put(
+                "postcodeError",
+                "Postcode must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+        );
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
     void gardenFormErrors_blankNameInvalidCountry_returnsBlankAndInvalidError() {
         String name = "  ";
         Float size = 1.5f;

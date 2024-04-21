@@ -268,6 +268,32 @@ class GardenFormControllerTest {
     }
 
     @Test
+    void submitForm_invalidLocation_invalidPostcode_gardenNotSaved() throws Exception {
+        String gardenName = "Test Garden";
+        float gardenSize = 4f;
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041&";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+                        .param("gardenName", gardenName)
+                        .param("gardenSize", Float.toString(gardenSize))
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", streetAddress)
+                        .param("suburb", suburb)
+                        .param("postcode", postcode)
+                        .param("ignoreApiCall", "true"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+
+        List<Garden> allGardens = gardenRepository.findAll();
+        assertTrue(allGardens.isEmpty());
+    }
+
+    @Test
     void submitForm_invalidSize_gardenNotSaved() throws Exception {
         String gardenName = "Test Garden";
         float gardenSize = -1f;
