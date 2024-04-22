@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import org.slf4j.Logger;
@@ -67,7 +68,7 @@ public class EmailSenderService {
             javaMailSender.send(message);
             logger.debug("Success");
             return true;
-        } catch (Exception e) {
+        } catch (MessagingException e) {
             logger.debug("Fail");
             logger.error(e.toString());
             return false;
