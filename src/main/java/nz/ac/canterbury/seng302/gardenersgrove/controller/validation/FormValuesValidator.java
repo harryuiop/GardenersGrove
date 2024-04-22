@@ -23,6 +23,16 @@ public class FormValuesValidator {
     }
 
     /**
+     * Checks the String contains valid characters including a forward slash.
+     *
+     * @param string represents the string being checked for correct characters
+     * @return whether it is valid or not.
+     */
+    public boolean checkCharactersWithForwardSlash(String string) {
+        return string.matches("[a-zA-Z0-9 .,\\-'/]*");
+    }
+
+    /**
      * Checks whether the name meets the given standards
      *
      * @param string represents the string being checked

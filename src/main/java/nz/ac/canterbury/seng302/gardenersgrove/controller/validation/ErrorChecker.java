@@ -50,7 +50,14 @@ public class ErrorChecker {
             errors.put("gardenSizeError", "Garden size must be a positive number");
         }
 
-        validateLocationField(country, "countryError", "Country", true, errors);
+        if (!valuesValidator.checkBlank(country)) {
+            errors.put("countryError", "Country cannot be empty");
+        } else if (!valuesValidator.checkCharactersWithForwardSlash(country)) {
+            errors.put(
+                    "countryError",
+                    "Country must only include letters, numbers, spaces, " +
+                    "commas, dots, hyphens, forward slashes or apostrophes");
+        }
         validateLocationField(city, "cityError", "City", true, errors);
         validateLocationField(streetAddress, "streetAddressError", "Street Address", false, errors);
         validateLocationField(suburb, "suburbError", "Suburb", false, errors);
@@ -70,7 +77,7 @@ public class ErrorChecker {
      */
     private void validateLocationField(String fieldValue, String errorName, String fieldName,
                                     boolean fieldRequired, HashMap<String, String> errors) {
-        if (!valuesValidator.checkBlank(fieldValue) && fieldRequired) {
+        if (fieldRequired && !valuesValidator.checkBlank(fieldValue)) {
             errors.put(errorName, String.format("%s cannot be empty", fieldName));
         } else if (!valuesValidator.checkCharacters(fieldValue)) {
             errors.put(

@@ -119,7 +119,9 @@ public class MapTilerGeocoding {
         Feature feature = features.get(0);
         double featureRelevance = feature.getRelevance();
         if (featureRelevance < FEATURE_RELEVANCE) {
-            logger.info("Location not within relevance of relevance set");
+            String infoMessage = String.format("Location with relevance of %1$,.2f is not greater" +
+                    "than the set relevance of %2$,.2f", featureRelevance, FEATURE_RELEVANCE);
+            logger.info(infoMessage);
             return null;
         }
         return feature;

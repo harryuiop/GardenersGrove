@@ -129,7 +129,7 @@ public class Feature {
 
     @Override
     public String toString() {
-        return String.format("%s, %s %s, %s, %s",
-                getStreetAddress(), getSuburb(), getCity(), getCountry(), getPostcode());
+        return String.format("{%s, %s %s, %s, %s,  %s}",
+                getStreetAddress(), getSuburb(), getCity(), getCountry(), getPostcode(), getRelevance());
     }
 }
