@@ -54,8 +54,10 @@ public class MapTilerGeocoding {
     private String generateRequestURL(String query, String countryCode, String setApiKey) {
         if (setApiKey != null) apiKey = setApiKey;
 
+        String formattedQuery = query.replaceAll("[,./'-]", " ");
+
         StringBuilder urlBuilder = new StringBuilder("https://api.maptiler.com/geocoding/");
-        urlBuilder.append(URLEncoder.encode(query, StandardCharsets.UTF_8)).append(".json?");
+        urlBuilder.append(URLEncoder.encode(formattedQuery, StandardCharsets.UTF_8)).append(".json?");
 
 
         if (countryCode != null && !countryCode.isEmpty()) {

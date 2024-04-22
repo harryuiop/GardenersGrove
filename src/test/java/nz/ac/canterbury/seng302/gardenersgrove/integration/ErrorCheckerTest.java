@@ -168,7 +168,7 @@ class ErrorCheckerTest {
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "countryError",
-                "Country must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+                "Country must only include letters, numbers, spaces, commas, dots, hyphens, forward slashes or apostrophes"
         );
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -264,7 +264,7 @@ class ErrorCheckerTest {
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         correctErrors.put(
                 "countryError",
-                "Country must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes"
+                "Country must only include letters, numbers, spaces, commas, dots, hyphens, forward slashes or apostrophes"
         );
         Assertions.assertEquals(correctErrors, errors);
     }
