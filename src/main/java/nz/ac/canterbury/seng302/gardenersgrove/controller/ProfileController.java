@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
+import org.springframework.ui.Model;
 
 import static java.lang.Integer.parseInt;
 
@@ -129,7 +130,7 @@ public class ProfileController {
      * @return The name of the login view template.
      */
     @PostMapping("/confirmProfileChanges")
-    public String addNewUser(
+    public String updateUser(
             @RequestParam(name = "email") String email,
             @RequestParam(name = "firstName") String firstName,
             @RequestParam(name = "lastName") String lastName,

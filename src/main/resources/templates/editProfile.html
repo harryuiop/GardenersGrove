@@ -1,6 +1,13 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <title>Profile Page</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+    <script
+            type="text/javascript"
+            src="/javascript/ValidationService.js"
+    ></script>
     <meta charset="UTF-8"/>
     <title>Edit Profile</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css"/>
@@ -120,9 +127,7 @@
                     id="password"
                     name="password"
                     th:name="password"
-                    th:value="${user.getPassword}"
                     autofocus
-                    onblur="passwordValidation(document.registerForm)"
             />
             <p class="errorMessage" id="passwordError"></p>
 

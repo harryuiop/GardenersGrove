@@ -34,9 +34,10 @@ public class UserValidation {
      * @param fname of the user
      * @param lname of the user
      * @return true or false depending on whether both names given match the pattern
+     * (last name is allowed to be blank)
      */
     public static boolean nameIsValid(String fname, String lname) {
-        return fname.matches(namePattern) && !fname.isBlank() && lname.matches(namePattern) && !lname.isBlank();
+        return fname.matches(namePattern) && !fname.isBlank() && (lname.matches(namePattern) || lname.isBlank());
     }
 
     /**
