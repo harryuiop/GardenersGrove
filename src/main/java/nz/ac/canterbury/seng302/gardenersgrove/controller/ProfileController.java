@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import org.springframework.ui.Model;
 
@@ -72,6 +75,7 @@ public class ProfileController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
         User user = userService.getUserById(currentPrincipalName);
+        System.out.println(user.getProfilePictureFilePath());
         model.addAttribute("user", user);
         return "editProfile";
     }
@@ -131,17 +135,46 @@ public class ProfileController {
      */
     @PostMapping("/confirmProfileChanges")
     public String updateUser(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "firstName") String firstName,
-            @RequestParam(name = "lastName") String lastName,
-            @RequestParam(name = "password") String password,
-            @RequestParam(name = "dateOfBirth") String dateOfBirth
+            @RequestParam String email,
+            @RequestParam String firstName,
+            @RequestParam(name = "lastName", required = false) String lastName,
+            @RequestParam(name = "noSurname", required = false) Boolean noSurname,
+            @RequestParam String password,
+            @RequestParam String passwordConfirm,
+            @RequestParam String dateOfBirth, Model model
     ) {
-        boolean checked = true;
-        userService.addUsers(
-                new User(email, firstName, lastName, password, dateOfBirth), checked
+        if (noSurname == null) {
+            noSurname = true;
+        }
+
+        boolean dateOfBirthValid = true;
+        try {
+            if (dateOfBirth != null && !dateOfBirth.isBlank()) {
+                LocalDate.parse(dateOfBirth);
+            }
+        } catch (DateTimeParseException exception) {
+            dateOfBirthValid = false;
+        }
+
+        ErrorChecker validator = new ErrorChecker();
+        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
+                password, passwordConfirm,
+                dateOfBirthValid, dateOfBirth, userService);
+
+        if (!errors.isEmpty()) {
+            for (Map.Entry<String, String> error : errors.entrySet()) {
+                model.addAttribute(error.getKey(), error.getValue());
+            }
+            model.addAttribute("firstName", firstName);
+            model.addAttribute("lastName", lastName);
+            model.addAttribute("email", email);
+            model.addAttribute("noSurname", noSurname);
+            return "editProfile";
+        }
+        userService.updateUser(
+                new User(email, firstName, lastName, password, dateOfBirth)
         );
-        return "login";
+        return "redirect:/profile";
     }
 
     /**

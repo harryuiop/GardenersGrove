@@ -42,6 +42,13 @@ public class RegisterController {
     public String showRegisterPage(Model model) {
         logger.info("GET /register");
         model.addAttribute("noSurname", false);
+        model.addAttribute("firstNameError", "");
+        model.addAttribute("lastNameError", "");
+        model.addAttribute("emailError", "");
+        model.addAttribute("passwordError", "");
+        model.addAttribute("passwordConfirmError", "");
+        model.addAttribute("dateOfBirthError", "");
+
         return "register";
     }
 

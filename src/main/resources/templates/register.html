@@ -1,13 +1,13 @@
 <!doctype html>
 <html
   xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:th="http://thymeleaf.org"
-  lang="us"
+  xmlns:th="http://www.thymeleaf.org"
+  lang="en"
 >
   <head>
     <meta charset="UTF-8" />
     <title>Register</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <script
       type="text/javascript"
       src="/javascript/ValidationService.js"
@@ -36,7 +36,7 @@
             autofocus
             autocomplete="off"
           />
-          <p class="errorMessage" id="firstNameError" th:text=${firstNameError}></p>
+          <p class="errorMessage" id="firstNameError" th:text="${firstNameError}"></p>
 
 
           <label for="lastName">Last name:</label>
@@ -83,7 +83,7 @@
             }
           </script>
 
-          <p class="errorMessage" id="lastNameError" th:text=${lastNameError}></p>
+          <p class="errorMessage" id="lastNameError" th:text="${lastNameError}"></p>
 
           <label for="email">Email:</label>
           <input
@@ -96,20 +96,7 @@
             autofocus
             autocomplete="off"
           />
-          <p class="errorMessage" id="emailError" th:text=${emailError}></p>
-
-          <label for="address">Address:</label>
-          <input
-            class="inputStyle"
-            type="text"
-            id="address"
-            name="address"
-            th:name="address"
-            th:value="${address}"
-            autofocus
-            autocomplete="off"
-          />
-          <p class="errorMessage" id="addressError" th:text=${addressErrors}></p>
+          <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
 
           <label for="password">Password:</label>
           <input
@@ -118,11 +105,10 @@
             id="password"
             name="password"
             th:name="password"
-            th:value="*{password}"
             autofocus
             autocomplete="off"
           />
-          <p class="errorMessage" id="passwordError" th:text=${passwordError}></p>
+          <p class="errorMessage" id="passwordError" th:text="${passwordError}"></p>
 
           <label for="passwordConfirm">Confirm Password:</label>
           <input
@@ -131,11 +117,10 @@
             id="passwordConfirm"
             name="passwordConfirm"
             th:name="passwordConfirm"
-            th:value="*{passwordConfirm}"
             autofocus
             autofill="off"
           />
-          <p class="errorMessage" id="passwordConfirmError" th:text=${passwordConfirmError}></p>
+          <p class="errorMessage" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
 
           <label for="dateOfBirth">Date of Birth:</label>
           <input
@@ -148,7 +133,7 @@
             autofocus
             autocomplete="off"
           />
-          <p class="errorMessage" id="dateOfBirthError" th:text=${dateOfBirthError}></p>
+          <p class="errorMessage" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
 
           <input class="inputStyle" id="submit" type="submit" value="Submit"/>
         </form>

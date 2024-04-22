@@ -1,13 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Profile Page</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
-    <script
-            type="text/javascript"
-            src="/javascript/ValidationService.js"
-    ></script>
     <meta charset="UTF-8"/>
     <title>Edit Profile</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css"/>
@@ -62,7 +55,7 @@
                     th:value="${user.getFirstName()}"
                     autofocus
             />
-            <p class="errorMessage" id="firstNameError"></p>
+            <p class="errorMessage" id="firstNameError" th:text="${firstNameError}"></p>
 
 
             <label for="lastName">Last name:</label>
@@ -104,7 +97,7 @@
                 }
             </script>
 
-            <p class="errorMessage" id="lastNameError"></p>
+            <p class="errorMessage" id="lastNameError" th:text="${lastNameError}"></p>
 
             <label for="email">Email:</label>
             <input
@@ -118,7 +111,7 @@
                     autofocus
                     onblur="emailValidation(document.registerForm)"
             />
-            <p class="errorMessage" id="emailError"></p>
+            <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
 
             <label for="password">Password:</label>
             <input
@@ -129,7 +122,7 @@
                     th:name="password"
                     autofocus
             />
-            <p class="errorMessage" id="passwordError"></p>
+            <p class="errorMessage" id="passwordError" th:text="${passwordError}"></p>
 
             <label for="passwordConfirm">Confirm Password:</label>
             <input
@@ -140,7 +133,7 @@
                     th:name="passwordConfirm"
                     autofocus
             />
-            <p class="errorMessage" id="passwordConfirmError"></p>
+            <p class="errorMessage" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
 
             <label for="dateOfBirth">Date of Birth:</label>
             <input
@@ -152,7 +145,7 @@
                     th:value="${user.getDob()}"
                     autofocus
             />
-            <p class="errorMessage" id="dateOfBirthError"></p>
+            <p class="errorMessage" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
             <input class="inputStyle" id="submit" type="submit" value="Submit"/>
             <div id="backDiv">
                 <a th:href="@{profile}" type="button" class="inputStyle" id="backbutton">Back</a>
