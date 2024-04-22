@@ -273,6 +273,10 @@ nav button {
     margin-top: 20px;
 }
 
+.form-field .info-message {
+    font-size: 0.8rem;
+}
+
 .gardens-list a {
     text-decoration: none;
     color: var(--light-color);
@@ -458,6 +462,10 @@ textarea {
 
 .modal-buttons #backToFormBtn:hover {
     background-color: darkred;
+}
+
+.sub-location-fields {
+
 }
 
 .signOutButton {
