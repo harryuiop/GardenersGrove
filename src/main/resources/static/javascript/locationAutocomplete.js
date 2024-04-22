@@ -15,7 +15,7 @@ streetAddressField.addEventListener('input', function() {
         if (inputValue) {
             if (inputValue !== previousInput) {
                 previousInput = inputValue;
-                updateAutocomplete(inputValue);
+                updateAutocomplete(inputValue, countryField.value);
             }
         } else {
             removeAutocompleteBox();
@@ -28,9 +28,10 @@ streetAddressField.addEventListener('input', function() {
  * only if maximum number of requests in given rate limit timeframe has not yet been reached.
  *
  * @param query Input from street address search box.
+ * @param country Input from country field, to find results only in specified country
  */
-function updateAutocomplete(query) {
-    fetch(`/maptiler/search-results?query=${query}`)
+function updateAutocomplete(query, country) {
+    fetch(`/maptiler/search-results?query=${query}&country=${country}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

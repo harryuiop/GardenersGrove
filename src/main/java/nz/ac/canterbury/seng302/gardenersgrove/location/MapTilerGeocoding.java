@@ -126,17 +126,21 @@ public class MapTilerGeocoding {
     }
 
     /**
-     * Get autocomplete results from user input if request is allowed. A request is allowed if it
+     * Get autocomplete results from user input within country
+     * if request is allowed. A request is allowed if it
      * is within the maximum number of requests in the set timeframe.
      *
      * @param query User input (in street address field)
+     * @param country Full country name, to only show results in that country.
      * @return Autocomplete suggestions or empty map if request is rejected.
      * JSON like output to be handled in JavaScript.
      */
     @GetMapping("/search-results")
-    public Map<String, List<Map<String, String>>> getSearchResults(@RequestParam String query) {
+    public Map<String, List<Map<String, String>>> getSearchResults(@RequestParam String query,
+                                                                   @RequestParam String country) {
         if (rateLimiter.allowRequest()) {
-            SearchResult searchResult = getSearchResult(query, null, this.apiKey);
+            String countryCode = CountryCode.getAlphaTwoCountryCodeFromName(country);
+            SearchResult searchResult = getSearchResult(query, countryCode, this.apiKey);
             return searchResult.getAutocompleteSuggestions();
         } else {
             return new HashMap<>();
