@@ -3,7 +3,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
@@ -20,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,7 +36,6 @@ public class EditPlantFormController extends GardensSidebar {
     private final GardenService gardenService;
     private final UserService userService;
     private final ErrorChecker validate;
-    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     public EditPlantFormController(PlantService plantService, GardenService gardenService, UserService userService) {
@@ -66,7 +62,7 @@ public class EditPlantFormController extends GardensSidebar {
 
         String date = null;
         if (plant.getPlantedOn() != null) {
-            date = readFormat.format(plant.getPlantedOn());
+            date = plant.getPlantedOn().toString();
         }
 
         model.addAttribute("plantNameError", "");
@@ -122,12 +118,12 @@ public class EditPlantFormController extends GardensSidebar {
         }
         Plant plant = optionalPlant.get();
 
-        Date plantDate = null;
+        LocalDate plantDate = null;
         try {
             if (plantedDate != null && !plantedDate.isBlank()) {
-                plantDate = readFormat.parse(plantedDate);
+                plantDate = LocalDate.parse(plantedDate);
             }
-        } catch (ParseException exception) {
+        } catch (DateTimeParseException exception) {
             errors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
         }
 
