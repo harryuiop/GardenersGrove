@@ -114,7 +114,9 @@ public class GardenFormController extends GardensSidebar {
                 } else {
                     query = city + " " + country;
                 }
+                logger.info(query);
                 locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode, apiKey);
+                logger.info(String.valueOf(locationFeature));
                 if (locationFeature != null) {
                     locationEntity.setLngLat(locationFeature.getCenter());
                     showLocationNotFoundBox = false;

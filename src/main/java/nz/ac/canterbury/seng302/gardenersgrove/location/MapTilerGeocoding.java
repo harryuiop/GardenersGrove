@@ -35,7 +35,7 @@ public class MapTilerGeocoding {
 
     //  How well the returned feature matches the user’s query on a scale from 0 to 1.
     //  0 means the result does not match the query text at all, while 1 means the result fully matches the query text.
-    private final double FEATURE_RELEVANCE = 0.7;
+    private final double FEATURE_RELEVANCE = 0.9;
 
     Logger logger = LoggerFactory.getLogger(MapTilerGeocoding.class);
 
