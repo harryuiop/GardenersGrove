@@ -91,7 +91,7 @@ public class GardenController extends GardensSidebar {
         logger.info("GET {}", newGardenUri());
         return loadGardenForm(
                         "", "", "",
-                        "new", null, null,
+                null, null, null,
                         newGardenUri(), request.getHeader("Referer"),
                         model
         );
