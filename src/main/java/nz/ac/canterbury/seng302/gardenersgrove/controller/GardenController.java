@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
@@ -12,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Map;
@@ -28,6 +24,7 @@ public class GardenController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(GardenController.class);
     private final GardenService gardenService;
     private final UserService userService;
+    private String refererUrl;
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -51,7 +48,6 @@ public class GardenController extends GardensSidebar {
      * @param gardenName          The name of the garden to pre-fill the form with.
      * @param gardenLocation      The location of the garden to pre-fill the form with.
      * @param gardenSize          The size of the garden to pre-fill the form with.
-     * @param previousPage        The previous page to redirect to.
      * @param model               object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
@@ -63,7 +59,6 @@ public class GardenController extends GardensSidebar {
                     String gardenLocation,
                     Float gardenSize,
                     URI formSubmissionUri,
-                    String previousPage,
                     Model model
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
@@ -76,7 +71,7 @@ public class GardenController extends GardensSidebar {
         model.addAttribute("gardenSize", gardenSize);
 
         model.addAttribute("formSubmissionUri", formSubmissionUri);
-        model.addAttribute("previousPage", previousPage);
+        model.addAttribute("previousPage", this.refererUrl);
         return "gardenForm";
     }
 
@@ -87,12 +82,20 @@ public class GardenController extends GardensSidebar {
      * @return thymeleaf HTML gardenForm template.
      */
     @GetMapping(NEW_GARDEN_URI_STRING)
-    public String createGarden(HttpServletRequest request, Model model) {
+    public String createGarden(
+                    @RequestHeader(required = false) String referer,
+                    Model model
+    ) {
         logger.info("GET {}", newGardenUri());
+
+        if (referer == null) {
+            referer = VIEW_ALL_GARDENS_URI_STRING;
+        }
+        this.refererUrl = referer;
         return loadGardenForm(
                         "", "", "",
-                null, null, null,
-                        newGardenUri(), request.getHeader("Referer"),
+                        null, null, null,
+                        newGardenUri(),
                         model
         );
     }
@@ -108,10 +111,9 @@ public class GardenController extends GardensSidebar {
      */
     @PostMapping(NEW_GARDEN_URI_STRING)
     public String submitNewGarden(
-                    @RequestParam(name = "gardenName") String gardenName,
-                    @RequestParam(name = "gardenLocation") String gardenLocation,
-                    @RequestParam(name = "gardenSize", required = false) Float gardenSize,
-                    HttpServletRequest request,
+                    @RequestParam String gardenName,
+                    @RequestParam String gardenLocation,
+                    @RequestParam(required = false) Float gardenSize,
                     Model model
     ) {
         logger.info("POST {}", newGardenUri());
@@ -123,7 +125,7 @@ public class GardenController extends GardensSidebar {
                             errors.getOrDefault("gardenLocationError", ""),
                             errors.getOrDefault("gardenSizeError", ""),
                             gardenName, gardenLocation, gardenSize,
-                            newGardenUri(), request.getHeader("Referer"),
+                            newGardenUri(),
                             model
             );
         }
@@ -144,7 +146,7 @@ public class GardenController extends GardensSidebar {
     @GetMapping(EDIT_GARDEN_URI_STRING)
     public String editGarden(
                     @PathVariable Long gardenId,
-                    HttpServletRequest request,
+                    @RequestHeader(required = false) String referer,
                     Model model
     ) throws NoSuchGardenException {
         logger.info("GET {}", editGardenUri(gardenId));
@@ -155,10 +157,14 @@ public class GardenController extends GardensSidebar {
         }
         Garden garden = optionalGarden.get();
 
+        if (referer == null) {
+            referer = viewGardenUri(gardenId).toString();
+        }
+        this.refererUrl = referer;
         return loadGardenForm(
                         "", "", "",
                         garden.getName(), garden.getLocation(), garden.getSize(),
-                        editGardenUri(gardenId), request.getHeader("Referer"),
+                        editGardenUri(gardenId),
                         model
         );
     }
@@ -176,10 +182,9 @@ public class GardenController extends GardensSidebar {
     @PostMapping(EDIT_GARDEN_URI_STRING)
     public String submitGardenEdit(
                     @PathVariable long gardenId,
-                    @RequestParam(name = "gardenName") String gardenName,
-                    @RequestParam(name = "gardenLocation") String gardenLocation,
-                    @RequestParam(name = "gardenSize", required = false) Float gardenSize,
-                    HttpServletRequest request,
+                    @RequestParam String gardenName,
+                    @RequestParam String gardenLocation,
+                    @RequestParam(required = false) Float gardenSize,
                     Model model
     ) throws NoSuchGardenException {
         logger.info("POST {}", editGardenUri(gardenId));
@@ -197,7 +202,7 @@ public class GardenController extends GardensSidebar {
                             errors.getOrDefault("gardenLocationError", ""),
                             errors.getOrDefault("gardenSizeError", ""),
                             gardenName, gardenLocation, gardenSize,
-                            editGardenUri(gardenId), request.getHeader("Referer"),
+                            editGardenUri(gardenId),
                             model
             );
         }
