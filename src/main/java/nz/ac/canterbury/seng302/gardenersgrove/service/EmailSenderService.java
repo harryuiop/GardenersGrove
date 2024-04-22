@@ -66,10 +66,10 @@ public class EmailSenderService {
 
             // send an email
             javaMailSender.send(message);
-            logger.debug("Success");
+            logger.debug("Success to send the email to the recipient");
             return true;
         } catch (MessagingException e) {
-            logger.debug("Fail");
+            logger.debug("Failing to Send an email to the recipient");
             logger.error(e.toString());
             return false;
         }
