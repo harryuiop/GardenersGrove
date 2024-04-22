@@ -29,13 +29,13 @@ public class MapTilerGeocoding {
     private String apiKey;
     private final int locationLimit = 3; // Max amount of locations returned by API
 
-    private final RateLimiter rateLimiter = new RateLimiter(30, 5);
+    private final RateLimiter rateLimiter = new RateLimiter(15, 5);
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     //  How well the returned feature matches the user’s query on a scale from 0 to 1.
     //  0 means the result does not match the query text at all, while 1 means the result fully matches the query text.
-    private final double FEATURE_RELEVANCE = 0.9;
+    private final double FEATURE_RELEVANCE = 0.95;
 
     Logger logger = LoggerFactory.getLogger(MapTilerGeocoding.class);
 
