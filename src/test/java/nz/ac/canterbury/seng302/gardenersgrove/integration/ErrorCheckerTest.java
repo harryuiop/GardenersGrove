@@ -142,7 +142,7 @@ class ErrorCheckerTest {
         boolean validDate = true;
         Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
-                userService);
+                userService, false);
         HashMap<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -158,7 +158,7 @@ class ErrorCheckerTest {
         boolean validDate = true;
         Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
                                                                     password, password, validDate, dateOfBirth,
-                                                                    userService);
+                                                                    userService, false);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("firstNameError", "First Name cannot be empty");
         correctErrors.put("lastNameError", "Last Name cannot be empty unless box is ticked");
@@ -179,7 +179,7 @@ class ErrorCheckerTest {
         boolean validDate = false;
         Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
-                userService);
+                userService, false);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("firstNameError", "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
         correctErrors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
@@ -199,7 +199,7 @@ class ErrorCheckerTest {
         boolean validDate = true;
         Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
-                userService);
+                userService, false);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("firstNameError", "First Name cannot exceed length of 64 characters");
         Assertions.assertEquals(correctErrors, errors);
@@ -274,7 +274,7 @@ class ErrorCheckerTest {
         Mockito.when(userService.getUserByEmail(email)).thenReturn(new User(email,firstName,lastName,password, dateOfBirth));
         Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
-                userService);
+                userService, false);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("emailError", "This email address is already in use");
         Assertions.assertEquals(correctErrors, errors);
@@ -292,7 +292,7 @@ class ErrorCheckerTest {
         boolean validDate = true;
         Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, otherpass, validDate, dateOfBirth,
-                userService);
+                userService, false);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("passwordConfirmError", "Passwords do not match");
         Assertions.assertEquals(correctErrors, errors);
@@ -308,7 +308,7 @@ class ErrorCheckerTest {
         boolean validDate = true;
         Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
-                userService);
+                userService, false);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "You must be 13 years or older to create an account");
         Assertions.assertEquals(correctErrors, errors);
@@ -324,7 +324,7 @@ class ErrorCheckerTest {
         boolean validDate = true;
         Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
-                userService);
+                userService, false);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "The maximum age allowed is 120 years");
         Assertions.assertEquals(correctErrors, errors);

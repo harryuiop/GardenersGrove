@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
@@ -11,17 +12,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
-import org.springframework.ui.Model;
+import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 
@@ -75,7 +73,6 @@ public class ProfileController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
         User user = userService.getUserById(currentPrincipalName);
-        System.out.println(user.getProfilePictureFilePath());
         model.addAttribute("user", user);
         return "editProfile";
     }
@@ -135,6 +132,7 @@ public class ProfileController {
      */
     @PostMapping("/confirmProfileChanges")
     public String updateUser(
+            @RequestParam int userId,
             @RequestParam String email,
             @RequestParam String firstName,
             @RequestParam(name = "lastName", required = false) String lastName,
@@ -145,6 +143,10 @@ public class ProfileController {
     ) {
         if (noSurname == null) {
             noSurname = true;
+        }
+
+        if (lastName == null) {
+            lastName = "";
         }
 
         boolean dateOfBirthValid = true;
@@ -159,22 +161,28 @@ public class ProfileController {
         ErrorChecker validator = new ErrorChecker();
         Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, passwordConfirm,
-                dateOfBirthValid, dateOfBirth, userService);
+                dateOfBirthValid, dateOfBirth, userService, true);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
             }
-            model.addAttribute("firstName", firstName);
-            model.addAttribute("lastName", lastName);
-            model.addAttribute("email", email);
-            model.addAttribute("noSurname", noSurname);
+            model.addAttribute("user", userService.getUserById(userId));
             return "editProfile";
         }
-        userService.updateUser(
-                new User(email, firstName, lastName, password, dateOfBirth)
-        );
-        return "redirect:/profile";
+
+        User user = userService.getUserById(userId);
+
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setDob(dateOfBirth);
+
+        userService.updateUser(user);
+        model.addAttribute("user", userService.getUserById(userId));
+
+        return "profile";
     }
 
     /**

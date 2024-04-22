@@ -40,7 +40,7 @@
         </div>
 
         <form
-                th:action="@{confirmProfileChanges}"
+                th:action="@{confirmProfileChanges(userId=${user.getId()})}"
                 method="post"
                 name="registerForm"
                 id="editProfileForm"

@@ -89,7 +89,7 @@ public class RegisterController {
 
         Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
                                                                         password, passwordConfirm,
-                                                                        dateOfBirthValid, dateOfBirth, userService);
+                                                                        dateOfBirthValid, dateOfBirth, userService, false);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
