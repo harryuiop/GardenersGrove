@@ -33,6 +33,10 @@ public class MapTilerGeocoding {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    //  How well the returned feature matches the user’s query on a scale from 0 to 1.
+    //  0 means the result does not match the query text at all, while 1 means the result fully matches the query text.
+    private final double FEATURE_RELEVANCE = 0.7;
+
     Logger logger = LoggerFactory.getLogger(MapTilerGeocoding.class);
 
     /**
@@ -98,7 +102,8 @@ public class MapTilerGeocoding {
     }
 
     /**
-     * Get first location/feature only from search results fetched from MapTiler API.
+     * Get first location/feature only from search results fetched from MapTiler API if within
+     * set relevance.
      *
      * @param query Input query by user.
      * @param countryCode ISO 3166-1 alpha-2 country code or null if not set.
@@ -111,7 +116,13 @@ public class MapTilerGeocoding {
             logger.info("No locations found from search result.");
             return null;
         }
-        return features.get(0);
+        Feature feature = features.get(0);
+        double featureRelevance = feature.getRelevance();
+        if (featureRelevance < FEATURE_RELEVANCE) {
+            logger.info("Location not within relevance of relevance set");
+            return null;
+        }
+        return feature;
     }
 
     /**
