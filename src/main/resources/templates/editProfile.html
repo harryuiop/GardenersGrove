@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Edit Profile</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-    <script type="text/javascript" src="/javascript/ValidationService.js"></script>
+<!--    <script type="text/javascript" src="/javascript/ValidationService.js"></script>-->
     <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
 </head>
 <body>
@@ -54,9 +54,6 @@
                     th:name="firstName"
                     th:value="${user.getFirstName()}"
                     autofocus
-                    onblur="firstNameValidation(
-                    document.registerForm,
-                    document.getElementById('firstNameError'))"
             />
             <p class="errorMessage" id="firstNameError"></p>
 
@@ -70,7 +67,6 @@
                     th:name="lastName"
                     th:value="${user.getLastName()}"
                     autofocus
-                    onblur="lastNameValidation(document.registerForm)"
             />
 
             <div class="noSurname">
@@ -80,11 +76,26 @@
                             id="noSurname"
                             value="checked"
                             autofocus
-                            onblur="checkNoSurnameClicked(document.registerForm)"
+                            onchange="updateCheckboxValue()"
                     />
                     I have no surname
                 </label>
             </div>
+
+            <script>
+                function updateCheckboxValue() {
+                    var checkbox = document.getElementById("noSurname");
+                    var lastName = document.getElementById("lastName")
+                    if (checkbox.checked) {
+                        checkbox.value = "true";
+                        lastName.value = "";
+                        lastName.disabled=true;
+                    } else {
+                        checkbox.value = "false";
+                        lastName.disabled=false;
+                    }
+                }
+            </script>
 
             <p class="errorMessage" id="lastNameError"></p>
 
@@ -123,7 +134,6 @@
                     name="passwordConfirm"
                     th:name="passwordConfirm"
                     autofocus
-                    onblur="confirmPasswordValidation(document.registerForm)"
             />
             <p class="errorMessage" id="passwordConfirmError"></p>
 
@@ -136,10 +146,9 @@
                     th:name="dateOfBirth"
                     th:value="${user.getDob()}"
                     autofocus
-                    onblur="ageValidation(document.registerForm)"
             />
             <p class="errorMessage" id="dateOfBirthError"></p>
-            <input class="inputStyle" id="submit" type="submit" value="Submit" disabled/>
+            <input class="inputStyle" id="submit" type="submit" value="Submit"/>
             <div id="backDiv">
                 <a th:href="@{profile}" type="button" class="inputStyle" id="backbutton">Back</a>
             </div>
