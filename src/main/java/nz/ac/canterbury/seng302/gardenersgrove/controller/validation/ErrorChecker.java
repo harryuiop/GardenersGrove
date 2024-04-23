@@ -72,11 +72,11 @@ public class ErrorChecker {
      * @param fieldRequired If the field is required or not
      * @param errors Error hashmap to update
      */
-    private void validateLocationField(String fieldValue, String errorName, String fieldName,
-                                    boolean fieldRequired, HashMap<String, String> errors) {
-        if (fieldRequired && !valuesValidator.checkBlank(fieldValue)) {
+    private static void validateLocationField(String fieldValue, String errorName, String fieldName,
+                                    boolean fieldRequired, Map<String, String> errors) {
+        if (fieldRequired && !FormValuesValidator.checkBlank(fieldValue)) {
             errors.put(errorName, String.format("%s is required", fieldName));
-        } else if (!valuesValidator.checkCharacters(fieldValue)) {
+        } else if (!FormValuesValidator.checkCharacters(fieldValue)) {
             errors.put(
                     errorName,
                     String.format("%s must only include letters, numbers, spaces, " +

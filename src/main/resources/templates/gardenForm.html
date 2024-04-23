@@ -32,7 +32,7 @@
                     <p class="info-message">Start typing location to see suggestions.</p>
                     <input type="text" class="form-control" id="streetAddress" th:name="streetAddress"
                            th:value="*{streetAddress}" data-cy="streetAddress" autofocus>
-                    <p class="errorMessage" th:text=${streetAddressError}></p>
+                    <p class="errorMessage" th:text="${streetAddressError}"></p>
                     <div id="autocomplete-list" class="inputStyle"></div>
                 </div>
                 <br/>
@@ -40,28 +40,28 @@
                     <label class="inputStyle" for="country"> Country: </label>
                     <input type="text" class="form-control" id="country" th:name="country"
                            th:value="*{country}" data-cy="country" autofocus>
-                    <p class="errorMessage" th:text=${countryError}></p>
+                    <p class="errorMessage" th:text="${countryError}"></p>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="inputStyle" for="city"> City: </label>
                     <input type="text" class="form-control" id="city" th:name="city"
                            th:value="*{city}" data-cy="city" autofocus>
-                    <p class="errorMessage" th:text=${cityError}></p>
+                    <p class="errorMessage" th:text="${cityError}"></p>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="inputStyle" for="suburb"> Suburb: </label>
                     <input type="text" class="form-control" id="suburb" th:name="suburb"
                            th:value="*{suburb}" data-cy="suburb" autofocus>
-                    <p class="errorMessage" th:text=${suburbError}></p>
+                    <p class="errorMessage" th:text="${suburbError}"></p>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="inputStyle" for="postcode"> Postcode: </label>
                     <input type="text" class="form-control" id="postcode" th:name="postcode"
                            th:value="*{postcode}" data-cy="postcode" autofocus>
-                    <p class="errorMessage" th:text=${postcodeError}></p>
+                    <p class="errorMessage" th:text="${postcodeError}"></p>
                 </div>
                 <br>
                 <button class="form-button" type="submit">Submit</button>
@@ -79,27 +79,13 @@
         <div class="modal-content">
             <p>No matching location found, location-based services may not work.</p>
             <div class="modal-buttons">
-                <form th:action="@{edit-garden-redirect}" method="post">
-                    <button id="backToFormBtn" onclick="editGardenRedirect()">Edit garden</button>
-                    <button type="submit" id="editGardenRedirect" style="display: none;"></button>
-                </form>
-                <form th:action="@{view-garden-from-create}" method="post">
-                    <button id="useLocationBtn" onclick="submitViewGardenRedirectForm()">Continue</button>
-                    <button type="submit" id="viewGardenRedirect" style="display: none;"></button>
-                </form>
+                <a th:href="@{${editGardenUri}}" id="backToFormBtn">Edit garden</a>
+                <a th:href="@{${viewGardenUri}(gardenId=${gardenId})}" id="useLocationBtn">Continue</a>
             </div>
         </div>
     </div>
 </div>
 
 <script th:src="@{/javascript/locationAutocomplete.js}"></script>
-<script>
-    function editGardenRedirect() {
-        document.getElementById("editGardenRedirect").click();
-    }
-    function submitViewGardenRedirectForm() {
-        document.getElementById("viewGardenRedirect").click();
-    }
-</script>
 </body>
 </html>
