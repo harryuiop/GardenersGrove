@@ -2,7 +2,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.thymeleaf.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -18,21 +17,23 @@ public class ErrorChecker {
     /**
      * Checks for valid user entries that meet the given requirements
      *
-     * @param gardenName     represents the name given
-     * @param gardenSize     represents the size given
-     * @param country user entered country
-     * @param city user entered city
+     * @param gardenName    represents the name given
+     * @param gardenSize    represents the size given
+     * @param country       user entered country
+     * @param city          user entered city
      * @param streetAddress user entered street address
-     * @param suburb user entered suburb
-     * @param postcode user entered postcode
+     * @param suburb        user entered suburb
+     * @param postcode      user entered postcode
      * @return a mapping of the error labels and messages
      */
-    public static Map<String, String> gardenFormErrors(String gardenName, Float gardenSize,
-                                                String country,
-                                                String city,
-                                                String streetAddress,
-                                                String suburb,
-                                                String postcode) {
+    public static Map<String, String> gardenFormErrors(
+                    String gardenName, Float gardenSize,
+                    String country,
+                    String city,
+                    String streetAddress,
+                    String suburb,
+                    String postcode
+    ) {
         Map<String, String> errors = new HashMap<>();
 
         if (!FormValuesValidator.checkBlank(gardenName)) {
@@ -51,9 +52,9 @@ public class ErrorChecker {
             errors.put("countryError", "Country is required");
         } else if (!FormValuesValidator.checkCharactersWithForwardSlash(country)) {
             errors.put(
-                    "countryError",
-                    "Country must only include letters, numbers, spaces, " +
-                    "commas, dots, hyphens, forward slashes or apostrophes");
+                            "countryError",
+                            "Country must only include letters, numbers, spaces, " +
+                                            "commas, dots, hyphens, forward slashes or apostrophes");
         }
         validateLocationField(city, "cityError", "City", true, errors);
         validateLocationField(streetAddress, "streetAddressError", "Street Address", false, errors);
@@ -64,23 +65,29 @@ public class ErrorChecker {
     }
 
     /**
-     * Update error hashmap for location based errors as they are similar.
+     * Update error Map for the location-based form fields.
      *
-     * @param fieldValue User inputted text
-     * @param errorName Name of error add to Hashmap (to be used to update frontend html)
-     * @param fieldName Field name used for frontend error text
+     * @param fieldValue    Text input by the user.
+     * @param errorName     Name of the error field to add to the map (to be used to update frontend html)
+     * @param fieldName     Field name used for frontend
      * @param fieldRequired If the field is required or not
-     * @param errors Error hashmap to update
+     * @param errors        Error hashmap to update
      */
-    private static void validateLocationField(String fieldValue, String errorName, String fieldName,
-                                    boolean fieldRequired, Map<String, String> errors) {
+    private static void validateLocationField(
+                    String fieldValue,
+                    String errorName,
+                    String fieldName,
+                    boolean fieldRequired,
+                    Map<String, String> errors
+    ) {
         if (fieldRequired && !FormValuesValidator.checkBlank(fieldValue)) {
             errors.put(errorName, String.format("%s is required", fieldName));
         } else if (!FormValuesValidator.checkCharacters(fieldValue)) {
             errors.put(
-                    errorName,
-                    String.format("%s must only include letters, numbers, spaces, " +
-                            "commas, dots, hyphens or apostrophes", fieldName));
+                            errorName,
+                            String.format("%s must only include letters, numbers, spaces, " +
+                                            "commas, dots, hyphens or apostrophes", fieldName)
+            );
         }
     }
 
@@ -140,9 +147,17 @@ public class ErrorChecker {
      *                        exists with the given information.
      * @return A HashMap<String, String> of the errors that have occurred based on the outcome of the error checks.
      */
-    public static Map<String, String> registerUserFormErrors(String firstName, String lastName, Boolean noSurname, String email,
-                                                             String password, String passwordConfirm, boolean validDate, String dateOfBirth,
-                                                             UserService userService) {
+    public static Map<String, String> registerUserFormErrors(
+                    String firstName,
+                    String lastName,
+                    Boolean noSurname,
+                    String email,
+                    String password,
+                    String passwordConfirm,
+                    boolean validDate,
+                    String dateOfBirth,
+                    UserService userService
+    ) {
         Map<String, String> errors = new HashMap<>();
         // Checking first name
         if (!FormValuesValidator.checkBlank(firstName)) {
