@@ -29,7 +29,7 @@ public class MapTilerGeocoding {
     private String apiKey;
     private final int locationLimit = 3; // Max amount of locations returned by API
 
-    private final RateLimiter rateLimiter = new RateLimiter(15, 5);
+    private final RateLimiter rateLimiter = new RateLimiter(5, 5);
 
     private final RestTemplate restTemplate = new RestTemplate();
 
