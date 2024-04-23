@@ -3,9 +3,12 @@ package nz.ac.canterbury.seng302.gardenersgrove.service;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
+import static java.lang.Integer.parseInt;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
 /**
@@ -99,4 +102,17 @@ public class UserService {
     public User getUserById(int id) {
         return userRepository.findByUserId(id);
     }
+
+    /**
+     * Retrieves the user object of the currently logged-in user
+     *
+     * @param userService The UserService object in use
+     * @return The User object if found
+     */
+    public User getAuthenticatedUser(UserService userService) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        int currentPrincipalName = parseInt(auth.getName());
+        return userService.getUserById(currentPrincipalName);
+    }
+
 }

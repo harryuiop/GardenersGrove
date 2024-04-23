@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class NoSuchGardenException extends Exception {
 
     public NoSuchGardenException(long gardenId) {
-        super("Unable to find garden with id " + gardenId + ".");
+        super("Unable to find garden with id " + gardenId + " owned by logged in user.");
     }
 }

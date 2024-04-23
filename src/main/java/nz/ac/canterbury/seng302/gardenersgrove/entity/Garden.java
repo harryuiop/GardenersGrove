@@ -15,6 +15,9 @@ public class Garden {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private User owner;
+
     @Column(nullable = false)
     private String name;
 
@@ -40,7 +43,8 @@ public class Garden {
      * @param location The name of the physical place where the garden is
      * @param size     The physical size of the garden in square metres
      */
-    public Garden(String name, String location, Float size) {
+    public Garden(User owner, String name, String location, Float size) {
+        this.owner = owner;
         this.name = name;
         this.location = location;
         this.size = size;
@@ -74,6 +78,10 @@ public class Garden {
 
     public Float getSize() {
         return size;
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     @Override

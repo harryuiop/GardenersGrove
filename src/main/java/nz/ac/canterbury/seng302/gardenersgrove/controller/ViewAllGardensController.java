@@ -44,7 +44,7 @@ public class ViewAllGardensController extends GardensSidebar {
     public String viewAllGardens(Model model) {
         logger.info("GET {}", viewAllGardensUri());
         this.updateGardensSidebar(model, gardenService, userService);
-        model.addAttribute("gardens", gardenService.getAllGardens());
+        model.addAttribute("gardens", gardenService.getAllGardens(userService));
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         return "allGardens";
     }

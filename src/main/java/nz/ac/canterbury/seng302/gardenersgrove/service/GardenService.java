@@ -18,8 +18,8 @@ public class GardenService {
         this.gardenRepository = gardenRepository;
     }
 
-    public List<Garden> getAllGardens() {
-        return gardenRepository.findAll();
+    public List<Garden> getAllGardens(UserService userService) {
+        return gardenRepository.findAllByOwner(userService.getAuthenticatedUser(userService));
     }
 
     public Optional<Garden> getGardenById(Long id) {

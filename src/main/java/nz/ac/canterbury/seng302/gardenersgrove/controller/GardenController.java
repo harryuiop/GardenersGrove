@@ -130,7 +130,7 @@ public class GardenController extends GardensSidebar {
             );
         }
 
-        Garden garden = new Garden(gardenName, gardenLocation, gardenSize);
+        Garden garden = new Garden(userService.getAuthenticatedUser(userService), gardenName, gardenLocation, gardenSize);
         gardenService.saveGarden(garden);
         return "redirect:" + viewGardenUri(garden.getId());
     }
