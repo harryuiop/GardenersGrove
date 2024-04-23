@@ -75,6 +75,8 @@ public class ProfileController {
         int currentPrincipalName = parseInt(auth.getName());
         User user = userService.getUserById(currentPrincipalName);
         model.addAttribute("user", user);
+        boolean noSurname = user.getLastName() == null;
+        model.addAttribute("noSurname", noSurname);
         return "editProfile";
     }
 
@@ -146,10 +148,6 @@ public class ProfileController {
             noSurname = true;
         }
 
-        if (lastName == null) {
-            lastName = "";
-        }
-
         User user = userService.getUserById(userId);
         boolean newEmail = email.equals(user.getEmail());
 
@@ -173,6 +171,7 @@ public class ProfileController {
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
             }
+            model.addAttribute(noSurname);
             return "editProfile";
         }
 

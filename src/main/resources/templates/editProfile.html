@@ -75,27 +75,17 @@
                             type="checkbox"
                             id="noSurname"
                             value="checked"
+                            th:name="noSurname"
+                            th:checked="${noSurname}"
+                            th:value="${noSurname}"
                             autofocus
+                            autocomplete="off"
                             onchange="updateCheckboxValue()"
+                            onload="updateCheckboxValue()"
                     />
                     I have no surname
                 </label>
             </div>
-
-            <script>
-                function updateCheckboxValue() {
-                    var checkbox = document.getElementById("noSurname");
-                    var lastName = document.getElementById("lastName")
-                    if (checkbox.checked) {
-                        checkbox.value = "true";
-                        lastName.value = "";
-                        lastName.disabled=true;
-                    } else {
-                        checkbox.value = "false";
-                        lastName.disabled=false;
-                    }
-                }
-            </script>
 
             <p class="errorMessage" id="lastNameError" th:text="${lastNameError}"></p>
 
@@ -105,11 +95,9 @@
                     type="text"
                     id="email"
                     name="email"
-                    readonly
                     th:name="email"
                     th:value="${user.getEmail()}"
                     autofocus
-                    onblur="emailValidation(document.registerForm)"
             />
             <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
 
@@ -148,10 +136,24 @@
             <p class="errorMessage" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
             <input class="inputStyle" id="submit" type="submit" value="Submit"/>
             <div id="backDiv">
-                <a th:href="@{profile}" type="button" class="inputStyle" id="backbutton">Back</a>
+                <a th:href="@{profile}" type="button" class="inputStyle" id="backbutton">Cancel</a>
             </div>
         </form>
     </div>
 </div>
+<script>
+    function updateCheckboxValue() {
+        var checkbox = document.getElementById("noSurname");
+        var lastName = document.getElementById("lastName")
+        if (checkbox.checked) {
+            checkbox.value = "true";
+            lastName.value = "";
+            lastName.disabled=true;
+        } else {
+            checkbox.value = "false";
+            lastName.disabled=false;
+        }
+    }
+</script>
 </body>
 </html>

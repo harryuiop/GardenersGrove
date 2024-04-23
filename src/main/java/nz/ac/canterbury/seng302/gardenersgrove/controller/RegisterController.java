@@ -23,6 +23,7 @@ import java.util.Map;
  */
 @Controller
 public class RegisterController {
+    final boolean oldEmail = false;
 
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
@@ -89,7 +90,7 @@ public class RegisterController {
 
         Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
                                                                         password, passwordConfirm,
-                                                                        dateOfBirthValid, dateOfBirth, userService, false);
+                                                                        dateOfBirthValid, dateOfBirth, userService, oldEmail);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
@@ -103,7 +104,7 @@ public class RegisterController {
         }
         boolean validated = true;
         userService.addUsers(
-                new User(email, firstName, lastName, password, dateOfBirth), validated
+                new User(email, firstName, lastName, password, dateOfBirth)
         );
         return "redirect:/profile";
     }

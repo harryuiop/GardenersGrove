@@ -37,8 +37,7 @@ public class UserService {
      * @param newUser The new user data.
      * @return The UserRepository instance with the new user saved.
      */
-    public User addUsers(User newUser, boolean checked) {
-        if (!checked) {
+    public User addUsers(User newUser) {
             if (!(emailIsValid(newUser.getEmail()) &&
                     passwordIsValid(newUser.getPassword()) &&
                     nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
@@ -47,7 +46,6 @@ public class UserService {
                 return null;
 
             }
-        }
         return userRepository.save(newUser);
     }
 
