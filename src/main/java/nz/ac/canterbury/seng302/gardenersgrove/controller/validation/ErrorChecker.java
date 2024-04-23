@@ -51,7 +51,7 @@ public class ErrorChecker {
         }
 
         if (!valuesValidator.checkBlank(country)) {
-            errors.put("countryError", "Country cannot be empty");
+            errors.put("countryError", "Country is required");
         } else if (!valuesValidator.checkCharactersWithForwardSlash(country)) {
             errors.put(
                     "countryError",
@@ -78,7 +78,7 @@ public class ErrorChecker {
     private void validateLocationField(String fieldValue, String errorName, String fieldName,
                                     boolean fieldRequired, HashMap<String, String> errors) {
         if (fieldRequired && !valuesValidator.checkBlank(fieldValue)) {
-            errors.put(errorName, String.format("%s cannot be empty", fieldName));
+            errors.put(errorName, String.format("%s is required", fieldName));
         } else if (!valuesValidator.checkCharacters(fieldValue)) {
             errors.put(
                     errorName,

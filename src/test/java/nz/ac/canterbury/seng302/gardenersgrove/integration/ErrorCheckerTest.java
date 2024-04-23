@@ -83,7 +83,7 @@ class ErrorCheckerTest {
         Map<String, String> errors = errorChecker.gardenFormErrors(name, size,
                 country, city, streetAddress, suburb, postcode);
         Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("countryError", "Country cannot be empty");
+        correctErrors.put("countryError", "Country is required");
         Assertions.assertEquals(correctErrors, errors);
     }
 
@@ -99,7 +99,7 @@ class ErrorCheckerTest {
         Map<String, String> errors = errorChecker.gardenFormErrors(name, size,
                 country, city, streetAddress, suburb, postcode);
         Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("cityError", "City cannot be empty");
+        correctErrors.put("cityError", "City is required");
         Assertions.assertEquals(correctErrors, errors);
     }
 
@@ -132,7 +132,7 @@ class ErrorCheckerTest {
                 country, city, streetAddress, suburb, postcode);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
-        correctErrors.put("countryError", "Country cannot be empty");
+        correctErrors.put("countryError", "Country is required");
         Assertions.assertEquals(correctErrors, errors);
     }
 
