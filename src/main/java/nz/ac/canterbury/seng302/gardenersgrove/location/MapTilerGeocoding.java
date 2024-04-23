@@ -27,7 +27,7 @@ public class MapTilerGeocoding {
 
     @Value("${maptiler.api.key}")
     private String apiKey;
-    private final int locationLimit = 3; // Max amount of locations returned by API
+    private static final int LOCATION_LIMIT = 3; // Max amount of locations returned by API
 
     private final RateLimiter rateLimiter = new RateLimiter(5, 5);
 
@@ -35,7 +35,7 @@ public class MapTilerGeocoding {
 
     //  How well the returned feature matches the user’s query on a scale from 0 to 1.
     //  0 means the result does not match the query text at all, while 1 means the result fully matches the query text.
-    private final double FEATURE_RELEVANCE = 0.95;
+    private static final double FEATURE_RELEVANCE = 0.95;
 
     Logger logger = LoggerFactory.getLogger(MapTilerGeocoding.class);
 
@@ -59,12 +59,11 @@ public class MapTilerGeocoding {
         StringBuilder urlBuilder = new StringBuilder("https://api.maptiler.com/geocoding/");
         urlBuilder.append(URLEncoder.encode(formattedQuery, StandardCharsets.UTF_8)).append(".json?");
 
-
         if (countryCode != null && !countryCode.isEmpty()) {
             urlBuilder.append("country=").append(URLEncoder.encode(countryCode, StandardCharsets.UTF_8)).append("&");
         }
 
-        urlBuilder.append("proximity=ip&fuzzyMatch=true&limit=" + locationLimit + "&key=");
+        urlBuilder.append("proximity=ip&fuzzyMatch=true&limit=" + LOCATION_LIMIT + "&key=");
         urlBuilder.append(URLEncoder.encode(apiKey, StandardCharsets.UTF_8));
         return urlBuilder.toString();
     }
