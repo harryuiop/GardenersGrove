@@ -8,6 +8,7 @@
     <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
 </head>
 <body>
+<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
 
 <div class="profileBody">
     <div class="formContainer">
@@ -102,31 +103,6 @@
             />
             <p class="errorMessage" id="emailError"></p>
 
-            <label for="password">Password:</label>
-            <input
-                    class="inputStyle"
-                    type="password"
-                    id="password"
-                    name="password"
-                    th:name="password"
-                    th:value="${user.getPassword}"
-                    autofocus
-                    onblur="passwordValidation(document.registerForm)"
-            />
-            <p class="errorMessage" id="passwordError"></p>
-
-            <label for="passwordConfirm">Confirm Password:</label>
-            <input
-                    class="inputStyle"
-                    type="password"
-                    id="passwordConfirm"
-                    name="passwordConfirm"
-                    th:name="passwordConfirm"
-                    autofocus
-                    onblur="confirmPasswordValidation(document.registerForm)"
-            />
-            <p class="errorMessage" id="passwordConfirmError"></p>
-
             <label for="dateOfBirth">Date of Birth:</label>
             <input
                     class="inputStyle"
@@ -139,11 +115,14 @@
                     onblur="ageValidation(document.registerForm)"
             />
             <p class="errorMessage" id="dateOfBirthError"></p>
-            <input class="inputStyle" id="submit" type="submit" value="Submit" disabled/>
-            <div id="backDiv">
-                <a th:href="@{profile}" type="button" class="inputStyle" id="backbutton">Back</a>
-            </div>
+            <input class="inputStyle" id="submit" type="submit" value="Submit"/>
         </form>
+    </div>
+    <div class="hrefDiv">
+        <a th:href="@{profile}" class="hrefButtons" type="button">Back</a>
+    </div>
+    <div>
+        <a id="changePassword" th:href="@{editPassword}">Change Password<a>
     </div>
 </div>
 </body>

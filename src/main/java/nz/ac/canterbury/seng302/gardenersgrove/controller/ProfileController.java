@@ -7,6 +7,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,6 @@ public class ProfileController extends GardensSidebar {
     private final UserService userService;
     private final GardenService gardenService;
 
-
     /**
      * Constructor for ProfileController.
      *
@@ -52,6 +52,9 @@ public class ProfileController extends GardensSidebar {
     @GetMapping("/profile")
     public String getProfilePage(Model model) {
         this.updateGardensSidebar(model, gardenService, userService);
+        User user = userService.getAuthenticatedUser(userService);
+        model.addAttribute("user", user);
+
         return "profile";
     }
 
@@ -64,18 +67,31 @@ public class ProfileController extends GardensSidebar {
      */
     @GetMapping("/editProfile")
     public String getEditProfilePage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        int currentPrincipalName = parseInt(auth.getName());
-        User user = userService.getUserById(currentPrincipalName);
+        User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
         return "editProfile";
     }
+
+    /**
+     *  Handles GET requests to the "/editPassword" URL.
+     *  Displays a form in which the user is able to change their password
+     *
+     * @param model The Model object used for adding attributes to the view.
+     * @return The name of the editPassword view template
+     */
+    @GetMapping("/editPassword")
+    public String editPassword(Model model) {
+        User user = userService.getAuthenticatedUser(userService);
+        model.addAttribute("user", user);
+
+        return "editPassword"; }
 
     /**
      * Handles POST requests to the "/uploadProfileImage" URL.
      * This method is responsible for dealing with grabbing the uploaded profile
      * photo from the user and saving it to the server.
      *
+     * @param model The Model object used for adding attributes to the view.
      * @param file  The multipart file object uploaded by the user
      * @param request The HTTP request object.
      * @param model The Model object used for adding attributes to the view.
@@ -123,23 +139,25 @@ public class ProfileController extends GardensSidebar {
      * @param email       The email of the user.
      * @param firstName   The first name of the user.
      * @param lastName    The last name of the user.
-     * @param password    The password of the user.
      * @param dateOfBirth The user's date of birth.
      * @return The name of the login view template.
      */
     @PostMapping("/confirmProfileChanges")
     public String addNewUser(
-                    @RequestParam(name = "email") String email,
-                    @RequestParam(name = "firstName") String firstName,
-                    @RequestParam(name = "lastName") String lastName,
-                    @RequestParam(name = "password") String password,
-                    @RequestParam(name = "dateOfBirth") String dateOfBirth
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "firstName") String firstName,
+            @RequestParam(name = "lastName") String lastName,
+            @RequestParam(name = "dateOfBirth") String dateOfBirth,
+            Model model
     ) {
+        User prevUpdateUser = userService.getAuthenticatedUser(userService);
+        model.addAttribute(prevUpdateUser);
+
         boolean checked = true;
         userService.addUsers(
-                new User(email, firstName, lastName, password, dateOfBirth), checked
+                new User(email, firstName, lastName, prevUpdateUser.getPassword(), dateOfBirth), checked
         );
-        return "login";
+        return "profile";
     }
 
     /**
@@ -153,25 +171,25 @@ public class ProfileController extends GardensSidebar {
         return "login";
     }
 
-    /**
-     * Handles requests to the "/profile" URL.
-     * Displays the profile page.
-     *
-     * @return The name of the profile view template.
-     */
-    @RequestMapping("/profile")
-    public String displayImage() {
-        return "profile";
-    }
-
-    /**
-     * Handles requests to the "/editProfile" URL.
-     * Displays the editProfile page.
-     *
-     * @return The name of the editProfile view template.
-     */
-    @RequestMapping("/editProfile")
-    public String displayEditImage() {
-        return "editProfile";
-    }
+//    /**
+//     * Handles requests to the "/profile" URL.
+//     * Displays the profile page.
+//     *
+//     * @return The name of the profile view template.
+//     */
+//    @RequestMapping("/profile")
+//    public String displayImage() {
+//        return "profile";
+//    }
+//
+//    /**
+//     * Handles requests to the "/editProfile" URL.
+//     * Displays the editProfile page.
+//     *
+//     * @return The name of the editProfile view template.
+//     */
+//    @RequestMapping("/editProfile")
+//    public String displayEditImage() {
+//        return "editProfile";
+//    }
 }
