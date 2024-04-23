@@ -74,13 +74,17 @@
 </div>
 
 <!-- No location message modal -->
-<div th:if="${noLocationFound}">
+<div th:if="${editGardenUri != null}">
     <div id="noLocationFoundModal" class="modal">
         <div class="modal-content">
-            <p>No matching location found, location-based services may not work.</p>
+            <p>
+                Your garden has been saved.
+                However, no matching location was found.
+                Location-based services will not work for this garden.
+            </p>
             <div class="modal-buttons">
                 <a th:href="@{${editGardenUri}}" id="backToFormBtn">Edit garden</a>
-                <a th:href="@{${viewGardenUri}(gardenId=${gardenId})}" id="useLocationBtn">Continue</a>
+                <a th:href="@{${viewGardenUri}}" id="useLocationBtn">Continue</a>
             </div>
         </div>
     </div>
