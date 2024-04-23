@@ -2,9 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Entity class representing a plant in a garden
@@ -18,14 +17,14 @@ public class Plant {
     @Column(nullable = false)
     private String name;
 
-    @Column()
+    @Column
     private Integer count;
 
     @Column(length = 512)
     private String description;
 
-    @Column()
-    private Date plantedOn;
+    @Column
+    private LocalDate plantedOn;
 
     @Column
     private String imageFileName;
@@ -33,7 +32,7 @@ public class Plant {
     @ManyToOne(optional = false)
     private Garden garden;
 
-    private static final DateFormat printFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     /**
      * JPA required no-args constructor
@@ -41,7 +40,7 @@ public class Plant {
     protected Plant() {
     }
 
-    public Plant(String name, Integer count, String description, Date plantedOn, String imageFileName, Garden garden) {
+    public Plant(String name, Integer count, String description, LocalDate plantedOn, String imageFileName, Garden garden) {
         this.name = name;
         this.count = count;
         this.description = description;
@@ -71,6 +70,9 @@ public class Plant {
     }
 
     public String getImageFilePath() {
+        if (imageFileName == null) {
+            return "/images/default-plant.jpg";
+        }
         return "/uploads/" + imageFileName;
     }
 
@@ -78,10 +80,10 @@ public class Plant {
         if (plantedOn == null) {
             return null;
         }
-        return printFormat.format(plantedOn);
-    };
+        return plantedOn.format(dateFormatter);
+    }
 
-    public Date getPlantedOn() {
+    public LocalDate getPlantedOn() {
         return plantedOn;
     }
 
@@ -101,21 +103,12 @@ public class Plant {
         this.description = description;
     }
 
-    public void setPlantedOn(Date plantedOn) {
+    public void setPlantedOn(LocalDate plantedOn) {
         this.plantedOn = plantedOn;
     }
 
     public void setImageFileName(String imageFileName) {
         this.imageFileName = imageFileName;
-    }
-
-    /**
-     * Check if image has been set to be used in frontend via html.
-     *
-     * @return If image is set.
-     */
-    public boolean isImageSet() {
-        return imageFileName != null;
     }
 
     @Override
@@ -125,7 +118,7 @@ public class Plant {
                 ", name='" + name + '\'' +
                 ", count=" + count +
                 ", description='" + description + '\'' +
-                ", imageFileName='" + imageFileName + '\'' +
+                        ", imageFileName='" + imageFileName + '\'' +
                 ", plantedOn=" + plantedOn +
                 '}';
     }

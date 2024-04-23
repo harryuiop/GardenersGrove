@@ -17,7 +17,7 @@
 
     <div class="registerBody">
         <h1 id="registerH1">Register</h1>
-      <a th:href="@{/}" class="button">Return Home</a>
+      <a th:href="@{/}" class="button">Cancel</a>
       <div class="forumContentsDiv">
         <h1>Register</h1>
         <form
@@ -97,19 +97,6 @@
             autocomplete="off"
           />
           <p class="errorMessage" id="emailError" th:text=${emailError}></p>
-
-          <label for="address">Address:</label>
-          <input
-            class="inputStyle"
-            type="text"
-            id="address"
-            name="address"
-            th:name="address"
-            th:value="${address}"
-            autofocus
-            autocomplete="off"
-          />
-          <p class="errorMessage" id="addressError" th:text=${addressErrors}></p>
 
           <label for="password">Password:</label>
           <input

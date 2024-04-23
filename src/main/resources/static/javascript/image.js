@@ -4,7 +4,7 @@ function displayImage() {
     const file = input.files[0];
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         for (const img of imgs) {
             img.src = e.target.result;
         }
