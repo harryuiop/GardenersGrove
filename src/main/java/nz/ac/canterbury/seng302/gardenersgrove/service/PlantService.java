@@ -19,16 +19,16 @@ public class PlantService {
         this.plantRepository = plantRepository;
     }
 
-    public List<Plant> getAllPlants() {
-        return plantRepository.findAll();
-    }
-
     public List<Plant> getAllPlantsInGarden(Garden garden) {
         return plantRepository.findAllByGarden(garden);
     }
 
     public Optional<Plant> getPlantById(Long id) {
         return plantRepository.findById(id);
+    }
+
+    public Optional<Plant> getPlantByGardenIdAndPlantId(long gardenId, long plantId) {
+        return plantRepository.findByGardenIdAndId(gardenId, plantId);
     }
 
     public Plant savePlant(Plant plant) {
