@@ -31,7 +31,6 @@ import static java.lang.Integer.parseInt;
 public class ProfileController extends GardensSidebar {
 
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
     private final GardenService gardenService;
 
     /**
@@ -140,7 +139,6 @@ public class ProfileController extends GardensSidebar {
      * @param email       The email of the user.
      * @param firstName   The first name of the user.
      * @param lastName    The last name of the user.
-     * @param password    The password of the user.
      * @param dateOfBirth The user's date of birth.
      * @return The name of the login view template.
      */
