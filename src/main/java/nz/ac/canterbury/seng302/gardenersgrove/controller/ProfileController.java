@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
@@ -149,6 +150,9 @@ public class ProfileController {
             lastName = "";
         }
 
+        User user = userService.getUserById(userId);
+        boolean newEmail = email.equals(user.getEmail());
+
         boolean dateOfBirthValid = true;
         try {
             if (dateOfBirth != null && !dateOfBirth.isBlank()) {
@@ -161,17 +165,17 @@ public class ProfileController {
         ErrorChecker validator = new ErrorChecker();
         Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, passwordConfirm,
-                dateOfBirthValid, dateOfBirth, userService, true);
+                dateOfBirthValid, dateOfBirth, userService, newEmail);
+
+        model.addAttribute("user", user);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
             }
-            model.addAttribute("user", userService.getUserById(userId));
             return "editProfile";
         }
 
-        User user = userService.getUserById(userId);
 
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -180,7 +184,6 @@ public class ProfileController {
         user.setDob(dateOfBirth);
 
         userService.updateUser(user);
-        model.addAttribute("user", userService.getUserById(userId));
 
         return "profile";
     }

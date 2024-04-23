@@ -99,7 +99,7 @@ public class ErrorChecker {
      */
     public Map<String, String> registerUserFormErrors(String firstName, String lastName, Boolean noSurname, String email,
                                                       String password, String passwordConfirm, boolean validDate, String dateOfBirth,
-                                                      UserService userService, boolean editing)
+                                                      UserService userService, boolean newEmail)
     {
         Map<String, String> errors = new HashMap<>();
         // Checking first name
@@ -125,7 +125,7 @@ public class ErrorChecker {
             errors.put("emailError", "Email cannot be empty");
         } else if (!emailIsValid(email)) {
             errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
-        } else if (!valuesValidator.emailInUse(email, userService) && !editing){
+        } else if (!valuesValidator.emailInUse(email, userService) && !newEmail){
             errors.put("emailError", "This email address is already in use");
         }
         // Checking password
