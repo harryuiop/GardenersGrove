@@ -162,7 +162,7 @@ public class User {
         if (profilePictureFileName != null) {
             return "/uploads/" + profilePictureFileName;
         } else {
-            return "images/default_profile_photo.png";
+            return "/images/default_profile_photo.png";
         }
     }
 

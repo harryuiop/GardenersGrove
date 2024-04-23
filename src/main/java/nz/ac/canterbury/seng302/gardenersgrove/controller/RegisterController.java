@@ -26,10 +26,12 @@ public class RegisterController {
 
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-    ErrorChecker validator = new ErrorChecker();
+    UserService userService;
 
     @Autowired
-    UserService userService;
+    public RegisterController(UserService userService) {
+        this.userService = userService;
+    }
 
 
     /**
@@ -80,7 +82,7 @@ public class RegisterController {
         }
 
 
-        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                                                                         password, passwordConfirm,
                                                                         dateOfBirthValid, dateOfBirth, userService);
 

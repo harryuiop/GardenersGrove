@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.editGardenUri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -86,7 +88,7 @@ class EditGardenControllerTest {
 
     @Test
     void submitEditForm_unchanged_gardenUnchanged() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                         .param("gardenName", initialGardenName)
                         .param("gardenSize", Float.toString(initialGardenSize))
                         .param("country", initialCountry)
@@ -104,7 +106,6 @@ class EditGardenControllerTest {
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenLocation.toString(), garden.getLocation().toString());
         assertEquals(initialGardenSize, garden.getSize());
-
     }
 
     @Test

@@ -2,8 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,14 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
-
 import static org.mockito.Mockito.when;
 
 @DataJpaTest
 @Import(ErrorChecker.class)
 
 class ErrorCheckerTest {
-    ErrorChecker errorChecker = new ErrorChecker();
 
     UserService userService = mock(UserService.class);
 
@@ -35,7 +33,7 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = errorChecker.gardenFormErrors(name, size,
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
                 country, city, streetAddress, suburb, postcode);
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
@@ -43,6 +41,7 @@ class ErrorCheckerTest {
     @Test
     void gardenFormErrors_NegativeSize_returnsNegativeError() {
         String name = "Garden 1";
+        String location = "Christchurch";
         Float size = -1.5f;
         String country = "New Zealand";
         String city = "Christchurch";
