@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,9 +60,6 @@ public class User {
     @Column(name = "sign-up_token")
     private String token;
 
-    @Column(name = "creation_date")
-    private Timestamp creationDate;
-
     /*
      * TODO - May be we need to create properties for GrantedAuthority
      * Perhaps this need to be a list?
@@ -100,7 +98,6 @@ public class User {
         this.password = password;
         this.dob = dob;
         this.confirmation = false;
-        this.creationDate = new Timestamp(System.currentTimeMillis());
     }
 
     /**
@@ -185,15 +182,6 @@ public class User {
      */
     public String getToken() {
         return this.token;
-    }
-
-    /**
-     * Retrieve creation timestamp
-     *
-     * @return Timestamp type of creation date
-     */
-    public Timestamp getCreationDateInMillisecond() {
-        return creationDate;
     }
 
     /**
