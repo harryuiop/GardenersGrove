@@ -81,6 +81,7 @@ public class EmailSenderService {
      * method to send verification email to register user account
      *
      * @param user User Entity
+     * @param template html file to send an email
      */
     public boolean sendRegistrationEmail (User user, String template) {
 
