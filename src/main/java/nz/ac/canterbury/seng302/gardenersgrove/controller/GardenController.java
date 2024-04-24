@@ -62,22 +62,20 @@ public class GardenController extends GardensSidebar {
      * @param suburb                 The suburb to pre-fill the form with.
      * @param postcode               The postcode to pre-fill the form with.
      * @param formSubmissionUri      The URI to submit the form to.
-     * @param gardenId               The ID of the garden to edit, ONLY SUPPLY WHEN LOCATION WAS NOT FOUND.
      * @param model                  object that passes data through to the HTML.
      * @return thymeleaf HTML gardenForm template.
      */
     private String loadGardenForm(
-                    Map<String, String> formFieldErrorMessages,
-                    String gardenName,
-                    Float gardenSize,
-                    String country,
-                    String city,
-                    String streetAddress,
-                    String suburb,
-                    String postcode,
-                    URI formSubmissionUri,
-                    Long gardenId,
-                    Model model
+            Map<String, String> formFieldErrorMessages,
+            String gardenName,
+            Float gardenSize,
+            String country,
+            String city,
+            String streetAddress,
+            String suburb,
+            String postcode,
+            URI formSubmissionUri,
+            Model model
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
         model.addAllAttributes(formFieldErrorMessages);
@@ -93,11 +91,18 @@ public class GardenController extends GardensSidebar {
         model.addAttribute("formSubmissionUri", formSubmissionUri);
         model.addAttribute("previousPage", this.refererUrl);
 
-        if (gardenId != null) {
-            model.addAttribute("viewGardenUri", viewGardenUri(gardenId));
-            model.addAttribute("editGardenUri", editGardenUri(gardenId));
-        }
         return "gardenForm";
+    }
+
+    /**
+     * Add the necessary attributes to the model for showing the garden location popup.
+     *
+     * @param gardenId The ID number of the garden.
+     * @param model    The map used to pass data through to thymeleaf.
+     */
+    public void loadLocationErrorMessagePopup(long gardenId, Model model) {
+        model.addAttribute("viewGardenUri", viewGardenUri(gardenId));
+        model.addAttribute("editGardenUri", editGardenUri(gardenId));
     }
 
     /**
@@ -108,8 +113,8 @@ public class GardenController extends GardensSidebar {
      */
     @GetMapping(NEW_GARDEN_URI_STRING)
     public String createGarden(
-                    @RequestHeader(required = false) String referer,
-                    Model model
+            @RequestHeader(required = false) String referer,
+            Model model
     ) {
         logger.info("GET {}", newGardenUri());
 
@@ -118,11 +123,10 @@ public class GardenController extends GardensSidebar {
         }
         this.refererUrl = referer;
         return loadGardenForm(
-                        Map.of(),
-                        null, null, null, null, null, null, null,
-                        newGardenUri(),
-                        null,
-                        model
+                Map.of(),
+                null, null, null, null, null, null, null,
+                newGardenUri(),
+                model
         );
     }
 
@@ -136,43 +140,45 @@ public class GardenController extends GardensSidebar {
      */
     @PostMapping(NEW_GARDEN_URI_STRING)
     public String submitNewGarden(
-                    @RequestParam String gardenName,
-                    @RequestParam(required = false) Float gardenSize,
-                    @RequestParam String country,
-                    @RequestParam String city,
-                    @RequestParam(required = false) String streetAddress,
-                    @RequestParam(required = false) String suburb,
-                    @RequestParam(required = false) String postcode,
-                    Model model
+            @RequestParam String gardenName,
+            @RequestParam(required = false) Float gardenSize,
+            @RequestParam String country,
+            @RequestParam String city,
+            @RequestParam(required = false) String streetAddress,
+            @RequestParam(required = false) String suburb,
+            @RequestParam(required = false) String postcode,
+            Model model
     ) {
         logger.info("POST {}", newGardenUri());
 
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                        gardenName, gardenSize, country, city, streetAddress, suburb, postcode
+                gardenName, gardenSize, country, city, streetAddress, suburb, postcode
         );
-        if (!errors.isEmpty()) {
-            return loadGardenForm(
-                            errors,
-                            gardenName, gardenSize, country, city, streetAddress, suburb, postcode,
-                            newGardenUri(),
-                            null,
-                            model
-            );
+        if (errors.isEmpty()) {
+            Location locationEntity = new Location(country, city);
+
+            boolean locationFound = updateLocationCoordinates(locationEntity, streetAddress, country, city);
+
+            locationEntity.setSuburb(suburb);
+            locationEntity.setPostcode(postcode);
+            locationEntity.setStreetAddress(streetAddress);
+
+            locationService.saveLocation(locationEntity);
+            Garden garden = new Garden(gardenName, locationEntity, gardenSize);
+            gardenService.saveGarden(garden);
+
+            if (locationFound) {
+                return "redirect:" + viewGardenUri(garden.getId());
+            } else {
+                loadLocationErrorMessagePopup(garden.getId(), model);
+            }
         }
-
-        Location locationEntity = new Location(country, city);
-
-        updateLocationCoordinates(locationEntity, streetAddress, country, city);
-
-        locationEntity.setSuburb(suburb);
-        locationEntity.setPostcode(postcode);
-        locationEntity.setStreetAddress(streetAddress);
-
-        locationService.saveLocation(locationEntity);
-        Garden garden = new Garden(gardenName, locationEntity, gardenSize);
-        gardenService.saveGarden(garden);
-
-        return "redirect:" + viewGardenUri(garden.getId());
+        return loadGardenForm(
+                errors,
+                gardenName, gardenSize, country, city, streetAddress, suburb, postcode,
+                newGardenUri(),
+                model
+        );
     }
 
     /**
@@ -185,9 +191,9 @@ public class GardenController extends GardensSidebar {
      */
     @GetMapping(EDIT_GARDEN_URI_STRING)
     public String editGarden(
-                    @PathVariable Long gardenId,
-                    @RequestHeader(required = false) String referer,
-                    Model model
+            @PathVariable Long gardenId,
+            @RequestHeader(required = false) String referer,
+            Model model
     ) throws NoSuchGardenException {
         logger.info("GET {}", editGardenUri(gardenId));
 
@@ -204,12 +210,11 @@ public class GardenController extends GardensSidebar {
 
         Location gardenLocation = garden.getLocation();
         return loadGardenForm(
-                        Map.of(),
-                        garden.getName(), garden.getSize(), gardenLocation.getCountry(), gardenLocation.getCity(),
-                        gardenLocation.getStreetAddress(), gardenLocation.getSuburb(), gardenLocation.getPostcode(),
-                        editGardenUri(gardenId),
-                        null,
-                        model
+                Map.of(),
+                garden.getName(), garden.getSize(), gardenLocation.getCountry(), gardenLocation.getCity(),
+                gardenLocation.getStreetAddress(), gardenLocation.getSuburb(), gardenLocation.getPostcode(),
+                editGardenUri(gardenId),
+                model
         );
     }
 
@@ -224,15 +229,15 @@ public class GardenController extends GardensSidebar {
      */
     @PostMapping(EDIT_GARDEN_URI_STRING)
     public String submitGardenEdit(
-                    @PathVariable long gardenId,
-                    @RequestParam String gardenName,
-                    @RequestParam(required = false) Float gardenSize,
-                    @RequestParam String country,
-                    @RequestParam String city,
-                    @RequestParam(required = false) String streetAddress,
-                    @RequestParam(required = false) String suburb,
-                    @RequestParam(required = false) String postcode,
-                    Model model
+            @PathVariable long gardenId,
+            @RequestParam String gardenName,
+            @RequestParam(required = false) Float gardenSize,
+            @RequestParam String country,
+            @RequestParam String city,
+            @RequestParam(required = false) String streetAddress,
+            @RequestParam(required = false) String suburb,
+            @RequestParam(required = false) String postcode,
+            Model model
     ) throws NoSuchGardenException {
         logger.info("POST {}", editGardenUri(gardenId));
 
@@ -243,34 +248,39 @@ public class GardenController extends GardensSidebar {
         Garden garden = optionalGarden.get();
 
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                        gardenName, gardenSize, country, city, streetAddress, suburb, postcode
+                gardenName, gardenSize, country, city, streetAddress, suburb, postcode
         );
-        if (!errors.isEmpty()) {
-            return loadGardenForm(
-                            errors,
-                            gardenName, gardenSize, country, city, streetAddress, suburb, postcode,
-                            editGardenUri(gardenId), null,
-                            model
-            );
-        }
-        Location locationEntity = garden.getLocation();
+        if (errors.isEmpty()) {
+            Location locationEntity = garden.getLocation();
 
-        // Get new location from API request
-        if (locationEntity.getStreetAddress() == null || !locationEntity.getStreetAddress().equals(streetAddress)) {
-            updateLocationCoordinates(locationEntity, streetAddress, country, city);
-        }
-        locationEntity.setCountry(country);
-        locationEntity.setSuburb(suburb);
-        locationEntity.setCity(city);
-        locationEntity.setPostcode(postcode);
-        locationEntity.setStreetAddress(streetAddress);
-        locationService.saveLocation(locationEntity);
+            boolean locationFound = true;
+            // Get new location from API request
+            if (locationEntity.getStreetAddress() == null || !locationEntity.getStreetAddress().equals(streetAddress)) {
+                locationFound = updateLocationCoordinates(locationEntity, streetAddress, country, city);
+            }
+            locationEntity.setCountry(country);
+            locationEntity.setSuburb(suburb);
+            locationEntity.setCity(city);
+            locationEntity.setPostcode(postcode);
+            locationEntity.setStreetAddress(streetAddress);
+            locationService.saveLocation(locationEntity);
 
-        garden.setName(gardenName);
-        garden.setSize(gardenSize);
-        garden.setLocation(locationEntity);
-        gardenService.saveGarden(garden);
-        return "redirect:" + viewGardenUri(garden.getId());
+            garden.setName(gardenName);
+            garden.setSize(gardenSize);
+            garden.setLocation(locationEntity);
+            gardenService.saveGarden(garden);
+            if (locationFound) {
+                return "redirect:" + viewGardenUri(garden.getId());
+            } else {
+                loadLocationErrorMessagePopup(gardenId, model);
+            }
+        }
+        return loadGardenForm(
+                errors,
+                gardenName, gardenSize, country, city, streetAddress, suburb, postcode,
+                editGardenUri(gardenId),
+                model
+        );
     }
 
     /**
@@ -280,7 +290,7 @@ public class GardenController extends GardensSidebar {
      * @param streetAddress Input street address by form box.
      * @param country       Input country by form box.
      * @param city          Input city by form box.
-     * @return True if no location message modal should be shown.
+     * @return {@code true} if the coordinates were successfully set, {@code false} otherwise.
      */
     private boolean updateLocationCoordinates(Location location, String streetAddress, String country, String city) {
         MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
@@ -296,10 +306,11 @@ public class GardenController extends GardensSidebar {
             query = city + " " + country;
         }
         locationFeature = mapTilerGeocoding.getFirstSearchResult(query, countryCode, apiKey);
-        if (locationFeature != null) {
-            location.setLngLat(locationFeature.getCenter());
+        if (locationFeature == null) {
             return false;
         }
+
+        location.setLngLat(locationFeature.getCenter());
         return true;
     }
 }
