@@ -4,10 +4,10 @@
     <meta charset="UTF-8"/>
     <title>Edit Profile</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-<!--    <script type="text/javascript" src="/javascript/ValidationService.js"></script>-->
+    <script type="text/javascript" src="/javascript/disableLastName.js"></script>
     <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
 </head>
-<body>
+<body onload="loadingPage()">
 
 <div class="profileBody">
     <div class="formContainer">
@@ -81,7 +81,6 @@
                             autofocus
                             autocomplete="off"
                             onchange="updateCheckboxValue()"
-                            onload="updateCheckboxValue()"
                     />
                     I have no surname
                 </label>
@@ -141,19 +140,5 @@
         </form>
     </div>
 </div>
-<script>
-    function updateCheckboxValue() {
-        var checkbox = document.getElementById("noSurname");
-        var lastName = document.getElementById("lastName")
-        if (checkbox.checked) {
-            checkbox.value = "true";
-            lastName.value = "";
-            lastName.disabled=true;
-        } else {
-            checkbox.value = "false";
-            lastName.disabled=false;
-        }
-    }
-</script>
 </body>
 </html>
