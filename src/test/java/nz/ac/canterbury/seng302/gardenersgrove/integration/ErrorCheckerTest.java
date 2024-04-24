@@ -153,8 +153,8 @@ class ErrorCheckerTest {
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "firstNameError",
-                "First name cannot exceed length of 64 characters" + "\n" +
-                        "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
+                "First name cannot exceed length of 64 characters and " +
+                        "first name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
         );
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -213,8 +213,8 @@ class ErrorCheckerTest {
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "lastNameError",
-                "Last name cannot exceed length of 64 characters" + "\n" +
-                        "Last name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
+                "Last name cannot exceed length of 64 characters and " +
+                        "last name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
         );
         Assertions.assertEquals(correctErrors, errors);
     }

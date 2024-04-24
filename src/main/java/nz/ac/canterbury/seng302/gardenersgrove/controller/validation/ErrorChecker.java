@@ -137,7 +137,7 @@ public class ErrorChecker {
                 if (!FormValuesValidator.checkNameLength(lastName) && !FormValuesValidator.checkUserName(lastName)) {
                     errors.put(
                             "lastNameError",
-                            "Last name cannot exceed length of 64 characters and  "+
+                            "Last name cannot exceed length of 64 characters and "+
                                     "last name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
                     );
                 } else if (!FormValuesValidator.checkNameLength(lastName)) {
