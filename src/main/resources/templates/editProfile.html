@@ -8,6 +8,7 @@
     <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
 </head>
 <body onload="loadingPage()">
+<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
 
 <div class="profileBody">
     <div class="formContainer">
@@ -100,28 +101,6 @@
             />
             <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
 
-            <label for="password">Password:</label>
-            <input
-                    class="inputStyle"
-                    type="password"
-                    id="password"
-                    name="password"
-                    th:name="password"
-                    autofocus
-            />
-            <p class="errorMessage" id="passwordError" th:text="${passwordError}"></p>
-
-            <label for="passwordConfirm">Confirm Password:</label>
-            <input
-                    class="inputStyle"
-                    type="password"
-                    id="passwordConfirm"
-                    name="passwordConfirm"
-                    th:name="passwordConfirm"
-                    autofocus
-            />
-            <p class="errorMessage" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
-
             <label for="dateOfBirth">Date of Birth:</label>
             <input
                     class="inputStyle"
@@ -132,12 +111,18 @@
                     th:value="${user.getDob()}"
                     autofocus
             />
-            <p class="errorMessage" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
+            <p class="errorMessage" id="dateOfBirthError"  th:text="${dateOfBirthError}"></p>
             <input class="inputStyle" id="submit" type="submit" value="Submit"/>
             <div id="backDiv">
                 <a th:href="@{profile}" type="button" class="inputStyle" id="backbutton">Cancel</a>
             </div>
         </form>
+    </div>
+    <div class="hrefDiv">
+        <a th:href="@{profile}" class="hrefButtons" type="button">Back</a>
+    </div>
+    <div>
+        <a id="changePassword" th:href="@{editPassword}">Change Password<a>
     </div>
 </div>
 </body>

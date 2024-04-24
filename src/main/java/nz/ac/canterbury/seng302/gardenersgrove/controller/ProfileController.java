@@ -2,9 +2,11 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,51 +31,46 @@ import static java.lang.Integer.parseInt;
  * Responsible for displaying user profile pages, editing profiles, and uploading profile photos.
  */
 @Controller
-public class ProfileController {
+public class ProfileController extends GardensSidebar {
 
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
-
+    private final GardenService gardenService;
 
     /**
      * Constructor for ProfileController.
      *
      * @param userService           The UserService responsible for user-related operations.
-     * @param authenticationManager The AuthenticationManager for managing user authentication.
      */
-    public ProfileController(UserService userService, AuthenticationManager authenticationManager) {
+    public ProfileController(UserService userService, GardenService gardenService) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
+        this.gardenService = gardenService;
     }
 
 
     /**
-     * Get mapping for the profile page
+     * Handles GET requests to the "/profile" URL.
      *
      * @return the profile page with the corresponding information
      */
     @GetMapping("/profile")
     public String getProfilePage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        int currentPrincipalName = parseInt(auth.getName());
-        User user = userService.getUserById(currentPrincipalName);
+        this.updateGardensSidebar(model, gardenService, userService);
+        User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
 
         return "profile";
     }
 
     /**
-     * Handles GET requests to the "/profile" URL.
+     * Handles GET requests to the "/editProfile" URL.
      * Displays the user's profile page.
      *
      * @param model The Model object used for adding attributes to the view.
      * @return The name of the profile view template.
      */
-    @GetMapping("editProfile")
+    @GetMapping("/editProfile")
     public String getEditProfilePage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        int currentPrincipalName = parseInt(auth.getName());
-        User user = userService.getUserById(currentPrincipalName);
+        User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
         boolean noSurname = user.getLastName() == null;
         model.addAttribute("noSurname", noSurname);
@@ -81,18 +78,36 @@ public class ProfileController {
     }
 
     /**
-     * Handles GET requests to the "/editProfile" URL.
+     *  Handles GET requests to the "/editPassword" URL.
+     *  Displays a form in which the user is able to change their password
+     *
+     * @param model The Model object used for adding attributes to the view.
+     * @return The name of the editPassword view template
+     */
+    @GetMapping("/editPassword")
+    public String editPassword(Model model) {
+        User user = userService.getAuthenticatedUser(userService);
+        model.addAttribute("user", user);
+
+        return "editPassword"; }
+
+    /**
+     * Handles POST requests to the "/uploadProfileImage" URL.
      * This method is responsible for dealing with grabbing the uploaded profile
-     * photo from the user and saving it to where he global variable UPLOAD_DIRECTORY specify
+     * photo from the user and saving it to the server.
      *
      * @param model The Model object used for adding attributes to the view.
      * @param file  The multipart file object uploaded by the user
+     * @param request The HTTP request object.
+     * @param model The Model object used for adding attributes to the view.
      * @return The name of the editProfile view template.
      */
     @PostMapping("/uploadProfileImage")
-    public String uploadImage(@RequestParam("image") MultipartFile file,
-                              HttpServletRequest request,
-                              Model model) throws IOException {
+    public String uploadImage(
+                    @RequestParam("image") MultipartFile file,
+                    HttpServletRequest request,
+                    Model model
+    ) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
         User user = userService.getUserById(currentPrincipalName);
@@ -129,7 +144,6 @@ public class ProfileController {
      * @param email       The email of the user.
      * @param firstName   The first name of the user.
      * @param lastName    The last name of the user.
-     * @param password    The password of the user.
      * @param dateOfBirth The user's date of birth.
      * @return The name of the login view template.
      */
@@ -140,10 +154,12 @@ public class ProfileController {
             @RequestParam String firstName,
             @RequestParam(name = "lastName", required = false) String lastName,
             @RequestParam(name = "noSurname", required = false) Boolean noSurname,
-            @RequestParam String password,
-            @RequestParam String passwordConfirm,
-            @RequestParam String dateOfBirth, Model model
+            @RequestParam(name = "dateOfBirth") String dateOfBirth,
+            Model model
     ) {
+        User prevUpdateUser = userService.getAuthenticatedUser(userService);
+        model.addAttribute(prevUpdateUser);
+
         if (noSurname == null) {
             noSurname = true;
         }
@@ -184,6 +200,7 @@ public class ProfileController {
 
         userService.updateUser(user);
 
+
         return "profile";
     }
 
@@ -198,25 +215,25 @@ public class ProfileController {
         return "login";
     }
 
-    /**
-     * Handles requests to the "/profile" URL.
-     * Displays the profile page.
-     *
-     * @return The name of the profile view template.
-     */
-    @RequestMapping("/profile")
-    public String displayImage() {
-        return "profile";
-    }
-
-    /**
-     * Handles requests to the "/editProfile" URL.
-     * Displays the editProfile page.
-     *
-     * @return The name of the editProfile view template.
-     */
-    @RequestMapping("/editProfile")
-    public String displayEditImage() {
-        return "editProfile";
-    }
+//    /**
+//     * Handles requests to the "/profile" URL.
+//     * Displays the profile page.
+//     *
+//     * @return The name of the profile view template.
+//     */
+//    @RequestMapping("/profile")
+//    public String displayImage() {
+//        return "profile";
+//    }
+//
+//    /**
+//     * Handles requests to the "/editProfile" URL.
+//     * Displays the editProfile page.
+//     *
+//     * @return The name of the editProfile view template.
+//     */
+//    @RequestMapping("/editProfile")
+//    public String displayEditImage() {
+//        return "editProfile";
+//    }
 }

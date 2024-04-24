@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,15 @@ public class RegisterController {
 
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-    ErrorChecker validator = new ErrorChecker();
+    UserService userService;
 
     @Autowired
-    UserService userService;
+    public RegisterController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    EmailSenderService emailSenderService;
 
 
     /**
@@ -88,7 +94,7 @@ public class RegisterController {
         }
 
 
-        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                                                                         password, passwordConfirm,
                                                                         dateOfBirthValid, dateOfBirth, userService, oldEmail);
 
@@ -102,10 +108,11 @@ public class RegisterController {
             model.addAttribute("noSurname", noSurname);
             return "register";
         }
-        boolean validated = true;
-        userService.addUsers(
-                new User(email, firstName, lastName, password, dateOfBirth)
-        );
+        userService.addUsers(new User(email, firstName, lastName, password, dateOfBirth););
+
+        // send verification email
+        emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");
+
         return "redirect:/profile";
     }
 }

@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.editGardenUri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -64,12 +66,12 @@ class EditGardenControllerTest {
 
     @Test
     void submitEditForm_unchanged_gardenUnchanged() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                                         .param("gardenName", initialGardenName)
                                         .param("gardenLocation", initialGardenLocation)
                                         .param("gardenSize", Float.toString(initialGardenSize)))
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());
@@ -85,12 +87,12 @@ class EditGardenControllerTest {
         String newGardenLocation = "New Test Location";
         float newGardenSize = 10.0f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                                         .param("gardenName", newGardenName)
                                         .param("gardenLocation", newGardenLocation)
                                         .param("gardenSize", Float.toString(newGardenSize)))
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
         List<Garden> allGardens = gardenRepository.findAll();
         assertEquals(1, allGardens.size());
@@ -106,12 +108,12 @@ class EditGardenControllerTest {
         String newGardenLocation = "Test Location";
         float newGardenSize = 4f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                                         .param("gardenName", newGardenName)
                                         .param("gardenLocation", newGardenLocation)
                                         .param("gardenSize", Float.toString(newGardenSize)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editGarden"));
+                        .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         Garden garden = allGardens.get(0);
@@ -127,12 +129,12 @@ class EditGardenControllerTest {
         String newGardenLocation = "Test^Location";
         float newGardenSize = 4f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                                         .param("gardenName", newGardenName)
                                         .param("gardenLocation", newGardenLocation)
                                         .param("gardenSize", Float.toString(newGardenSize)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editGarden"));
+                        .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         Garden garden = allGardens.get(0);
@@ -148,12 +150,12 @@ class EditGardenControllerTest {
         String newGardenLocation = "Test Location";
         float newGardenSize = -1f;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                                         .param("gardenName", newGardenName)
                                         .param("gardenLocation", newGardenLocation)
                                         .param("gardenSize", Float.toString(newGardenSize)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.view().name("editGarden"));
+                        .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAll();
         Garden garden = allGardens.get(0);
@@ -168,12 +170,12 @@ class EditGardenControllerTest {
         String gardenName = "Test Garden";
         String gardenLocation = "Test Location";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/edit-garden?gardenId=" + gardenId)
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                                         .param("gardenName", gardenName)
                                         .param("gardenLocation", gardenLocation)
                                         .param("gardenSize", ""))
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/view-garden?gardenId=*"));
+                        .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
 
         List<Garden> allGardens = gardenRepository.findAll();
