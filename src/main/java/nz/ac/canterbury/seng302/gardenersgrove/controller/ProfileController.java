@@ -155,7 +155,7 @@ public class ProfileController extends GardensSidebar {
         model.addAttribute(prevUpdateUser);
 
         if (noSurname == null) {
-            noSurname = true;
+            noSurname = false;
         }
 
         boolean newEmail = email.equals(prevUpdateUser.getEmail());
