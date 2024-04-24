@@ -94,9 +94,10 @@ public class RegisterController {
         }
 
 
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname,
+                                                                        email, oldEmail, userService,
                                                                         password, passwordConfirm,
-                                                                        dateOfBirthValid, dateOfBirth, userService, oldEmail);
+                                                                        dateOfBirthValid, dateOfBirth);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
@@ -108,7 +109,8 @@ public class RegisterController {
             model.addAttribute("noSurname", noSurname);
             return "register";
         }
-        userService.addUsers(new User(email, firstName, lastName, password, dateOfBirth););
+        User newUser = new User(email, firstName, lastName, password, dateOfBirth);
+        userService.addUsers(newUser);
 
         // send verification email
         emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");

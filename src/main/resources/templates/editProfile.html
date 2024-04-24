@@ -113,16 +113,13 @@
             />
             <p class="errorMessage" id="dateOfBirthError"  th:text="${dateOfBirthError}"></p>
             <input class="inputStyle" id="submit" type="submit" value="Submit"/>
-            <div id="backDiv">
-                <a th:href="@{profile}" type="button" class="inputStyle" id="backbutton">Cancel</a>
-            </div>
         </form>
     </div>
     <div class="hrefDiv">
-        <a th:href="@{profile}" class="hrefButtons" type="button">Back</a>
+        <a th:href="@{profile}" class="hrefButtons" type="button">Cancel</a>
     </div>
     <div>
-        <a id="changePassword" th:href="@{editPassword}">Change Password<a>
+        <a id="changePassword" th:href="@{editPassword}">Change Password</a>
     </div>
 </div>
 </body>

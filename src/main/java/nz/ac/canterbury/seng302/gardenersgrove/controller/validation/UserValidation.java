@@ -37,7 +37,7 @@ public class UserValidation {
      * (last name is allowed to be blank)
      */
     public static boolean nameIsValid(String fname, String lname) {
-        return fname.matches(namePattern) && !fname.isBlank() && (lname == null || lname.matches(namePattern));
+        return fname.matches(namePattern) && !fname.isBlank() && (lname == null || lname.isBlank() || lname.matches(namePattern));
     }
 
     /**

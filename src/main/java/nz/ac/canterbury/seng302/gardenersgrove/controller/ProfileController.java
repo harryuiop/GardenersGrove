@@ -4,12 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,8 +19,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 
@@ -99,7 +95,6 @@ public class ProfileController extends GardensSidebar {
      * @param model The Model object used for adding attributes to the view.
      * @param file  The multipart file object uploaded by the user
      * @param request The HTTP request object.
-     * @param model The Model object used for adding attributes to the view.
      * @return The name of the editProfile view template.
      */
     @PostMapping("/uploadProfileImage")
@@ -149,7 +144,6 @@ public class ProfileController extends GardensSidebar {
      */
     @PostMapping("/confirmProfileChanges")
     public String updateUser(
-            @RequestParam int userId,
             @RequestParam String email,
             @RequestParam String firstName,
             @RequestParam(name = "lastName", required = false) String lastName,
@@ -164,8 +158,7 @@ public class ProfileController extends GardensSidebar {
             noSurname = true;
         }
 
-        User user = userService.getUserById(userId);
-        boolean newEmail = email.equals(user.getEmail());
+        boolean newEmail = email.equals(prevUpdateUser.getEmail());
 
         boolean dateOfBirthValid = true;
         try {
@@ -176,12 +169,12 @@ public class ProfileController extends GardensSidebar {
             dateOfBirthValid = false;
         }
 
-        ErrorChecker validator = new ErrorChecker();
-        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, passwordConfirm,
-                dateOfBirthValid, dateOfBirth, userService, newEmail);
-
-        model.addAttribute("user", user);
+        Map<String, String> errors = ErrorChecker.profileFormErrors(
+                                                                        firstName, lastName, noSurname,
+                                                                        email, newEmail, userService,
+                                                                        dateOfBirthValid, dateOfBirth
+                                                                        );
+        model.addAttribute("user", prevUpdateUser);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
@@ -191,14 +184,12 @@ public class ProfileController extends GardensSidebar {
             return "editProfile";
         }
 
+        prevUpdateUser.setFirstName(firstName);
+        prevUpdateUser.setLastName(lastName);
+        prevUpdateUser.setEmail(email);
+        prevUpdateUser.setDob(dateOfBirth);
 
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setDob(dateOfBirth);
-
-        userService.updateUser(user);
+        userService.updateUser(prevUpdateUser);
 
 
         return "profile";
@@ -215,25 +206,4 @@ public class ProfileController extends GardensSidebar {
         return "login";
     }
 
-//    /**
-//     * Handles requests to the "/profile" URL.
-//     * Displays the profile page.
-//     *
-//     * @return The name of the profile view template.
-//     */
-//    @RequestMapping("/profile")
-//    public String displayImage() {
-//        return "profile";
-//    }
-//
-//    /**
-//     * Handles requests to the "/editProfile" URL.
-//     * Displays the editProfile page.
-//     *
-//     * @return The name of the editProfile view template.
-//     */
-//    @RequestMapping("/editProfile")
-//    public String displayEditImage() {
-//        return "editProfile";
-//    }
 }
