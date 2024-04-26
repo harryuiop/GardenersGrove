@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TestEmail</title>
+</head>
+<body>
+<h1>This is Test Email - PLEASE IGNORE</h1>
+<h2 id="date-time"></h2>
+<p>This is a test email to check whether our server sending email service is work properly.</p>
+
+<p>Please ignore this email as this email do nothing. Cheers o7</p>
+<p>Oh! And this link is not do anything <b>Gardeners Grove</b> Login Page!!</p>
+<a id="verify-link">Click This Link!</a>
+<script>
+    const date = new Date();
+    document.getElementById("date-time").innerHTML = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+</script>
+</body>
+</html>

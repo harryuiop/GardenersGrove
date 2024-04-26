@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,12 @@ public class User {
     @Column(name = "profile_picture_file_name")
     private String profilePictureFileName;
 
+    @Column
+    private Boolean confirmation;
+
+    @Column(name = "sign-up_token")
+    private String token;
+
     /*
      * TODO - May be we need to create properties for GrantedAuthority
      * Perhaps this need to be a list?
@@ -89,6 +97,11 @@ public class User {
         this.lastName = lastName;
         this.password = password;
         this.dob = dob;
+        this.confirmation = false;
+    }
+
+    public int getId() {
+        return userId;
     }
 
     /**
@@ -101,12 +114,28 @@ public class User {
     }
 
     /**
+     * Sets the users email so that it can be saved by the service and updated in the database
+     * @param email the new email entered by the user
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
      * Retrieves the user's first name.
      *
      * @return User's first name.
      */
     public String getFirstName() {
         return firstName;
+    }
+
+    /**
+     * Sets the users firstName so that it can be saved by the service and updated in the database
+     * @param firstName the new first name the user has entered into the form
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     /**
@@ -119,12 +148,28 @@ public class User {
     }
 
     /**
+     * Sets the users lastName so that it can be saved by the service and updated in the database
+     * @param lastName the new last name the user has entered into the form
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    /**
      * Retrieves the user's date of birth.
      *
      * @return User's date of birth.
      */
     public String getDob() {
         return dob;
+    }
+
+    /**
+     * Sets the users Date of Birth so that it can be saved by the service and updated in the database
+     * @param dob the new date of birth the user has entered into the form
+     */
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     /**
@@ -141,6 +186,14 @@ public class User {
      */
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * Sets the users password so that it can be saved by the service and updated in the database
+     * @param password the new password the user has entered into the form
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**
@@ -167,12 +220,48 @@ public class User {
     }
 
     /**
+     * getting user's valid token
+     *
+     * @return user's valid token
+     */
+    public String getToken() {
+        return this.token;
+    }
+
+    /**
+     * check if client's account is registered.
+     *
+     * @return boolean about client's current status of registration
+     */
+    public boolean isConfirmed() {
+        return this.confirmation;
+    }
+
+    /**
      * Sets the file name of the user's profile picture.
      *
      * @param profilePictureFileName The file name of the user's profile picture.
      */
     public void setProfilePictureFileName(String profilePictureFileName) {
         this.profilePictureFileName = profilePictureFileName;
+    }
+
+    /**
+     * Setter method about client's registration token
+     *
+     * @param token to authenticate the client's identity
+     */
+    public void setToken (String token) {
+        this.token = token;
+    }
+
+    /**
+     * setter method to change status of client's registration
+     *
+     * @param confirmation a bool type variable to be changed
+     */
+    public void setConfirmation(boolean confirmation) {
+        this.confirmation = confirmation;
     }
 
     /**

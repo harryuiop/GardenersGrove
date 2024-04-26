@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import java.util.Map;
  */
 @Controller
 public class RegisterController {
+    final boolean oldEmail = false;
 
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
@@ -32,6 +34,9 @@ public class RegisterController {
     public RegisterController(UserService userService) {
         this.userService = userService;
     }
+
+    @Autowired
+    EmailSenderService emailSenderService;
 
 
     /**
@@ -44,6 +49,13 @@ public class RegisterController {
     public String showRegisterPage(Model model) {
         logger.info("GET /register");
         model.addAttribute("noSurname", false);
+        model.addAttribute("firstNameError", "");
+        model.addAttribute("lastNameError", "");
+        model.addAttribute("emailError", "");
+        model.addAttribute("passwordError", "");
+        model.addAttribute("passwordConfirmError", "");
+        model.addAttribute("dateOfBirthError", "");
+
         return "register";
     }
 
@@ -82,9 +94,10 @@ public class RegisterController {
         }
 
 
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname,
+                                                                        email, oldEmail, userService,
                                                                         password, passwordConfirm,
-                                                                        dateOfBirthValid, dateOfBirth, userService);
+                                                                        dateOfBirthValid, dateOfBirth);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
@@ -96,10 +109,12 @@ public class RegisterController {
             model.addAttribute("noSurname", noSurname);
             return "register";
         }
-        boolean validated = true;
-        userService.addUsers(
-                new User(email, firstName, lastName, password, dateOfBirth), validated
-        );
+        User newUser = new User(email, firstName, lastName, password, dateOfBirth);
+        userService.addUsers(newUser);
+
+        // send verification email
+        emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");
+
         return "redirect:/profile";
     }
 }

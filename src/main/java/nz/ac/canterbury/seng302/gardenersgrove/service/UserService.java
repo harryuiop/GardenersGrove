@@ -39,17 +39,14 @@ public class UserService {
      * @param newUser The new user data.
      * @return The UserRepository instance with the new user saved.
      */
-    public User addUsers(User newUser, boolean checked) {
-        if (!checked) {
+    public User addUsers(User newUser) {
             if (!(emailIsValid(newUser.getEmail()) &&
                     passwordIsValid(newUser.getPassword()) &&
                     nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
                     dobIsValid(newUser.getDob()) &&
                     (getUserByEmail(newUser.getEmail()) == null))) {
                 return null;
-
             }
-        }
         return userRepository.save(newUser);
     }
 
@@ -61,9 +58,8 @@ public class UserService {
     public boolean updateUser(User user) {
         if (
                 emailIsValid(user.getEmail()) &&
-                        passwordIsValid(user.getPassword()) &&
-                        nameIsValid(user.getFirstName(), user.getLastName()) &&
-                        dobIsValid(user.getDob())
+                nameIsValid(user.getFirstName(), user.getLastName()) &&
+                dobIsValid(user.getDob())
         ) {
             userRepository.save(user);
             return true;
@@ -104,8 +100,6 @@ public class UserService {
 
     /**
      * Retrieves the user object of the currently logged-in user
-     *
-     * @param userService The UserService object in use
      * @return The User object if found
      */
     public User getAuthenticatedUser() {

@@ -67,7 +67,7 @@ class RegistrationControllerTest {
         String firstName = "John";
         String lastName = "";
         Boolean noSurname = true;
-        String email = "john@smith.co.nz";
+        String email = "jane@smith.co.nz";
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));

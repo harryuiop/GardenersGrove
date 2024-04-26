@@ -34,6 +34,31 @@ body {
   background-color: var(--light-neutral);
 }
 
+.hrefDiv {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.hrefButtons {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    background-color: var(--neutral);
+    color: #fff;
+    text-decoration: none;
+    width: calc(100% - 10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hrefButtons:hover {
+    background-color: var(--dark-color);
+}
+
 /* -------------------- Register page specific -------------------- */
 
 .forumContentsDiv {
@@ -54,30 +79,31 @@ label {
     width: calc(100% - 10px);
     padding: 10px;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
+    border: 1px solid;
     border-radius: 3px;
     box-sizing: border-box;
     font-size: 1rem;
 }
 
 #submit {
-    background-color: #CCC;
+    background-color: var(--neutral);
+    border-color: var(--neutral);
     color: #fff;
     cursor: pointer;
 }
 
 #submit:hover {
-  background-color: #BBB;
+    background-color: var(--dark-color);
 }
 
 #back {
-    background-color: var(--dark-color);
+    background-color: var(--neutral);
     color: #fff;
     cursor: pointer;
 }
 
 #back:hover {
-    background-color: #BBB;
+    background-color: var(--dark-color);
 }
 
 .errorMessage {
@@ -175,6 +201,11 @@ label {
 
 #profileDoB {
     margin-bottom: 10px;
+}
+
+#changePassword {
+    display: flex;
+    justify-content: center;
 }
 
 /* -------------------- Login page specific -------------------- */
