@@ -33,6 +33,7 @@ public class GardenController extends GardensSidebar {
     private final GardenService gardenService;
     private final UserService userService;
     private final LocationService locationService;
+    private final MapTilerGeocoding mapTilerGeocoding;
     private String refererUrl;
 
     /**
@@ -44,10 +45,16 @@ public class GardenController extends GardensSidebar {
      * @param locationService The Location database access object.
      */
     @Autowired
-    public GardenController(GardenService gardenService, UserService userService, LocationService locationService) {
+    public GardenController(
+            GardenService gardenService,
+            UserService userService,
+            LocationService locationService,
+            MapTilerGeocoding mapTilerGeocoding
+    ) {
         this.gardenService = gardenService;
         this.userService = userService;
         this.locationService = locationService;
+        this.mapTilerGeocoding = mapTilerGeocoding;
     }
 
     /**
@@ -293,8 +300,6 @@ public class GardenController extends GardensSidebar {
      * @return {@code true} if the coordinates were successfully set, {@code false} otherwise.
      */
     private boolean updateLocationCoordinates(Location location, String streetAddress, String country, String city) {
-        MapTilerGeocoding mapTilerGeocoding = new MapTilerGeocoding();
-
         // Country code allows more accurate searching by filtering by just that country
         String countryCode = CountryCode.getAlphaTwoCountryCodeFromName(country);
 

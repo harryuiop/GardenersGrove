@@ -2,13 +2,16 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -16,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.newGardenUri;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -33,10 +37,16 @@ class GardenFormControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @MockBean
+    private MapTilerGeocoding mapTilerGeocoding;
+
     private boolean userCreated = false;
 
     @BeforeEach
     void setUp() {
+        Mockito.when(mapTilerGeocoding.getFirstSearchResult(Mockito.any(), Mockito.any(), Mockito.any()))
+                .thenReturn(null);
+
         if (!userCreated) {
             User user = new User(
                             "test@domain.net",
@@ -61,7 +71,7 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                 .param("gardenName", gardenName)
                 .param("gardenSize", Float.toString(gardenSize))
                 .param("country", country)
@@ -95,15 +105,14 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                 .param("gardenName", gardenName)
                 .param("gardenSize", Float.toString(gardenSize))
                 .param("country", country)
                 .param("city", city)
                 .param("streetAddress", streetAddress)
                 .param("suburb", suburb)
-                .param("postcode", postcode)
-                .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -121,15 +130,14 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                 .param("gardenName", gardenName)
                 .param("gardenSize", Float.toString(gardenSize))
                 .param("country", country)
                 .param("city", city)
                 .param("streetAddress", streetAddress)
                 .param("suburb", suburb)
-                .param("postcode", postcode)
-                .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -147,15 +155,14 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenSize", Float.toString(gardenSize))
                         .param("country", country)
                         .param("city", city)
                         .param("streetAddress", streetAddress)
                         .param("suburb", suburb)
-                        .param("postcode", postcode)
-                        .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -173,15 +180,14 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenSize", Float.toString(gardenSize))
                         .param("country", country)
                         .param("city", city)
                         .param("streetAddress", streetAddress)
                         .param("suburb", suburb)
-                        .param("postcode", postcode)
-                        .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -199,15 +205,14 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenSize", Float.toString(gardenSize))
                         .param("country", country)
                         .param("city", city)
                         .param("streetAddress", streetAddress)
                         .param("suburb", suburb)
-                        .param("postcode", postcode)
-                        .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -225,15 +230,14 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenSize", Float.toString(gardenSize))
                         .param("country", country)
                         .param("city", city)
                         .param("streetAddress", streetAddress)
                         .param("suburb", suburb)
-                        .param("postcode", postcode)
-                        .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -251,15 +255,14 @@ class GardenFormControllerTest {
         String suburb = "Ilam&";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenSize", Float.toString(gardenSize))
                         .param("country", country)
                         .param("city", city)
                         .param("streetAddress", streetAddress)
                         .param("suburb", suburb)
-                        .param("postcode", postcode)
-                        .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -277,15 +280,14 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041&";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("gardenSize", Float.toString(gardenSize))
                         .param("country", country)
                         .param("city", city)
                         .param("streetAddress", streetAddress)
                         .param("suburb", suburb)
-                        .param("postcode", postcode)
-                        .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -303,15 +305,14 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                 .param("gardenName", gardenName)
                 .param("gardenSize", Float.toString(gardenSize))
                 .param("country", country)
                 .param("city", city)
                 .param("streetAddress", streetAddress)
                 .param("suburb", suburb)
-                .param("postcode", postcode)
-                .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -328,7 +329,7 @@ class GardenFormControllerTest {
         String suburb = "Ilam";
         String postcode = "8041";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/gardenform")
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
                         .param("country", country)
                         .param("city", city)
