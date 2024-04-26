@@ -2,10 +2,14 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
@@ -13,6 +17,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
  * Checks the validity of the entries into the garden form
  */
 public class ErrorChecker {
+    Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
 
     /**
      * Checks for valid user entries that meet the given requirements
@@ -288,8 +293,9 @@ public class ErrorChecker {
                             "Email address must be in the form ‘jane@doe.nz'");
         }
         User user = userService.getUserByEmailAndPassword(email, password);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
 
-        if (user == null) {
+        if (user == null || !encoder.matches(password, user.getPassword())) {
             errors.put("invalidError",
                             "The email address is unknown, or the password is invalid");
         }
