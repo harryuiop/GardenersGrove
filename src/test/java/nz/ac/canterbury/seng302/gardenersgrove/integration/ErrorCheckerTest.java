@@ -268,76 +268,258 @@ class ErrorCheckerTest {
     }
 
     @Test
-    void registrationFormErrors_allFieldsValid_returnsNoErrors() {
-        String firstName = "Jane";
-        String lastName = "Doe";
-        boolean noSurname = false;
-        String email = "jane.doe@gmail.com";
-        String password = "a1B2c#de";
-        String dateOfBirth = LocalDate.now().minusYears(20).toString();
-        boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, password, validDate, dateOfBirth,
-                userService);
+    void firstNameErrors_validFirstName_returnsNoErrors() {
+        String firstName = "Jane-Mary's ";
+        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
         HashMap<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
 
     @Test
-    void registrationFormErrors_allFieldsBlank_returnsBlankErrors() {
+    void firstNameErrors_BlankFirstName_returnsBlankError() {
         String firstName = "  ";
-        String lastName = "";
-        boolean noSurname = false;
-        String email = "  ";
-        String password = "";
-        String dateOfBirth = "  ";
-        boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                                                                    password, password, validDate, dateOfBirth,
-                                                                    userService);
+        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
         HashMap<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("firstNameError", "First Name cannot be empty");
-        correctErrors.put("lastNameError", "Last Name cannot be empty unless box is ticked");
+        correctErrors.put("firstNameError", "First name cannot be empty");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void firstNameErrors_InvalidLongFirstNameWithInvalidCharacters_returnsTooLongErrorPlusInvalidCharacters() {
+        String firstName = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyza%$#bcdefghijklm";
+        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put(
+                "firstNameError",
+                "First name cannot exceed length of 64 characters and " +
+                        "first name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
+        );
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void firstNameErrors_InvalidLongFirstName_returnsTooLongError() {
+        String firstName = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm";
+        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("firstNameError", "First name cannot exceed length of 64 characters");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void firstNameErrors_InvalidCharacter_returnsInvalidError() {
+        String firstName = " JA$$";
+        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("firstNameError", "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void lastNameErrors_validLastName_returnsNoErrors() {
+        String lastName = "Doe";
+        boolean noSurname = false;
+        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void lastNameErrors_validEmptyLastName_returnsNoErrors() {
+        String lastName = null;
+        boolean noSurname = true;
+        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void lastNameErrors_emptyLastName_returnsBlankError() {
+        String lastName = null;
+        boolean noSurname = false;
+        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("lastNameError", "Last name cannot be empty unless box is ticked");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void lastNameErrors_InvalidLongLastNameWithInvalidCharacters_returnsTooLongErrorPlusInvalidCharacters() {
+        String lastName = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyza%$#bcdefghijklm";
+        boolean noSurname = false;
+        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put(
+                "lastNameError",
+                "Last name cannot exceed length of 64 characters and " +
+                        "last name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
+        );
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void lastNameErrors_InvalidLongLastName_returnsTooLongError() {
+        String lastName = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm";
+        boolean noSurname = false;
+        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("lastNameError", "Last name cannot exceed length of 64 characters");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void lastNameErrors_InvalidCharacter_returnsInvalidError() {
+        String lastName = "M<>()!@acojlc";
+        boolean noSurname = false;
+        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("lastNameError", "Last name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void emailErrors_validEmail_returnsNoErrors() {
+        String email = "jane@doe.com";
+        boolean oldEmail = false;
+        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> correctErrors = new HashMap<>();
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void emailErrors_blankEmail_returnsBlankError() {
+        String email = null;
+        boolean oldEmail = false;
+        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("emailError", "Email cannot be empty");
-        correctErrors.put("passwordError", "Password cannot be empty");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void emailErrors_invalidEmailForm_returnsInvalidError() {
+        String email = "notAnEmail.com";
+        boolean oldEmail = false;
+        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void emailErrors_oldEmail_returnsNoErrors() {
+        String firstName = "Jane";
+        String lastName = "";
+        String email = "jane@doe.nz";
+        String password = "passworD!2";
+        String dateOfBirth = LocalDate.now().minusYears(20).toString();
+        boolean oldEmail = true;
+        Mockito.when(userService.getUserByEmail(email)).thenReturn(new User(email,firstName,lastName,password, dateOfBirth));
+        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> correctErrors = new HashMap<>();
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void emailErrors_InvalidDupEmail_returnsAlreadyInUse() {
+        String firstName = "Jane";
+        String lastName = "";
+        String email = "jane@doe.nz";
+        String password = "passworD!2";
+        String dateOfBirth = LocalDate.now().minusYears(20).toString();
+        boolean oldEmail = false;
+        Mockito.when(userService.getUserByEmail(email)).thenReturn(new User(email,firstName,lastName,password, dateOfBirth));
+        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("emailError", "This email address is already in use");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void dateOfBirthErrors_validDate_returnsNoErrors() {
+        String dateOfBirth = LocalDate.now().minusYears(120).toString();
+        boolean validDate = true;
+        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
+        Map<String, String> correctErrors = new HashMap<>();
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void dateOfBirthErrors_BlankDate_returnsBlankError() {
+        String dateOfBirth = "";
+        boolean validDate = true;
+        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
+        Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "Date of Birth cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
     }
 
     @Test
-    void registrationFormErrors_allFieldsInvalidChar_returnsInvalidErrors() {
-        String firstName = " JA$$";
-        String lastName = "";
-        boolean noSurname = true;
-        String email = "  @doe.nz";
-        String password = "password";
-        String dateOfBirth = "  ";
-        boolean validDate = false;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, password, validDate, dateOfBirth,
-                userService);
+    void dateOfBirthErrors_dobTooYoung_returnsUnder13() {
+        String dateOfBirth = LocalDate.now().minusYears(10).toString();
+        boolean validDate = true;
+        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
         Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("firstNameError", "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
-        correctErrors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
-        correctErrors.put("passwordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        correctErrors.put("plantedDateError", "Date is not in valid format, DD/MM/YYYY");
+        correctErrors.put("dateOfBirthError", "You must be 13 years or older to create an account");
         Assertions.assertEquals(correctErrors, errors);
     }
 
     @Test
-    void registrationFormErrors_InvalidlongFName_returnsTooLongError() {
-        String firstName = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm";
-        String lastName = "";
-        boolean noSurname = true;
-        String email = "jane@doe.nz";
-        String password = "passworD!2";
-        String dateOfBirth = LocalDate.now().minusYears(20).toString();
+    void dateOfBirthErrors_dobTooOld_returnsOver120() {
+        String dateOfBirth = LocalDate.now().minusYears(121).toString();
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, password, validDate, dateOfBirth,
-                userService);
+        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
         Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("firstNameError", "First Name cannot exceed length of 64 characters");
+        correctErrors.put("dateOfBirthError", "The maximum age allowed is 120 years");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void dateOfBirthErrors_invalidDate_returnsInvalidFormat() {
+        String dateOfBirth = "30/02/2000";
+        boolean validDate = false;
+        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("dateOfBirthError", "Date is not in valid format, DD/MM/YYYY");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void passwordErrors_validPassword_returnsNoErrors() {
+        String password = "Abe123#$";
+        Map<String, String> errors = ErrorChecker.passwordErrors(password, password);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void passwordErrors_blankPassword_returnsBlankError() {
+        String password = null;
+        Map<String, String> errors = ErrorChecker.passwordErrors(password, password);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("passwordError", "Password cannot be empty");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void passwordErrors_doesNotMeetCharacterConditions_returnsInvaildCharacters() {
+        String password = "a1b2de";
+        Map<String, String> errors = ErrorChecker.passwordErrors(password, password);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        correctErrors.put(
+                "passwordError",
+                "Your password must be at least 8 characters long and include at least one uppercase letter, " +
+                        "one lowercase letter, one number, and one special character");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void passwordErrors_notEqualPasswords_returnsNotEqual() {
+        String password = "a1B2c#de";
+        String otherpass = "abcD32#";
+        Map<String, String> errors = ErrorChecker.passwordErrors(password, otherpass);
+        HashMap<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("passwordConfirmError", "Passwords do not match");
         Assertions.assertEquals(correctErrors, errors);
     }
 
@@ -397,72 +579,5 @@ class ErrorCheckerTest {
         expected.put("emailError", "Email address must be in the form ‘jane@doe.nz'");
         expected.put("invalidError", "The email address is unknown, or the password is invalid");
         Assertions.assertEquals(expected, errors);
-    }
-    @Test
-    void registrationFormErrors_InvalidDupEmail_returnsAlreadyInUse() {
-        String firstName = "Jane";
-        String lastName = "";
-        boolean noSurname = true;
-        String email = "jane@doe.nz";
-        String password = "passworD!2";
-        String dateOfBirth = LocalDate.now().minusYears(20).toString();
-        boolean validDate = true;
-        Mockito.when(userService.getUserByEmail(email)).thenReturn(new User(email,firstName,lastName,password, dateOfBirth));
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, password, validDate, dateOfBirth,
-                userService);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("emailError", "This email address is already in use");
-        Assertions.assertEquals(correctErrors, errors);
-    }
-
-    @Test
-    void registrationFormErrors_notEqualPasswords_returnsNotEqual() {
-        String firstName = "Jane";
-        String lastName = "Doe";
-        boolean noSurname = false;
-        String email = "jane.doe@gmail.com";
-        String password = "a1B2c#de";
-        String otherpass = "abcD32#";
-        String dateOfBirth = LocalDate.now().minusYears(20).toString();
-        boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, otherpass, validDate, dateOfBirth,
-                userService);
-        HashMap<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("passwordConfirmError", "Passwords do not match");
-        Assertions.assertEquals(correctErrors, errors);
-    }
-    @Test
-    void registrationFormErrors_dobTooYoung_returnsUnder13() {
-        String firstName = "Jane";
-        String lastName = "Doe";
-        boolean noSurname = false;
-        String email = "jane.doe@gmail.com";
-        String password = "a1B2c#de";
-        String dateOfBirth = LocalDate.now().minusYears(10).toString();
-        boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, password, validDate, dateOfBirth,
-                userService);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("dateOfBirthError", "You must be 13 years or older to create an account");
-        Assertions.assertEquals(correctErrors, errors);
-    }
-    @Test
-    void registrationFormErrors_dobTooOld_returnsUnder13() {
-        String firstName = "Jane";
-        String lastName = "Doe";
-        boolean noSurname = false;
-        String email = "jane.doe@gmail.com";
-        String password = "a1B2c#de";
-        String dateOfBirth = LocalDate.now().minusYears(121).toString();
-        boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, password, validDate, dateOfBirth,
-                userService);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("dateOfBirthError", "The maximum age allowed is 120 years");
-        Assertions.assertEquals(correctErrors, errors);
     }
 }

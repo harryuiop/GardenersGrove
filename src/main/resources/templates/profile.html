@@ -7,7 +7,6 @@
     <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
   </head>
   <body>
-  <div th:insert="~{fragments/fragments :: title}">Header</div>
   <nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
     <a th:href="@{/editProfile}" class="button">Edit Profile</a>
     <div class="profileBody">
@@ -40,7 +39,7 @@
           </div>
         </div>
 
-        <h2 th:text="${user.getFirstName() + ' ' + user.getLastName()}"></h2>
+        <h2 th:text="${user.getLastName() != null ? user.getFirstName() + ' ' + user.getLastName() : user.getFirstName()}"></h2>
         <h3 id="profileDoB" th:text="${user.getDob()}"></h3>
         <h3 id="profileEmail" th:text="${user.getEmail()}"></h3>
       </div>

@@ -56,7 +56,7 @@ public class LogInController {
         }
         boolean validated = false;
         userService.addUsers(new User
-                ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"), validated);
+                ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
         return "login";
     }
 

@@ -39,7 +39,10 @@ public class FormValuesValidator {
      * @return false to show there are no errors
      */
     public static boolean checkBlank(String string) {
-        return !string.isBlank();
+        if (string != null) {
+            return string.isBlank();
+        }
+        return true;
     }
 
     /**
@@ -101,7 +104,7 @@ public class FormValuesValidator {
      * @return true if the password and confirmer are the same, otherwise false.
      */
     public static boolean checkConfirmPasswords(String password, String confirmer) {
-        return confirmer.equals(password);
+        return password.equals(confirmer);
     }
 
     /**

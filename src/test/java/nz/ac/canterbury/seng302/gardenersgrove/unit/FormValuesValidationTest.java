@@ -37,16 +37,16 @@ public class FormValuesValidationTest {
     }
 
     @Test
-    void checkName_validName_returnTrue() {
+    void checkName_validName_returnFalse() {
         String string = "Garden 1";
-        Assertions.assertTrue(FormValuesValidator.checkBlank(string));
+        Assertions.assertFalse(FormValuesValidator.checkBlank(string));
         Assertions.assertTrue(FormValuesValidator.checkCharacters(string));
     }
 
     @Test
-    void checkName_blankName_returnFalse() {
+    void checkName_blankName_returnTrue() {
         String string = " ";
-        Assertions.assertFalse(FormValuesValidator.checkBlank(string));
+        Assertions.assertTrue(FormValuesValidator.checkBlank(string));
     }
 
     @Test

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        div {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        p {
+            color: #666;
+            text-align: justify;
+        }
+        #welcome-title {
+            text-align: center;
+        }
+        #instruction {
+            margin-left: 20px;
+            text-align: justify;
+            color: #666;
+
+        }
+        #token {
+            text-align: center;
+            font-size: xx-large;
+            color: rgba(0, 0, 0, 0.66);
+        }
+
+    </style>
+</head>
+<body>
+
+<div>
+    <h1 id="welcome-title" th:text="'Welcome ' + ${firstName} + ' ' + ${lastName} + '!!!'"></h1>
+    <br />
+    <br />
+    <h3 id="instruction">Thank you for sign-up. To complete your registration, please copy this token and paste to your register webpage to register your email.</h3>
+    <p id="token" th:text="${token}"></p>
+    <p style="margin-left: 20px;">If you did not sign up for this service, Do not worry Account will remove in 10 minutes.</p>
+    <br />
+    <p style="margin-left: 20px;">Thank you,<br/>SENG302 Team-400 (Bad Request)</p>
+</div>
+
+</body>
+</html>

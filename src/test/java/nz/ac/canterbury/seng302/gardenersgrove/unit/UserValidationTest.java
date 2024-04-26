@@ -101,10 +101,10 @@ public class UserValidationTest {
     }
 
     @Test
-    void checkName_lnameAllSpace_returnFalse() {
+    void checkName_lnameAllSpace_returnTrue() {
         String fname = "John";
         String lname = "   ";
-        Assertions.assertFalse(nameIsValid(fname, lname));
+        Assertions.assertTrue(nameIsValid(fname, lname));
     }
 
     @Test
@@ -115,10 +115,10 @@ public class UserValidationTest {
     }
 
     @Test
-    void checkName_lnameEmpty_returnFalse() {
+    void checkName_lnameEmpty_returnTrue() {
         String fname = "John";
         String lname = "";
-        Assertions.assertFalse(nameIsValid(fname, lname));
+        Assertions.assertTrue(nameIsValid(fname, lname));
     }
 
     @Test
