@@ -220,7 +220,7 @@ public class ErrorChecker {
 
     /**
      * Receives the inputs for the profile (from edit directly but is also used by register below),
-     * then collates messages of anyway they breach the acceptance criteria.
+     * then creates a map of the fields that have errors and the descriptions of those errors, used to inform the user
      * @param firstName       The first name string.
      * @param lastName        The last name string.
      * @param noSurname       Whether the noLastName box was ticked.
