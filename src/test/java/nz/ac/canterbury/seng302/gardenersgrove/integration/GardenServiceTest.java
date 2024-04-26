@@ -5,6 +5,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ class GardenServiceTest {
     private GardenRepository gardenRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     private User user;
 
@@ -36,9 +37,9 @@ class GardenServiceTest {
                     "Password1!",
                     "2000-01-01"
             );
-            userRepository.save(user);
+            userService.addUsers(user);
         }
-        GardenService gardenService = new GardenService(gardenRepository);
+        GardenService gardenService = new GardenService(gardenRepository, userService);
         Garden garden = gardenService.saveGarden(new Garden(user, "Test Garden", "Test location", 100f));
         List<Garden> gardens = gardenRepository.findAllByOwner(user);
 

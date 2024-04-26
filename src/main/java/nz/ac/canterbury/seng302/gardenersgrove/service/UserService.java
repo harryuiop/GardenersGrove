@@ -36,9 +36,9 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
         this.addUsers(new User
-                ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
-        this.addUsers(new User
                 ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
+        this.addUsers(new User
+                ("user2@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
     }
 
     /**
