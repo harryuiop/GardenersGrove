@@ -50,11 +50,11 @@ class PlantControllerEditTest {
     private final String originalPlantDescription = "description";
     private final LocalDate originalPlantedDate = LocalDate.now();
 
-    private boolean userCreated = false;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        if (!userCreated) {
+        if (user == null) {
             User user = new User(
                             "test@domain.net",
                             "Test",
@@ -63,11 +63,10 @@ class PlantControllerEditTest {
                             "2000-01-01"
             );
             userRepository.save(user);
-            userCreated = true;
         }
         gardenRepository.deleteAll();
-        gardenRepository.save(new Garden("Test Garden", "test location", null));
-        Garden garden = gardenRepository.findAll().get(0);
+        gardenRepository.save(new Garden(user, "Test Garden", "test location", null));
+        Garden garden = gardenRepository.findAllByOwner(user).get(0);
         plantRepository.deleteAll();
         plantRepository.save(new Plant(
                         originalPlantName, originalPlantCount, originalPlantDescription, originalPlantedDate, null, garden

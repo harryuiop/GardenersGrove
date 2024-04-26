@@ -2,7 +2,9 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,12 +24,26 @@ public class PlantServiceTest {
     @Autowired
     private GardenRepository gardenRepository;
 
+    @Autowired
+    private UserRepository userRepository;
     private Garden garden;
+
+    private User user;
 
     @BeforeEach
     void setUp() {
+        if (user == null) {
+            User user = new User(
+                    "test@domain.net",
+                    "Test",
+                    "User",
+                    "Password1!",
+                    "2000-01-01"
+            );
+            userRepository.save(user);
+        }
         gardenRepository.deleteAll();
-        this.garden = new Garden("Test Garden", "Test Location", null);
+        this.garden = new Garden(user, "Test Garden", "Test Location", null);
         gardenRepository.save(this.garden);
     }
 
@@ -65,7 +81,7 @@ public class PlantServiceTest {
         );
         plantService.savePlant(plant);
 
-        Garden gardenTwo = new Garden("Test Garden Two", "Test Location Two", null);
+        Garden gardenTwo = new Garden(user, "Test Garden Two", "Test Location Two", null);
         gardenRepository.save(gardenTwo);
 
         Plant plantTwo = new Plant(

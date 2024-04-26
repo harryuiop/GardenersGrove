@@ -43,11 +43,11 @@ class EditGardenControllerTest {
     private final float initialGardenSize = 100.0f;
 
     private Long gardenId;
-    private boolean userCreated = false;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        if (!userCreated) {
+        if (user == null) {
             User user = new User(
                             "test@domain.net",
                             "Test",
@@ -56,10 +56,9 @@ class EditGardenControllerTest {
                             "2000-01-01"
             );
             userRepository.save(user);
-            userCreated = true;
         }
         gardenRepository.deleteAll();
-        Garden garden = new Garden(initialGardenName, initialGardenLocation, initialGardenSize);
+        Garden garden = new Garden(user, initialGardenName, initialGardenLocation, initialGardenSize);
         gardenRepository.save(garden);
         gardenId = garden.getId();
     }
@@ -73,7 +72,7 @@ class EditGardenControllerTest {
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                         .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertEquals(1, allGardens.size());
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
@@ -94,7 +93,7 @@ class EditGardenControllerTest {
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                         .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertEquals(1, allGardens.size());
         Garden garden = allGardens.get(0);
         assertEquals(newGardenName, garden.getName());
@@ -115,7 +114,7 @@ class EditGardenControllerTest {
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenLocation, garden.getLocation());
@@ -136,7 +135,7 @@ class EditGardenControllerTest {
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenLocation, garden.getLocation());
@@ -157,7 +156,7 @@ class EditGardenControllerTest {
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenLocation, garden.getLocation());
@@ -178,7 +177,7 @@ class EditGardenControllerTest {
                         .andExpect(MockMvcResultMatchers.redirectedUrlPattern(VIEW_GARDEN_URI_STRING));
 
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertEquals(1, allGardens.size());
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());

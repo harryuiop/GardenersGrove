@@ -1,7 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,11 +21,26 @@ class GardenServiceTest {
     @Autowired
     private GardenRepository gardenRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    private User user;
+
     @Test
     void gardenRepositoryGardenCreation() {
+        if (user == null) {
+            User user = new User(
+                    "test@domain.net",
+                    "Test",
+                    "User",
+                    "Password1!",
+                    "2000-01-01"
+            );
+            userRepository.save(user);
+        }
         GardenService gardenService = new GardenService(gardenRepository);
-        Garden garden = gardenService.saveGarden(new Garden("Test Garden", "Test location", 100f));
-        List<Garden> gardens = gardenRepository.findAll();
+        Garden garden = gardenService.saveGarden(new Garden(user, "Test Garden", "Test location", 100f));
+        List<Garden> gardens = gardenRepository.findAllByOwner(user);
 
         Assertions.assertEquals(1, gardens.size());
         Assertions.assertEquals(garden.getId(), gardens.get(0).getId());

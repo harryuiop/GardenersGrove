@@ -29,7 +29,6 @@ public class UserService {
      * @param userRepository The UserRepository instance.
      */
     @Autowired
-
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -112,7 +111,7 @@ public class UserService {
     public User getAuthenticatedUser(UserService userService) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
-        return userService.getUserById(currentPrincipalName);
+        return getUserById(currentPrincipalName);
     }
 
 }
