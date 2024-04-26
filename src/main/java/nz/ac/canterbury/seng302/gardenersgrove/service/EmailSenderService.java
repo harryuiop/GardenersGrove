@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import static java.util.concurrent.TimeUnit.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +22,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Service about sending email in server side
@@ -135,4 +138,7 @@ public class EmailSenderService {
         }
     }
 
+    public void checkVerificationBeenTenMinutes() {
+        return;
+    }
 }
