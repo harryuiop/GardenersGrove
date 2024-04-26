@@ -108,7 +108,7 @@ public class UserService {
      * @param userService The UserService object in use
      * @return The User object if found
      */
-    public User getAuthenticatedUser(UserService userService) {
+    public User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
         return getUserById(currentPrincipalName);

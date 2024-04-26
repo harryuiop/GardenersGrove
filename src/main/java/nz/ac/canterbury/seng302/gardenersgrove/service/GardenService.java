@@ -19,7 +19,7 @@ public class GardenService {
     }
 
     public List<Garden> getAllGardens(UserService userService) {
-        return gardenRepository.findAllByOwner(userService.getAuthenticatedUser(userService));
+        return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
     }
 
     public Optional<Garden> getGardenById(Long id) {

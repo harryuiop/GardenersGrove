@@ -41,6 +41,7 @@ class GardenFormControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
     private GardenService gardenService;
 
     private UserService userService;
@@ -51,8 +52,6 @@ class GardenFormControllerTest {
 
     @BeforeEach
     void setUp() {
-
-        gardenService = Mockito.spy(new GardenService(gardenRepository));
 
         userService = Mockito.spy(new UserService(userRepository));
 
@@ -76,7 +75,7 @@ class GardenFormControllerTest {
         String gardenName = "Test Garden";
         String gardenLocation = "Test Location";
         float gardenSize = 100.0f;
-        Mockito.when(userService.getAuthenticatedUser(Mockito.any())).thenReturn(user);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                                         .param("gardenName", gardenName)
@@ -98,7 +97,7 @@ class GardenFormControllerTest {
         String gardenName = "Test&Garden";
         String gardenLocation = "Test Location";
         float gardenSize = 4f;
-        Mockito.when(userService.getAuthenticatedUser(Mockito.any())).thenReturn(user);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                                         .param("gardenName", gardenName)
@@ -116,7 +115,7 @@ class GardenFormControllerTest {
         String gardenName = "Test Garden";
         String gardenLocation = "Test^Location";
         float gardenSize = 4f;
-        Mockito.when(userService.getAuthenticatedUser(Mockito.any())).thenReturn(user);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                                         .param("gardenName", gardenName)
@@ -134,7 +133,7 @@ class GardenFormControllerTest {
         String gardenName = "Test Garden";
         String gardenLocation = "Test Location";
         float gardenSize = -1f;
-        Mockito.when(userService.getAuthenticatedUser(Mockito.any())).thenReturn(user);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                                         .param("gardenName", gardenName)
@@ -151,7 +150,7 @@ class GardenFormControllerTest {
     void submitForm_noSize_gardenSaved() throws Exception {
         String gardenName = "Test Garden";
         String gardenLocation = "Test Location";
-        Mockito.when(userService.getAuthenticatedUser(Mockito.any())).thenReturn(user);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                                         .param("gardenName", gardenName)
