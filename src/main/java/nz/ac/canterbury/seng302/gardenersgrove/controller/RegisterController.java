@@ -30,13 +30,14 @@ public class RegisterController {
 
     UserService userService;
 
-    @Autowired
-    public RegisterController(UserService userService) {
-        this.userService = userService;
-    }
+    EmailSenderService emailSenderService;
 
     @Autowired
-    EmailSenderService emailSenderService;
+    public RegisterController(UserService userService, EmailSenderService emailSenderService) {
+        this.userService = userService;
+        this.emailSenderService = emailSenderService;
+    }
+
 
 
     /**
