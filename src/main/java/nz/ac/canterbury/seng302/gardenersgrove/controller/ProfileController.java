@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
@@ -66,11 +67,13 @@ public class ProfileController extends GardensSidebar {
      * @return The name of the profile view template.
      */
     @GetMapping("/editProfile")
-    public String getEditProfilePage(Model model) {
+    public String getEditProfilePage(Model model, String imageTypeError, String imageSizeError) {
         User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
         boolean noSurname = user.getLastName() == null;
         model.addAttribute("noSurname", noSurname);
+        model.addAttribute("imageTypeError", imageTypeError);
+        model.addAttribute("imageSizeError", imageSizeError);
         return "editProfile";
     }
 
