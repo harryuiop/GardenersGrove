@@ -287,6 +287,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> loginFormErrors(String email, String password, UserService userService) {
         HashMap<String, String> errors = new HashMap<>();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         if (!UserValidation.emailIsValid(email)) {
             errors.put("emailError",
@@ -294,7 +295,7 @@ public class ErrorChecker {
         }
         User user = userService.getUserByEmail(email);
 
-        if (user == null) {
+        if (user == null || !encoder.matches(password, user.getPassword())) {
             errors.put("invalidError",
                             "The email address is unknown, or the password is invalid");
         }
