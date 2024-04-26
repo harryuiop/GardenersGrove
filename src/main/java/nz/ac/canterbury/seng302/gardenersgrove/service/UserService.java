@@ -1,7 +1,11 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
+import jakarta.annotation.PostConstruct;
+import nz.ac.canterbury.seng302.gardenersgrove.GardenersGroveApplication;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +35,10 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.addUsers(new User
+                ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
+        this.addUsers(new User
+                ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
     }
 
     /**

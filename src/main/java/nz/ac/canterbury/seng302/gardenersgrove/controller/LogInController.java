@@ -54,9 +54,6 @@ public class LogInController {
         if (error != null && error.equals("Bad_Credentials")) {
             model.addAttribute("emailError", "Email address must be in the form ‘jane@doe.nz’");
         }
-        boolean validated = false;
-        userService.addUsers(new User
-                ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
         return "login";
     }
 
