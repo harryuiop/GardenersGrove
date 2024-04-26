@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.emailIsValid;
@@ -48,10 +49,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         // Attempt to retrieve user from the database using email and password
-        User user = userService.getUserByEmailAndPassword(email, password);
+        User user = userService.getUserByEmail(email);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         // If user is not found, throw BadCredentialsException
-        if (user == null) {
+        if (user == null || !encoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Invalid");
         }
 

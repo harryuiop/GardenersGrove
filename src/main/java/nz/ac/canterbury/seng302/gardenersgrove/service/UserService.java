@@ -115,8 +115,13 @@ public class UserService {
         return userService.getUserById(currentPrincipalName);
     }
 
+    /**
+     * Hashes a plain text password using BCrypt
+     * @param passwordInPlainText The plain text password
+     * @return  The hashed password
+     */
     public String hashUserPassword(String passwordInPlainText) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
         return encoder.encode(passwordInPlainText);
     }
 }

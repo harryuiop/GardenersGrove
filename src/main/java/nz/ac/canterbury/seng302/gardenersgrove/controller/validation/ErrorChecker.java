@@ -292,10 +292,9 @@ public class ErrorChecker {
             errors.put("emailError",
                             "Email address must be in the form ‘jane@doe.nz'");
         }
-        User user = userService.getUserByEmailAndPassword(email, password);
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+        User user = userService.getUserByEmail(email);
 
-        if (user == null || !encoder.matches(password, user.getPassword())) {
+        if (user == null) {
             errors.put("invalidError",
                             "The email address is unknown, or the password is invalid");
         }
