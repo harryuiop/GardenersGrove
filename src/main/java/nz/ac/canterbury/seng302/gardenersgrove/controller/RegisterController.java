@@ -2,17 +2,19 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 
 /**
@@ -25,12 +27,15 @@ public class RegisterController {
 
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-    ErrorChecker validator = new ErrorChecker();
-
-    private final DateFormat readFormat = new SimpleDateFormat("yyyy-MM-dd");
+    UserService userService;
 
     @Autowired
-    UserService userService;
+    public RegisterController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    EmailSenderService emailSenderService;
 
 
     /**
@@ -74,14 +79,14 @@ public class RegisterController {
         boolean dateOfBirthValid = true;
         try {
             if (dateOfBirth != null && !dateOfBirth.isBlank()) {
-                readFormat.parse(dateOfBirth);
+                LocalDate.parse(dateOfBirth);
             }
-        } catch (ParseException exception) {
+        } catch (DateTimeParseException exception) {
             dateOfBirthValid = false;
         }
 
 
-        Map<String, String> errors = validator.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                                                                         password, passwordConfirm,
                                                                         dateOfBirthValid, dateOfBirth, userService);
 
@@ -96,9 +101,12 @@ public class RegisterController {
             return "register";
         }
         boolean validated = true;
-        userService.addUsers(
-                new User(email, firstName, lastName, password, dateOfBirth), validated
-        );
+        User newUser = new User(email, firstName, lastName, password, dateOfBirth);
+        userService.addUsers(newUser, validated);
+
+        // send verification email
+        emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");
+
         return "redirect:/profile";
     }
 }

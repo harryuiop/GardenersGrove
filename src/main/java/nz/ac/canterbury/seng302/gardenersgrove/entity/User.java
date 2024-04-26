@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,12 @@ public class User {
     @Column(name = "profile_picture_file_name")
     private String profilePictureFileName;
 
+    @Column
+    private Boolean confirmation;
+
+    @Column(name = "sign-up_token")
+    private String token;
+
     /*
      * TODO - May be we need to create properties for GrantedAuthority
      * Perhaps this need to be a list?
@@ -89,6 +97,7 @@ public class User {
         this.lastName = lastName;
         this.password = password;
         this.dob = dob;
+        this.confirmation = false;
     }
 
     /**
@@ -162,8 +171,26 @@ public class User {
         if (profilePictureFileName != null) {
             return "/uploads/" + profilePictureFileName;
         } else {
-            return "images/default_profile_photo.png";
+            return "/images/default_profile_photo.png";
         }
+    }
+
+    /**
+     * getting user's valid token
+     *
+     * @return user's valid token
+     */
+    public String getToken() {
+        return this.token;
+    }
+
+    /**
+     * check if client's account is registered.
+     *
+     * @return boolean about client's current status of registration
+     */
+    public boolean isConfirmed() {
+        return this.confirmation;
     }
 
     /**
@@ -173,6 +200,24 @@ public class User {
      */
     public void setProfilePictureFileName(String profilePictureFileName) {
         this.profilePictureFileName = profilePictureFileName;
+    }
+
+    /**
+     * Setter method about client's registration token
+     *
+     * @param token to authenticate the client's identity
+     */
+    public void setToken (String token) {
+        this.token = token;
+    }
+
+    /**
+     * setter method to change status of client's registration
+     *
+     * @param confirmation a bool type variable to be changed
+     */
+    public void setConfirmation(boolean confirmation) {
+        this.confirmation = confirmation;
     }
 
     /**

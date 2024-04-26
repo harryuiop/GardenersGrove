@@ -3,8 +3,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
-
 import static org.mockito.Mockito.when;
 
 @DataJpaTest
@@ -56,7 +55,7 @@ class ErrorCheckerTest {
         String name = "Garden 1";
         String location = "Christchurch";
         Float size = 1.5f;
-        Map<String, String> errors = validate.gardenFormErrors(name, location, size);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, location, size);
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -65,7 +64,7 @@ class ErrorCheckerTest {
         String name = "Garden 1";
         String location = "Christchurch";
         Float size = -1.5f;
-        Map<String, String> errors = validate.gardenFormErrors(name, location, size);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, location, size);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenSizeError", "Garden size must be a positive number");
         Assertions.assertEquals(correctErrors, errors);
@@ -76,7 +75,7 @@ class ErrorCheckerTest {
         String name = "";
         String location = "Christchurch";
         Float size = 1.5f;
-        Map<String, String> errors = validate.gardenFormErrors(name, location, size);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, location, size);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         Assertions.assertEquals(correctErrors, errors);
@@ -86,7 +85,7 @@ class ErrorCheckerTest {
         String name = "Garden 1";
         String location = "";
         Float size = 1.5f;
-        Map<String, String> errors = validate.gardenFormErrors(name, location, size);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, location, size);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenLocationError", "Location cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
@@ -97,7 +96,7 @@ class ErrorCheckerTest {
         String name = "Garden 1";
         String location = "Christchurch";
         Float size = null;
-        Map<String, String> errors = validate.gardenFormErrors(name, location, size);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, location, size);
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -107,7 +106,7 @@ class ErrorCheckerTest {
         String name = "";
         String location = " ";
         Float size = 1.5f;
-        Map<String, String> errors = validate.gardenFormErrors(name, location, size);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, location, size);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         correctErrors.put("gardenLocationError", "Location cannot be empty");
@@ -119,7 +118,7 @@ class ErrorCheckerTest {
         String name = "This!@$%";
         String location = "Christchurch";
         Float size = 1.5f;
-        Map<String, String> errors = validate.gardenFormErrors(name, location, size);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, location, size);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "gardenNameError",
@@ -132,7 +131,7 @@ class ErrorCheckerTest {
         String name = "Garden 1";
         String location = "#1";
         Float size = 1.5f;
-        Map<String, String> errors = validate.gardenFormErrors(name, location, size);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, location, size);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "gardenLocationError",
@@ -146,7 +145,7 @@ class ErrorCheckerTest {
         String name = "  ";
         String location = "#1";
         Float size = 1.5f;
-        Map<String, String> errors = validate.gardenFormErrors(name, location, size);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, location, size);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         correctErrors.put(
@@ -165,7 +164,7 @@ class ErrorCheckerTest {
         String password = "a1B2c#de";
         String dateOfBirth = LocalDate.now().minusYears(20).toString();
         boolean validDate = true;
-        Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
                 userService);
         HashMap<String, String> correctErrors = new HashMap<>();
@@ -181,7 +180,7 @@ class ErrorCheckerTest {
         String password = "";
         String dateOfBirth = "  ";
         boolean validDate = true;
-        Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                                                                     password, password, validDate, dateOfBirth,
                                                                     userService);
         HashMap<String, String> correctErrors = new HashMap<>();
@@ -202,7 +201,7 @@ class ErrorCheckerTest {
         String password = "password";
         String dateOfBirth = "  ";
         boolean validDate = false;
-        Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
                 userService);
         Map<String, String> correctErrors = new HashMap<>();
@@ -222,7 +221,7 @@ class ErrorCheckerTest {
         String password = "passworD!2";
         String dateOfBirth = LocalDate.now().minusYears(20).toString();
         boolean validDate = true;
-        Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
                 userService);
         Map<String, String> correctErrors = new HashMap<>();
@@ -239,7 +238,7 @@ class ErrorCheckerTest {
         String password = "Password1!";
         when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(
                 new User(email, "fname", "lname", password, "20/20/2003"));
-        Map<String, String> errors = validate.loginFormErrors(email, password, userService);
+        Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         Assertions.assertEquals(expected, errors);
     }
@@ -252,7 +251,7 @@ class ErrorCheckerTest {
         String email = "";
         String password = "";
         when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(null);
-        Map<String, String> errors = validate.loginFormErrors(email, password, userService);
+        Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         expected.put("emailError", "Email address must be in the form ‘jane@doe.nz'");
         expected.put("invalidError", "The email address is unknown, or the password is invalid");
@@ -267,7 +266,7 @@ class ErrorCheckerTest {
         String email = "user@gmail.com";
         String password = "iAmABadPassword";
         when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(null);
-        Map<String, String> errors = validate.loginFormErrors(email, password, userService);
+        Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         expected.put("invalidError", "The email address is unknown, or the password is invalid");
         Assertions.assertEquals(expected, errors);
@@ -281,7 +280,7 @@ class ErrorCheckerTest {
         String email = "notAnEmail";
         String password = "Re4!Password";
         when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(null);
-        Map<String, String> errors = validate.loginFormErrors(email, password, userService);
+        Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         expected.put("emailError", "Email address must be in the form ‘jane@doe.nz'");
         expected.put("invalidError", "The email address is unknown, or the password is invalid");
@@ -297,7 +296,7 @@ class ErrorCheckerTest {
         String dateOfBirth = LocalDate.now().minusYears(20).toString();
         boolean validDate = true;
         Mockito.when(userService.getUserByEmail(email)).thenReturn(new User(email,firstName,lastName,password, dateOfBirth));
-        Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
                 userService);
         Map<String, String> correctErrors = new HashMap<>();
@@ -315,7 +314,7 @@ class ErrorCheckerTest {
         String otherpass = "abcD32#";
         String dateOfBirth = LocalDate.now().minusYears(20).toString();
         boolean validDate = true;
-        Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, otherpass, validDate, dateOfBirth,
                 userService);
         HashMap<String, String> correctErrors = new HashMap<>();
@@ -331,7 +330,7 @@ class ErrorCheckerTest {
         String password = "a1B2c#de";
         String dateOfBirth = LocalDate.now().minusYears(10).toString();
         boolean validDate = true;
-        Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
                 userService);
         Map<String, String> correctErrors = new HashMap<>();
@@ -347,7 +346,7 @@ class ErrorCheckerTest {
         String password = "a1B2c#de";
         String dateOfBirth = LocalDate.now().minusYears(121).toString();
         boolean validDate = true;
-        Map<String, String> errors = validate.registerUserFormErrors(firstName, lastName, noSurname, email,
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
                 password, password, validDate, dateOfBirth,
                 userService);
         Map<String, String> correctErrors = new HashMap<>();

@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+
 
 public class GardensSidebar {
     /**
@@ -18,9 +20,14 @@ public class GardensSidebar {
      */
     public void updateGardensSidebar(Model model, GardenService gardenService, UserService userService) {
         model.addAttribute("gardens", gardenService.getAllGardens());
+        model.addAttribute("newGardenUri", newGardenUri());
+        model.addAttribute("viewAllGardensUri", viewAllGardensUri());
+        model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = Integer.parseInt(auth.getName());
         User user = userService.getUserById(currentPrincipalName);
+
         model.addAttribute("user", user);
     }
 }

@@ -2,28 +2,37 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
+
 /**
  * Controller class handling profile-related requests and actions.
  * Responsible for displaying user profile pages, editing profiles, and uploading profile photos.
  */
 @Controller
-public class ProfileController {
+public class ProfileController extends GardensSidebar {
 
     private final UserService userService;
+    private final GardenService gardenService;
     private final ErrorChecker validator = new ErrorChecker();
 
     /**
@@ -31,17 +40,19 @@ public class ProfileController {
      *
      * @param userService           The UserService responsible for user-related operations.
      */
-    public ProfileController(UserService userService) {
+    public ProfileController(UserService userService, GardenService gardenService) {
         this.userService = userService;
+        this.gardenService = gardenService;
     }
 
     /**
-     * Get mapping for the profile page
+     * Handles GET requests to the "/profile" URL.
      *
      * @return the profile page with the corresponding information
      */
     @GetMapping("/profile")
     public String getProfilePage(Model model) {
+        this.updateGardensSidebar(model, gardenService, userService);
         User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
 
@@ -49,7 +60,7 @@ public class ProfileController {
     }
 
     /**
-     * Handles GET requests to the "/profile" URL.
+     * Handles GET requests to the "/editProfile" URL.
      * Displays the user's profile page.
      *
      * @param model The Model object used for adding attributes to the view.
@@ -77,19 +88,25 @@ public class ProfileController {
         return "editPassword"; }
 
     /**
-     * Handles GET requests to the "/editProfile" URL.
+     * Handles POST requests to the "/uploadProfileImage" URL.
      * This method is responsible for dealing with grabbing the uploaded profile
-     * photo from the user and saving it to where he global variable UPLOAD_DIRECTORY specify
+     * photo from the user and saving it to the server.
      *
      * @param model The Model object used for adding attributes to the view.
      * @param file  The multipart file object uploaded by the user
+     * @param request The HTTP request object.
+     * @param model The Model object used for adding attributes to the view.
      * @return The name of the editProfile view template.
      */
     @PostMapping("/uploadProfileImage")
-    public String uploadImage(@RequestParam("image") MultipartFile file,
-                              HttpServletRequest request,
-                              Model model) throws IOException {
-        User user = userService.getAuthenticatedUser(userService);
+    public String uploadImage(
+                    @RequestParam("image") MultipartFile file,
+                    HttpServletRequest request,
+                    Model model
+    ) throws IOException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        int currentPrincipalName = parseInt(auth.getName());
+        User user = userService.getUserById(currentPrincipalName);
         model.addAttribute("user", user);
 
         ImageValidator imageValidator = new ImageValidator(file);
