@@ -100,6 +100,10 @@ public class User {
         this.confirmation = false;
     }
 
+    public int getId() {
+        return userId;
+    }
+
     /**
      * Retrieves the user's email.
      *
@@ -107,6 +111,14 @@ public class User {
      */
     public String getEmail() {
         return email;
+    }
+
+    /**
+     * Sets the users email so that it can be saved by the service and updated in the database
+     * @param email the new email entered by the user
+     */
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     /**
@@ -119,6 +131,14 @@ public class User {
     }
 
     /**
+     * Sets the users firstName so that it can be saved by the service and updated in the database
+     * @param firstName the new first name the user has entered into the form
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
      * Retrieves the user's last name.
      *
      * @return User's last name.
@@ -128,12 +148,28 @@ public class User {
     }
 
     /**
+     * Sets the users lastName so that it can be saved by the service and updated in the database
+     * @param lastName the new last name the user has entered into the form
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    /**
      * Retrieves the user's date of birth.
      *
      * @return User's date of birth.
      */
     public String getDob() {
         return dob;
+    }
+
+    /**
+     * Sets the users Date of Birth so that it can be saved by the service and updated in the database
+     * @param dob the new date of birth the user has entered into the form
+     */
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     /**
@@ -150,6 +186,14 @@ public class User {
      */
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * Sets the users password so that it can be saved by the service and updated in the database
+     * @param password the new password the user has entered into the form
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**

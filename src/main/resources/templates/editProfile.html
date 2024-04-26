@@ -4,10 +4,10 @@
     <meta charset="UTF-8"/>
     <title>Edit Profile</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-    <script type="text/javascript" src="/javascript/ValidationService.js"></script>
+    <script type="text/javascript" src="/javascript/disableLastName.js"></script>
     <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
 </head>
-<body>
+<body onload="loadingPage()">
 <nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
 
 <div class="profileBody">
@@ -41,7 +41,7 @@
         </div>
 
         <form
-                th:action="@{confirmProfileChanges}"
+                th:action="@{confirmProfileChanges(userId=${user.getId()})}"
                 method="post"
                 name="registerForm"
                 id="editProfileForm"
@@ -55,11 +55,8 @@
                     th:name="firstName"
                     th:value="${user.getFirstName()}"
                     autofocus
-                    onblur="firstNameValidation(
-                    document.registerForm,
-                    document.getElementById('firstNameError'))"
             />
-            <p class="errorMessage" id="firstNameError"></p>
+            <p class="errorMessage" id="firstNameError" th:text="${firstNameError}"></p>
 
 
             <label for="lastName">Last name:</label>
@@ -71,7 +68,6 @@
                     th:name="lastName"
                     th:value="${user.getLastName()}"
                     autofocus
-                    onblur="lastNameValidation(document.registerForm)"
             />
 
             <div class="noSurname">
@@ -80,14 +76,18 @@
                             type="checkbox"
                             id="noSurname"
                             value="checked"
+                            th:name="noSurname"
+                            th:checked="${noSurname}"
+                            th:value="${noSurname}"
                             autofocus
-                            onblur="checkNoSurnameClicked(document.registerForm)"
+                            autocomplete="off"
+                            onchange="updateCheckboxValue()"
                     />
                     I have no surname
                 </label>
             </div>
 
-            <p class="errorMessage" id="lastNameError"></p>
+            <p class="errorMessage" id="lastNameError" th:text="${lastNameError}"></p>
 
             <label for="email">Email:</label>
             <input
@@ -95,13 +95,11 @@
                     type="text"
                     id="email"
                     name="email"
-                    readonly
                     th:name="email"
                     th:value="${user.getEmail()}"
                     autofocus
-                    onblur="emailValidation(document.registerForm)"
             />
-            <p class="errorMessage" id="emailError"></p>
+            <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
 
             <label for="dateOfBirth">Date of Birth:</label>
             <input
@@ -112,17 +110,16 @@
                     th:name="dateOfBirth"
                     th:value="${user.getDob()}"
                     autofocus
-                    onblur="ageValidation(document.registerForm)"
             />
-            <p class="errorMessage" id="dateOfBirthError"></p>
+            <p class="errorMessage" id="dateOfBirthError"  th:text="${dateOfBirthError}"></p>
             <input class="inputStyle" id="submit" type="submit" value="Submit"/>
         </form>
     </div>
     <div class="hrefDiv">
-        <a th:href="@{profile}" class="hrefButtons" type="button">Back</a>
+        <a th:href="@{profile}" class="hrefButtons" type="button">Cancel</a>
     </div>
     <div>
-        <a id="changePassword" th:href="@{editPassword}">Change Password<a>
+        <a id="changePassword" th:href="@{editPassword}">Change Password</a>
     </div>
 </div>
 </body>
