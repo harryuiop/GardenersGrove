@@ -116,6 +116,7 @@ public class ProfileController extends GardensSidebar {
         } else {
             for (Map.Entry<String, String> entry : imageValidator.getErrorMessages().entrySet()) {
                 model.addAttribute(entry.getKey(), entry.getValue());
+                System.out.println(entry.getKey());
             }
         }
         return "redirect:" + request.getHeader("Referer");
