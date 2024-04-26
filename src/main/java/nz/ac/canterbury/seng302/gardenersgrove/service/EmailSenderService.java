@@ -5,6 +5,7 @@ import jakarta.mail.internet.MimeMessage;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -30,6 +31,8 @@ public class EmailSenderService {
     Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
     private JavaMailSender javaMailSender;
     private TemplateEngine templateEngine;
+    private UserService userService;
+
 
     // Sets the email address that the email will be sent FROM
     @Value("${spring.mail.username}") private String sender;
@@ -39,9 +42,11 @@ public class EmailSenderService {
      *
      * @param javaMailSender JavaMailSender that will be autowired
      */
-    public EmailSenderService(JavaMailSender javaMailSender, TemplateEngine templateEngine) {
+    @Autowired
+    public EmailSenderService(JavaMailSender javaMailSender, TemplateEngine templateEngine, UserService userService) {
         this.javaMailSender = javaMailSender;
         this.templateEngine = templateEngine;
+        this.userService = userService;
     }
 
     /**
@@ -90,6 +95,7 @@ public class EmailSenderService {
         int digit = random.nextInt(10000, 1000000);
         String token = String.format("%06d", digit);
         user.setToken(token);   // assign the token to user
+        userService.updateUser(user);
         String emailTitle = "GARDENER'S GROVE :: REGISTER YOUR EMAIL ::";
 
         // model for email contents
