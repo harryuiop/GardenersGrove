@@ -2,6 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
@@ -206,7 +208,7 @@ public class ProfileController extends GardensSidebar {
         User user = userService.getAuthenticatedUser(userService);
         model.addAttribute(user);
 
-        Map<String, String> errors = validator.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {

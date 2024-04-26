@@ -300,7 +300,7 @@ public class ErrorChecker {
         return errors;
     }
 
-    public Map<String, String> editPasswordFormErrors(String oldPassword,
+    public static Map<String, String> editPasswordFormErrors(String oldPassword,
                                                       String newPassword,
                                                       String retypeNewPassword,
                                                       User user

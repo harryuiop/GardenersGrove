@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -474,13 +475,13 @@ class ErrorCheckerTest {
         String lastName = "";
         boolean noSurname = true;
         String email = "jane@doe.nz";
+        boolean oldEmail = false;
         String password = "passworD!2";
         String dateOfBirth = LocalDate.now().minusYears(20).toString();
         boolean validDate = true;
         Mockito.when(userService.getUserByEmail(email)).thenReturn(new User(email,firstName,lastName,password, dateOfBirth));
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, password, validDate, dateOfBirth,
-                userService);
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
+                password, password, validDate, dateOfBirth);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("emailError", "This email address is already in use");
         Assertions.assertEquals(correctErrors, errors);
@@ -492,13 +493,13 @@ class ErrorCheckerTest {
         String lastName = "Doe";
         boolean noSurname = false;
         String email = "jane.doe@gmail.com";
+        boolean oldEmail = false;
         String password = "a1B2c#de";
         String otherpass = "abcD32#";
         String dateOfBirth = LocalDate.now().minusYears(20).toString();
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, otherpass, validDate, dateOfBirth,
-                userService);
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
+                password, password, validDate, dateOfBirth);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("passwordConfirmError", "Passwords do not match");
         Assertions.assertEquals(correctErrors, errors);
@@ -509,12 +510,12 @@ class ErrorCheckerTest {
         String lastName = "Doe";
         boolean noSurname = false;
         String email = "jane.doe@gmail.com";
+        boolean oldEmail = false;
         String password = "a1B2c#de";
         String dateOfBirth = LocalDate.now().minusYears(10).toString();
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, password, validDate, dateOfBirth,
-                userService);
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
+                password, password, validDate, dateOfBirth);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "You must be 13 years or older to create an account");
         Assertions.assertEquals(correctErrors, errors);
@@ -525,12 +526,12 @@ class ErrorCheckerTest {
         String lastName = "Doe";
         boolean noSurname = false;
         String email = "jane.doe@gmail.com";
+        boolean oldEmail = false;
         String password = "a1B2c#de";
         String dateOfBirth = LocalDate.now().minusYears(121).toString();
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email,
-                password, password, validDate, dateOfBirth,
-                userService);
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
+                password, password, validDate, dateOfBirth);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "The maximum age allowed is 120 years");
         Assertions.assertEquals(correctErrors, errors);
