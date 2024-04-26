@@ -14,6 +14,10 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
  */
 public class ErrorChecker {
 
+    private ErrorChecker() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * Checks for valid user entries that meet the given requirements
      *
@@ -48,7 +52,7 @@ public class ErrorChecker {
             errors.put("gardenSizeError", "Garden size must be a positive number");
         }
 
-        if (!FormValuesValidator.checkBlank(country)) {
+        if (FormValuesValidator.checkBlank(country)) {
             errors.put("countryError", "Country is required");
         } else if (!FormValuesValidator.checkCharactersWithForwardSlash(country)) {
             errors.put(
@@ -80,7 +84,7 @@ public class ErrorChecker {
                     boolean fieldRequired,
                     Map<String, String> errors
     ) {
-        if (fieldRequired && !FormValuesValidator.checkBlank(fieldValue)) {
+        if (fieldRequired && FormValuesValidator.checkBlank(fieldValue)) {
             errors.put(errorName, String.format("%s is required", fieldName));
         } else if (!FormValuesValidator.checkCharacters(fieldValue)) {
             errors.put(

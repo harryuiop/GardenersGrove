@@ -7,8 +7,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -16,9 +14,6 @@ import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-@DataJpaTest
-@Import(ErrorChecker.class)
 
 class ErrorCheckerTest {
 
@@ -33,8 +28,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -47,8 +43,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenSizeError", "Garden size must be a positive number");
         Assertions.assertEquals(correctErrors, errors);
@@ -63,8 +60,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         Assertions.assertEquals(correctErrors, errors);
@@ -79,7 +77,8 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+                country, city, streetAddress, suburb, postcode
+        );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("countryError", "Country is required");
         Assertions.assertEquals(correctErrors, errors);
@@ -94,8 +93,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("cityError", "City is required");
         Assertions.assertEquals(correctErrors, errors);
@@ -111,8 +111,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -126,8 +127,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         correctErrors.put("countryError", "Country is required");
@@ -143,8 +145,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "gardenNameError",
@@ -161,8 +164,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "countryError",
@@ -180,8 +184,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "cityError",
@@ -199,8 +204,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam% Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "streetAddressError",
@@ -218,8 +224,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam&";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "suburbError",
@@ -237,8 +244,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8&041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "postcodeError",
@@ -256,8 +264,9 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
-                country, city, streetAddress, suburb, postcode);
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+                name, size, country, city, streetAddress, suburb, postcode
+        );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         correctErrors.put(
@@ -502,7 +511,7 @@ class ErrorCheckerTest {
     }
 
     @Test
-    void passwordErrors_doesNotMeetCharacterConditions_returnsInvaildCharacters() {
+    void passwordErrors_doesNotMeetCharacterConditions_returnsInvalidCharacters() {
         String password = "a1b2de";
         Map<String, String> errors = ErrorChecker.passwordErrors(password, password);
         HashMap<String, String> correctErrors = new HashMap<>();
@@ -524,7 +533,7 @@ class ErrorCheckerTest {
     }
 
     @Test
-    public void loginFormErrors_ValidInputs_ReturnsEmpty() {
+    void loginFormErrors_ValidInputs_ReturnsEmpty() {
         UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
         UserService userService = new UserService(userRepositoryMock);
 
@@ -538,7 +547,7 @@ class ErrorCheckerTest {
     }
 
     @Test
-    public void loginFormErrors_AllBlank_ReturnsBothErrors() {
+    void loginFormErrors_AllBlank_ReturnsBothErrors() {
         UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
         UserService userService = new UserService(userRepositoryMock);
 
@@ -553,7 +562,7 @@ class ErrorCheckerTest {
     }
 
     @Test
-    public void loginFormErrors_InvalidPassword_ReturnsAccountError() {
+    void loginFormErrors_InvalidPassword_ReturnsAccountError() {
         UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
         UserService userService = new UserService(userRepositoryMock);
 
@@ -567,7 +576,7 @@ class ErrorCheckerTest {
     }
 
     @Test
-    public void loginFormErrors_InvalidEmailFormat_ReturnsBothErrors() {
+    void loginFormErrors_InvalidEmailFormat_ReturnsBothErrors() {
         UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
         UserService userService = new UserService(userRepositoryMock);
 
