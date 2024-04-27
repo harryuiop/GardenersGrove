@@ -259,6 +259,24 @@ input[type=text], input[type=password] {
     justify-content: center;
 }
 
+/*-------------------- verify page specific --------------------*/
+
+#verify {
+    background-color: var(--neutral);
+    font-size: 1rem;
+    padding: 8px 18px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+}
+#verify:hover {
+    background-color: var(--light-neutral);
+}
+#verify:active {
+    background-color: var(--dark-neutral);
+}
+
 /* Team-r styling */
 /* Title at top of page */
 .title {
