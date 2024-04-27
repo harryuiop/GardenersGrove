@@ -39,7 +39,7 @@ public class UserServiceIntegrationTest {
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
-                firstName, lname, password, dob), validated);
+                firstName, lname, password, dob));
         Assertions.assertEquals(user.getEmail(), email);
         Assertions.assertEquals(user.getFirstName(), firstName);
         Assertions.assertEquals(user.getLastName(), lname);
@@ -58,7 +58,7 @@ public class UserServiceIntegrationTest {
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
-                firstName, lname, password, dob), validated);
+                firstName, lname, password, dob));
         Assertions.assertNull(user);
     }
 
@@ -73,7 +73,7 @@ public class UserServiceIntegrationTest {
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
-                firstName, lname, password, dob), validated);
+                firstName, lname, password, dob));
         Assertions.assertNull(user);
     }
 
@@ -88,7 +88,7 @@ public class UserServiceIntegrationTest {
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
-                firstName, lname, password, dob), validated);
+                firstName, lname, password, dob));
         Assertions.assertNull(user);
     }
 
@@ -103,7 +103,7 @@ public class UserServiceIntegrationTest {
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
-                firstName, lname, password, dob), validated);
+                firstName, lname, password, dob));
         Assertions.assertNull(user);
     }
 
@@ -118,7 +118,7 @@ public class UserServiceIntegrationTest {
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
-                firstName, lname, password, dob), validated);
+                firstName, lname, password, dob));
         Assertions.assertNull(user);
     }
 }

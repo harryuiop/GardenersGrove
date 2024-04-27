@@ -2,11 +2,14 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -27,9 +30,13 @@ class RegistrationControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @MockBean
+    private EmailSenderService emailSenderService;
+
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
+        Mockito.when(emailSenderService.sendRegistrationEmail(Mockito.any(), Mockito.any())).thenReturn(true);
     }
     @Test
     void submitForm_allValid_userSaved() throws Exception {
@@ -67,7 +74,7 @@ class RegistrationControllerTest {
         String firstName = "John";
         String lastName = "";
         Boolean noSurname = true;
-        String email = "john@smith.co.nz";
+        String email = "jane@smith.co.nz";
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
