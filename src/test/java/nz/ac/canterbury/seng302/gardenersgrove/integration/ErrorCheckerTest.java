@@ -307,12 +307,11 @@ class ErrorCheckerTest {
     }
 
     @Test
-    void dateOfBirthErrors_BlankDate_returnsBlankError() {
+    void dateOfBirthErrors_BlankDate_returnsNoErrors() {
         String dateOfBirth = "";
         boolean validDate = true;
         Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
         Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("dateOfBirthError", "Date of Birth cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
     }
 

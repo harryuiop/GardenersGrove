@@ -50,7 +50,7 @@ class RegistrationControllerTest {
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/profile*"));
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/login*"));
 
         List<User> allUsers = userRepository.findAll();
         assertEquals(1, allUsers.size());
@@ -81,7 +81,7 @@ class RegistrationControllerTest {
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/profile*"));
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/login*"));
 
         List<User> allUsers = userRepository.findAll();
         assertEquals(1, allUsers.size());
