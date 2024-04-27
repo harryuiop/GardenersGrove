@@ -183,12 +183,12 @@ public class ErrorChecker {
     public static Map<String, String> dateOfBirthErrors(String dateOfBirth, boolean validDate) {
         Map<String, String> errors = new HashMap<>();
         if (validDate) {
-            if (FormValuesValidator.checkBlank(dateOfBirth)) {
-                errors.put("dateOfBirthError", "Date of Birth cannot be empty");
-            } else if (!dobIsValid(dateOfBirth)) {
-                errors.put("dateOfBirthError", "You must be 13 years or older to create an account");
-            } else if (!FormValuesValidator.checkUnder120(dateOfBirth)) {
-                errors.put("dateOfBirthError", "The maximum age allowed is 120 years");
+            if (!FormValuesValidator.checkBlank(dateOfBirth)) {
+                if (!dobIsValid(dateOfBirth)) {
+                    errors.put("dateOfBirthError", "You must be 13 years or older to create an account");
+                } else if (!FormValuesValidator.checkUnder120(dateOfBirth)) {
+                    errors.put("dateOfBirthError", "The maximum age allowed is 120 years");
+                }
             }
         } else {
             errors.put("dateOfBirthError", "Date is not in valid format, DD/MM/YYYY");
