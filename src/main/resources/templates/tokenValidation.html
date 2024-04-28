@@ -10,14 +10,15 @@
     <h3>Please verify It is you!!!</h3>
     <p>For security reason, we are sending an email with a token to make user verify the email they use for
     the account is their own account.</p>
-    <br />
+
     <p>Please enter a 6 digits token to verify your account. </p>
         <br />
-    <form th:action="@{/}" method="post">
+    <form th:action="@{/register/verify}" method="post">
         <label for="token">TOKEN:</label>
-        <input id="token" type="text" name="tokenValue" th:name="tokenValue" th:value="${tokenValue}">
-        <a th:href="@{/}" id="verify">Verify!</a>
+        <input id="token" type="text" name="tokenValue" th:name="tokenValue">
+        <input id="verify" type="submit" value="verify!">
     </form>
+    <p class="errorMessage" th:text="${tokenInvalid}"></p>
 
     <p>Your account will be removed after 10 minutes from you created this account. If you do not verify.</p>
 </div>

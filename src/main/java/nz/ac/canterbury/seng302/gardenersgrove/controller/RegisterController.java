@@ -116,17 +116,26 @@ public class RegisterController {
         // send verification email
         emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");
 
-        return "redirect:/profile";
+        model.addAttribute("tokenInvalid", "");
+
+        return "tokenValidation";
     }
 
     @PostMapping("/register/verify")
-    public String verifyUserAccount(@RequestParam(name = "email") String email,
-                                    @RequestParam(name = "token") String token,
-                                    Model model) {
+    public String verifyUserAccount(@RequestParam(name = "tokenValue") String token, Model model) {
 
-        // TODO - Implement this method
+        // Implement this function for a moment to avoid conflict
+        // TODO - move this error checking function to ErrorChecker.java
+        User user = userService.getUserByToken(token);
+        if (user == null) {
+            model.addAttribute("tokenInvalid", "Signup code invalid");
 
-        // return profile template if no fetal issues happened
-        return null;
+            return "tokenValidation";
+        }
+
+        logger.info("good!!");
+
+        // redirect to /login if no fetal issues happened
+        return "redirect: /login";
     }
 }
