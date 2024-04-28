@@ -136,6 +136,6 @@ public class RegisterController {
         logger.info("good!!");
 
         // redirect to /login if no fetal issues happened
-        return "redirect: /login";
+        return "redirect:/login";
     }
 }

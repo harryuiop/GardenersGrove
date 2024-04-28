@@ -295,10 +295,9 @@ class RegistrationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register/verify")
-                .param("email", email)
-                .param("token", "009999"))       //token numbers cannot be lower than 010000
+                .param("tokenValue", "009999"))       //token numbers cannot be lower than 010000
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("tokenVerification"));
+                .andExpect(MockMvcResultMatchers.view().name("tokenValidation"));
         User user = userRepository.findByEmail(email);
         assertNotNull(user);
         assertFalse(user.isConfirmed());
@@ -325,9 +324,11 @@ class RegistrationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         User user = userRepository.findByEmail(email);
+        user.setToken("508471"); // initialize token for test
+        userRepository.save(user); // update user
+
         mockMvc.perform(MockMvcRequestBuilders.post("/register/verify")
-                        .param("email", email)
-                        .param("token", user.getToken()))
+                        .param("tokenValue", user.getToken()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
 
