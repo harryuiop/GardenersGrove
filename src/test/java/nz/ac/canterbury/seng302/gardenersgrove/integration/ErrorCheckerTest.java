@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -388,11 +389,14 @@ class ErrorCheckerTest {
     public void loginFormErrors_ValidInputs_ReturnsEmpty() {
         UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
         UserService userService = new UserService(userRepositoryMock);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         String email = "user@gmail.com";
         String password = "Password1!";
-        when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(
-                new User(email, "fname", "lname", password, "20/20/2003"));
+
+
+        when(userRepositoryMock.findByEmail(email)).thenReturn(
+                new User(email, "fname", "lname", encoder.encode(password), "20/20/2003"));
         Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         Assertions.assertEquals(expected, errors);

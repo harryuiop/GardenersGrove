@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -48,6 +49,8 @@ class RegistrationControllerTest {
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .param("email", email)
                         .param("firstName", firstName)
@@ -65,7 +68,7 @@ class RegistrationControllerTest {
         assertEquals(firstName, user.getFirstName());
         assertEquals(lastName, user.getLastName());
         assertEquals(email, user.getEmail());
-        assertEquals(password, user.getPassword());
+        assertTrue(encoder.matches(password, user.getPassword()));
         assertEquals(dateOfBirth, user.getDob());
     }
 
@@ -79,6 +82,8 @@ class RegistrationControllerTest {
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .param("email", email)
                         .param("firstName", firstName)
@@ -96,7 +101,7 @@ class RegistrationControllerTest {
         assertEquals(firstName, user.getFirstName());
         assertEquals(lastName, user.getLastName());
         assertEquals(email, user.getEmail());
-        assertEquals(password, user.getPassword());
+        assertTrue(encoder.matches(password, user.getPassword()));
         assertEquals(dateOfBirth, user.getDob());
     }
 
