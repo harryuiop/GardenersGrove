@@ -329,7 +329,7 @@ class RegistrationControllerTest {
                         .param("email", email)
                         .param("token", user.getToken()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("profile"));
+                .andExpect(MockMvcResultMatchers.view().name("login"));
 
         // get updated user detail
         user = userRepository.findByEmail(email);
