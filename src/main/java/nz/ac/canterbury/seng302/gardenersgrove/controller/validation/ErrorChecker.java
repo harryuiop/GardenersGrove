@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 
 
 
@@ -308,7 +307,7 @@ public class ErrorChecker {
         Map<String, String> errors = new HashMap<>();
 
         // Checking old password
-        if (!FormValuesValidator.checkBlank(oldPassword)) {
+        if (FormValuesValidator.checkBlank(oldPassword)) {
             errors.put("oldPasswordError", "Password cannot be empty");
         } else if (!passwordIsValid(oldPassword)) {
             errors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
@@ -317,14 +316,14 @@ public class ErrorChecker {
         }
 
         // Checking new password
-        if (!FormValuesValidator.checkBlank(newPassword)) {
+        if (FormValuesValidator.checkBlank(newPassword)) {
             errors.put("newPasswordError", "Password cannot be empty");
         } else if (!passwordIsValid(newPassword)) {
             errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         }
 
         // Checking retyped new password
-        if (!FormValuesValidator.checkBlank(retypeNewPassword)) {
+        if (FormValuesValidator.checkBlank(retypeNewPassword)) {
             errors.put("retypeNewPasswordError", "Password cannot be empty");
         } else if (!passwordIsValid(retypeNewPassword)) {
             errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");

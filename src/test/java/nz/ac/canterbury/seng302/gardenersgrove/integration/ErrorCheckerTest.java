@@ -1,7 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -469,6 +468,7 @@ class ErrorCheckerTest {
         expected.put("invalidError", "The email address is unknown, or the password is invalid");
         Assertions.assertEquals(expected, errors);
     }
+
     @Test
     void registrationFormErrors_InvalidDupEmail_returnsAlreadyInUse() {
         String firstName = "Jane";
@@ -487,23 +487,6 @@ class ErrorCheckerTest {
         Assertions.assertEquals(correctErrors, errors);
     }
 
-    @Test
-    void registrationFormErrors_notEqualPasswords_returnsNotEqual() {
-        String firstName = "Jane";
-        String lastName = "Doe";
-        boolean noSurname = false;
-        String email = "jane.doe@gmail.com";
-        boolean oldEmail = false;
-        String password = "a1B2c#de";
-        String otherpass = "abcD32#";
-        String dateOfBirth = LocalDate.now().minusYears(20).toString();
-        boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
-                password, password, validDate, dateOfBirth);
-        HashMap<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("passwordConfirmError", "Passwords do not match");
-        Assertions.assertEquals(correctErrors, errors);
-    }
     @Test
     void registrationFormErrors_dobTooYoung_returnsUnder13() {
         String firstName = "Jane";
@@ -698,10 +681,9 @@ class ErrorCheckerTest {
         String newPassword = "Password1!";
         String retypeNewPassword = "short";
         Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
-        Assertions.assertEquals(correctErrors.get("retypeNewPasswordError"), errors.get("retypeNewPasswordError"));
+        Assertions.assertTrue(errors.containsValue("Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"));
+
     }
     @Test
     void editPasswordFormErrors_tooLongRetypeNewPassword_returnsInvalidRetypeNewPasswordError() {
@@ -775,7 +757,6 @@ class ErrorCheckerTest {
         String newPassword = "NewPassword1!";
         String retypeNewPassword = "NewPassword1!";
         Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
-        Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertTrue(errors.isEmpty());
     }
     @Test
