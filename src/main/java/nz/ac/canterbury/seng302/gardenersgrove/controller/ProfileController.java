@@ -209,9 +209,7 @@ public class ProfileController extends GardensSidebar {
         Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
 
         if (!errors.isEmpty()) {
-            for (Map.Entry<String, String> error : errors.entrySet()) {
-                model.addAttribute(error.getKey(), error.getValue());
-            }
+            model.addAllAttributes(errors);
             model.addAttribute("oldPassword", oldPassword);
             model.addAttribute("newPassword", newPassword);
             model.addAttribute("retypeNewPassword", retypeNewPassword);
