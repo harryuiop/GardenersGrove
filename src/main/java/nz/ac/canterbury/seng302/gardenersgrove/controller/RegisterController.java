@@ -133,7 +133,8 @@ public class RegisterController {
             return "tokenValidation";
         }
 
-        logger.info("good!!");
+        user.setConfirmation(true);
+        userService.updateUser(user);
 
         // redirect to /login if no fetal issues happened
         return "redirect:/login";
