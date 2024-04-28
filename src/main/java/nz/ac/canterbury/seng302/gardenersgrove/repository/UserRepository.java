@@ -44,4 +44,12 @@ public interface UserRepository extends CrudRepository<User, String> {
      * @return A User object if found, otherwise null.
      */
     User findByUserId(int id);
+
+    /**
+     * Retrieves a specific user By token
+     *
+     * @param token the 6 digits number to verify user.
+     * @return A User object if found, otherwise return null.
+     */
+    User findByToken(String token);
 }
