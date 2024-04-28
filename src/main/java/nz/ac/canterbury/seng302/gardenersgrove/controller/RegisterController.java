@@ -118,4 +118,15 @@ public class RegisterController {
 
         return "redirect:/profile";
     }
+
+    @PostMapping("/register/verify")
+    public String verifyUserAccount(@RequestParam(name = "email") String email,
+                                    @RequestParam(name = "token") String token,
+                                    Model model) {
+
+        // TODO - Implement this method
+
+        // return profile template if no fetal issues happened
+        return null;
+    }
 }

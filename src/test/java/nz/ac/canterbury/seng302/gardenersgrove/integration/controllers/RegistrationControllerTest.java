@@ -56,8 +56,8 @@ class RegistrationControllerTest {
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/profile*"));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("tokenValidation"));
 
         List<User> allUsers = userRepository.findAll();
         assertEquals(1, allUsers.size());
@@ -87,8 +87,8 @@ class RegistrationControllerTest {
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/profile*"));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("tokenValidation"));
 
         List<User> allUsers = userRepository.findAll();
         assertEquals(1, allUsers.size());
@@ -273,5 +273,67 @@ class RegistrationControllerTest {
 
         List<User> allUsers = userRepository.findAll();
         assertTrue(allUsers.isEmpty());
+    }
+
+    @Test
+    void submitForm_wrongToken_userNotVerified() throws Exception {
+        String firstName = "Chulsoo";
+        String lastName = "Kim";
+        Boolean noSurname = false;
+        String email = "cskim@fakedomain.co.nz";
+        String password = "Password100%";
+        String passwordConfirm = "Password100%";
+        String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
+        mockMvc.perform(MockMvcRequestBuilders.post("/register")
+                .param("email", email)
+                .param("firstName", firstName)
+                .param("lastName", lastName)
+                .param("noSurname", String.valueOf(noSurname))
+                .param("password", password)
+                .param("passwordConfirm", passwordConfirm)
+                .param("dateOfBirth", dateOfBirth))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/register/verify")
+                .param("email", email)
+                .param("token", "009999"))       //token numbers cannot be lower than 010000
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("tokenVerification"));
+        User user = userRepository.findByEmail(email);
+        assertNotNull(user);
+        assertFalse(user.isConfirmed());
+    }
+
+
+    @Test
+    void submitForm_correctToken_userVerified() throws Exception {
+        String firstName = "Young";
+        String lastName = "Kang";
+        Boolean noSurname = false;
+        String email = "yka@fakedomain.co.nz";
+        String password = "Password100%";
+        String passwordConfirm = "Password100%";
+        String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
+        mockMvc.perform(MockMvcRequestBuilders.post("/register")
+                        .param("email", email)
+                        .param("firstName", firstName)
+                        .param("lastName", lastName)
+                        .param("noSurname", String.valueOf(noSurname))
+                        .param("password", password)
+                        .param("passwordConfirm", passwordConfirm)
+                        .param("dateOfBirth", dateOfBirth))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        User user = userRepository.findByEmail(email);
+        mockMvc.perform(MockMvcRequestBuilders.post("/register/verify")
+                        .param("email", email)
+                        .param("token", user.getToken()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("profile"));
+
+        // get updated user detail
+        user = userRepository.findByEmail(email);
+        assertNotNull(user);
+        assertTrue(user.isConfirmed());
     }
 }
