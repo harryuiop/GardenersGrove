@@ -335,7 +335,7 @@ class RegistrationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/register/verify")
                         .param("tokenValue", user.getToken()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/login?authUser=1"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
 
         // get updated user detail
         user = userRepository.findByEmail(email);
