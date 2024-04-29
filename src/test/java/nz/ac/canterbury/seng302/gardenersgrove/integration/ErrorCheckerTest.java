@@ -7,6 +7,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -100,7 +101,6 @@ class ErrorCheckerTest {
         correctErrors.put("cityError", "City is required");
         Assertions.assertEquals(correctErrors, errors);
     }
-
 
     @Test
     void gardenFormErrors_blankSize_returnsNull() {
@@ -454,12 +454,11 @@ class ErrorCheckerTest {
     }
 
     @Test
-    void dateOfBirthErrors_BlankDate_returnsBlankError() {
+    void dateOfBirthErrors_BlankDate_returnsNoErrors() {
         String dateOfBirth = "";
         boolean validDate = true;
         Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
         Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("dateOfBirthError", "Date of Birth cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
     }
 
@@ -536,11 +535,14 @@ class ErrorCheckerTest {
     void loginFormErrors_ValidInputs_ReturnsEmpty() {
         UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
         UserService userService = new UserService(userRepositoryMock);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         String email = "user@gmail.com";
         String password = "Password1!";
-        when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(
-                new User(email, "fname", "lname", password, "20/20/2003"));
+
+        when(userRepositoryMock.findByEmail(email)).thenReturn(
+                new User(email, "fname", "lname", encoder.encode(password), "20/20/2003")
+        );
         Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         Assertions.assertEquals(expected, errors);

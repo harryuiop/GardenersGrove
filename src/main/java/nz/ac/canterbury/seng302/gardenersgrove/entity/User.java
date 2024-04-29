@@ -43,7 +43,7 @@ public class User {
     /**
      * User's Date of Birth
      */
-    @Column(name = "Date_of_Birth", nullable = false)
+    @Column(name = "Date_of_Birth", nullable = true)
     private String dob;
 
     @Id
