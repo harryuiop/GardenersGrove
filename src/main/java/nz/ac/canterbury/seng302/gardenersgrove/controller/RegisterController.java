@@ -115,7 +115,7 @@ public class RegisterController {
         userService.addUsers(newUser);
 
         // send verification email
-        emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");
+        emailSenderService.sendEmail(newUser, "registrationEmail", "registration");
 
         model.addAttribute("tokenInvalid", "");
 
