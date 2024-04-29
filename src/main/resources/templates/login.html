@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html
         xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://thymeleaf.org"
+        xmlns:th="http://www.thymeleaf.org"
         lang="us">
   <head>
     <meta charset="UTF-8">
@@ -12,7 +12,10 @@
     <div id="app_container">
       <main>
         <header th:insert="~{fragments/general.html :: header}"></header>
-        <div id="form">
+        <div class="loginForm">
+          <p th:text="${accountActiveMessage}" style="font-size: small; font-style: italic;"></p>
+        </div>
+        <div class="loginForm">
           <form th:action="@{login}" method="post" name="loginForm">
             <label for="email">Email Address:</label>
             <input
