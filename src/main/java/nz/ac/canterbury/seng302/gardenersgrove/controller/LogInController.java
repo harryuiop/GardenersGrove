@@ -45,8 +45,7 @@ public class LogInController {
      * @return The name of the login view template.
      */
     @GetMapping("/login")
-    public String getLoginPage(@RequestParam(required = false) String error, Model model
-    ) {
+    public String getLoginPage(@RequestParam(required = false) String error, Model model) {
         if (error != null && error.equals("Invalid")) {
             model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
         }
