@@ -1,8 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
@@ -12,7 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -70,6 +72,8 @@ public class ProfileController extends GardensSidebar {
         model.addAttribute("user", user);
         boolean noSurname = user.getLastName() == null;
         model.addAttribute("noSurname", noSurname);
+
+        this.updateGardensSidebar(model, gardenService, userService);
         return "editProfile";
     }
 
@@ -85,7 +89,8 @@ public class ProfileController extends GardensSidebar {
         User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
 
-        return "editPassword"; }
+        return "editPassword";
+    }
 
     /**
      * Handles POST requests to the "/uploadProfileImage" URL.
