@@ -228,7 +228,7 @@ header {
     background-color: var(--neutral);
 }
 
-#form {
+.loginForm {
     background-color: #fff;
     padding: 20px;
     justify-content: center;
@@ -257,6 +257,24 @@ input[type=text], input[type=password] {
 .cancelOnLogin {
     display: flex;
     justify-content: center;
+}
+
+/*-------------------- verify page specific --------------------*/
+
+#verify {
+    background-color: var(--neutral);
+    font-size: 1rem;
+    padding: 8px 18px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+}
+#verify:hover {
+    background-color: var(--light-neutral);
+}
+#verify:active {
+    background-color: var(--dark-neutral);
 }
 
 /* Team-r styling */
