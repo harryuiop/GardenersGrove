@@ -136,7 +136,7 @@ public class RegisterController {
         user.setConfirmation(true);
         userService.updateUser(user);
 
-        // redirect to /login if no fetal issues happened
-        return "redirect:/login";
+        // redirect to /login with authUser=1 if no fetal issues happened
+        return "redirect:/login?authUser=1";
     }
 }

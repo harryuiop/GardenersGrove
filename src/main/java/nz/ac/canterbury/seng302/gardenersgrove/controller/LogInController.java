@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Controller class handling login-related requests and actions.
@@ -46,6 +47,7 @@ public class LogInController {
     @GetMapping("/login")
     public String getLoginPage(
             @RequestParam(required = false) String error,
+            @RequestParam(required = false, name = "authUser") String authorised,
             Model model
     ) {
         if (error != null && error.equals("Invalid")) {
@@ -57,6 +59,12 @@ public class LogInController {
         boolean validated = false;
         userService.addUsers(new User
                 ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
+
+        // if login has authUser param and is equal to "1" show the message
+        if (authorised != null && authorised.equals("1"))
+            model.addAttribute("accountActiveMessage", "Your account has been activated, please log in");
+
+
         return "login";
     }
 
