@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -122,7 +123,11 @@ public class RegisterController {
     }
 
     @PostMapping("/register/verify")
-    public String verifyUserAccount(@RequestParam(name = "tokenValue") String token, Model model) {
+    public String verifyUserAccount(
+            @RequestParam(name = "tokenValue") String token,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
 
         // Implement this function for a moment to avoid conflict
         // TODO - move this error checking function to ErrorChecker.java
@@ -136,7 +141,8 @@ public class RegisterController {
         user.setConfirmation(true);
         userService.updateUser(user);
 
-        // redirect to /login with authUser=1 if no fetal issues happened
-        return "redirect:/login?authUser=1";
+        redirectAttributes.addFlashAttribute("accountActiveMessage", "Your account has been activated, please log in");
+        // redirect to /login if no fatal issues happened
+        return "redirect:/login";
     }
 }

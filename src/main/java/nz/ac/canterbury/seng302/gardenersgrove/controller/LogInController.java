@@ -45,10 +45,7 @@ public class LogInController {
      * @return The name of the login view template.
      */
     @GetMapping("/login")
-    public String getLoginPage(
-            @RequestParam(required = false) String error,
-            @RequestParam(required = false, name = "authUser") String authorised,
-            Model model
+    public String getLoginPage(@RequestParam(required = false) String error, Model model
     ) {
         if (error != null && error.equals("Invalid")) {
             model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
@@ -59,11 +56,6 @@ public class LogInController {
         boolean validated = false;
         userService.addUsers(new User
                 ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
-
-        // if login has authUser param and is equal to "1" show the message
-        if (authorised != null && authorised.equals("1"))
-            model.addAttribute("accountActiveMessage", "Your account has been activated, please log in");
-
 
         return "login";
     }
