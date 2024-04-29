@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Controller class handling login-related requests and actions.
@@ -44,10 +45,7 @@ public class LogInController {
      * @return The name of the login view template.
      */
     @GetMapping("/login")
-    public String getLoginPage(
-            @RequestParam(required = false) String error,
-            Model model
-    ) {
+    public String getLoginPage(@RequestParam(required = false) String error, Model model) {
         if (error != null && error.equals("Invalid")) {
             model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
         }
@@ -57,6 +55,7 @@ public class LogInController {
         boolean validated = false;
         userService.addUsers(new User
                 ("user@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
+
         return "login";
     }
 

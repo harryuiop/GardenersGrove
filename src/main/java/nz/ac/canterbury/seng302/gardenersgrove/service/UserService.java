@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Random;
+
 import static java.lang.Integer.parseInt;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
@@ -123,6 +125,43 @@ public class UserService {
         return userService.getUserById(currentPrincipalName);
     }
 
+    /**
+
+     * Retrieves a user by token
+     *
+     * @param token the 6 digits number to verify user.
+     * @return A User object if found, otherwise return null.
+     */
+    public User getUserByToken(String token) {
+        return userRepository.findByToken(token);
+    }
+
+    /**
+     * grant a user a token and update user detail
+     *
+     * @param user a user data to be granted a token to verify
+     * @return the same user from parameter that has token
+     */
+    public User grantUserToken(User user) {
+
+        boolean isExist = false;
+        String token = "";
+
+        // execute until user got a unique token
+        while(!isExist) {
+            Random random = new Random();
+            int digit = random.nextInt(10000, 1000000);
+            token = String.format("%06d", digit);
+            isExist = userRepository.findByToken(token) == null;
+        }
+
+        // update user
+        user.setToken(token);
+        this.updateUser(user);
+
+        return user;
+    }
+    
     /**
      * Hashes a plain text password using BCrypt
      * @param passwordInPlainText The plain text password

@@ -1,9 +1,11 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.LocationRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +45,9 @@ class PlantControllerCreateTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LocationRepository locationRepository;
+
     private boolean userCreated = false;
 
     @BeforeEach
@@ -59,7 +64,15 @@ class PlantControllerCreateTest {
             userCreated = true;
         }
         gardenRepository.deleteAll();
-        gardenRepository.save(new Garden("Test Garden", "test location", null));
+
+        locationRepository.deleteAll();
+
+        Location gardenLocation = new Location("New Zealand", "Christchurch");
+        gardenLocation.setStreetAddress("90 Ilam Road");
+        gardenLocation.setSuburb("Ilam");
+        gardenLocation.setPostcode("8041");
+
+        gardenRepository.save(new Garden("Test Garden", gardenLocation, null));
         plantRepository.deleteAll();
     }
 

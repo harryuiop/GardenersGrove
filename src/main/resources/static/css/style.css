@@ -229,7 +229,7 @@ header {
     background-color: var(--neutral);
 }
 
-#form {
+.loginForm {
     background-color: #fff;
     padding: 20px;
     justify-content: center;
@@ -422,8 +422,4 @@ textarea {
 
 .signOutButton {
 
-}
-
-#editPassword {
-    max-width: 272.6px;
 }
