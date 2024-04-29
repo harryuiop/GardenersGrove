@@ -15,7 +15,6 @@ import java.time.LocalDate;
 
 @DataJpaTest
 @Import(FormValuesValidator.class)
-
 public class FormValuesValidationTest {
     UserRepository userRepository;
     UserService userService;
