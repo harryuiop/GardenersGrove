@@ -5,6 +5,9 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -43,13 +46,14 @@ public class UserService {
      * @return The UserRepository instance with the new user saved.
      */
     public User addUsers(User newUser) {
-            if (!(emailIsValid(newUser.getEmail()) &&
-                    passwordIsValid(newUser.getPassword()) &&
-                    nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
-                    dobIsValid(newUser.getDob()) &&
-                    (getUserByEmail(newUser.getEmail()) == null))) {
-                return null;
-            }
+        if (!(emailIsValid(newUser.getEmail()) &&
+                passwordIsValid(newUser.getPassword()) &&
+                nameIsValid(newUser.getFirstName(), newUser.getLastName()) &&
+                dobIsValid(newUser.getDob()) &&
+                (getUserByEmail(newUser.getEmail()) == null))) {
+            return null;
+        }
+        newUser.setPassword(hashUserPassword(newUser.getPassword()));
         return userRepository.save(newUser);
     }
 
@@ -114,6 +118,7 @@ public class UserService {
     }
 
     /**
+
      * Retrieves a user by token
      *
      * @param token the 6 digits number to verify user.
@@ -147,5 +152,15 @@ public class UserService {
         this.updateUser(user);
 
         return user;
+    }
+    
+    /**
+     * Hashes a plain text password using BCrypt
+     * @param passwordInPlainText The plain text password
+     * @return  The hashed password
+     */
+    public String hashUserPassword(String passwordInPlainText) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
+        return encoder.encode(passwordInPlainText);
     }
 }

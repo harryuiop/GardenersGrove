@@ -149,9 +149,9 @@ public class UserValidationTest {
     }
 
     @Test
-    void checkDob_isEmpty_returnFalse() {
+    void checkDob_isEmpty_returnTrue() {
         String dob = "";
-        Assertions.assertFalse(dobIsValid(dob));
+        Assertions.assertTrue(dobIsValid(dob));
     }
 
     @Test

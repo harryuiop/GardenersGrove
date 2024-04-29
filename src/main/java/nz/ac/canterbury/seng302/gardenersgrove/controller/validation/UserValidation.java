@@ -49,6 +49,9 @@ public class UserValidation {
      */
     public static boolean dobIsValid(String dob) {
         try {
+            if (dob.equals("")) {
+                return true;
+            }
             LocalDate dobDate = LocalDate.parse(dob);
             LocalDate currentDate = LocalDate.now();
             LocalDate validDate = currentDate.minusYears(13);
