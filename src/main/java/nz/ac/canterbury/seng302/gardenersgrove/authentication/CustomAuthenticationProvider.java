@@ -42,19 +42,22 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // Check if either email or password is null or empty
         if (
-                email == null || email.isEmpty() || !emailIsValid(email) ||
-                        password == null || password.isEmpty()
+                email == null || email.isEmpty() || !emailIsValid(email)
         ) {
-            throw new BadCredentialsException("Bad_Credentials");
+            throw new BadCredentialsException("Invalid_Email");
+        } else if (
+                password == null || password.isEmpty()
+        ){
+            throw new BadCredentialsException("Invalid_Password");
         }
 
         // Attempt to retrieve user from the database using email and password
         User user = userService.getUserByEmail(email);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
-        // If user is not found, throw BadCredentialsException
+        // If user is not found or the password is incorrect, throw BadCredentialsException
         if (user == null || !encoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException("Invalid");
+            throw new BadCredentialsException("Authentication_Failed");
         }
 
         if (!user.isConfirmed()) {
@@ -63,7 +66,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // If user is found, create and return a UsernamePasswordAuthenticationToken
         return new UsernamePasswordAuthenticationToken(
-                user.getUserId(), // User ID - NOTE: This is how you change the principle name for spring secuirty of user entitys
+                user.getUserId(), // User ID - NOTE: This is how you change the principle name for spring security of user entities
                 null, // Null credentials as they're already authenticated
                 user.getAuthorities() // User's authorities (roles)
         );

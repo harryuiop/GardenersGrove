@@ -43,11 +43,12 @@ public class LogInController {
     public String getLoginPage(@RequestParam(required = false) String error, Model model) {
         logger.info("GET /login");
 
-        if (error != null && error.equals("Invalid")) {
-            model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
-        }
-        if (error != null && error.equals("Bad_Credentials")) {
-            model.addAttribute("emailError", "Email address must be in the form ‘jane@doe.nz’");
+        if (error != null) {
+            if (error.equals("Authentication_Failed") || error.equals("Invalid_Password")) {
+                model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
+            } else if (error.equals("Invalid_Email")) {
+                model.addAttribute("emailError", "Email address must be in the form ‘jane@doe.nz’");
+            }
         }
 
         User defaultUser = new User("user@gmail.com", "Default", "User", "Password1!", "2000-01-01");
