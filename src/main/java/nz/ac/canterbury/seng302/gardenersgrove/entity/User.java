@@ -94,7 +94,7 @@ public class User {
     ) {
         this.email = email;
         this.firstName = firstName;
-        this.lastName = lastName;
+        this.lastName = lastName == null ? "" : lastName;
         this.password = password;
         this.dob = dob;
         this.confirmation = false;
@@ -152,7 +152,7 @@ public class User {
      * @param lastName the new last name the user has entered into the form
      */
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.lastName = lastName == null ? "" : lastName;
     }
 
     /**
