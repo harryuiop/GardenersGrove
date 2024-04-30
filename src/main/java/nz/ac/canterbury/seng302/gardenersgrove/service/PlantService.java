@@ -3,7 +3,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.service;
 import jakarta.annotation.PostConstruct;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,7 @@ public class PlantService {
             this.savePlant(new Plant("Plant 8", 1, "", LocalDate.parse("2000-01-01"), null, garden1));
             this.savePlant(new Plant("Plant 9", 1, "", LocalDate.parse("2000-01-01"), null, garden1));
             this.savePlant(new Plant("Plant 10", 1, "", LocalDate.parse("2000-01-01"), null, garden1));
-        };
+        }
     }
 
     public List<Plant> getAllPlantsInGarden(Garden garden) {
