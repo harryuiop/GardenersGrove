@@ -74,7 +74,7 @@ public class ProfileController extends GardensSidebar {
     public String getEditProfilePage(Model model) {
         User user = userService.getAuthenticatedUser();
         model.addAttribute("user", user);
-        boolean noSurname = user.getLastName() == null;
+        boolean noSurname = user.getLastName() == "";
         model.addAttribute("noSurname", noSurname);
 
         this.updateGardensSidebar(model, gardenService, userService);
