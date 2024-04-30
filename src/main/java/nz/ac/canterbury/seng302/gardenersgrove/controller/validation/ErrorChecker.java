@@ -7,9 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
@@ -19,10 +16,10 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
  * Checks the validity of the entries into the garden form
  */
 public class ErrorChecker {
-    static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
+    static String passwordEmptyMsg = "Password cannot be empty";
 
     private ErrorChecker() {
-        // throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("Utility class");
     }
 
     /**
@@ -151,20 +148,21 @@ public class ErrorChecker {
      */
     public static Map<String, String> firstNameErrors(String firstName) {
         Map<String, String> errors = new HashMap<>();
+        String firstNameErrorMsg = "firstNameError";
         if (FormValuesValidator.checkBlank(firstName)) {
-            errors.put("firstNameError", "First name cannot be empty");
+            errors.put(firstNameErrorMsg, "First name cannot be empty");
         } else {
             if (!FormValuesValidator.checkNameLength(firstName) && !FormValuesValidator.checkUserName(firstName)) {
                 errors.put(
-                        "firstNameError",
+                        firstNameErrorMsg,
                         "First name cannot exceed length of 64 characters and " +
                         "first name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
                 );
             } else if (!FormValuesValidator.checkNameLength(firstName)) {
-                errors.put("firstNameError", "First name cannot exceed length of 64 characters");
+                errors.put(firstNameErrorMsg, "First name cannot exceed length of 64 characters");
             } else if (!FormValuesValidator.checkUserName(firstName)) {
                 errors.put(
-                        "firstNameError",
+                        firstNameErrorMsg,
                         "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
                         );
             }
@@ -182,21 +180,22 @@ public class ErrorChecker {
      */
     public static Map<String, String> lastNameErrors(String lastName, boolean noSurname) {
         Map<String, String> errors = new HashMap<>();
+        String lastNameErrorMsg = "lastNameError";
         if (!noSurname) {
             if (FormValuesValidator.checkBlank(lastName)) {
-                errors.put("lastNameError", "Last name cannot be empty unless box is ticked");
+                errors.put(lastNameErrorMsg, "Last name cannot be empty unless box is ticked");
             } else {
                 if (!FormValuesValidator.checkNameLength(lastName) && !FormValuesValidator.checkUserName(lastName)) {
                     errors.put(
-                            "lastNameError",
+                            lastNameErrorMsg,
                             "Last name cannot exceed length of 64 characters and "+
                                     "last name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
                     );
                 } else if (!FormValuesValidator.checkNameLength(lastName)) {
-                    errors.put("lastNameError", "Last name cannot exceed length of 64 characters");
+                    errors.put(lastNameErrorMsg, "Last name cannot exceed length of 64 characters");
                 } else if (!FormValuesValidator.checkUserName(lastName)) {
                     errors.put(
-                            "lastNameError",
+                            lastNameErrorMsg,
                             "Last name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
                     );
                 }
@@ -215,12 +214,13 @@ public class ErrorChecker {
      */
     public static Map<String, String> emailErrors(String email, boolean oldEmail, UserService userService) {
         Map<String, String> errors = new HashMap<>();
+        String emailErrorMsg = "emailError";
         if (FormValuesValidator.checkBlank(email)) {
-            errors.put("emailError", "Email cannot be empty");
+            errors.put(emailErrorMsg, "Email cannot be empty");
         } else if (!emailIsValid(email)) {
-            errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
+            errors.put(emailErrorMsg, "Email address must be in the form ‘jane@doe.nz");
         } else if (!FormValuesValidator.emailInUse(email, userService) && !oldEmail) {
-            errors.put("emailError", "This email address is already in use");
+            errors.put(emailErrorMsg, "This email address is already in use");
         }
         return errors;
     }
@@ -234,16 +234,17 @@ public class ErrorChecker {
      */
     public static Map<String, String> dateOfBirthErrors(String dateOfBirth, boolean validDate) {
         Map<String, String> errors = new HashMap<>();
+        String dobErrorMsg = "dateOfBirthError";
         if (validDate) {
             if (!FormValuesValidator.checkBlank(dateOfBirth)) {
                 if (!dobIsValid(dateOfBirth)) {
-                    errors.put("dateOfBirthError", "You must be 13 years or older to create an account");
+                    errors.put(dobErrorMsg, "You must be 13 years or older to create an account");
                 } else if (!FormValuesValidator.checkUnder120(dateOfBirth)) {
-                    errors.put("dateOfBirthError", "The maximum age allowed is 120 years");
+                    errors.put(dobErrorMsg, "The maximum age allowed is 120 years");
                 }
             }
         } else {
-            errors.put("dateOfBirthError", "Date is not in valid format, DD/MM/YYYY");
+            errors.put(dobErrorMsg, "Date is not in valid format, DD/MM/YYYY");
         }
         return errors;
     }
@@ -258,7 +259,7 @@ public class ErrorChecker {
     public static Map<String, String> passwordErrors(String password, String passwordConfirm) {
         Map<String, String> errors = new HashMap<>();
         if (FormValuesValidator.checkBlank(password)) {
-            errors.put("passwordError", "Password cannot be empty");
+            errors.put("passwordError", passwordEmptyMsg);
         } else if (!passwordIsValid(password)) {
             errors.put(
                     "passwordError",
@@ -302,7 +303,7 @@ public class ErrorChecker {
      * @param noSurname       Whether the noLastName box was ticked.
      * @param email           The email string.
      * @param password        The password string.
-     * @param passwordConfirm The confirm password string.
+     * @param passwordConfirm The confirmation password string.
      * @param validDate       Whether the date is valid or not.
      * @param dateOfBirth     The date of birth string.
      * @param userService     The userService instance used to query the database for checking whether an account
@@ -356,28 +357,30 @@ public class ErrorChecker {
     ) {
         Map<String, String> errors = new HashMap<>();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
+        String oldPasswordError = "oldPasswordError";
+        String passwordInvalidMsg = "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character";
 
         // Checking old password
         if (FormValuesValidator.checkBlank(oldPassword)) {
-            errors.put("oldPasswordError", "Password cannot be empty");
+            errors.put(oldPasswordError, passwordEmptyMsg);
         } else if (!passwordIsValid(oldPassword)) {
-            errors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+            errors.put(oldPasswordError, passwordInvalidMsg);
         } else if (!encoder.matches(oldPassword, user.getPassword())) {
-            errors.put("oldPasswordError", "Your old password is incorrect");
+            errors.put(oldPasswordError, "Your old password is incorrect");
         }
 
         // Checking new password
         if (FormValuesValidator.checkBlank(newPassword)) {
-            errors.put("newPasswordError", "Password cannot be empty");
+            errors.put("newPasswordError", passwordEmptyMsg);
         } else if (!passwordIsValid(newPassword)) {
-            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+            errors.put("newPasswordError", passwordInvalidMsg);
         }
 
         // Checking retyped new password
         if (FormValuesValidator.checkBlank(retypeNewPassword)) {
-            errors.put("retypeNewPasswordError", "Password cannot be empty");
+            errors.put("retypeNewPasswordError", passwordEmptyMsg);
         } else if (!passwordIsValid(retypeNewPassword)) {
-            errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+            errors.put("retypeNewPasswordError", passwordInvalidMsg);
         }
 
         // Check that the new password and the retyped new password match

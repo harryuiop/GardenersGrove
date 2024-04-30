@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
 
 class ErrorCheckerTest {
 
-    ErrorChecker validate = new ErrorChecker();
     UserService userService = mock(UserService.class);
     private boolean userCreated = false;
     User user;
