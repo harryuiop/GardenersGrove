@@ -24,6 +24,7 @@ class GardenServiceTest {
     private UserRepository userRepository;
 
     private UserService userService;
+
     private User user;
 
     @Test

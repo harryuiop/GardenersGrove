@@ -62,11 +62,11 @@ class GardenFormControllerTest {
 
         if (user == null) {
             user = new User(
-                            "test@domain.net",
-                            "Test",
-                            "User",
-                            "Password1!",
-                            "2000-01-01"
+                    "test@domain.net",
+                    "Test",
+                    "User",
+                    "Password1!",
+                    "2000-01-01"
             );
             userRepository.save(user);
         }
@@ -88,12 +88,12 @@ class GardenFormControllerTest {
         String postcode = "8041";
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
-                .param("gardenName", gardenName)
-                .param("gardenSize", Float.toString(gardenSize))
-                .param("country", country)
-                .param("city", city)
-                .param("streetAddress", streetAddress)
-                .param("suburb", suburb)
+                        .param("gardenName", gardenName)
+                        .param("gardenSize", Float.toString(gardenSize))
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", streetAddress)
+                        .param("suburb", suburb)
                         .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
@@ -121,12 +121,12 @@ class GardenFormControllerTest {
         String postcode = "8041";
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
-                .param("gardenName", gardenName)
-                .param("gardenSize", Float.toString(gardenSize))
-                .param("country", country)
-                .param("city", city)
-                .param("streetAddress", streetAddress)
-                .param("suburb", suburb)
+                        .param("gardenName", gardenName)
+                        .param("gardenSize", Float.toString(gardenSize))
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", streetAddress)
+                        .param("suburb", suburb)
                         .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
@@ -146,12 +146,12 @@ class GardenFormControllerTest {
         String postcode = "8041";
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
-                .param("gardenName", gardenName)
-                .param("gardenSize", Float.toString(gardenSize))
-                .param("country", country)
-                .param("city", city)
-                .param("streetAddress", streetAddress)
-                .param("suburb", suburb)
+                        .param("gardenName", gardenName)
+                        .param("gardenSize", Float.toString(gardenSize))
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", streetAddress)
+                        .param("suburb", suburb)
                         .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
@@ -189,7 +189,6 @@ class GardenFormControllerTest {
     void submitForm_invalidLocation_noCity_gardenNotSaved() throws Exception {
         String gardenName = "Test Garden";
         float gardenSize = 4f;
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
         String country = "New Zealand";
         String city = "";
         String streetAddress = "90 Ilam Road";
@@ -220,7 +219,6 @@ class GardenFormControllerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)
@@ -321,16 +319,15 @@ class GardenFormControllerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
-                .param("gardenName", gardenName)
-                .param("gardenSize", Float.toString(gardenSize))
-                .param("country", country)
-                .param("city", city)
-                .param("streetAddress", streetAddress)
-                .param("suburb", suburb)
+                        .param("gardenName", gardenName)
+                        .param("gardenSize", Float.toString(gardenSize))
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", streetAddress)
+                        .param("suburb", suburb)
                         .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
@@ -347,7 +344,6 @@ class GardenFormControllerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                         .param("gardenName", gardenName)

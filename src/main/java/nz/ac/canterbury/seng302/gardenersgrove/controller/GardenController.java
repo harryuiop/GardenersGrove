@@ -5,7 +5,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuc
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.location.CountryCode;
 import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
 import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Feature;
@@ -170,8 +169,7 @@ public class GardenController extends GardensSidebar {
             locationEntity.setSuburb(suburb);
             locationEntity.setPostcode(postcode);
             locationEntity.setStreetAddress(streetAddress);
-            User user = userService.getAuthenticatedUser();
-            Garden garden = new Garden(user, gardenName, locationEntity, gardenSize);
+            Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName, locationEntity, gardenSize);
             gardenService.saveGarden(garden);
 
             if (locationFound) {
@@ -319,4 +317,3 @@ public class GardenController extends GardensSidebar {
         return true;
     }
 }
-
