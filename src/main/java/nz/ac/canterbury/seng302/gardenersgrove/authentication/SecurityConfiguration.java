@@ -119,7 +119,10 @@ public class SecurityConfiguration {
                         formLogin
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/")
+//                                .defaultSuccessUrl("/register/verify")
+                                .successHandler((request, response, authentication) -> {
+                                    response.sendRedirect("/register/verify");
+                                })
                                 .failureHandler(new LoginAuthenticationFailureHandler())
                 )
                 // Define logging out, a POST "/logout" endpoint now exists under the hood, redirect to "/login", invalidate session and remove cookie

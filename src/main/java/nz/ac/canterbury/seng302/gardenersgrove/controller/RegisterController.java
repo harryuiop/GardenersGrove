@@ -7,6 +7,9 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -119,6 +122,25 @@ public class RegisterController {
 
         model.addAttribute("tokenInvalid", "");
 
+        return "redirect:/register/verify";
+    }
+
+    @GetMapping("/register/verify")
+    public String showVerifyPage() {
+
+        logger.info("GET /register/verify");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (auth.getPrincipal() != "anonymousUser") ?
+                userService.getUserById(Integer.parseInt(auth.getName())) : null;
+
+
+        if(user != null && user.isConfirmed())
+            return "redirect:/";
+        else if (user != null && !user.isConfirmed()) {
+            SecurityContextHolder.getContext().setAuthentication(null);
+            return "tokenValidation";
+        }
+
         return "tokenValidation";
     }
 
@@ -128,7 +150,7 @@ public class RegisterController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
-
+        logger.info("POST /register/verify");
         // Implement this function for a moment to avoid conflict
         // TODO - move this error checking function to ErrorChecker.java
         User user = userService.getUserByToken(token);

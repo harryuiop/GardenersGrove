@@ -24,10 +24,9 @@
                     id="email"
                     name="email"
                     th:name="username"
-                    th:value="*{email}"
                     autofocus
             />
-            <p class="errorMessage" id="emailError" th:text=${emailError}></p>
+            <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
 
             <label for="password">Password:</label>
             <input class="inputStyle"
@@ -37,7 +36,7 @@
                    th:name="password"
                    th:value="password"
             >
-            <p class="errorMessage" id="invalidError" th:text=${invalidError}></p>
+            <p class="errorMessage" id="invalidError" th:text="${invalidError}"></p>
 
             <input class="inputStyle" id="sign_in_button" type="submit" value="Sign In">
           </form>
