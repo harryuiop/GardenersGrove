@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -95,10 +96,18 @@ public class RegisterController {
         }
 
 
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname,
-                                                                        email, oldEmail, userService,
-                                                                        password, passwordConfirm,
-                                                                        dateOfBirthValid, dateOfBirth);
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(
+                firstName,
+                lastName,
+                noSurname,
+                email,
+                oldEmail,
+                userService,
+                password,
+                passwordConfirm,
+                dateOfBirthValid,
+                dateOfBirth
+        );
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
@@ -116,7 +125,36 @@ public class RegisterController {
         // send verification email
         emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");
 
-        // This needs to go to email confirmation
+        model.addAttribute("tokenInvalid", "");
+
+        return "redirect:/register/verify";
+    }
+
+    @GetMapping("/register/verify")
+    public String showVerifyPage() {
+        logger.info("GET /register/verify");
+
+        return "tokenValidation";
+    }
+
+    @PostMapping("/register/verify")
+    public String verifyUserAccount(
+            @RequestParam(name = "tokenValue") String token,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
+        logger.info("POST /register/verify");
+
+        User user = userService.getUserByToken(token);
+        if (user == null) {
+            model.addAttribute("tokenInvalid", "Signup code invalid");
+            return "tokenValidation";
+        }
+
+        user.setConfirmation(true);
+        userService.updateUser(user);
+
+        redirectAttributes.addFlashAttribute("accountActiveMessage", "Your account has been activated, please log in");
         return "redirect:/login";
     }
 }

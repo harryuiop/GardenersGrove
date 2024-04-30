@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
@@ -19,7 +20,6 @@ import org.springframework.context.annotation.Import;
 import java.util.List;
 
 @DataJpaTest
-//@Import(PlantService.class)
 public class PlantServiceTest {
     @Autowired
     private PlantRepository plantRepository;
@@ -52,7 +52,7 @@ public class PlantServiceTest {
             userRepository.save(user);
         }
         gardenRepository.deleteAll();
-        this.garden = new Garden(user, "Test Garden", "Test Location", null);
+        this.garden = new Garden(user, "Test Garden", new Location("New Zealand", "Christchurch"), null);
         gardenRepository.save(this.garden);
     }
 
@@ -90,7 +90,7 @@ public class PlantServiceTest {
         );
         plantService.savePlant(plant);
 
-        Garden gardenTwo = new Garden(user, "Test Garden Two", "Test Location Two", null);
+        Garden gardenTwo = new Garden(user, "Test Garden Two", new Location("United States", "Evans"), null);
         gardenRepository.save(gardenTwo);
 
         Plant plantTwo = new Plant(

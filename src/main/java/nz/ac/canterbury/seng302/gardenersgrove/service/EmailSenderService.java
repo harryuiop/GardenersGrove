@@ -90,12 +90,8 @@ public class EmailSenderService {
      */
     public boolean sendRegistrationEmail (User user, String template) {
 
-        // generate token
-        Random random = new Random();
-        int digit = random.nextInt(10000, 1000000);
-        String token = String.format("%06d", digit);
-        user.setToken(token);   // assign the token to user
-        userService.updateUser(user);
+        user = userService.grantUserToken(user);   // assign the token to user
+
         String emailTitle = "GARDENER'S GROVE :: REGISTER YOUR EMAIL ::";
 
         // model for email contents
@@ -110,29 +106,6 @@ public class EmailSenderService {
         String htmlContent = templateEngine.process(template, context);
 
         return this.sendEmail(emailTitle, htmlContent, user.getEmail());
-    }
-
-
-    /**
-     * Sending a test email using test.html as a body of the email.
-     *
-     * @param emailTitle email title
-     * @param file html file that will be an email contents
-     * @param link link that will be provided to a user
-     * @param sendTo email address to send
-     * @return boolean true if success to send the email, false otherwise
-     */
-    public boolean sendTestEmail(String emailTitle, File file, String link, String sendTo) {
-        try {
-            byte[] content = Files.readAllBytes(file.toPath());
-            String message = new String(content, StandardCharsets.UTF_8);
-            String pastATag = "<a id=\"link\">";
-            String replacement = String.format("<a id=\"link\" href=\"%s\">", link);
-            message = message.replaceAll(pastATag, replacement);
-            return this.sendEmail(emailTitle, message, sendTo);
-        } catch (IOException e) {
-            return false;
-        }
     }
 
 }

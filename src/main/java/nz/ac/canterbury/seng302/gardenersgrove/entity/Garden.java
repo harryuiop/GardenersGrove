@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Entity class reflecting an entry of name, and favourite programming language
+ * Entity class reflecting a garden's full information
  * Note the @link{Entity} annotation required for declaring this as a persistence entity
  */
 @Entity
@@ -21,8 +21,9 @@ public class Garden {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String location;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private Location location;
 
     @Column()
     private Float size;
@@ -40,10 +41,10 @@ public class Garden {
      * Creates a new Garden object
      *
      * @param name     name of Garden
-     * @param location The name of the physical place where the garden is
+     * @param location The details of the physical place where the garden is
      * @param size     The physical size of the garden in square metres
      */
-    public Garden(User owner, String name, String location, Float size) {
+    public Garden(User owner, String name, Location location, Float size) {
         this.owner = owner;
         this.name = name;
         this.location = location;
@@ -56,7 +57,7 @@ public class Garden {
         this.name = newName;
     }
 
-    public void setLocation(String newLocation) {
+    public void setLocation(Location newLocation) {
         this.location = newLocation;
     }
 
@@ -72,8 +73,16 @@ public class Garden {
         return name;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
+    }
+
+    /**
+     * Used in frontend to show full location.
+     * @return Location in string format.
+     */
+    public String getLocationString() {
+        return location.toString();
     }
 
     public Float getSize() {
@@ -82,6 +91,14 @@ public class Garden {
 
     public User getOwner() {
         return owner;
+    }
+
+    public List<Plant> getPlants() {
+        return plants;
+    }
+
+    public void addPlant(Plant plant) {
+        this.plants.add(plant);
     }
 
     @Override

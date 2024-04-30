@@ -5,7 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 **/resources/application-dev.properties
-**/resources/application-email.properties
+
 
 ### User uploaded images ###
 storage/

@@ -11,8 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_ALL_GARDENS_URI_STRING;
-
 /**
  * Custom Security Configuration
  * Such functionality was previously handled by WebSecurityConfigurerAdapter
@@ -103,7 +101,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request ->
                         // Allow "/", "/register", and "/login" to anyone (permitAll)
                         request
-                                .requestMatchers("/", "/register", "/login", "/check-email-duplication")
+                                .requestMatchers("/", "/register/**", "/login", "/check-email-duplication")
                                 .permitAll()
                                 // Only allow admins to reach the "/admin" page
                                 .requestMatchers("/admin")

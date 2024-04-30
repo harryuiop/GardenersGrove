@@ -19,15 +19,30 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
 public class ErrorChecker {
     Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
 
+    private ErrorChecker() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * Checks for valid user entries that meet the given requirements
      *
-     * @param gardenName     represents the name given
-     * @param gardenLocation represents the location given
-     * @param gardenSize     represents the size given
+     * @param gardenName    represents the name given
+     * @param gardenSize    represents the size given
+     * @param country       user entered country
+     * @param city          user entered city
+     * @param streetAddress user entered street address
+     * @param suburb        user entered suburb
+     * @param postcode      user entered postcode
      * @return a mapping of the error labels and messages
      */
-    public static Map<String, String> gardenFormErrors(String gardenName, String gardenLocation, Float gardenSize) {
+    public static Map<String, String> gardenFormErrors(
+                    String gardenName, Float gardenSize,
+                    String country,
+                    String city,
+                    String streetAddress,
+                    String suburb,
+                    String postcode
+    ) {
         Map<String, String> errors = new HashMap<>();
 
         if (FormValuesValidator.checkBlank(gardenName)) {
@@ -38,19 +53,51 @@ public class ErrorChecker {
                             "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         }
 
-        if (FormValuesValidator.checkBlank(gardenLocation)) {
-            errors.put("gardenLocationError", "Location cannot be empty");
-        } else if (!FormValuesValidator.checkCharacters(gardenLocation)) {
-            errors.put(
-                            "gardenLocationError",
-                            "Location name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
-        }
-
         if (!FormValuesValidator.checkSize(gardenSize)) {
             errors.put("gardenSizeError", "Garden size must be a positive number");
         }
 
+        if (FormValuesValidator.checkBlank(country)) {
+            errors.put("countryError", "Country is required");
+        } else if (!FormValuesValidator.checkCharactersWithForwardSlash(country)) {
+            errors.put(
+                            "countryError",
+                            "Country must only include letters, numbers, spaces, " +
+                                            "commas, dots, hyphens, forward slashes or apostrophes");
+        }
+        validateLocationField(city, "cityError", "City", true, errors);
+        validateLocationField(streetAddress, "streetAddressError", "Street Address", false, errors);
+        validateLocationField(suburb, "suburbError", "Suburb", false, errors);
+        validateLocationField(postcode, "postcodeError", "Postcode", false, errors);
+
         return errors;
+    }
+
+    /**
+     * Update error Map for the location-based form fields.
+     *
+     * @param fieldValue    Text input by the user.
+     * @param errorName     Name of the error field to add to the map (to be used to update frontend html)
+     * @param fieldName     Field name used for frontend
+     * @param fieldRequired If the field is required or not
+     * @param errors        Error hashmap to update
+     */
+    private static void validateLocationField(
+                    String fieldValue,
+                    String errorName,
+                    String fieldName,
+                    boolean fieldRequired,
+                    Map<String, String> errors
+    ) {
+        if (fieldRequired && FormValuesValidator.checkBlank(fieldValue)) {
+            errors.put(errorName, String.format("%s is required", fieldName));
+        } else if (!FormValuesValidator.checkCharacters(fieldValue)) {
+            errors.put(
+                            errorName,
+                            String.format("%s must only include letters, numbers, spaces, " +
+                                            "commas, dots, hyphens or apostrophes", fieldName)
+            );
+        }
     }
 
     /**
@@ -92,8 +139,6 @@ public class ErrorChecker {
 
         return errors;
     }
-
-    //User Errors
 
     /**
      * Takes the user's first name and checks that there is a first name, it is 64 characters or fewer, and

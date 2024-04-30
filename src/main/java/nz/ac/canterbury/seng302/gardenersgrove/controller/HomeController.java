@@ -1,5 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -11,7 +15,15 @@ import org.springframework.web.bind.annotation.GetMapping;
  * depending on authentication status and permissions.
  */
 @Controller
-public class HomeController {
+public class HomeController extends GardensSidebar {
+    private final GardenService gardenService;
+    private final UserService userService;
+
+    @Autowired
+    public HomeController(GardenService gardenService, UserService userService) {
+        this.gardenService = gardenService;
+        this.userService = userService;
+    }
 
     /**
      * Handles GET requests to the "/" URL.
@@ -26,13 +38,9 @@ public class HomeController {
         // The home page is authorized to any user, logged in or not thus all users are technically authenticated,
         // so we must check that the principle is linked to an actual user (which would return an int if true)
         if (auth.getPrincipal() == "anonymousUser") {
-            boolean loggedIn = false;
-            model.addAttribute("loggedInStatus", loggedIn);
-            return "home";
+            return "landing";
         }
-
-        boolean loggedIn = true;
-        model.addAttribute("loggedInStatus", loggedIn);
+        this.updateGardensSidebar(model, gardenService, userService);
         return "home";
     }
 }

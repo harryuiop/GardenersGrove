@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html
         xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://thymeleaf.org"
+        xmlns:th="http://www.thymeleaf.org"
         lang="us">
   <head>
     <meta charset="UTF-8">
@@ -12,7 +12,10 @@
     <div id="app_container">
       <main>
         <header th:insert="~{fragments/general.html :: header}"></header>
-        <div id="form">
+        <div class="loginForm" th:if="${accountActiveMessage} != null" style="margin-bottom: 25px">
+          <p th:text="${accountActiveMessage}" style="font-size: small; font-style: italic;"></p>
+        </div>
+        <div class="loginForm">
           <form th:action="@{login}" method="post" name="loginForm">
             <label for="email">Email Address:</label>
             <input
@@ -21,10 +24,9 @@
                     id="email"
                     name="email"
                     th:name="username"
-                    th:value="*{email}"
                     autofocus
             />
-            <p class="errorMessage" id="emailError" th:text=${emailError}></p>
+            <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
 
             <label for="password">Password:</label>
             <input class="inputStyle"
@@ -34,7 +36,7 @@
                    th:name="password"
                    th:value="password"
             >
-            <p class="errorMessage" id="invalidError" th:text=${invalidError}></p>
+            <p class="errorMessage" id="invalidError" th:text="${invalidError}"></p>
 
             <input class="inputStyle" id="sign_in_button" type="submit" value="Sign In">
           </form>
