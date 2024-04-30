@@ -220,7 +220,7 @@ public class ProfileController extends GardensSidebar {
             @RequestParam(name = "retypeNewPassword") String retypeNewPassword,
             Model model
     ) {
-        User user = userService.getAuthenticatedUser(userService);
+        User user = userService.getAuthenticatedUser();
         model.addAttribute(user);
 
         Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
