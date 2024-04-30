@@ -40,7 +40,9 @@ public class ProfileController extends GardensSidebar {
     /**
      * Constructor for ProfileController.
      *
-     * @param userService           The UserService responsible for user-related operations.
+     * @param userService the UserService responsible for user-related operations.
+     * @param gardenService the GardenService responsible for garden-related operations
+     * @param emailSenderService the EmailSenderService responsible for email-sending-related operations
      */
     public ProfileController(UserService userService, GardenService gardenService, EmailSenderService emailSenderService) {
         this.userService = userService;
