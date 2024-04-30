@@ -1,7 +1,11 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
+import jakarta.annotation.PostConstruct;
+import nz.ac.canterbury.seng302.gardenersgrove.GardenersGroveApplication;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,9 +38,12 @@ public class UserService {
      * @param userRepository The UserRepository instance.
      */
     @Autowired
-
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.addUsers(new User
+                ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
+        this.addUsers(new User
+                ("user2@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
     }
 
     /**
@@ -115,14 +122,12 @@ public class UserService {
 
     /**
      * Retrieves the user object of the currently logged-in user
-     *
-     * @param userService The UserService object in use
      * @return The User object if found
      */
-    public User getAuthenticatedUser(UserService userService) {
+    public User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
-        return userService.getUserById(currentPrincipalName);
+        return getUserById(currentPrincipalName);
     }
 
     /**

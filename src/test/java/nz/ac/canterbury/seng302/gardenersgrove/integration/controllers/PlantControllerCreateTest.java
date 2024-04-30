@@ -45,6 +45,8 @@ class PlantControllerCreateTest {
     @Autowired
     private UserRepository userRepository;
 
+    private User user;
+
     @Autowired
     private LocationRepository locationRepository;
 
@@ -52,8 +54,8 @@ class PlantControllerCreateTest {
 
     @BeforeEach
     void setUp() {
-        if (!userCreated) {
-            User user = new User(
+        if (user == null) {
+            user = new User(
                             "test@domain.net",
                             "Test",
                             "User",
@@ -61,10 +63,8 @@ class PlantControllerCreateTest {
                             "2000-01-01"
             );
             userRepository.save(user);
-            userCreated = true;
         }
         gardenRepository.deleteAll();
-
         locationRepository.deleteAll();
 
         Location gardenLocation = new Location("New Zealand", "Christchurch");
@@ -72,7 +72,7 @@ class PlantControllerCreateTest {
         gardenLocation.setSuburb("Ilam");
         gardenLocation.setPostcode("8041");
 
-        gardenRepository.save(new Garden("Test Garden", gardenLocation, null));
+        gardenRepository.save(new Garden(user, "Test Garden", gardenLocation, null));
         plantRepository.deleteAll();
     }
 
@@ -84,7 +84,7 @@ class PlantControllerCreateTest {
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[10];
         new Random().nextBytes(fakeImageBytes);
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
@@ -111,7 +111,7 @@ class PlantControllerCreateTest {
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[10];
         new Random().nextBytes(fakeImageBytes);
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
@@ -137,7 +137,7 @@ class PlantControllerCreateTest {
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[10];
         new Random().nextBytes(fakeImageBytes);
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
@@ -163,7 +163,7 @@ class PlantControllerCreateTest {
         String plantDescription = "Test Description";
         byte[] fakeImageBytes = new byte[10];
         new Random().nextBytes(fakeImageBytes);
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
@@ -191,7 +191,7 @@ class PlantControllerCreateTest {
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[10];
         new Random().nextBytes(fakeImageBytes);
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
@@ -215,7 +215,7 @@ class PlantControllerCreateTest {
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[10];
         new Random().nextBytes(fakeImageBytes);
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
@@ -239,7 +239,7 @@ class PlantControllerCreateTest {
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[10];
         new Random().nextBytes(fakeImageBytes);
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
@@ -285,7 +285,7 @@ class PlantControllerCreateTest {
         String plantDescription = "Test Description";
         String plantedDate = "2024-01-01";
         byte[] emptyImageBytes = new byte[0];
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
@@ -314,7 +314,7 @@ class PlantControllerCreateTest {
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[11_000_000];
         new Random().nextBytes(fakeImageBytes);
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
@@ -338,7 +338,7 @@ class PlantControllerCreateTest {
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[10];
         new Random().nextBytes(fakeImageBytes);
-        long gardenId = gardenRepository.findAll().get(0).getId();
+        long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
 
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))

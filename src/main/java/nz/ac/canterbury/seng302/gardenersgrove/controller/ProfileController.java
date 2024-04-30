@@ -58,7 +58,7 @@ public class ProfileController extends GardensSidebar {
     @GetMapping("/profile")
     public String getProfilePage(Model model) {
         this.updateGardensSidebar(model, gardenService, userService);
-        User user = userService.getAuthenticatedUser(userService);
+        User user = userService.getAuthenticatedUser();
         model.addAttribute("user", user);
         return "profile";
     }
@@ -72,7 +72,7 @@ public class ProfileController extends GardensSidebar {
      */
     @GetMapping("/editProfile")
     public String getEditProfilePage(Model model) {
-        User user = userService.getAuthenticatedUser(userService);
+        User user = userService.getAuthenticatedUser();
         model.addAttribute("user", user);
         boolean noSurname = user.getLastName() == null;
         model.addAttribute("noSurname", noSurname);
@@ -90,7 +90,7 @@ public class ProfileController extends GardensSidebar {
      */
     @GetMapping("/editPassword")
     public String editPassword(Model model) {
-        User user = userService.getAuthenticatedUser(userService);
+        User user = userService.getAuthenticatedUser();
         model.addAttribute("user", user);
 
         return "editPassword";
@@ -160,7 +160,7 @@ public class ProfileController extends GardensSidebar {
             @RequestParam(name = "dateOfBirth") String dateOfBirth,
             Model model
     ) {
-        User prevUpdateUser = userService.getAuthenticatedUser(userService);
+        User prevUpdateUser = userService.getAuthenticatedUser();
         model.addAttribute(prevUpdateUser);
 
         if (noSurname == null) {

@@ -15,10 +15,13 @@ public class Garden {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private User owner;
+
     @Column(nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
@@ -41,7 +44,8 @@ public class Garden {
      * @param location The details of the physical place where the garden is
      * @param size     The physical size of the garden in square metres
      */
-    public Garden(String name, Location location, Float size) {
+    public Garden(User owner, String name, Location location, Float size) {
+        this.owner = owner;
         this.name = name;
         this.location = location;
         this.size = size;
@@ -83,6 +87,10 @@ public class Garden {
 
     public Float getSize() {
         return size;
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     public List<Plant> getPlants() {

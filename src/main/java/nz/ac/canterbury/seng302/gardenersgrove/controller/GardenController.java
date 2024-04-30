@@ -169,9 +169,7 @@ public class GardenController extends GardensSidebar {
             locationEntity.setSuburb(suburb);
             locationEntity.setPostcode(postcode);
             locationEntity.setStreetAddress(streetAddress);
-
-            locationService.saveLocation(locationEntity);
-            Garden garden = new Garden(gardenName, locationEntity, gardenSize);
+            Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName, locationEntity, gardenSize);
             gardenService.saveGarden(garden);
 
             if (locationFound) {
