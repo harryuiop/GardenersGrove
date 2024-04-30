@@ -11,8 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_ALL_GARDENS_URI_STRING;
-
 /**
  * Custom Security Configuration
  * Such functionality was previously handled by WebSecurityConfigurerAdapter
