@@ -2,25 +2,27 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
+
+
 /**
  * Checks the validity of the entries into the garden form
  */
 public class ErrorChecker {
-    Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
+    static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
 
     private ErrorChecker() {
-        throw new IllegalStateException("Utility class");
+         throw new IllegalStateException("Utility class");
     }
 
     /**
@@ -343,6 +345,54 @@ public class ErrorChecker {
         if (user == null || !encoder.matches(password, user.getPassword())) {
             errors.put("invalidError",
                             "The email address is unknown, or the password is invalid");
+        }
+        return errors;
+    }
+
+    /**
+     * Creates a hash map of all the errors that it encounters from FormValuesValidator checks
+     *
+     * @param oldPassword Users current password
+     * @param newPassword Users new password
+     * @param retypeNewPassword Users new password retyped
+     * @param user The passed in user
+     *
+     * @return The hash map of errors
+     */
+    public static Map<String, String> editPasswordFormErrors(String oldPassword,
+                                                      String newPassword,
+                                                      String retypeNewPassword,
+                                                      User user
+    ) {
+        Map<String, String> errors = new HashMap<>();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
+
+        // Checking old password
+        if (FormValuesValidator.checkBlank(oldPassword)) {
+            errors.put("oldPasswordError", "Password cannot be empty");
+        } else if (!passwordIsValid(oldPassword)) {
+            errors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        } else if (!encoder.matches(oldPassword, user.getPassword())) {
+            errors.put("oldPasswordError", "Your old password is incorrect");
+        }
+
+        // Checking new password
+        if (FormValuesValidator.checkBlank(newPassword)) {
+            errors.put("newPasswordError", "Password cannot be empty");
+        } else if (!passwordIsValid(newPassword)) {
+            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        }
+
+        // Checking retyped new password
+        if (FormValuesValidator.checkBlank(retypeNewPassword)) {
+            errors.put("retypeNewPasswordError", "Password cannot be empty");
+        } else if (!passwordIsValid(retypeNewPassword)) {
+            errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        }
+
+        // Check that the new password and the retyped new password match
+        if (!FormValuesValidator.checkConfirmPasswords(newPassword, retypeNewPassword)) {
+            errors.put("passwordConfirmError", "The new passwords do not match");
         }
         return errors;
     }

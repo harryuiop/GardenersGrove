@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import static java.util.concurrent.TimeUnit.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +22,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Service about sending email in server side
@@ -90,8 +93,12 @@ public class EmailSenderService {
      */
     public boolean sendRegistrationEmail (User user, String template) {
 
-        user = userService.grantUserToken(user);   // assign the token to user
-
+        // generate token
+        Random random = new Random();
+        int digit = random.nextInt(10000, 1000000);
+        String token = String.format("%06d", digit);
+        user.setToken(token);   // assign the token to user
+        userService.updateUser(user);
         String emailTitle = "GARDENER'S GROVE :: REGISTER YOUR EMAIL ::";
 
         // model for email contents
@@ -108,4 +115,30 @@ public class EmailSenderService {
         return this.sendEmail(emailTitle, htmlContent, user.getEmail());
     }
 
+
+    /**
+     * Sending a test email using test.html as a body of the email.
+     *
+     * @param emailTitle email title
+     * @param file html file that will be an email contents
+     * @param link link that will be provided to a user
+     * @param sendTo email address to send
+     * @return boolean true if success to send the email, false otherwise
+     */
+    public boolean sendTestEmail(String emailTitle, File file, String link, String sendTo) {
+        try {
+            byte[] content = Files.readAllBytes(file.toPath());
+            String message = new String(content, StandardCharsets.UTF_8);
+            String pastATag = "<a id=\"link\">";
+            String replacement = String.format("<a id=\"link\" href=\"%s\">", link);
+            message = message.replaceAll(pastATag, replacement);
+            return this.sendEmail(emailTitle, message, sendTo);
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public void checkVerificationBeenTenMinutes() {
+        return;
+    }
 }

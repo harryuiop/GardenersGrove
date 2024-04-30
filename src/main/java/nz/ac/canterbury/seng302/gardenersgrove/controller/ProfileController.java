@@ -185,7 +185,8 @@ public class ProfileController extends GardensSidebar {
             for (Map.Entry<String, String> error : errors.entrySet()) {
                 model.addAttribute(error.getKey(), error.getValue());
             }
-            model.addAttribute(noSurname);
+            noSurname = prevUpdateUser.getLastName() == null;
+            model.addAttribute("noSurname", noSurname);
             return "editProfile";
         }
 
@@ -198,6 +199,39 @@ public class ProfileController extends GardensSidebar {
 
 
         return "profile";
+    }
+
+    /**
+     *
+     * @param oldPassword Users current password
+     * @param newPassword Users new password
+     * @param retypeNewPassword Users new password retyped
+     * @param model The Model object used for adding attributes to the view.
+     * @return The name of the editProfile view template.
+     */
+    @PostMapping("/confirmEditPassword")
+    public String confirmEditPassword (
+            @RequestParam(name = "oldPassword") String oldPassword,
+            @RequestParam(name = "newPassword") String newPassword,
+            @RequestParam(name = "retypeNewPassword") String retypeNewPassword,
+            Model model
+    ) {
+        User user = userService.getAuthenticatedUser(userService);
+        model.addAttribute(user);
+
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+
+        if (!errors.isEmpty()) {
+            model.addAllAttributes(errors);
+            model.addAttribute("oldPassword", oldPassword);
+            model.addAttribute("newPassword", newPassword);
+            model.addAttribute("retypeNewPassword", retypeNewPassword);
+            return "editPassword";
+        }
+
+        user.setPassword(userService.hashUserPassword(newPassword));
+        userService.updateUser(user);
+        return "editProfile";
     }
 
     /**
