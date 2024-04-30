@@ -2,7 +2,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,10 +19,10 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
  * Checks the validity of the entries into the garden form
  */
 public class ErrorChecker {
-    Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
+    static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
 
     private ErrorChecker() {
-        throw new IllegalStateException("Utility class");
+        // throw new IllegalStateException("Utility class");
     }
 
     /**
@@ -356,13 +355,15 @@ public class ErrorChecker {
                                                       User user
     ) {
         Map<String, String> errors = new HashMap<>();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
+        logger.info(user.getPassword());
 
         // Checking old password
         if (FormValuesValidator.checkBlank(oldPassword)) {
             errors.put("oldPasswordError", "Password cannot be empty");
         } else if (!passwordIsValid(oldPassword)) {
             errors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        } else if (!Objects.equals(user.getPassword(), oldPassword)) {
+        } else if (!encoder.matches(oldPassword, user.getPassword())) {
             errors.put("oldPasswordError", "Your old password is incorrect");
         }
 

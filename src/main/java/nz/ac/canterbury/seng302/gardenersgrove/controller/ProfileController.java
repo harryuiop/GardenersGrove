@@ -221,7 +221,7 @@ public class ProfileController extends GardensSidebar {
             return "editPassword";
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(userService.hashUserPassword(newPassword));
         userService.updateUser(user);
         return "editProfile";
     }
