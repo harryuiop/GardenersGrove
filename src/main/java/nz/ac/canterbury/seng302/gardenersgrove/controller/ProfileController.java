@@ -5,6 +5,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
@@ -34,17 +35,20 @@ public class ProfileController extends GardensSidebar {
 
     private final UserService userService;
     private final GardenService gardenService;
+    private final EmailSenderService emailSenderService;
 
     /**
      * Constructor for ProfileController.
      *
-     * @param userService           The UserService responsible for user-related operations.
+     * @param userService the UserService responsible for user-related operations.
+     * @param gardenService the GardenService responsible for garden-related operations
+     * @param emailSenderService the EmailSenderService responsible for email-sending-related operations
      */
-    public ProfileController(UserService userService, GardenService gardenService) {
+    public ProfileController(UserService userService, GardenService gardenService, EmailSenderService emailSenderService) {
         this.userService = userService;
         this.gardenService = gardenService;
+        this.emailSenderService = emailSenderService;
     }
-
 
     /**
      * Handles GET requests to the "/profile" URL.
@@ -231,6 +235,10 @@ public class ProfileController extends GardensSidebar {
 
         user.setPassword(userService.hashUserPassword(newPassword));
         userService.updateUser(user);
+
+        // send verification email
+        emailSenderService.sendEmail(user, "passwordUpdatedEmail");
+
         return "editProfile";
     }
 

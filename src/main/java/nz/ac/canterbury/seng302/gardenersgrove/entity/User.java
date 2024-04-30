@@ -60,11 +60,6 @@ public class User {
     @Column(name = "sign-up_token")
     private String token;
 
-    /*
-     * TODO - May be we need to create properties for GrantedAuthority
-     * Perhaps this need to be a list?
-     */
-    // private Object roles;
     @Column
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")

@@ -39,8 +39,6 @@ public class RegisterController {
         this.emailSenderService = emailSenderService;
     }
 
-
-
     /**
      * Handles GET requests to the "/register" URL.
      * Displays the registration page.
@@ -123,7 +121,7 @@ public class RegisterController {
         userService.addUsers(newUser);
 
         // send verification email
-        emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");
+        emailSenderService.sendEmail(newUser, "registrationEmail");
 
         model.addAttribute("tokenInvalid", "");
 
