@@ -21,19 +21,11 @@ import java.util.Map;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@DataJpaTest
-@Import(ErrorChecker.class)
-@WithMockUser(value = "1")
-
 class ErrorCheckerTest {
 
-    ErrorChecker validate = new ErrorChecker();
     UserService userService = mock(UserService.class);
     private boolean userCreated = false;
     User user;
-
-    @Autowired
-    UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -45,7 +37,7 @@ class ErrorCheckerTest {
                     "Password1!",
                     "2000-01-01"
             );
-            userRepository.save(user);
+            userService.addUsers(user);
             userCreated = true;
         }
     }
