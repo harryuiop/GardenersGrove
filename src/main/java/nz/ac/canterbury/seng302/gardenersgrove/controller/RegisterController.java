@@ -30,13 +30,14 @@ public class RegisterController {
 
     UserService userService;
 
-    @Autowired
-    public RegisterController(UserService userService) {
-        this.userService = userService;
-    }
+    EmailSenderService emailSenderService;
 
     @Autowired
-    EmailSenderService emailSenderService;
+    public RegisterController(UserService userService, EmailSenderService emailSenderService) {
+        this.userService = userService;
+        this.emailSenderService = emailSenderService;
+    }
+
 
 
     /**
@@ -78,7 +79,7 @@ public class RegisterController {
             @RequestParam(name = "noSurname", required = false) Boolean noSurname,
             @RequestParam(name = "password") String password,
             @RequestParam(name = "passwordConfirm") String passwordConfirm,
-            @RequestParam(name = "dateOfBirth") String dateOfBirth, Model model
+            @RequestParam(name = "dateOfBirth", required = false) String dateOfBirth, Model model
     ) {
         if (noSurname == null) {
             noSurname = false;
@@ -115,6 +116,7 @@ public class RegisterController {
         // send verification email
         emailSenderService.sendRegistrationEmail(newUser, "registrationEmail");
 
-        return "redirect:/profile";
+        // This needs to go to email confirmation
+        return "redirect:/login";
     }
 }
