@@ -7,9 +7,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -99,10 +96,18 @@ public class RegisterController {
         }
 
 
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname,
-                                                                        email, oldEmail, userService,
-                                                                        password, passwordConfirm,
-                                                                        dateOfBirthValid, dateOfBirth);
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(
+                firstName,
+                lastName,
+                noSurname,
+                email,
+                oldEmail,
+                userService,
+                password,
+                passwordConfirm,
+                dateOfBirthValid,
+                dateOfBirth
+        );
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
@@ -127,19 +132,7 @@ public class RegisterController {
 
     @GetMapping("/register/verify")
     public String showVerifyPage() {
-
         logger.info("GET /register/verify");
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (auth.getPrincipal() != "anonymousUser") ?
-                userService.getUserById(Integer.parseInt(auth.getName())) : null;
-
-
-        if(user != null && user.isConfirmed())
-            return "redirect:/";
-        else if (user != null && !user.isConfirmed()) {
-            SecurityContextHolder.getContext().setAuthentication(null);
-            return "tokenValidation";
-        }
 
         return "tokenValidation";
     }
@@ -151,12 +144,10 @@ public class RegisterController {
             Model model
     ) {
         logger.info("POST /register/verify");
-        // Implement this function for a moment to avoid conflict
-        // TODO - move this error checking function to ErrorChecker.java
+
         User user = userService.getUserByToken(token);
         if (user == null) {
             model.addAttribute("tokenInvalid", "Signup code invalid");
-
             return "tokenValidation";
         }
 
@@ -164,7 +155,6 @@ public class RegisterController {
         userService.updateUser(user);
 
         redirectAttributes.addFlashAttribute("accountActiveMessage", "Your account has been activated, please log in");
-        // redirect to /login if no fatal issues happened
         return "redirect:/login";
     }
 }

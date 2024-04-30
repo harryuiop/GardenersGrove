@@ -11,8 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_ALL_GARDENS_URI_STRING;
-
 /**
  * Custom Security Configuration
  * Such functionality was previously handled by WebSecurityConfigurerAdapter
@@ -119,10 +117,7 @@ public class SecurityConfiguration {
                         formLogin
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-//                                .defaultSuccessUrl("/register/verify")
-                                .successHandler((request, response, authentication) -> {
-                                    response.sendRedirect("/register/verify");
-                                })
+                                .defaultSuccessUrl("/")
                                 .failureHandler(new LoginAuthenticationFailureHandler())
                 )
                 // Define logging out, a POST "/logout" endpoint now exists under the hood, redirect to "/login", invalidate session and remove cookie
