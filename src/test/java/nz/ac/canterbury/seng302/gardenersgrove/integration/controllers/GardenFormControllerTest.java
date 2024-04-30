@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
-import nz.ac.canterbury.seng302.gardenersgrove.controller.GardenController;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
@@ -16,17 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.newGardenUri;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
 
 
 @SpringBootTest
@@ -49,6 +47,7 @@ class GardenFormControllerTest {
     @Autowired
     private LocationService locationService;
 
+    @SpyBean
     private UserService userService;
 
     private User user;
@@ -56,18 +55,10 @@ class GardenFormControllerTest {
     @MockBean
     private MapTilerGeocoding mapTilerGeocoding;
 
-    private boolean userCreated = false;
-
     @BeforeEach
     void setUp() {
         Mockito.when(mapTilerGeocoding.getFirstSearchResult(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(null);
-
-        userService = Mockito.spy(new UserService(userRepository));
-
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(new GardenController(gardenService, userService, locationService, mapTilerGeocoding)).apply(sharedHttpSession()).build();
 
         if (user == null) {
             user = new User(
@@ -79,7 +70,11 @@ class GardenFormControllerTest {
             );
             userRepository.save(user);
         }
+
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
+
         gardenRepository.deleteAll();
+        locationService.deleteAll();
     }
 
     @Test
@@ -99,8 +94,7 @@ class GardenFormControllerTest {
                 .param("city", city)
                 .param("streetAddress", streetAddress)
                 .param("suburb", suburb)
-                .param("postcode", postcode)
-                .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
@@ -361,8 +355,7 @@ class GardenFormControllerTest {
                         .param("city", city)
                         .param("streetAddress", streetAddress)
                         .param("suburb", suburb)
-                        .param("postcode", postcode)
-                        .param("ignoreApiCall", "true"))
+                        .param("postcode", postcode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
