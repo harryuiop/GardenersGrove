@@ -31,6 +31,10 @@ public class LoginAuthenticationFailureHandler implements AuthenticationFailureH
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        response.sendRedirect(request.getContextPath() + "/login?error=" + exception.getMessage());
+        if (exception.getMessage().equals("Unconfirmed")) {
+            response.sendRedirect(request.getContextPath() + "/register/verify");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/login?error=" + exception.getMessage());
+        }
     }
 }

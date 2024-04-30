@@ -57,6 +57,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Invalid");
         }
 
+        if (!user.isConfirmed()) {
+            throw new BadCredentialsException("Unconfirmed");
+        }
+
         // If user is found, create and return a UsernamePasswordAuthenticationToken
         return new UsernamePasswordAuthenticationToken(
                 user.getUserId(), // User ID - NOTE: This is how you change the principle name for spring secuirty of user entitys
