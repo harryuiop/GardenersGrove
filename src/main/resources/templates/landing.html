@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gardener's Grove</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+<div id="landingPage">
+    <h1>Gardener's Grove</h1>
+    <p>Welcome to Gardener's Grove!</p>
+    <div>
+        <button>
+            <a th:href="@{/login}">Sign In</a>
+        </button>
+        <button>
+            <a th:href="@{/register}">Register</a>
+        </button>
+    </div>
+</div>
+</body>
+</html>

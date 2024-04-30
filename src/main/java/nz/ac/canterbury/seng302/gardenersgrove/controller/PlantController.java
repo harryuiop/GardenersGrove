@@ -60,8 +60,8 @@ public class PlantController extends GardensSidebar {
      * @param plantCountError       The error message for the plant count form field.
      * @param plantDescriptionError The error message for the plant description form field.
      * @param plantedDateError      The error message for the planted date form field.
-     * @param plantImageTypeError   The error message for the plant image type.
-     * @param plantImageSizeError   The error message for the plant image size.
+     * @param imageTypeError   The error message for the plant image type.
+     * @param imageSizeError   The error message for the plant image size.
      * @param plantImageUploadError The error message for the plant image upload.
      * @param plantName             The name to pre-fill the form with.
      * @param plantCount            The count to pre-fill the form with.
@@ -79,8 +79,8 @@ public class PlantController extends GardensSidebar {
                     String plantCountError,
                     String plantDescriptionError,
                     String plantedDateError,
-                    String plantImageTypeError,
-                    String plantImageSizeError,
+                    String imageTypeError,
+                    String imageSizeError,
                     String plantImageUploadError,
                     String plantName,
                     Integer plantCount,
@@ -98,8 +98,8 @@ public class PlantController extends GardensSidebar {
         model.addAttribute("plantCountError", plantCountError);
         model.addAttribute("plantDescriptionError", plantDescriptionError);
         model.addAttribute("plantedDateError", plantedDateError);
-        model.addAttribute("plantImageTypeError", plantImageTypeError);
-        model.addAttribute("plantImageSizeError", plantImageSizeError);
+        model.addAttribute("imageTypeError", imageTypeError);
+        model.addAttribute("imageSizeError", imageSizeError);
         model.addAttribute("plantImageUploadError", plantImageUploadError);
 
         model.addAttribute("plantName", plantName);
@@ -266,8 +266,8 @@ public class PlantController extends GardensSidebar {
                             errors.getOrDefault("plantCountError", ""),
                             errors.getOrDefault("plantDescriptionError", ""),
                             errors.getOrDefault("plantedDateError", ""),
-                            errors.getOrDefault("plantImageTypeError", ""),
-                            errors.getOrDefault("plantImageSizeError", ""),
+                            errors.getOrDefault("imageTypeError", ""),
+                            errors.getOrDefault("imageSizeError", ""),
                             errors.getOrDefault("plantImageUploadError", ""),
                             plantName,
                             plantCount,
@@ -336,8 +336,8 @@ public class PlantController extends GardensSidebar {
                             errors.getOrDefault("plantCountError", ""),
                             errors.getOrDefault("plantDescriptionError", ""),
                             errors.getOrDefault("plantedDateError", ""),
-                            errors.getOrDefault("plantImageTypeError", ""),
-                            errors.getOrDefault("plantImageSizeError", ""),
+                            errors.getOrDefault("imageTypeError", ""),
+                            errors.getOrDefault("imageSizeError", ""),
                             errors.getOrDefault("plantImageUploadError", ""),
                             plantName,
                             plantCount,

@@ -94,10 +94,18 @@ public class RegisterController {
         }
 
 
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname,
-                                                                        email, oldEmail, userService,
-                                                                        password, passwordConfirm,
-                                                                        dateOfBirthValid, dateOfBirth);
+        Map<String, String> errors = ErrorChecker.registerUserFormErrors(
+                firstName,
+                lastName,
+                noSurname,
+                email,
+                oldEmail,
+                userService,
+                password,
+                passwordConfirm,
+                dateOfBirthValid,
+                dateOfBirth
+        );
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> error : errors.entrySet()) {
@@ -117,6 +125,13 @@ public class RegisterController {
 
         model.addAttribute("tokenInvalid", "");
 
+        return "redirect:/register/verify";
+    }
+
+    @GetMapping("/register/verify")
+    public String showVerifyPage() {
+        logger.info("GET /register/verify");
+
         return "tokenValidation";
     }
 
@@ -126,13 +141,11 @@ public class RegisterController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
+        logger.info("POST /register/verify");
 
-        // Implement this function for a moment to avoid conflict
-        // TODO - move this error checking function to ErrorChecker.java
         User user = userService.getUserByToken(token);
         if (user == null) {
             model.addAttribute("tokenInvalid", "Signup code invalid");
-
             return "tokenValidation";
         }
 
@@ -140,7 +153,6 @@ public class RegisterController {
         userService.updateUser(user);
 
         redirectAttributes.addFlashAttribute("accountActiveMessage", "Your account has been activated, please log in");
-        // redirect to /login if no fatal issues happened
         return "redirect:/login";
     }
 }

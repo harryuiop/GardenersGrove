@@ -59,8 +59,8 @@ class RegisterControllerTest {
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("tokenValidation"));
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/register/verify"));
 
         List<User> allUsers = userRepository.findAll();
         assertEquals(1, allUsers.size());
@@ -92,8 +92,8 @@ class RegisterControllerTest {
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("tokenValidation"));
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/register/verify"));
 
         List<User> allUsers = userRepository.findAll();
         assertEquals(1, allUsers.size());
@@ -297,7 +297,7 @@ class RegisterControllerTest {
                 .param("password", password)
                 .param("passwordConfirm", passwordConfirm)
                 .param("dateOfBirth", dateOfBirth))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register/verify")
                 .param("tokenValue", "009999"))       //token numbers cannot be lower than 010000
@@ -326,7 +326,7 @@ class RegisterControllerTest {
                         .param("password", password)
                         .param("passwordConfirm", passwordConfirm)
                         .param("dateOfBirth", dateOfBirth))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
 
         User user = userRepository.findByEmail(email);
         user.setToken("508471"); // initialize token for test

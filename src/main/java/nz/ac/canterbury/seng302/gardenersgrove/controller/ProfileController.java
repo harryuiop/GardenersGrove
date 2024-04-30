@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -57,7 +58,6 @@ public class ProfileController extends GardensSidebar {
         this.updateGardensSidebar(model, gardenService, userService);
         User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
-
         return "profile";
     }
 
@@ -99,21 +99,21 @@ public class ProfileController extends GardensSidebar {
      * This method is responsible for dealing with grabbing the uploaded profile
      * photo from the user and saving it to the server.
      *
-     * @param model The Model object used for adding attributes to the view.
      * @param file  The multipart file object uploaded by the user
      * @param request The HTTP request object.
+     * @param redirectAttributes The RedirectAttributes object used for adding attributes to the view.
      * @return The name of the editProfile view template.
      */
     @PostMapping("/uploadProfileImage")
     public String uploadImage(
                     @RequestParam("image") MultipartFile file,
                     HttpServletRequest request,
-                    Model model
+                    RedirectAttributes redirectAttributes
     ) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
         User user = userService.getUserById(currentPrincipalName);
-        model.addAttribute("user", user);
+        redirectAttributes.addFlashAttribute("user", user);
 
         ImageValidator imageValidator = new ImageValidator(file);
         if (imageValidator.isValid()) {
@@ -122,7 +122,7 @@ public class ProfileController extends GardensSidebar {
             userService.updateUser(user);
         } else {
             for (Map.Entry<String, String> entry : imageValidator.getErrorMessages().entrySet()) {
-                model.addAttribute(entry.getKey(), entry.getValue());
+                redirectAttributes.addFlashAttribute(entry.getKey(), entry.getValue());
             }
         }
         return "redirect:" + request.getHeader("Referer");

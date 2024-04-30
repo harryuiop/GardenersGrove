@@ -27,6 +27,8 @@
                     class="formControlFile"
                     alt="test"
             />
+            <p class="errorMessage" id="imageTypeError" th:text="${imageTypeError}"></p>
+            <p class="errorMessage" id="imageSizeError" th:text="${imageSizeError}"></p>
         </form>
 
         <div id="profilePictureWrapper">
@@ -39,6 +41,7 @@
                 <div id="profilePictureOverlayIcon">+</div>
             </div>
         </div>
+
 
         <form
                 th:action="@{confirmProfileChanges(userId=${user.getId()})}"
