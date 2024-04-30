@@ -21,7 +21,7 @@ public class Garden {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 

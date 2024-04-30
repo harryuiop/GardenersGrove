@@ -171,7 +171,7 @@ public class GardenController extends GardensSidebar {
             locationEntity.setStreetAddress(streetAddress);
 
             locationService.saveLocation(locationEntity);
-            Garden garden = new Garden(gardenName, locationEntity, gardenSize);
+            Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName, locationEntity, gardenSize);
             gardenService.saveGarden(garden);
 
             if (locationFound) {
@@ -186,11 +186,6 @@ public class GardenController extends GardensSidebar {
                 newGardenUri(),
                 model
         );
-    }
-
-        Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName, gardenLocation, gardenSize);
-        gardenService.saveGarden(garden);
-        return "redirect:" + viewGardenUri(garden.getId());
     }
 
     /**
@@ -324,3 +319,4 @@ public class GardenController extends GardensSidebar {
         return true;
     }
 }
+

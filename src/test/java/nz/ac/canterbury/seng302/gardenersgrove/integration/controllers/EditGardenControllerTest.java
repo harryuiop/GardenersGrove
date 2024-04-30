@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_GARDEN_URI_STRING;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.editGardenUri;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewGardenUri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -77,13 +76,14 @@ class EditGardenControllerTest {
         }
 
         gardenRepository.deleteAll();
-        Garden garden = new Garden(user, initialGardenName, initialGardenLocation, initialGardenSize);
         locationRepository.deleteAll();
 
         initialGardenLocation = new Location(initialCountry, initialCity);
         initialGardenLocation.setStreetAddress(initialStreetAddress);
         initialGardenLocation.setSuburb(initialSuburb);
         initialGardenLocation.setPostcode(initialPostcode);
+
+        Garden garden = new Garden(user, initialGardenName, initialGardenLocation, initialGardenSize);
 
         gardenRepository.save(garden);
         gardenId = garden.getId();
@@ -158,7 +158,7 @@ class EditGardenControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenSize, garden.getSize());
@@ -181,7 +181,7 @@ class EditGardenControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenLocation.toString(), garden.getLocation().toString());
@@ -250,7 +250,7 @@ class EditGardenControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenLocation.getCity(), garden.getLocation().getCity());
@@ -273,7 +273,7 @@ class EditGardenControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenLocation.getStreetAddress(), garden.getLocation().getStreetAddress());
@@ -296,7 +296,7 @@ class EditGardenControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenLocation.getSuburb(), garden.getLocation().getSuburb());
@@ -319,7 +319,7 @@ class EditGardenControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         Garden garden = allGardens.get(0);
         assertEquals(initialGardenName, garden.getName());
         assertEquals(initialGardenLocation.getPostcode(), garden.getLocation().getPostcode());

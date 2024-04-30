@@ -7,12 +7,10 @@ import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.LocationService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -49,11 +46,13 @@ class GardenFormControllerTest {
     @Autowired
     private GardenService gardenService;
 
+    @Autowired
+    private LocationService locationService;
+
     private UserService userService;
 
-    private MockMvc mockMvc;
-
     private User user;
+
     @MockBean
     private MapTilerGeocoding mapTilerGeocoding;
 
@@ -66,7 +65,9 @@ class GardenFormControllerTest {
 
         userService = Mockito.spy(new UserService(userRepository));
 
-        mockMvc = MockMvcBuilders.standaloneSetup(new GardenController(gardenService, userService)).apply(sharedHttpSession()).build();
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
+
+        mockMvc = MockMvcBuilders.standaloneSetup(new GardenController(gardenService, userService, locationService, mapTilerGeocoding)).apply(sharedHttpSession()).build();
 
         if (user == null) {
             user = new User(
@@ -90,7 +91,6 @@ class GardenFormControllerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
                 .param("gardenName", gardenName)
@@ -137,7 +137,7 @@ class GardenFormControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertTrue(allGardens.isEmpty());
     }
 
@@ -162,7 +162,7 @@ class GardenFormControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertTrue(allGardens.isEmpty());
     }
 
@@ -187,7 +187,7 @@ class GardenFormControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertTrue(allGardens.isEmpty());
     }
 
@@ -264,7 +264,7 @@ class GardenFormControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertTrue(allGardens.isEmpty());
     }
 
@@ -289,7 +289,7 @@ class GardenFormControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertTrue(allGardens.isEmpty());
     }
 
@@ -314,7 +314,7 @@ class GardenFormControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
-        List<Garden> allGardens = gardenRepository.findAll();
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertTrue(allGardens.isEmpty());
     }
 
@@ -353,7 +353,6 @@ class GardenFormControllerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        String gardenLocation = "Test Location";
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())

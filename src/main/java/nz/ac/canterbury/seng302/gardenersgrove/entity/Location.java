@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
+
 import java.util.List;
 
 /**
@@ -32,6 +33,9 @@ public class Location {
 
     @Column()
     private double lng;
+
+    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
+    private Garden garden;
 
     /**
      * Initialize a Location with the required fields.
