@@ -50,12 +50,10 @@ public class ProfileController extends GardensSidebar {
      * @return the profile page with the corresponding information
      */
     @GetMapping("/profile")
-    public String getProfilePage(Model model, String imageTypeError, String imageSizeError) {
+    public String getProfilePage(Model model) {
         this.updateGardensSidebar(model, gardenService, userService);
         User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
-        model.addAttribute("imageTypeError", imageTypeError);
-        model.addAttribute("imageSizeError", imageSizeError);
         return "profile";
     }
 
@@ -67,13 +65,11 @@ public class ProfileController extends GardensSidebar {
      * @return The name of the profile view template.
      */
     @GetMapping("/editProfile")
-    public String getEditProfilePage(Model model, String imageTypeError, String imageSizeError) {
+    public String getEditProfilePage(Model model) {
         User user = userService.getAuthenticatedUser(userService);
         model.addAttribute("user", user);
         boolean noSurname = user.getLastName() == null;
         model.addAttribute("noSurname", noSurname);
-        model.addAttribute("imageTypeError", imageTypeError);
-        model.addAttribute("imageSizeError", imageSizeError);
         return "editProfile";
     }
 
@@ -110,7 +106,7 @@ public class ProfileController extends GardensSidebar {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalName = parseInt(auth.getName());
         User user = userService.getUserById(currentPrincipalName);
-        redirectAttributes.addAttribute("user", user);
+        redirectAttributes.addFlashAttribute("user", user);
 
         ImageValidator imageValidator = new ImageValidator(file);
         if (imageValidator.isValid()) {
@@ -119,7 +115,7 @@ public class ProfileController extends GardensSidebar {
             userService.updateUser(user);
         } else {
             for (Map.Entry<String, String> entry : imageValidator.getErrorMessages().entrySet()) {
-                redirectAttributes.addAttribute(entry.getKey(), entry.getValue());
+                redirectAttributes.addFlashAttribute(entry.getKey(), entry.getValue());
             }
         }
         return "redirect:" + request.getHeader("Referer");
