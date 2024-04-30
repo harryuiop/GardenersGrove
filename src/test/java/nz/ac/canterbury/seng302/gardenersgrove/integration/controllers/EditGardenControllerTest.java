@@ -48,7 +48,7 @@ class EditGardenControllerTest {
     @BeforeEach
     void setUp() {
         if (user == null) {
-            User user = new User(
+            user = new User(
                             "test@domain.net",
                             "Test",
                             "User",

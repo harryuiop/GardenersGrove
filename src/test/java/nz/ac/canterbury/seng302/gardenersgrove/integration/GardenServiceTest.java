@@ -16,21 +16,23 @@ import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
-@Import(GardenService.class)
+//@Import(GardenService.class)
 class GardenServiceTest {
 
     @Autowired
     private GardenRepository gardenRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
+    private UserService userService;
     private User user;
 
     @Test
     void gardenRepositoryGardenCreation() {
+        userService = new UserService(userRepository);
         if (user == null) {
-            User user = new User(
+            user = new User(
                     "test@domain.net",
                     "Test",
                     "User",

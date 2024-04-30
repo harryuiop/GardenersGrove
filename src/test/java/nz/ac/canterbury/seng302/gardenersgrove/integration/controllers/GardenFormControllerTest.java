@@ -58,7 +58,7 @@ class GardenFormControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(new GardenController(gardenService, userService)).apply(sharedHttpSession()).build();
 
         if (user == null) {
-            User user = new User(
+            user = new User(
                             "test@domain.net",
                             "Test",
                             "User",

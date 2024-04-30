@@ -1,6 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,12 +32,19 @@ class RegistrationControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PlantRepository plantRepository;
+    @Autowired
+    private GardenRepository gardenRepository;
+
 
     @MockBean
     private EmailSenderService emailSenderService;
 
     @BeforeEach
     void setUp() {
+        plantRepository.deleteAll();
+        gardenRepository.deleteAll();
         userRepository.deleteAll();
         Mockito.when(emailSenderService.sendRegistrationEmail(Mockito.any(), Mockito.any())).thenReturn(true);
     }
