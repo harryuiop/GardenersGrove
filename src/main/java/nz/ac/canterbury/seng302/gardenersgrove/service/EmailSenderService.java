@@ -56,11 +56,13 @@ public class EmailSenderService {
      */
     public boolean sendEmail(User user, String template) {
         String emailTitle;
+        Map<String, Object> model = new HashMap<>();
 
         switch (template) {
             case "registrationEmail":
                 user = userService.grantUserToken(user);
                 emailTitle = "GARDENER'S GROVE :: REGISTER YOUR EMAIL ::";
+                model.put("token", user.getToken());
                 break;
             case "passwordUpdatedEmail":
                 emailTitle = "GARDENER'S GROVE :: YOUR PASSWORD HAS BEEN UPDATED ::";
@@ -70,10 +72,8 @@ public class EmailSenderService {
         }
 
         // model for email contents
-        Map<String, Object> model = new HashMap<>();
         model.put("firstName", user.getFirstName());
         model.put("lastName", user.getLastName());
-        model.put("token", user.getToken());
 
         // create email content
         Context context = new Context();
