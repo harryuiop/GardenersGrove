@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 class ErrorCheckerTest {
 
     UserService userService = mock(UserService.class);
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private boolean userCreated = false;
     User user;
 
@@ -34,7 +35,7 @@ class ErrorCheckerTest {
                     "test@domain.net",
                     "Test",
                     "User",
-                    "Password1!",
+                    encoder.encode("Password1!"),
                     "2000-01-01"
             );
             userService.addUsers(user);

@@ -356,7 +356,6 @@ public class ErrorChecker {
     ) {
         Map<String, String> errors = new HashMap<>();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
-        logger.info(user.getPassword());
 
         // Checking old password
         if (FormValuesValidator.checkBlank(oldPassword)) {
