@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class RegistrationControllerTest {
+class RegisterControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +37,7 @@ class RegistrationControllerTest {
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
-        Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any(), "registration")).thenReturn(true);
+        Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any())).thenReturn(true);
     }
     @Test
     void submitForm_allValid_userSaved() throws Exception {

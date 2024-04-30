@@ -28,9 +28,9 @@ import java.util.Map;
 public class EmailSenderService {
 
     Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
-    private JavaMailSender javaMailSender;
-    private TemplateEngine templateEngine;
-    private UserService userService;
+    private final JavaMailSender javaMailSender;
+    private final TemplateEngine templateEngine;
+    private final UserService userService;
 
 
     // Sets the email address that the email will be sent FROM
@@ -52,18 +52,17 @@ public class EmailSenderService {
      * method to email the user
      *
      * @param user User Entity
-     * @param template html file to send an email
-     * @param emailType the type of email to send, e.g. registration email
+     * @param template html file containing the template for the email to be sent
      */
-    public boolean sendEmail(User user, String template, String emailType) {
+    public boolean sendEmail(User user, String template) {
         String emailTitle;
 
-        switch (emailType) {
-            case "registration":
+        switch (template) {
+            case "registrationEmail":
                 user = userService.grantUserToken(user);
                 emailTitle = "GARDENER'S GROVE :: REGISTER YOUR EMAIL ::";
                 break;
-            case "passwordUpdated":
+            case "passwordUpdatedEmail":
                 emailTitle = "GARDENER'S GROVE :: YOUR PASSWORD HAS BEEN UPDATED ::";
                 break;
             default:
@@ -105,56 +104,5 @@ public class EmailSenderService {
 
     }
 
-    /**
-     * method to send verification email to register user account
-     *
-     * @param user User Entity
-     * @param template html file to send an email
-     */
-    public boolean sendRegistrationEmail (User user, String template) {
 
-        user = userService.grantUserToken(user);   // assign the token to user
-
-        String emailTitle = "GARDENER'S GROVE :: REGISTER YOUR EMAIL ::";
-
-        // model for email contents
-        Map<String, Object> model = new HashMap<>();
-        model.put("firstName", user.getFirstName());
-        model.put("lastName", user.getLastName());
-        model.put("token", user.getToken());
-
-        // create email content
-        Context context = new Context();
-        context.setVariables(model);
-        String htmlContent = templateEngine.process(template, context);
-
-        return this.sendEmail(emailTitle, htmlContent, user.getEmail());
-    }
-
-
-    /**
-     * Sending a test email using test.html as a body of the email.
-     *
-     * @param emailTitle email title
-     * @param file html file that will be an email contents
-     * @param link link that will be provided to a user
-     * @param sendTo email address to send
-     * @return boolean true if success to send the email, false otherwise
-     */
-    public boolean sendTestEmail(String emailTitle, File file, String link, String sendTo) {
-        try {
-            byte[] content = Files.readAllBytes(file.toPath());
-            String message = new String(content, StandardCharsets.UTF_8);
-            String pastATag = "<a id=\"link\">";
-            String replacement = String.format("<a id=\"link\" href=\"%s\">", link);
-            message = message.replaceAll(pastATag, replacement);
-            return this.sendEmail(emailTitle, message, sendTo);
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public void checkVerificationBeenTenMinutes() {
-        return;
-    }
 }
