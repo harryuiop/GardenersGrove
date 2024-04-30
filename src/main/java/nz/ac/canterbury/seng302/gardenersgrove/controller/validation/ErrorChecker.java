@@ -22,7 +22,7 @@ public class ErrorChecker {
     static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
 
     private ErrorChecker() {
-        // throw new IllegalStateException("Utility class");
+         throw new IllegalStateException("Utility class");
     }
 
     /**
@@ -349,6 +349,16 @@ public class ErrorChecker {
         return errors;
     }
 
+    /**
+     * Creates a hash map of all the errors that it encounters from FormValuesValidator checks
+     *
+     * @param oldPassword Users current password
+     * @param newPassword Users new password
+     * @param retypeNewPassword Users new password retyped
+     * @param user The passed in user
+     *
+     * @return The hash map of errors
+     */
     public static Map<String, String> editPasswordFormErrors(String oldPassword,
                                                       String newPassword,
                                                       String retypeNewPassword,

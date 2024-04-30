@@ -201,6 +201,14 @@ public class ProfileController extends GardensSidebar {
         return "profile";
     }
 
+    /**
+     *
+     * @param oldPassword Users current password
+     * @param newPassword Users new password
+     * @param retypeNewPassword Users new password retyped
+     * @param model The Model object used for adding attributes to the view.
+     * @return The name of the editProfile view template.
+     */
     @PostMapping("/confirmEditPassword")
     public String confirmEditPassword (
             @RequestParam(name = "oldPassword") String oldPassword,
