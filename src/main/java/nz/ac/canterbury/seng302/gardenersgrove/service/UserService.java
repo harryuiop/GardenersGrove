@@ -66,7 +66,8 @@ public class UserService {
         if (
                 emailIsValid(user.getEmail()) &&
                 nameIsValid(user.getFirstName(), user.getLastName()) &&
-                dobIsValid(user.getDob())
+                dobIsValid(user.getDob()) &&
+                passwordIsValid(user.getPassword())
         ) {
             userRepository.save(user);
             return true;
@@ -104,6 +105,13 @@ public class UserService {
     public User getUserById(int id) {
         return userRepository.findByUserId(id);
     }
+
+    /**
+     * Deletes a user by User object.
+     *
+     * @param user The user to delete
+     */
+    public void deleteUser(User user) { userRepository.delete(user); }
 
     /**
      * Retrieves the user object of the currently logged-in user

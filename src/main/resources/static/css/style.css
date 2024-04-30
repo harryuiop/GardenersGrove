@@ -206,6 +206,7 @@ label {
 #changePassword {
     display: flex;
     justify-content: center;
+    text-decoration: none;
 }
 
 /* -------------------- Login page specific -------------------- */
@@ -259,24 +260,6 @@ input[type=text], input[type=password] {
     justify-content: center;
 }
 
-/*-------------------- verify page specific --------------------*/
-
-#verify {
-    background-color: var(--neutral);
-    font-size: 1rem;
-    padding: 8px 18px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    color: #fff;
-    text-decoration: none;
-}
-#verify:hover {
-    background-color: var(--light-neutral);
-}
-#verify:active {
-    background-color: var(--dark-neutral);
-}
-
 /* Team-r styling */
 /* Title at top of page */
 .title {
@@ -320,10 +303,6 @@ nav button {
 .form-button {
     line-height: 20px;
     margin-top: 20px;
-}
-
-.form-field .info-message {
-    font-size: 0.8rem;
 }
 
 .gardens-list a {
@@ -439,82 +418,6 @@ textarea {
 
 .userProfileName {
     color: var(--light-color);
-}
-#autocomplete-list {
-    display: none;
-}
-
-#autocomplete-list .primary-text {
-    font-size: 1rem;
-    color: black;
-}
-
-#autocomplete-list .secondary-text {
-    font-size: 0.8rem;
-    color: grey;
-}
-
-#autocomplete-list div:hover {
-    cursor: pointer;
-    background-color: #e9e9e9;
-}
-
-.modal {
-    position: fixed;
-    z-index: 1;
-    padding-top: 100px;
-    left: 0;   top: 0;   width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    background-color: white;
-    margin: auto;
-    padding: 20px;
-    border: 3px solid #888;
-    border-radius: 10px;
-}
-
-.modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.modal-buttons form {
-    margin-left: 10px;
-}
-
-.modal-buttons button {
-    padding: 10px 20px;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.modal-buttons #useLocationBtn {
-    background-color: green;
-}
-
-.modal-buttons #useLocationBtn:hover {
-    background-color: darkgreen;
-}
-
-.modal-buttons #backToFormBtn {
-    background-color: red;
-}
-
-.modal-buttons #backToFormBtn:hover {
-    background-color: darkred;
-}
-
-.sub-location-fields {
-
 }
 
 .signOutButton {
