@@ -1,48 +1,46 @@
 <!DOCTYPE html>
-<html
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.thymeleaf.org"
-        lang="us">
-  <head>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="us">
+<head>
     <meta charset="UTF-8">
     <title>Home Page</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-  </head>
-  <body>
-    <div id="app_container">
-      <main>
+</head>
+<body>
+<div id="app_container">
+    <main>
         <header th:insert="~{fragments/general.html :: header}"></header>
         <div class="loginForm" th:if="${accountActiveMessage} != null" style="margin-bottom: 25px">
-          <p th:text="${accountActiveMessage}" style="font-size: small; font-style: italic;"></p>
+            <p th:text="${accountActiveMessage}" style="font-size: small; font-style: italic;"></p>
         </div>
         <div class="loginForm">
-          <form th:action="@{login}" method="post" name="loginForm">
-            <label for="email">Email Address:</label>
-            <input
-                    class="inputStyle"
-                    type="text"
-                    id="email"
-                    name="email"
-                    th:name="username"
-                    autofocus
-            />
-            <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
+            <form th:action="@{login}" method="post" name="loginForm">
+                <label for="email">Email Address:</label>
+                <input
+                        class="inputStyle"
+                        type="text"
+                        id="email"
+                        name="email"
+                        th:name="username"
+                        autofocus
+                />
+                <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
 
-            <label for="password">Password:</label>
-            <input class="inputStyle"
-                   type="password"
-                   id="password"
-                   name="password"
-                   th:name="password"
-            >
-            <p class="errorMessage" id="invalidError" th:text="${invalidError}"></p>
+                <label for="password">Password:</label>
+                <input class="inputStyle"
+                       type="password"
+                       id="password"
+                       name="password"
+                       th:name="password"
+                >
+                <p class="errorMessage" id="invalidError" th:text="${invalidError}"></p>
 
-            <input class="inputStyle" id="sign_in_button" type="submit" value="Sign In">
-          </form>
-        <p class="registerLink">Don't have an account? <a th:href="@{/register}">Register here.</a></p>
-        <p class="registerLink">Don't want to login? <a th:href="@{/}">Cancel.</a></p>
+                <input class="inputStyle" id="sign_in_button" type="submit" value="Sign In">
+            </form>
+            <p class="registerLink">Don't have an account? <a th:href="@{/register}">Register here.</a></p>
+            <p class="registerLink">Don't want to login? <a th:href="@{/}">Cancel.</a></p>
         </div>
-      </main>
-    </div>
-  </body>
+    </main>
+</div>
+</body>
 </html>

@@ -4,8 +4,8 @@
     <meta charset="UTF-8"/>
     <title>Edit Profile</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-    <script type="text/javascript" src="/javascript/disableLastName.js"></script>
-    <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/disableLastName.js}"></script>
+    <script type="text/javascript" th:src="@{/javascript/profilePictureUpload.js}"></script>
 </head>
 <body onload="loadingPage()">
 <nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
