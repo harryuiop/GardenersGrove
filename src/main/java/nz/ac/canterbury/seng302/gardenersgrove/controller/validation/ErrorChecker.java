@@ -370,30 +370,42 @@ public class ErrorChecker {
         // Checking old password
         if (FormValuesValidator.checkBlank(oldPassword)) {
             errors.put("oldPasswordError", "Password cannot be empty");
-        } else if (!passwordIsValid(oldPassword)) {
-            errors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         } else if (!encoder.matches(oldPassword, user.getPassword())) {
             errors.put("oldPasswordError", "Your old password is incorrect");
-        }
-
-        // Checking new password
-        if (FormValuesValidator.checkBlank(newPassword)) {
-            errors.put("newPasswordError", "Password cannot be empty");
         } else if (!passwordIsValid(newPassword)) {
-            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        }
-
-        // Checking retyped new password
-        if (FormValuesValidator.checkBlank(retypeNewPassword)) {
-            errors.put("retypeNewPasswordError", "Password cannot be empty");
-        } else if (!passwordIsValid(retypeNewPassword)) {
-            errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        }
+            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least " +
+                    "one uppercase letter, one lowercase letter, one number, and one special character");
+    }
 
         // Check that the new password and the retyped new password match
         if (!FormValuesValidator.checkConfirmPasswords(newPassword, retypeNewPassword)) {
             errors.put("passwordConfirmError", "The new passwords do not match");
         }
+
+        // Checking new password
+        if (FormValuesValidator.checkBlank(newPassword)) {
+            errors.put("newPasswordError", "Password cannot be empty");
+        } else if (newPassword.contains(user.getFirstName()) || newPassword.contains(user.getLastName()) || newPassword.contains(user.getEmail())) {
+            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one" +
+                    " uppercase letter, one lowercase letter, one number, and one special character nor include any current " +
+                    "user profile form fields");
+        } else if (!passwordIsValid(newPassword)) {
+            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one" +
+                    " uppercase letter, one lowercase letter, one number, and one special character");
+        }
+
+        // Checking retyped new password
+        if (FormValuesValidator.checkBlank(retypeNewPassword)) {
+            errors.put("retypeNewPasswordError", "Password cannot be empty");
+        } else if (retypeNewPassword.contains(user.getFirstName()) || retypeNewPassword.contains(user.getLastName()) || retypeNewPassword.contains(user.getEmail())) {
+            errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one" +
+                    " uppercase letter, one lowercase letter, one number, and one special character nor include any current " +
+                    "user profile form fields");
+        } else if (!passwordIsValid(retypeNewPassword)) {
+            errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least " +
+                    "one uppercase letter, one lowercase letter, one number, and one special character");
+        }
+
         return errors;
     }
 }

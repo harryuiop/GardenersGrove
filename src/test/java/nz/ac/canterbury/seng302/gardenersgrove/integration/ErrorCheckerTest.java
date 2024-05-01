@@ -665,46 +665,7 @@ class ErrorCheckerTest {
         correctErrors.put("dateOfBirthError", "The maximum age allowed is 120 years");
         Assertions.assertEquals(correctErrors, errors);
     }
-    @Test
-    void editPasswordFormErrors_tooShortOldPassword_returnsOldInvalidPasswordError() {
-        String oldPassword = "short";
-        String newPassword = "Password1!new";
-        String retypeNewPassword = "Password1!new";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        Assertions.assertEquals(correctErrors, errors);
-    }
-    @Test
-    void editPasswordFormErrors_tooLongOldPassword_returnsOldInvalidPasswordError() {
-        String oldPassword = "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiop";
-        String newPassword = "Password1!";
-        String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        Assertions.assertEquals(correctErrors, errors);
-    }
-    @Test
-    void editPasswordFormErrors_noUpperCaseLetterInOldPassword_returnsOldInvalidPasswordError() {
-        String oldPassword = "password1!";
-        String newPassword = "Password1!";
-        String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        Assertions.assertEquals(correctErrors, errors);
-    }
-    @Test
-    void editPasswordFormErrors_noLowerCaseLetterInOldPassword_returnsOldInvalidPasswordError() {
-        String oldPassword = "PASSWORD1!";
-        String newPassword = "Password1!";
-        String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        Assertions.assertEquals(correctErrors, errors);
-    }
+
     @Test
     void editPasswordFormErrors_EmptyOldPassword_returnsOldInvalidPasswordError() {
         String oldPassword = "";
@@ -715,26 +676,7 @@ class ErrorCheckerTest {
         correctErrors.put("oldPasswordError", "Password cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
     }
-    @Test
-    void editPasswordFormErrors_noSpecialCaseInOldPassword_returnsOldInvalidPasswordError() {
-        String oldPassword = "Password1";
-        String newPassword = "Password1!";
-        String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        Assertions.assertEquals(correctErrors, errors);
-    }
-    @Test
-    void editPasswordFormErrors_noDigitCaseInOldPassword_returnsOldInvalidPasswordError() {
-        String oldPassword = "Password!";
-        String newPassword = "Password1!";
-        String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        Assertions.assertEquals(correctErrors, errors);
-    }
+
     @Test
     void editPasswordFormErrors_incorrectOldPassword_returnsOldInvalidPasswordError() {
         String oldPassword = "Password!1valid";
