@@ -8,9 +8,10 @@ Project's tech stack includes ```gradle```, ```Spring Boot```, ```Thymeleaf```, 
 
 ## How to run
 
-### 1 - Running the project
+### 1 - Product Status
 Our project has not been deployed to PROD instance.
 
+### 2 - Running the program
 On Linux:
 ```
 ./gradlew bootRun
@@ -23,7 +24,7 @@ gradlew bootRun
 
 By default, the application will run on local port 8080 [http://localhost:8080](http://localhost:8080)
 
-### 2 - Using the application
+### 3 - Using the application
 
 > - You will first need to register an account or login with persisting account.
 > - If registering you must get a code from your email to verify your account before you are able to access the account.
@@ -37,6 +38,10 @@ By default, the application will run on local port 8080 [http://localhost:8080](
 > - When viewing a garden you can also see any plants added to the garden. If you have more than 10 plants you may not be able to see them all on your page, so a scroll wheel appears and you can scroll through them.
 > - You can add a plant by viewing the garden you want to add a plant to.
 > - You can add an image to the plant either through the adding/editing of a plant or on the garden view page by clicking on the image.
+
+## Default User Credentials
+__Email__: user@gmail.com \
+__Password__: Password1!
 
 ## Contributors
 
