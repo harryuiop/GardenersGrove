@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta http-equiv="Content-Type" context="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Gardeners' Grove</title>
-    <link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div th:insert="fragmentExample/fragments :: title">Header</div>
-<nav th:insert="fragmentExample/fragments :: gardens">Gardens</nav>
+<div th:insert="~{fragments/fragments :: title}">Header</div>
+<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
 <div class="content">
     <h2>My Gardens</h2>
     <div class="list-container">
-        <a th:each="garden: ${gardens}" th:href="@{/view-garden(gardenId=${garden.id})}">
-            <div class="garden-item"><span th:text="${garden.name}" >Name</span></div>
+        <a th:each="garden: ${gardens}" th:href="@{${viewGardenUriString}(gardenId=${garden.id})}">
+            <div class="garden-item"><span th:text="${garden.name}">Name</span></div>
         </a>
     </div>
 </div>

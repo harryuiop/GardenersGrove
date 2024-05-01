@@ -1,0 +1,51 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Profile Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
+  </head>
+  <body>
+  <nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
+    <a th:href="@{/editProfile}" class="button">Edit Profile</a>
+    <div class="profileBody">
+      <div class="formContainer">
+        <form
+                id="uploadProfileImage"
+                th:action="@{uploadProfileImage}"
+                method="post"
+                name="profilePhoto"
+                enctype="multipart/form-data"
+        >
+          <input
+                  id="profilePictureInput"
+                  type="file"
+                  name="image"
+                  accept="image/jpeg, image/png, image/svg+xml"
+                  class="formControlFile"
+                  alt="test"
+          />
+          <p class="errorMessage" id="imageTypeError" th:text="${imageTypeError}"></p>
+          <p class="errorMessage" id="imageSizeError" th:text="${imageSizeError}"></p>
+
+        </form>
+
+        <div id="profilePictureWrapper">
+          <img
+                  id="profilePicture"
+                  th:src="${user.getProfilePictureFilePath()}"
+                  alt="User profile picture"
+          />
+          <div id="profilePictureOverlay">
+            <div id="profilePictureOverlayIcon">+</div>
+          </div>
+        </div>
+
+        <h2 th:text="${user.getFirstName() + ' ' + user.getLastName()}"></h2>
+        <h3 id="profileDoB" th:text="${user.getDob()}"></h3>
+        <h3 id="profileEmail" th:text="${user.getEmail()}"></h3>
+      </div>
+    </div>
+  </body>
+</html>

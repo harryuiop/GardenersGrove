@@ -13,7 +13,7 @@ import java.util.Map;
 public class ImageValidator {
     protected static final int MAX_IMAGE_SIZE_BYTES = 10_000_000;
 
-    protected static final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList("image/jpeg", "image/png", "image/svg");
+    protected static final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList("image/jpeg", "image/png", "image/svg+xml");
 
     private final MultipartFile image;
 
@@ -61,10 +61,10 @@ public class ImageValidator {
         boolean validType = validImageType();
         boolean validSize = validSize();
         if (!validType) {
-            errorMessages.put("plantImageTypeError", "Image must be of type png, jpg or svg.");
+            errorMessages.put("imageTypeError", "Image must be of type png, jpg or svg.");
         }
         if (!validSize) {
-            errorMessages.put("plantImageSizeError", "Image must be less than 10MB.");
+            errorMessages.put("imageSizeError", "Image must be less than 10MB.");
         }
         return validType && validSize;
     }

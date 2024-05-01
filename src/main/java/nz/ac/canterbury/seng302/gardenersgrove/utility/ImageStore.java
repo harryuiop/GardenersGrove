@@ -34,11 +34,19 @@ public class ImageStore {
             throw new IOException("No content type");
         }
         String extension = contentType.split("/")[1];
+        if (extension.equals("svg+xml")) {
+            extension = "svg";
+        }
         String newFilename = UUID.randomUUID() + "." + extension;
 
         Path path = Paths.get(UPLOAD_DIR + newFilename);
         Files.write(path, image.getBytes());
 
         return newFilename;
+    }
+
+    public static void deleteImage(String filename) throws IOException {
+        Path path = Paths.get(UPLOAD_DIR + filename);
+        Files.delete(path);
     }
 }

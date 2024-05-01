@@ -1,43 +1,46 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * This is a basic spring boot controller, note the @link{Controller} annotation which defines this.
- * This controller defines endpoints as functions with specific HTTP mappings
+ * Controller for the root/home page. This controls what each user will see client side
+ * depending on authentication status and permissions.
  */
 @Controller
 public class HomeController extends GardensSidebar {
-    Logger logger = LoggerFactory.getLogger(HomeController.class);
-
     private final GardenService gardenService;
+    private final UserService userService;
 
     @Autowired
-    public HomeController(GardenService gardenService) {
+    public HomeController(GardenService gardenService, UserService userService) {
         this.gardenService = gardenService;
+        this.userService = userService;
     }
 
     /**
-     * Gets the thymeleaf page representing the /demo page (a basic welcome screen with some links)
-     * @param name url query parameter of user's name
-     * @param model (map-like) representation of data to be used in thymeleaf display
-     * @return thymeleaf demoTemplate
+     * Handles GET requests to the "/" URL.
+     * Displays the login page with different HTML attributes depending on permissions and authentication status.
+     *
+     * @return a redirect to the login page
      */
     @GetMapping("/")
-    public String getTemplate(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
-        logger.info("GET /");
-        this.updateGardensSidebar(model, gardenService);
-        model.addAttribute("name", name);
-        return "homeTemplate";
-    }
+    public String getLandingPage(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        // The home page is authorized to any user, logged in or not thus all users are technically authenticated,
+        // so we must check that the principle is linked to an actual user (which would return an int if true)
+        if (auth.getPrincipal() == "anonymousUser" || userService.getAuthenticatedUser() == null) {
+            return "landing";
+        }
+        this.updateGardensSidebar(model, gardenService, userService);
+        return "home";
+    }
 }

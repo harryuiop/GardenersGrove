@@ -8,6 +8,7 @@
  - [ ] All aceptance criteria for this task are met.
  - [ ] All new commits from the target branch have been merged locally, ensuring no conflicts are present.
  - [ ] All ACs are passing is this is the final task of it's story.
+ - [ ] ALL NEW DEPENDANCIES REQUIRED IN THIS BRANCH HAVE BEEN APPROVED BY CTO!
 
 #### Changes proposed in this merge request:
 

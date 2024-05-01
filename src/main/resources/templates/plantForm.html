@@ -1,95 +1,79 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org" lang="">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Add Plant</title>
-    <link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script th:src="@{/javascript/image.js}"></script>
 </head>
 <body>
-<div th:insert="~{fragmentExample/fragments :: title}">Header</div>
-<nav th:insert="~{fragmentExample/fragments :: gardens}">Gardens</nav>
+<div th:insert="~{fragments/fragments :: title}">Header</div>
+<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
 <div class="content">
     <h1 th:text="${gardenName}"></h1>
     <div>
-        <div>
-            <form th:action="@{/plantform(gardenId=${gardenId})}" method="post" id="plant-form" enctype="multipart/form-data">
+        <div class="forumContentsDiv">
+            <form th:action="@{${formSubmissionUri}}" method="post" id="plant-form" enctype="multipart/form-data">
                 <div class="form-field">
                     <label class="form-input" for="plantName"> Plant Name: </label>
                     <input type="text" class="form-control" id="plantName" th:name="plantName"
                            th:value="*{plantName}" data-cy="plantName" autofocus>
-                    <h5 th:text=${plantNameError}></h5>
+                    <h5 th:text="${plantNameError}"></h5>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantCount"> Number of these plants to add to garden: </label>
-                    <input type="number" step="1" class="form-control" id="plantCount" th:name="plantCount"
+                    <input type="number" step="1" max="1000000000" class="form-control" id="plantCount"
+                           th:name="plantCount"
                            th:value="*{plantCount}" data-cy="plantCount" autofocus>
-                    <h5 th:text=${plantCountError}></h5>
+                    <h5 th:text="${plantCountError}"></h5>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantDescription"> Plant Description: </label>
-                    <textarea form="plant-form" type="text" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                    <textarea form="plant-form"
+                              oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
                               class="form-control" id="plantDescription" th:name="plantDescription"
                               th:text="*{plantDescription}" data-cy="plantDescription" autofocus></textarea>
-                    <h5 th:text=${plantDescriptionError}></h5>
+                    <h5 th:text="${plantDescriptionError}"></h5>
                 </div>
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantedDate"> Date Planted: </label>
                     <input type="date" class="form-control" id="plantedDate" th:name="plantedDate"
                            th:value="*{plantedDate}" data-cy="plantedDate" placeholder="DD/MM/YYYY" autofocus>
-                    <h5 th:text=${plantedDateError}></h5>
+                    <h5 th:text="${plantedDateError}"></h5>
                 </div>
                 <br/>
 
                 <div class="form-field">
                     <div class="plant-image-container">
-                        <img id="selectedImage" th:src="@{/images/default-plant.jpg}"  alt="Plant Image">
-                        <p id = "image-selected-message"></p>
+                        <img class="selectedImage" th:src="@{${plantImagePath}}" alt="Plant Image">
+                        <p id="image-selected-message"></p>
                         <div class="add-image">
                             <label for="plantImage">
                                 <i class="fas fa-plus-circle"></i>
                             </label>
-                            <input type="file" class="form-control" id="plantImage" th:name="plantImage" accept=".jpg, .svg, .png"
+                            <input type="file" class="form-control" id="plantImage" th:name="plantImage"
+                                   accept="image/jpeg, image/png, image/svg+xml"
                                    data-cy="plantImage" onchange="displayImage()" autofocus>
                         </div>
                     </div>
-                    <h5 th:text=${plantImageTypeError}></h5>
-                    <h5 th:text=${plantImageSizeError}></h5>
+                    <h5 th:text="${imageTypeError}"></h5>
+                    <h5 th:text="${imageSizeError}"></h5>
+                    <h5 th:text="${plantImageUploadError}"></h5>
                 </div>
 
                 <br>
-                <button class="form-button" type="submit">Submit!</button>
-                <a th:href="@{/view-garden(gardenId=${gardenId})}">
-                    <button class="form-button" type="button">Cancel</button>
+                <button class="hrefButtons" type="submit">Submit!</button>
+                <a th:href="@{${cancelButtonUri}}">
+                    <button class="hrefButtons" type="button">Cancel</button>
                 </a>
             </form>
         </div>
     </div>
 </div>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-<script>
-    function displayImage() {
-
-        console.log("Image Uploaded");
-
-        const input = document.getElementById('plantImage');
-        const img = document.getElementById('selectedImage');
-        const file = input.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            img.src = e.target.result;
-        }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    }
-</script>
 </body>
 </html>

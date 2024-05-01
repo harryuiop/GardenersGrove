@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Thymeleaf Fragments: home</title>
+    <!--/*/ <th:block th:include="fragmentExample/fragments/general.html :: headerfiles">
+            </th:block> /*/-->
+    <!-- The above comment (differentiated by the enclosing "slash star slash") is a thymeleaf prototype-only block
+        making use of synthetic th:block tags. This code will import the header files then the block will disappear.
+        We can see it working since it applies the style import from general.html.
+        See: https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#comments-and-blocks -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<div th:fragment="header"></div>
+
+<div class="title" th:fragment="title">
+    <h2>Gardeners' Grove</h2>
+</div>
+
+<nav class="gardens-list" th:fragment="gardens">
+    <a class="userProfile" th:href="@{/profile}">
+        <img
+                th:src="${user.getProfilePictureFilePath()}"
+
+                class="userProfileImage"
+                alt="user profile image">
+        <p class="userProfileName" th:text="'My Profile'"></p>
+    </a>
+    <a th:href="@{${newGardenUri}}">
+        <button>Add New Garden</button>
+    </a>
+    <br/>
+    <table>
+        <thead>
+        <a th:href="@{${viewAllGardensUri}}">My Gardens</a>
+        </thead>
+        <tbody>
+        <tr th:each="garden : ${gardens}">
+            <td><a th:href="@{${viewGardenUriString}(gardenId=${garden.getId()})}"><span th:text="${garden.getName()}"> Name </span></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form th:action="@{/logout}"
+          method="post"
+          name="registerForm">
+        <input class="inputStyle" id="signOutButton" type="submit" value="Logout">
+    </form>
+</nav>
+
+</body>
+</html>
