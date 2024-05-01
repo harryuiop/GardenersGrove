@@ -8,11 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -24,7 +21,7 @@ import static org.mockito.Mockito.when;
 class ErrorCheckerTest {
 
     UserService userService = mock(UserService.class);
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private boolean userCreated = false;
     User user;
 
@@ -558,7 +555,6 @@ class ErrorCheckerTest {
     void loginFormErrors_ValidInputs_ReturnsEmpty() {
         UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
         UserService userService = new UserService(userRepositoryMock);
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         String email = "user@gmail.com";
         String password = "Password1!";

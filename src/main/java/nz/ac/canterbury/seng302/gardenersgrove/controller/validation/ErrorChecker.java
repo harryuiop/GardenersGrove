@@ -2,14 +2,14 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
@@ -20,6 +20,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
  */
 public class ErrorChecker {
     static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
+    private static final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     private ErrorChecker() {
          throw new IllegalStateException("Utility class");
@@ -334,7 +335,6 @@ public class ErrorChecker {
      */
     public static Map<String, String> loginFormErrors(String email, String password, UserService userService) {
         HashMap<String, String> errors = new HashMap<>();
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         if (!UserValidation.emailIsValid(email)) {
             errors.put("emailError",
@@ -342,7 +342,7 @@ public class ErrorChecker {
         }
         User user = userService.getUserByEmail(email);
 
-        if (user == null || !encoder.matches(password, user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             errors.put("invalidError",
                             "The email address is unknown, or the password is invalid");
         }
@@ -365,14 +365,13 @@ public class ErrorChecker {
                                                       User user
     ) {
         Map<String, String> errors = new HashMap<>();
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         // Checking old password
         if (FormValuesValidator.checkBlank(oldPassword)) {
             errors.put("oldPasswordError", "Password cannot be empty");
         } else if (!passwordIsValid(oldPassword)) {
             errors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        } else if (!encoder.matches(oldPassword, user.getPassword())) {
+        } else if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             errors.put("oldPasswordError", "Your old password is incorrect");
         }
 
