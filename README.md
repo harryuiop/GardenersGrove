@@ -1,11 +1,15 @@
 # SENG302 Team 400 Project
 
-Project's tech stack includes ```gradle```, ```Spring Boot```, ```Thymeleaf```, and ```GitLab CI```.
+Project's tech stack includes ```gradle```, ```Spring Boot```, ```Thymeleaf```, ```Spring Boot Starter Mail```, ```MapTiler``` and ```GitLab CI```.
+
+## How to run tests
+
+> Run ./gradlew test
 
 ## How to run
 
 ### 1 - Running the project
-From the root directory ...
+Our project has not been deployed to PROD instance.
 
 On Linux:
 ```
@@ -21,29 +25,18 @@ By default, the application will run on local port 8080 [http://localhost:8080](
 
 ### 2 - Using the application
 
-> - Create a new garden using "Add New Garden" button in the top left corner of the page.
-> - Edit garden and add plants can only be accessed through created gardens.
-> - View gardens either through the My Gardens page or by clicking their name on the sidebar.
-> - On the plant form, images can be added by clicking the semi-transparent "+" icon in the top right of the image.
-    > This can be done in the view garden, add plant, and edit plant pages.
-
-## How to run tests
-
-> Run ./gradlew test
-
-## Todo (Sprint 1)
-
-- Add team name into `build.gradle`
-- Update this README title
-- Update this README contributors
-
-## Todo (Sprint 2)
-
-- Update team name into `build.gradle`
-- Update this README title
-- Update this README contributors
-- Set up Gitlab CI server (refer to the student guide on Scrumboard)
-- Decide on a LICENSE
+> - You will first need to register an account or login with persisting account.
+> - If registering you must get a code from your email to verify your account before you are able to access the account.
+> - Once logged in, you have the ability to view the users details, add a profile picture, and change any of the users details.
+> - To view the users profile click on the profile image or name. 
+> - From viewing the users profile you can edit the profile image and view all public knowledge details (everything except users password).
+> - On the edit profile page you can edit users name, email, and date of birth. To edit password you must go through to change password.
+> - If password is updated an email will be sent to the user notifying them of the update.
+> - When logged in you will also have access to add garden's or view existing gardens that the user has created.
+> - All gardens can be seen in the sidebar or on the "My Gardens" page also accessible through the sidebar.
+> - When viewing a garden you can also see any plants added to the garden. If you have more than 10 plants you may not be able to see them all on your page, so a scroll wheel appears and you can scroll through them.
+> - You can add a plant by viewing the garden you want to add a plant to.
+> - You can add an image to the plant either through the adding/editing of a plant or on the garden view page by clicking on the image.
 
 ## Contributors
 
