@@ -473,22 +473,23 @@ textarea {
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
+    margin-left: 0.8rem;
 }
 
 .modal-buttons #useLocationBtn {
-    background-color: green;
+    background-color: var(--neutral);
 }
 
 .modal-buttons #useLocationBtn:hover {
-    background-color: darkgreen;
+    background-color: var(--dark-neutral);
 }
 
 .modal-buttons #backToFormBtn {
-    background-color: red;
+    background-color: var(--neutral);
 }
 
 .modal-buttons #backToFormBtn:hover {
-    background-color: darkred;
+    background-color: var(--dark-neutral);
 }
 
 
