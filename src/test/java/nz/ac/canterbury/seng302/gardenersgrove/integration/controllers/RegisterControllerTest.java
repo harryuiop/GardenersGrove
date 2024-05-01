@@ -8,6 +8,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +20,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -36,6 +41,7 @@ class RegisterControllerTest {
     private PlantRepository plantRepository;
     @Autowired
     private GardenRepository gardenRepository;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 
     @MockBean
@@ -48,6 +54,7 @@ class RegisterControllerTest {
         userRepository.deleteAll();
         Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any())).thenReturn(true);
     }
+
     @Test
     void submitForm_allValid_userSaved() throws Exception {
         String firstName = "John";
