@@ -111,6 +111,16 @@ public class Location {
 
     @Override
     public String toString() {
-        return String.format("%s, %s, %s, %s, %s", streetAddress, suburb, city, country, postcode);
+        String string = String.format("%s, %s", city, country);
+        if (suburb != null && !suburb.isEmpty() && !suburb.equals(" ")) {
+            string = suburb + ", " + string;
+        }
+        if (streetAddress != null && !streetAddress.isEmpty() && !streetAddress.equals(" ")) {
+            string = streetAddress + ", " + string;
+        }
+        if (postcode != null && !postcode.isEmpty() && !postcode.equals(" ")) {
+            string += (", " + postcode);
+        }
+        return string;
     }
 }
