@@ -34,6 +34,8 @@ public class Location {
     @Column()
     private double lng;
 
+    private boolean isCoordinatesSet = false;
+
     /**
      * Initialize a Location with the required fields.
      * @param country Country
@@ -97,6 +99,14 @@ public class Location {
     public void setLngLat(List<Double> lngLat) {
         this.lng = lngLat.get(0);
         this.lat = lngLat.get(1);
+        isCoordinatesSet = true;
+    }
+
+    /**
+     * @return If latitude and longitude have been set.
+     */
+    public boolean isCoordinatesSet() {
+        return isCoordinatesSet;
     }
 
     @Override
