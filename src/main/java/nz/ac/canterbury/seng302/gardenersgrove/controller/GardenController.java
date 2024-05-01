@@ -260,7 +260,9 @@ public class GardenController extends GardensSidebar {
 
             boolean locationFound = true;
             // Get new location from API request
-            if (locationEntity.getStreetAddress() == null || !locationEntity.getStreetAddress().equals(streetAddress)) {
+            if (locationEntity.getStreetAddress() == null
+                    || !locationEntity.getStreetAddress().equals(streetAddress)
+                    || !locationEntity.isCoordinatesSet()) {
                 locationFound = updateLocationCoordinates(locationEntity, streetAddress, country, city);
             }
             locationEntity.setCountry(country);

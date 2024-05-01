@@ -99,8 +99,8 @@ class EditGardenControllerTest {
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
                         .param("postcode", initialPostcode))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl(viewGardenUri(gardenId).toString()));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertEquals(1, allGardens.size());
@@ -360,8 +360,8 @@ class EditGardenControllerTest {
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
                         .param("postcode", initialPostcode))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl(viewGardenUri(gardenId).toString()));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertEquals(1, allGardens.size());
