@@ -18,7 +18,7 @@ public class Garden {
     @ManyToOne
     private User owner;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
