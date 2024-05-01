@@ -37,7 +37,7 @@ public class HomeController extends GardensSidebar {
 
         // The home page is authorized to any user, logged in or not thus all users are technically authenticated,
         // so we must check that the principle is linked to an actual user (which would return an int if true)
-        if (auth.getPrincipal() == "anonymousUser") {
+        if (auth.getPrincipal() == "anonymousUser" || userService.getAuthenticatedUser() == null) {
             return "landing";
         }
         this.updateGardensSidebar(model, gardenService, userService);
