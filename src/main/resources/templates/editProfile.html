@@ -34,7 +34,7 @@
         <div id="profilePictureWrapper">
             <img
                     id="profilePicture"
-                    th:src="${user.getProfilePictureFilePath()}"
+                    th:src="@{${user.getProfilePictureFilePath()}}"
                     alt="User profile picture"
             />
             <div id="profilePictureOverlay">
