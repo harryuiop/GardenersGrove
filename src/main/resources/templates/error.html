@@ -2,47 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-  <style>
-    table td{
-      vertical-align:top;
-      border:solid 1px #888;
-      padding:10px;
-    }
-
-  </style>
+  <meta charset="utf-8" />
+  <title>Error</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css" />
+  <script
+          type="text/javascript"
+          src="/javascript/disableLastName.js"
+  ></script>
 </head>
 <body>
-<h1>Basic Thymeleaf Error Page (You may want to make something better)</h1>
-<table>
-  <tr>
-    <td>Date</td>
-    <td th:text="${timestamp}"/>
-  </tr>
-  <tr>
-    <td>Path</td>
-    <td th:text="${path}"/>
-  </tr>
-  <tr>
-    <td>Error</td>
-    <td th:text="${error}"/>
-  </tr>
-  <tr>
-    <td>Status</td>
-    <td th:text="${status}"/>
-  </tr>
-  <tr>
-    <td>Message</td>
-    <td th:text="${message}"/>
-  </tr>
-  <tr>
-    <td>Exception</td>
-    <td th:text="${exception}"/>
-  </tr>
-  <tr>
-    <td>Trace</td>
-    <td>
-      <pre th:text="${trace}"/>
-    </td>
-  </tr>
-</table>
+  <div class=errorBox>
+    <h1>Uh Oh.. 😕</h1>
+    <p>Looks like something went wrong.</p>
+    <h3>Status: [[${status}]]</h3>
+    <h3>Error: [[${error}]]</h3>
+    <h3>Path: [[${path}]]</h3>
+    <h3>Exception: [[${exception}]]</h3>
+    <h3>Message: [[${message}]]</h3>
+  </div>
 </body>

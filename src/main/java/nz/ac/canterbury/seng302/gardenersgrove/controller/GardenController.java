@@ -203,7 +203,7 @@ public class GardenController extends GardensSidebar {
         logger.info("GET {}", editGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty()) {
+        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();

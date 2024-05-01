@@ -129,7 +129,7 @@ public class PlantController extends GardensSidebar {
         logger.info("GET {}", newPlantUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty()) {
+        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
@@ -158,8 +158,9 @@ public class PlantController extends GardensSidebar {
     ) throws NoSuchPlantException {
         logger.info("GET {}", editPlantUri(gardenId, plantId));
 
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
-        if (optionalPlant.isEmpty()) {
+        if (optionalPlant.isEmpty() || optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
             throw new NoSuchPlantException(
                             "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
             );
