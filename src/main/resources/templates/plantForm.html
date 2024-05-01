@@ -25,7 +25,8 @@
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantCount"> Number of these plants to add to garden: </label>
-                    <input type="number" step="1" class="form-control" id="plantCount" th:name="plantCount"
+                    <input type="number" step="1" max="2147483647" class="form-control" id="plantCount"
+                           th:name="plantCount"
                            th:value="*{plantCount}" data-cy="plantCount" autofocus>
                     <h5 th:text="${plantCountError}"></h5>
                 </div>
