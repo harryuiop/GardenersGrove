@@ -25,7 +25,7 @@
 
                 class="userProfileImage"
                 alt="user profile image">
-        <p class="userProfileName" th:text="${user.getLastName() != null ? user.getFirstName() + ' ' + user.getLastName() : user.getFirstName()}"></p>
+        <p class="userProfileName" th:text="'My Profile'"></p>
     </a>
     <a th:href="@{${newGardenUri}}">
         <button>Add New Garden</button>
