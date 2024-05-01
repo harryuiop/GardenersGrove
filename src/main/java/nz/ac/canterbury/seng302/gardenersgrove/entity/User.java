@@ -293,11 +293,12 @@ public class User {
     public String toString() {
         return String.format(
                 "User entity {first name: %s last name: %s " +
-                        "email: %s password %s} is created",
+                        "email: %s password %s confirmation: %s} is created",
                 this.firstName,
                 this.lastName,
                 this.email,
-                this.password
+                this.password,
+                this.confirmation
         );
     }
 }

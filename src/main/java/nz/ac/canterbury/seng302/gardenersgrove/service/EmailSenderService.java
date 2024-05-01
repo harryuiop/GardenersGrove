@@ -13,12 +13,11 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import static java.util.concurrent.TimeUnit.*;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 /**
  * Service about sending email in server side
@@ -28,6 +27,7 @@ import java.util.Map;
 public class EmailSenderService {
 
     Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
     private final UserService userService;
@@ -100,9 +100,22 @@ public class EmailSenderService {
             logger.error(e.toString());
             return false;
         }
-
-
     }
 
-
+    /**
+     * This method is called after a user is registered in /Register and begins a 10-minute timer. If after 10 minutes
+     * the user has not input their verification code, their account is deleted from the database
+     *
+     * @param email Users email
+     */
+    public void CheckEmailVerifiedInTime(String email) {
+        Runnable checkAndDeleteUser = () -> {
+            User user = userService.getUserByEmail(email);
+            if (!user.isConfirmed()) {
+                logger.info(user.getEmail() + "'s account has been deleted due to no verification within the given time");
+                userService.deleteUser(user);
+            }
+        };
+        scheduler.schedule(checkAndDeleteUser, 10, MINUTES);
+    }
 }

@@ -122,6 +122,7 @@ public class RegisterController {
 
         // send verification email
         emailSenderService.sendEmail(newUser, "registrationEmail");
+        emailSenderService.CheckEmailVerifiedInTime(newUser.getEmail());
 
         model.addAttribute("tokenInvalid", "");
 
