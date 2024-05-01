@@ -40,8 +40,13 @@ By default, the application will run on local port 8080 [http://localhost:8080](
 > - You can add an image to the plant either through the adding/editing of a plant or on the garden view page by clicking on the image.
 
 ## Default User Credentials
-__Email__: user@gmail.com \
-__Password__: Password1!
+__Email__: user1@gmail.com \
+__Password__: Password1!\
+User 1 has 1 garden with 10 plants
+
+__Email__: user2@gmail.com \
+__Password__: Password1!\
+User 2 has 1 garden with no plants
 
 ## Contributors
 
