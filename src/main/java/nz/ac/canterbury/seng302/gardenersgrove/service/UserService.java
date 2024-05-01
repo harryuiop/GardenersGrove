@@ -1,19 +1,12 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import jakarta.annotation.PostConstruct;
-import nz.ac.canterbury.seng302.gardenersgrove.GardenersGroveApplication;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.util.Random;
 
@@ -40,10 +33,14 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.addUsers(new User
-                ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
-        this.addUsers(new User
-                ("user2@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
+        User user1 = new User
+                ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01");
+        user1.setConfirmation(true);
+        this.addUsers(user1);
+        User user2 = new User
+                ("user2@gmail.com", "Default", "User", "Password1!", "2000-01-01");
+        user2.setConfirmation(true);
+        this.addUsers(user2);
     }
 
     /**

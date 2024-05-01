@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,10 +49,6 @@ public class LogInController {
                 model.addAttribute("emailError", "Email address must be in the form ‘jane@doe.nz’");
             }
         }
-
-        User defaultUser = new User("user@gmail.com", "Default", "User", "Password1!", "2000-01-01");
-        defaultUser.setConfirmation(true);
-        userService.addUsers(defaultUser);
 
         return "login";
     }
