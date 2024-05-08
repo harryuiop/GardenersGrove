@@ -28,6 +28,25 @@
         <button class="form-button" type="button">Add Plant</button>
     </a>
 
+
+    <!-- Garden tags -->
+    <div class="display-tags">
+        <span th:each="tag, iterStat : ${tags}">
+            <span class="tag-text" th:text="'#' + ${tag.getName()}"></span>
+            <span th:if="${!iterStat.last}">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </span>
+    </div>
+
+    <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form">
+        <label class="form-input" for="tagName"> Tag Name: </label>
+        <div style="display: flex;">
+            <input type="text" class="form-control" id="tagName" th:name="tagName"
+                   data-cy="tagName" autofocus>
+            <button type="submit">+</button>
+        </div>
+    </form>
+
+
     <h2>My Plants</h2>
     <div id="plant-entries" class="plant-entries">
         <table>
@@ -82,19 +101,6 @@
             </tr>
             </tbody>
         </table>
-        <ul>
-            <li th:each="tag : ${tags}" th:text="${tag.getName()}"></li>
-        </ul>
-
-        <!-- Create tag -->
-        <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form">
-            <div class="form-field">
-                <label class="form-input" for="tagName"> Tag Name: </label>
-                <input type="text" class="form-control" id="tagName" th:name="tagName"
-                       data-cy="tagName" autofocus>
-            </div>
-            <button class="hrefButtons" type="submit">+</button>
-        </form>
     </div>
 </div>
 
