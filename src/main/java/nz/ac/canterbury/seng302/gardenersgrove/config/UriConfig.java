@@ -22,6 +22,9 @@ public class UriConfig {
     public static final String UPLOAD_PLANT_IMAGE_URI_STRING = "/garden/{gardenId}/plant/{plantId}/image";
     public static final String VIEW_ALL_GARDENS_URI_STRING = "/gardens";
 
+    public static final String SEARCH_URI_STRING = "/search";
+
+
 
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
     private static final UriTemplate EDIT_GARDEN_URI = new UriTemplate(EDIT_GARDEN_URI_STRING);
@@ -96,4 +99,9 @@ public class UriConfig {
     public static URI viewAllGardensUri() {
         return URI.create(VIEW_ALL_GARDENS_URI_STRING);
     }
+
+    public static URI searchUri() {
+        return URI.create(SEARCH_URI_STRING);
+    }
+
 }

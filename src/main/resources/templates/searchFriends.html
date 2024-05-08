@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Gardener's Grove</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
+<h1>Gardener's Grove</h1>
+    <form th:action="" method="post" name="serachUsers">
+        <label for="search">User's Name:</label>
+        <input
+                class="inputStyle"
+                type="text"
+                id="search"
+                name="search"
+                th:name="username"
+                autofocus
+        />
+    </form>
+</body>
+</html>
