@@ -1,9 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,18 +17,6 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 public class LogInController {
 
     private static final Logger logger = LoggerFactory.getLogger(LogInController.class);
-
-    private final UserService userService;
-
-    /**
-    * Constructor for LogInController.
-    *
-    * @param userService The UserService responsible for user-related operations.
-    */
-    @Autowired
-    public LogInController(UserService userService) {
-        this.userService = userService;
-    }
 
     /**
      * Handles GET requests to the "/login" URL.

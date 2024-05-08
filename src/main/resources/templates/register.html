@@ -87,7 +87,6 @@
             id="password"
             name="password"
             th:name="password"
-            th:value="*{password}"
             autofocus
             autocomplete="off"
           />
@@ -100,9 +99,7 @@
             id="passwordConfirm"
             name="passwordConfirm"
             th:name="passwordConfirm"
-            th:value="*{passwordConfirm}"
             autofocus
-            autofill="off"
           />
           <p class="errorMessage" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
 
