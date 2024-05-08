@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
@@ -11,6 +12,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
@@ -52,6 +58,25 @@ public class SearchController extends GardensSidebar {
         // Spring security allows requests to the root URI for unauthenticated users.
         // We must check to see if the principle is authenticated to determine which page to display.
         this.updateGardensSidebar(model, gardenService, userService);
+
+        model.addAttribute("searchUri", searchUri());
+
         return "searchFriends";
     }
+
+    @PostMapping(SEARCH_URI_STRING)
+    public String getSearchedUsers(@RequestParam String search, Model model) {
+        model.addAttribute("searchUri", searchUri());
+        List<User> searchResults = new ArrayList<User>();
+        for (User user: userService.getAllUsers()) {
+            if ((user.getFirstName() + " " +user.getLastName()).contains(search)) {
+                searchResults.add(user);
+                logger.info(user.getFirstName());
+            }
+        }
+        model.addAttribute("users", searchResults);
+        model.addAttribute("user", userService.getAuthenticatedUser());
+        return "searchFriends";
+    }
+
 }

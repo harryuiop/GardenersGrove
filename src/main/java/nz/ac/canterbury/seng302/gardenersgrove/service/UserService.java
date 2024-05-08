@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 
 import static java.lang.Integer.parseInt;
@@ -172,5 +173,9 @@ public class UserService {
     public String hashUserPassword(String passwordInPlainText) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
         return encoder.encode(passwordInPlainText);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
