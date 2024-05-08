@@ -5,6 +5,15 @@ import org.springframework.web.util.UriTemplate;
 import java.net.URI;
 
 public class UriConfig {
+    public static final String HOME_URI_STRING = "/";
+    public static final String LOGIN_URI_STRING = "/login";
+    public static final String LOGOUT_URI_STRING = "/logout";
+    public static final String REGISTER_URI_STRING = "/register";
+    public static final String VERIFY_EMAIL_URI_STRING = "/register/verify";
+    public static final String VIEW_PROFILE_URI_STRING = "/profile";
+    public static final String EDIT_PROFILE_URI_STRING = "/profile/edit";
+    public static final String EDIT_PASSWORD_URI_STRING = "/profile/edit/password";
+    public static final String UPLOAD_PROFILE_IMAGE_URI_STRING = "/profile/image";
     public static final String NEW_GARDEN_URI_STRING = "/garden/new";
     public static final String VIEW_GARDEN_URI_STRING = "/garden/{gardenId}";
     public static final String EDIT_GARDEN_URI_STRING = "/garden/{gardenId}/edit";
@@ -13,11 +22,52 @@ public class UriConfig {
     public static final String UPLOAD_PLANT_IMAGE_URI_STRING = "/garden/{gardenId}/plant/{plantId}/image";
     public static final String VIEW_ALL_GARDENS_URI_STRING = "/gardens";
 
+
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
     private static final UriTemplate EDIT_GARDEN_URI = new UriTemplate(EDIT_GARDEN_URI_STRING);
     private static final UriTemplate NEW_PLANT_URI = new UriTemplate(NEW_PLANT_URI_STRING);
     private static final UriTemplate EDIT_PLANT_URI = new UriTemplate(EDIT_PLANT_URI_STRING);
     private static final UriTemplate UPLOAD_PLANT_IMAGE_URI = new UriTemplate(UPLOAD_PLANT_IMAGE_URI_STRING);
+
+    private UriConfig() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static URI homeUri() {
+        return URI.create(HOME_URI_STRING);
+    }
+
+    public static URI loginUri() {
+        return URI.create(LOGIN_URI_STRING);
+    }
+
+    public static URI logoutUri() {
+        return URI.create(LOGOUT_URI_STRING);
+    }
+
+    public static URI registerUri() {
+        return URI.create(REGISTER_URI_STRING);
+    }
+
+    public static URI verifyEmailUri() {
+        return URI.create(VERIFY_EMAIL_URI_STRING);
+    }
+
+    public static URI viewProfileUri() {
+        return URI.create(VIEW_PROFILE_URI_STRING);
+    }
+
+    public static URI editProfileUri() {
+        return URI.create(EDIT_PROFILE_URI_STRING);
+    }
+
+    public static URI editPasswordUri() {
+        return URI.create(EDIT_PASSWORD_URI_STRING);
+    }
+
+    public static URI uploadProfileImageUri() {
+        return URI.create(UPLOAD_PROFILE_IMAGE_URI_STRING);
+    }
 
     public static URI newGardenUri() {
         return URI.create(NEW_GARDEN_URI_STRING);
