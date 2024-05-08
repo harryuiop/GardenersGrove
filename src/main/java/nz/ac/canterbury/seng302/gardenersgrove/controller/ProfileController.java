@@ -190,7 +190,6 @@ public class ProfileController extends GardensSidebar {
             model.addAttribute("editProfileUri", editProfileUri());
             model.addAttribute("profileUri", viewProfileUri());
             model.addAttribute("user", prevUpdateUser);
-            noSurname = prevUpdateUser.getLastName() == null;
             model.addAttribute("noSurname", noSurname);
             return "editProfile";
         }
