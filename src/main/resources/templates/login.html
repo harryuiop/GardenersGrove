@@ -1,46 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      lang="us">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home Page</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <meta http-equiv="X-UA-Compatible" content="IE=Chrome">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/newstyle.css}">
+    <title>Gardeners Grove - Login</title>
 </head>
 <body>
-<div id="app_container">
-    <main>
-        <header th:insert="~{fragments/general.html :: header}"></header>
-        <div class="loginForm" th:if="${accountActiveMessage} != null" style="margin-bottom: 25px">
-            <p th:text="${accountActiveMessage}" style="font-size: small; font-style: italic;"></p>
-        </div>
-        <div class="loginForm">
-            <form th:action="@{${loginUri}}" method="post" name="loginForm">
-                <label for="email">Email Address:</label>
-                <input
-                        class="inputStyle"
-                        type="text"
-                        id="email"
-                        name="email"
-                        th:name="username"
-                        autofocus
-                />
-                <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
+<div class="container-flex d-flex justify-content-center align-items-center vh-100 login-bg">
+    <div>
+        <div class="g-col-md-4">
+            <div class="bg-white p-5 rounded shadow ">
+                <form th:action="@{${loginUri}}" method="post" name="loginForm" class="">
+                    <h2 class="text-center display-3 title-heading mb-4">Login</h2>
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="mb-4">
+                        <input
+                                class="form-control"
+                                type="text"
+                                id="email"
+                                name="email"
+                                th:name="username"
+                                autofocus
+                        />
+                        <p class="form-text text-danger" id="emailError" th:text="${emailError}"></p>
+                    </div>
 
-                <label for="password">Password:</label>
-                <input class="inputStyle"
-                       type="password"
-                       id="password"
-                       name="password"
-                       th:name="password"
-                >
-                <p class="errorMessage" id="invalidError" th:text="${invalidError}"></p>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <input class="form-control"
+                               type="password"
+                               id="password"
+                               name="password"
+                               th:name="password"
+                        >
+                        <p class="form-text text-danger" id="invalidError" th:text="${invalidError}"></p>
+                    </div>
 
-                <input class="inputStyle" id="sign_in_button" type="submit" value="Sign In">
-            </form>
-            <p class="registerLink">Don't have an account? <a th:href="@{${registerUri}}">Register here.</a></p>
-            <p class="registerLink">Don't want to login? <a th:href="@{${homeUri}}">Cancel.</a></p>
+                    <div class="col auto text-center mt-4 mb-4">
+                        <button type="submit"
+                                class="btn btn-lg text-white "
+                                style="background-color: var(--fern-green)">
+                            Sign In
+                        </button>
+                    </div>
+                    <p class="text-center">Don't have an account? <a th:href="@{${registerUri}}">Register Here</a></p>
+                    <p class="text-center">Don't want to login? <a th:href="@{${homeUri}}">Cancel</a></p>
+                </form>
+            </div>
         </div>
-    </main>
+    </div>
 </div>
 </body>
 </html>
