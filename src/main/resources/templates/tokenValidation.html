@@ -13,7 +13,7 @@
 
     <p>Please enter a 6 digits token to verify your account. </p>
         <br />
-    <form th:action="@{/register/verify}" method="post">
+    <form th:action="@{${verifyEmailUri}}" method="post">
         <label for="token">TOKEN:</label>
         <input id="token" type="text" name="tokenValue" th:name="tokenValue">
         <input id="verify" type="submit" value="verify!">

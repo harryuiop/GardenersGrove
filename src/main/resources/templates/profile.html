@@ -8,12 +8,12 @@
   </head>
   <body>
   <nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
-    <a th:href="@{/editProfile}" class="button">Edit Profile</a>
+  <a th:href="@{${editProfileUri}}" class="button">Edit Profile</a>
     <div class="profileBody">
       <div class="formContainer">
         <form
                 id="uploadProfileImage"
-                th:action="@{uploadProfileImage}"
+                th:action="@{${uploadProfileImageUri}}"
                 method="post"
                 name="profilePhoto"
                 enctype="multipart/form-data"
