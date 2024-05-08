@@ -152,6 +152,16 @@ public class ViewGardenController extends GardensSidebar {
         return "redirect:" + viewGardenUri(gardenId);
     }
 
+    /**
+     * Create new tag for a garden.
+     *
+     * @param model Model to add attributes to
+     * @param gardenId Id of garden
+     * @param tagName User inputted tag name
+     * @return Redirect to view garden page
+     * @throws NoSuchGardenException If garden is not found, either by wrong/unauthorized owner
+     * or does not exist.
+     */
     @PostMapping(NEW_GARDEN_TAG_URI_STRING)
     public String submitGardenTag(Model model,
                                   @PathVariable long gardenId,
@@ -161,7 +171,7 @@ public class ViewGardenController extends GardensSidebar {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
-        tagService.saveTag(new Tag(tagName, garden));
+        tagService.saveTag(tagName, garden);
         return "redirect:" + viewGardenUri(gardenId);
     }
 
