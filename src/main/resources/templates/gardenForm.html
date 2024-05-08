@@ -27,6 +27,13 @@
                     <p class="errorMessage" th:text="${gardenSizeError}"></p>
                 </div>
                 <br/>
+                <div class="form-field">
+                    <label class="form-input" for="gardenDescription"> Garden Description: </label>
+                    <input type="text" class="form-control" id="gardenDescription" th:name="gardenDescription"
+                           th:value="*{gardenDescription}" data-cy="gardenName" autofocus>
+                    <p class="errorMessage" th:text="${gardenDescriptionError}"></p>
+                </div>
+                <br/>
                 <h2>Location</h2>
                 <div class="form-field">
                     <label class="form-input" for="streetAddress"> Street Address: </label>

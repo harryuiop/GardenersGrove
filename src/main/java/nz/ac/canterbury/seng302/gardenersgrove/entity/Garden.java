@@ -21,6 +21,9 @@ public class Garden {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 
+    @Column(length = 512)
+    private String description;
+
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
@@ -65,12 +68,20 @@ public class Garden {
         this.size = newSize;
     }
 
+    public void setDescription(String newDescription) {
+        this.description = newDescription;
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Location getLocation() {

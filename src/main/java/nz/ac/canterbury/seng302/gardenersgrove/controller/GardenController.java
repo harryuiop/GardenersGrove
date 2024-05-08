@@ -76,6 +76,7 @@ public class GardenController extends GardensSidebar {
             Map<String, String> formFieldErrorMessages,
             String gardenName,
             Float gardenSize,
+            String gardenDescription,
             String country,
             String city,
             String streetAddress,
@@ -89,6 +90,7 @@ public class GardenController extends GardensSidebar {
 
         model.addAttribute("gardenName", gardenName);
         model.addAttribute("gardenSize", gardenSize);
+        model.addAttribute("gardenDescription", gardenDescription);
         model.addAttribute("country", country);
         model.addAttribute("city", city);
         model.addAttribute("streetAddress", streetAddress);
@@ -131,7 +133,7 @@ public class GardenController extends GardensSidebar {
         this.refererUrl = referer;
         return loadGardenForm(
                 Map.of(),
-                null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null,
                 newGardenUri(),
                 model
         );
@@ -149,6 +151,7 @@ public class GardenController extends GardensSidebar {
     public String submitNewGarden(
             @RequestParam String gardenName,
             @RequestParam(required = false) Float gardenSize,
+            @RequestParam String gardenDescription,
             @RequestParam String country,
             @RequestParam String city,
             @RequestParam(required = false) String streetAddress,
@@ -159,7 +162,7 @@ public class GardenController extends GardensSidebar {
         logger.info("POST {}", newGardenUri());
 
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                gardenName, gardenSize, country, city, streetAddress, suburb, postcode
+                gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode
         );
         if (errors.isEmpty()) {
             Location locationEntity = new Location(country, city);
@@ -180,7 +183,7 @@ public class GardenController extends GardensSidebar {
         }
         return loadGardenForm(
                 errors,
-                gardenName, gardenSize, country, city, streetAddress, suburb, postcode,
+                gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode,
                 newGardenUri(),
                 model
         );
@@ -216,7 +219,7 @@ public class GardenController extends GardensSidebar {
         Location gardenLocation = garden.getLocation();
         return loadGardenForm(
                 Map.of(),
-                garden.getName(), garden.getSize(), gardenLocation.getCountry(), gardenLocation.getCity(),
+                garden.getName(), garden.getSize(), garden.getDescription(), gardenLocation.getCountry(), gardenLocation.getCity(),
                 gardenLocation.getStreetAddress(), gardenLocation.getSuburb(), gardenLocation.getPostcode(),
                 editGardenUri(gardenId),
                 model
@@ -237,6 +240,7 @@ public class GardenController extends GardensSidebar {
             @PathVariable long gardenId,
             @RequestParam String gardenName,
             @RequestParam(required = false) Float gardenSize,
+            @RequestParam String gardenDescription,
             @RequestParam String country,
             @RequestParam String city,
             @RequestParam(required = false) String streetAddress,
@@ -253,7 +257,7 @@ public class GardenController extends GardensSidebar {
         Garden garden = optionalGarden.get();
 
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                gardenName, gardenSize, country, city, streetAddress, suburb, postcode
+                gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode
         );
         if (errors.isEmpty()) {
             Location locationEntity = garden.getLocation();
@@ -274,6 +278,7 @@ public class GardenController extends GardensSidebar {
 
             garden.setName(gardenName);
             garden.setSize(gardenSize);
+            garden.setDescription(gardenDescription);
             garden.setLocation(locationEntity);
             gardenService.saveGarden(garden);
             if (locationFound) {
@@ -284,7 +289,7 @@ public class GardenController extends GardensSidebar {
         }
         return loadGardenForm(
                 errors,
-                gardenName, gardenSize, country, city, streetAddress, suburb, postcode,
+                gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode,
                 editGardenUri(gardenId),
                 model
         );

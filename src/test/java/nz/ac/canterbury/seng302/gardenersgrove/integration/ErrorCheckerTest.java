@@ -8,11 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -53,7 +49,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
@@ -68,7 +64,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenSizeError", "Garden size must be a positive number");
@@ -85,7 +81,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
@@ -100,7 +96,7 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
+        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size, null,
                 country, city, streetAddress, suburb, postcode
         );
         Map<String, String> correctErrors = new HashMap<>();
@@ -118,7 +114,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("cityError", "City is required");
@@ -135,7 +131,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
@@ -151,7 +147,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
@@ -169,7 +165,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
@@ -188,7 +184,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
@@ -208,7 +204,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
@@ -228,7 +224,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
@@ -248,7 +244,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam&";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
@@ -268,7 +264,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8&041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
@@ -288,7 +284,7 @@ class ErrorCheckerTest {
         String suburb = "Ilam";
         String postcode = "8041";
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");

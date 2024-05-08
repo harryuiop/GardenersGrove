@@ -20,6 +20,8 @@
     <article class="in-line"><p>Size: </p>
         <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
     </article>
+    <article class="in-line"><p>Description: </p>
+        <p th:text="${garden.getDescription()}"></p></article>
 
     <a th:href="@{${editGardenUri}}">
         <button class="form-button" type="button">Edit Garden</button>
