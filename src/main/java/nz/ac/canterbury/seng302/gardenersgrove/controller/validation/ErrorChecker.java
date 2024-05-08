@@ -58,7 +58,7 @@ public class ErrorChecker {
         if (!FormValuesValidator.checkDescription(gardenDescription) || !FormValuesValidator.checkContainsText(gardenDescription)) {
             errors.put("gardenDescriptionError", "Description must be 512 characters or less and contain some text");
         } else if (FormValuesValidator.checkProfanity(gardenDescription)) {
-            errors.put("gardenDescriptionError", "The description does not match the language standards of the app.");
+            errors.put("gardenDescriptionError", "The description does not match the language standards of the app");
         }
 
         if (!FormValuesValidator.checkSize(gardenSize)) {
