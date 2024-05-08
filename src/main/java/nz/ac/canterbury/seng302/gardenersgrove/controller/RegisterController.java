@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+
 /**
  * Controller class handling registration-related requests and actions.
  * Responsible for displaying the registration page, checking email duplication,
@@ -25,14 +27,19 @@ import java.util.Map;
  */
 @Controller
 public class RegisterController {
-    final boolean oldEmail = false;
-
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
     UserService userService;
 
     EmailSenderService emailSenderService;
 
+    /**
+     * The RegisterController constructor need not be called ever.
+     * It is autowired in by Spring at run time to inject instances of all the necessary dependencies.
+     *
+     * @param userService        The User database access object.
+     * @param emailSenderService The email sender service.
+     */
     @Autowired
     public RegisterController(UserService userService, EmailSenderService emailSenderService) {
         this.userService = userService;
@@ -40,14 +47,14 @@ public class RegisterController {
     }
 
     /**
-     * Handles GET requests to the "/register" URL.
+     * Handles GET requests to the register URI.
      * Displays the registration page.
      *
      * @return The name of the register view template.
      */
-    @GetMapping("/register")
+    @GetMapping(REGISTER_URI_STRING)
     public String showRegisterPage(Model model) {
-        logger.info("GET /register");
+        logger.info("GET {}", registerUri());
         model.addAttribute("noSurname", false);
         model.addAttribute("firstNameError", "");
         model.addAttribute("lastNameError", "");
@@ -55,12 +62,14 @@ public class RegisterController {
         model.addAttribute("passwordError", "");
         model.addAttribute("passwordConfirmError", "");
         model.addAttribute("dateOfBirthError", "");
-
+        model.addAttribute("homeUri", homeUri());
+        model.addAttribute("registerUri", registerUri());
+        model.addAttribute("loginUri", loginUri());
         return "register";
     }
 
     /**
-     * Handles POST requests to the "/register" URL.
+     * Handles POST requests to the register URI.
      * Adds a new user to the system.
      *
      * @param email       The email of the user.
@@ -70,16 +79,19 @@ public class RegisterController {
      * @param dateOfBirth The date of birth of the user.
      * @return Redirects to the login page after successful registration.
      */
-    @PostMapping("/register")
+    @PostMapping(REGISTER_URI_STRING)
     public String addNewUser(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "firstName") String firstName,
-            @RequestParam(name = "lastName", required = false) String lastName,
-            @RequestParam(name = "noSurname", required = false) Boolean noSurname,
-            @RequestParam(name = "password") String password,
-            @RequestParam(name = "passwordConfirm") String passwordConfirm,
-            @RequestParam(name = "dateOfBirth", required = false) String dateOfBirth, Model model
+            @RequestParam String email,
+            @RequestParam String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) Boolean noSurname,
+            @RequestParam String password,
+            @RequestParam String passwordConfirm,
+            @RequestParam(required = false) String dateOfBirth,
+            Model model
     ) {
+        logger.info("POST {}", registerUri());
+
         if (noSurname == null) {
             noSurname = false;
         }
@@ -93,13 +105,12 @@ public class RegisterController {
             dateOfBirthValid = false;
         }
 
-
         Map<String, String> errors = ErrorChecker.registerUserFormErrors(
                 firstName,
                 lastName,
                 noSurname,
                 email,
-                oldEmail,
+                false,
                 userService,
                 password,
                 passwordConfirm,
@@ -108,13 +119,14 @@ public class RegisterController {
         );
 
         if (!errors.isEmpty()) {
-            for (Map.Entry<String, String> error : errors.entrySet()) {
-                model.addAttribute(error.getKey(), error.getValue());
-            }
+            model.addAllAttributes(errors);
             model.addAttribute("firstName", firstName);
             model.addAttribute("lastName", lastName);
             model.addAttribute("email", email);
             model.addAttribute("noSurname", noSurname);
+            model.addAttribute("homeUri", homeUri());
+            model.addAttribute("registerUri", registerUri());
+            model.addAttribute("loginUri", loginUri());
             return "register";
         }
         User newUser = new User(email, firstName, lastName, password, dateOfBirth);
@@ -124,28 +136,28 @@ public class RegisterController {
         emailSenderService.sendEmail(newUser, "registrationEmail");
         emailSenderService.CheckEmailVerifiedInTime(newUser.getEmail());
 
-        model.addAttribute("tokenInvalid", "");
-
-        return "redirect:/register/verify";
+        return "redirect:" + verifyEmailUri();
     }
 
-    @GetMapping("/register/verify")
-    public String showVerifyPage() {
-        logger.info("GET /register/verify");
+    @GetMapping(VERIFY_EMAIL_URI_STRING)
+    public String showVerifyPage(Model model) {
+        logger.info("GET {}", verifyEmailUri());
 
+        model.addAttribute("verifyEmailUri", verifyEmailUri());
         return "tokenValidation";
     }
 
-    @PostMapping("/register/verify")
+    @PostMapping(VERIFY_EMAIL_URI_STRING)
     public String verifyUserAccount(
-            @RequestParam(name = "tokenValue") String token,
+            @RequestParam String tokenValue,
             RedirectAttributes redirectAttributes,
             Model model
     ) {
-        logger.info("POST /register/verify");
+        logger.info("POST {}", verifyEmailUri());
 
-        User user = userService.getUserByToken(token);
+        User user = userService.getUserByToken(tokenValue);
         if (user == null) {
+            model.addAttribute("verifyEmailUri", verifyEmailUri());
             model.addAttribute("tokenInvalid", "Signup code invalid");
             return "tokenValidation";
         }
@@ -154,6 +166,6 @@ public class RegisterController {
         userService.updateUser(user);
 
         redirectAttributes.addFlashAttribute("accountActiveMessage", "Your account has been activated, please log in");
-        return "redirect:/login";
+        return "redirect:" + loginUri();
     }
 }

@@ -14,7 +14,7 @@
     <div class="formContainer">
         <form
                 id="uploadProfileImage"
-                th:action="@{uploadProfileImage}"
+                th:action="@{${uploadProfileImageUri}}"
                 method="post"
                 name="profilePhoto"
                 enctype="multipart/form-data"
@@ -44,7 +44,7 @@
 
 
         <form
-                th:action="@{confirmProfileChanges(userId=${user.getId()})}"
+                th:action="@{${editProfileUri}}"
                 method="post"
                 name="registerForm"
                 id="editProfileForm"
@@ -119,10 +119,10 @@
         </form>
     </div>
     <div class="hrefDiv">
-        <a th:href="@{profile}" class="hrefButtons" type="button">Cancel</a>
+        <a th:href="@{${profileUri}}" class="hrefButtons" type="button">Cancel</a>
     </div>
     <div>
-        <a id="changePassword" th:href="@{editPassword}">Change Password</a>
+        <a id="changePassword" th:href="@{${editPasswordUri}}">Change Password</a>
     </div>
 </div>
 </body>
