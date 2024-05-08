@@ -116,6 +116,7 @@ public class Garden {
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
                 ", size=" + size +
+                ", tags=" + tags +
                 '}';
     }
 }
