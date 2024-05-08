@@ -77,6 +77,16 @@ public class FormValuesValidator {
     }
 
     /**
+     * Checks that a string only contains digits.
+     *
+     * @param value The string value to check, used in plant count.
+     * @return  true if the number only contains digits, otherwise false.
+     */
+    public static boolean checkIsInt(String value) {
+        return value == null || value.matches("^[0-9]*$");
+    }
+
+    /**
      * Checks that the user's name is less than 64 characters.
      *
      * @param name the name entered in the user form that is to be checked
