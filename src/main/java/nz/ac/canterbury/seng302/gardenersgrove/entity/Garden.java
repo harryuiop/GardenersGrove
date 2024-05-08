@@ -31,7 +31,7 @@ public class Garden {
     @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
     private List<Plant> plants;
 
-    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "gardens", cascade = CascadeType.REMOVE)
     private List<Tag> tags;
 
     /**
@@ -106,7 +106,6 @@ public class Garden {
     }
 
     public List<Tag> getTags() {
-
         return tags;
     }
 

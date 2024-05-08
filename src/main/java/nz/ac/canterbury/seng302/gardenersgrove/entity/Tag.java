@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Entity class representing a tag for a garden.
@@ -15,11 +18,11 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT", unique = true)
     private String name;
 
-    @ManyToOne
-    private Garden garden;
+    @ManyToMany
+    private List<Garden> gardens;
 
     /**
      * JPA required no-args constructor
@@ -29,11 +32,14 @@ public class Tag {
 
     public Tag(String name, Garden garden) {
         this.name = name;
-        this.garden = garden;
+        this.gardens = Arrays.asList(garden);
     }
-
 
     public String getName() {
         return name;
+    }
+
+    public void addGarden(Garden garden) {
+        gardens.add(garden);
     }
 }
