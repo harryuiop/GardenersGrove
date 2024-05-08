@@ -82,6 +82,9 @@
             </tr>
             </tbody>
         </table>
+        <ul>
+            <li th:each="tag : ${tags}" th:text="${tag.getName()}"></li>
+        </ul>
 
         <!-- Create tag -->
         <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form">
@@ -90,7 +93,7 @@
                 <input type="text" class="form-control" id="tagName" th:name="tagName"
                        data-cy="tagName" autofocus>
             </div>
-            <button class="hrefButtons" type="submit">Submit</button>
+            <button class="hrefButtons" type="submit">+</button>
         </form>
     </div>
 </div>

@@ -105,6 +105,11 @@ public class Garden {
         this.plants.add(plant);
     }
 
+    public List<Tag> getTags() {
+
+        return tags;
+    }
+
     @Override
     public String toString() {
         return "Garden{" +

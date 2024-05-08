@@ -31,4 +31,9 @@ public class Tag {
         this.name = name;
         this.garden = garden;
     }
+
+
+    public String getName() {
+        return name;
+    }
 }

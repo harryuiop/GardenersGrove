@@ -74,6 +74,7 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("plants", plants);
         model.addAttribute("editPlantUriString", EDIT_PLANT_URI_STRING);
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
+        model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
         return "viewGarden";
     }
