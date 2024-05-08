@@ -1,44 +1,43 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherResponse;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-import java.util.concurrent.CountDownLatch;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class WeatherService {
 
-    private final WebClient webClient;
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    public WeatherService() {
-        this.webClient = WebClient.create("https://api.open-meteo.com/v1");
-    }
-
-
-    public Mono<WeatherResponse> getWeather() {
-        return webClient.get()
-                        .uri(uriBuilder -> uriBuilder
-                                        .path("/forecast")
-                                        .queryParam("latitude", "52.52")
-                                        .queryParam("longitude", "13.41")
-                                        .queryParam("hourly", "temperature_2m")
-                                        .build())
-                        .retrieve()
-                        .bodyToMono(WeatherResponse.class)
-                        .onErrorResume(e -> Mono.error(
-                                        new RuntimeException("Error while fetching weather data:" + e.getMessage(), e)
-                        ));
-    }
-
-    public static void main(String[] args) {
-        WeatherService weatherService = new WeatherService();
-        CountDownLatch latch = new CountDownLatch(1);
-        System.out.println("Start");
-        weatherService.getWeather().subscribe(System.out::println, System.err::println);
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
+    public String getJsonFromApi() throws InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m"))
+                .GET()
+                .build();
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        WeatherService weatherService = new WeatherService();
+        String json = weatherService.getJsonFromApi();
+        try {
+            WeatherResponse weatherResponse = weatherService.objectMapper.readValue(json, WeatherResponse.class);
+            System.out.println(weatherResponse);
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
         }
     }
 }
