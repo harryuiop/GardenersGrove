@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -13,8 +14,8 @@ public class WeatherService {
         this.webClient = WebClient.create("https://api.open-meteo.com/v1");
     }
 
-    public Mono<String> getWeather() {
 
+    public Mono<WeatherResponse> getWeather() {
         return webClient.get()
                         .uri(uriBuilder -> uriBuilder
                                         .path("/forecast")
@@ -23,11 +24,10 @@ public class WeatherService {
                                         .queryParam("hourly", "temperature_2m")
                                         .build())
                         .retrieve()
-                        .bodyToMono(String.class)
+                        .bodyToMono(WeatherResponse.class)
                         .onErrorResume(e -> Mono.error(
                                         new RuntimeException("Error while fetching weather data:" + e.getMessage(), e)
                         ));
-
     }
 
     public static void main(String[] args) {
