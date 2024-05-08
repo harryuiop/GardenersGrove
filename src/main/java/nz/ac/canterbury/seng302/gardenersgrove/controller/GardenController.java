@@ -11,6 +11,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Featu
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.LocationService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.WeatherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class GardenController extends GardensSidebar {
     private final UserService userService;
     private final LocationService locationService;
     private final MapTilerGeocoding mapTilerGeocoding;
+    private final WeatherService weatherService;
     private String refererUrl;
 
     /**
@@ -49,12 +51,14 @@ public class GardenController extends GardensSidebar {
             GardenService gardenService,
             UserService userService,
             LocationService locationService,
-            MapTilerGeocoding mapTilerGeocoding
+            MapTilerGeocoding mapTilerGeocoding,
+            WeatherService weatherService
     ) {
         this.gardenService = gardenService;
         this.userService = userService;
         this.locationService = locationService;
         this.mapTilerGeocoding = mapTilerGeocoding;
+        this.weatherService = weatherService;
     }
 
     /**

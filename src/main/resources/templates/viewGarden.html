@@ -18,8 +18,9 @@
     <article class="in-line"><p>Location: </p>
         <p th:text="${garden.getLocationString()}"></p></article>
     <article class="in-line"><p>Size: </p>
-        <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
-    </article>
+        <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p></article>
+    <article class="in-line"><p>Weather: </p>
+        <p th:text="${weatherService.getJsonFromApi(garden.getLocation().getLat(), garden.getLocation().getLng())}"></p></article>
 
     <a th:href="@{${editGardenUri}}">
         <button class="form-button" type="button">Edit Garden</button>

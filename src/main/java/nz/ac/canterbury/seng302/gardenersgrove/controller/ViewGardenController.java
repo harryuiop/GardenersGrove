@@ -9,6 +9,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.WeatherService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public class ViewGardenController extends GardensSidebar {
     private final GardenService gardenService;
     private final PlantService plantService;
     private final UserService userService;
+    private final WeatherService weatherService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -49,10 +51,12 @@ public class ViewGardenController extends GardensSidebar {
      * @param userService   A User database access object.
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService,
+                                UserService userService, WeatherService weatherService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
+        this.weatherService = weatherService;
     }
 
     private String loadGardenPage(
@@ -65,6 +69,7 @@ public class ViewGardenController extends GardensSidebar {
         this.updateGardensSidebar(model, gardenService, userService);
 
         model.addAttribute("garden", garden);
+        model.addAttribute("weatherService", weatherService);
         model.addAttribute("editGardenUri", editGardenUri.toString());
         model.addAttribute("newPlantUri", newPlantUri.toString());
         model.addAttribute("plants", plants);
