@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +63,10 @@ public class User {
     @JoinColumn(name = "userId")
     private List<Authority> userRoles;
 
+    @Column
+    @ManyToMany
+    private List<User> friends;
+
     /**
      * JPA Empty Constructor
      */
@@ -97,6 +99,18 @@ public class User {
 
     public int getId() {
         return userId;
+    }
+
+    public List<User> getFriends() {
+        return friends;
+    }
+
+    public void addFriend(User friend) {
+        friends.add(friend);
+    }
+
+    public void removeFriend(User friend) {
+        friends.remove(friend);
     }
 
     /**
