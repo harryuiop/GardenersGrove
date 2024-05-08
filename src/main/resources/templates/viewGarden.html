@@ -82,6 +82,16 @@
             </tr>
             </tbody>
         </table>
+
+        <!-- Create tag -->
+        <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form">
+            <div class="form-field">
+                <label class="form-input" for="tagName"> Tag Name: </label>
+                <input type="text" class="form-control" id="tagName" th:name="tagName"
+                       data-cy="tagName" autofocus>
+            </div>
+            <button class="hrefButtons" type="submit">Submit</button>
+        </form>
     </div>
 </div>
 

@@ -31,6 +31,9 @@ public class Garden {
     @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
     private List<Plant> plants;
 
+    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
+    private List<Tag> tags;
+
     /**
      * JPA required no-args constructor
      */
@@ -50,6 +53,7 @@ public class Garden {
         this.location = location;
         this.size = size;
         this.plants = new ArrayList<>();
+        this.tags = new ArrayList<>();
     }
 
 
