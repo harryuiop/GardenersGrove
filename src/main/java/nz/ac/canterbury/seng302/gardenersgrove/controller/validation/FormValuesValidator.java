@@ -57,7 +57,7 @@ public class FormValuesValidator {
      * @return whether it is valid or not.
      */
     public static boolean checkContainsText(String string) {
-        return string.isEmpty() || string.chars().anyMatch(Character::isAlphabetic);
+        return string == null || string.isEmpty() || string.chars().anyMatch(Character::isAlphabetic);
     }
 
     /**

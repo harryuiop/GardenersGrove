@@ -151,7 +151,7 @@ public class GardenController extends GardensSidebar {
     public String submitNewGarden(
             @RequestParam String gardenName,
             @RequestParam(required = false) Float gardenSize,
-            @RequestParam String gardenDescription,
+            @RequestParam(required = false) String gardenDescription,
             @RequestParam String country,
             @RequestParam String city,
             @RequestParam(required = false) String streetAddress,
@@ -240,7 +240,7 @@ public class GardenController extends GardensSidebar {
             @PathVariable long gardenId,
             @RequestParam String gardenName,
             @RequestParam(required = false) Float gardenSize,
-            @RequestParam String gardenDescription,
+            @RequestParam(required = false) String gardenDescription,
             @RequestParam String country,
             @RequestParam String city,
             @RequestParam(required = false) String streetAddress,
