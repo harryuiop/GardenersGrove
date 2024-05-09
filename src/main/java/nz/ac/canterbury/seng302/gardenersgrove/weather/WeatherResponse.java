@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather;
 
 import java.util.List;
 
+@java.lang.SuppressWarnings("all")
 public class WeatherResponse {
     private double latitude;
     private double longitude;
@@ -16,16 +17,16 @@ public class WeatherResponse {
     @Override
     public String toString() {
         return "WeatherResponse{" +
-                        "latitude=" + latitude +
-                        ", longitude=" + longitude +
-                        ", generationtime_ms=" + generationtime_ms +
-                        ", utc_offset_seconds=" + utc_offset_seconds +
-                        ", timezone='" + timezone + '\'' +
-                        ", timezone_abbreviation='" + timezone_abbreviation + '\'' +
-                        ", elevation=" + elevation +
-                        ", hourly_units=" + hourly_units +
-                        ", hourly=" + hourly +
-                        '}';
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", generationtime_ms=" + generationtime_ms +
+                ", utc_offset_seconds=" + utc_offset_seconds +
+                ", timezone='" + timezone + '\'' +
+                ", timezone_abbreviation='" + timezone_abbreviation + '\'' +
+                ", elevation=" + elevation +
+                ", hourly_units=" + hourly_units +
+                ", hourly=" + hourly +
+                '}';
     }
 
     public void setLatitude(double latitude) {
@@ -68,13 +69,15 @@ public class WeatherResponse {
 class HourlyUnits {
     private String time;
     private String temperature_2m;
+    private String weather_code;
 
     @Override
     public String toString() {
         return "HourlyUnits{" +
-                        "time='" + time + '\'' +
-                        ", temperature_2m='" + temperature_2m + '\'' +
-                        '}';
+                "time='" + time + '\'' +
+                ", temperature_2m='" + temperature_2m + '\'' +
+                ", weather_code='" + weather_code + '\'' +
+                '}';
     }
 
     public void setTime(String time) {
@@ -84,18 +87,24 @@ class HourlyUnits {
     public void setTemperature_2m(String temperature_2m) {
         this.temperature_2m = temperature_2m;
     }
+
+    public void setWeather_code(String weather_code) {
+        this.weather_code = weather_code;
+    }
 }
 
 class Hourly {
     private List<String> time;
     private List<Double> temperature_2m;
+    private List<Integer> weather_code;
 
     @Override
     public String toString() {
         return "Hourly{" +
-                        "time=" + time +
-                        ", temperature_2m=" + temperature_2m +
-                        '}';
+                "time=" + time +
+                ", temperature_2m=" + temperature_2m +
+                ", weather_code=" + weather_code +
+                '}';
     }
 
     public void setTime(List<String> time) {
@@ -104,5 +113,9 @@ class Hourly {
 
     public void setTemperature_2m(List<Double> temperature_2m) {
         this.temperature_2m = temperature_2m;
+    }
+
+    public void setWeather_code(List<Integer> weather_code) {
+        this.weather_code = weather_code;
     }
 }
