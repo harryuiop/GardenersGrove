@@ -11,11 +11,13 @@ public interface TagRepository extends CrudRepository<Tag, Long> {
     public Tag findByName(String name);
 
     /**
-     * Find autocomplete suggestions by finding all tags starting with parameter
+     * Find autocomplete suggestions by finding all the tags that contain the input text.
+     * Order higher if the result starts with the input text.
+     * For example: for result: "cool", the input "co" is a closer match than "ol".
      *
-     * @param prefix User input
-     * @return List of tags starting with user inputted prefix.
+     * @param query User tag input
+     * @return List of tags containing user input.
      */
-    @Query("SELECT tag FROM Tag tag WHERE tag.name LIKE ?1%")
-    List<Tag> findByNameStartingWith(String prefix);
+    @Query("SELECT tag FROM Tag tag WHERE tag.name LIKE %?1% ORDER BY CASE WHEN tag.name LIKE ?1% THEN 0 ELSE 1 END")
+    List<Tag> findByNameContains(String query);
 }

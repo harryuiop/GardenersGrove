@@ -43,12 +43,19 @@ public class TagService {
      * @return List of tag name suggestions.
      */
     public List<String> findAutocompleteSuggestions(String query, int limit) {
-        List<Tag> tags = tagRepository.findByNameStartingWith(query);
+        List<Tag> tags = tagRepository.findByNameContains(query);
         List<String> tagStrings = new ArrayList<>();
+
+        int count = 0;
         for (Tag tag: tags) {
-            tagStrings.add(tag.getName());
+            if (count < limit) {
+                tagStrings.add(tag.getName());
+            } else {
+                return tagStrings;
+            }
+            count++;
         }
-        return tagStrings.subList(0, Math.min(limit, tagStrings.size()));
+        return tagStrings;
     }
     public void deleteAll() {
         tagRepository.deleteAll();
