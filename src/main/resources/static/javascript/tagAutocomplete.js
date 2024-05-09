@@ -69,6 +69,7 @@ function renderAutocomplete(tags) {
         suggestionElement.appendChild(primaryTextElement);
         autocompleteList.appendChild(suggestionElement);
     });
+    tagSubmitBtn.style.height = tagField.offsetHeight + 'px';
 }
 
 function removeAutocompleteBox() {
