@@ -21,24 +21,16 @@
         <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
     </article>
 
-    <a th:href="@{${editGardenUri}}">
-        <button class="form-button" type="button">Edit Garden</button>
-    </a>
-    <a th:href="@{${newPlantUri}}">
-        <button class="form-button" type="button">Add Plant</button>
-    </a>
-
-
     <!-- Garden tags -->
     <div class="display-tags">
         <span th:each="tag, iterStat : ${tags}">
             <span class="tag-text" th:text="'#' + ${tag.getName()}"></span>
-            <span th:if="${!iterStat.last}">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span th:if="${!iterStat.last}">&nbsp;&nbsp;&nbsp;</span>
         </span>
     </div>
 
     <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form">
-        <label class="form-input" for="tagName"> Tag Name: </label>
+        <label class="form-input" for="tagName"> Create new tag: </label>
         <div style="display: flex;">
             <div>
                 <input type="text" class="form-control" id="tagName" th:name="tagName"
@@ -48,6 +40,15 @@
             <button type="submit">+</button>
         </div>
     </form>
+
+    <br>
+
+    <a th:href="@{${editGardenUri}}">
+        <button class="form-button" type="button">Edit Garden</button>
+    </a>
+    <a th:href="@{${newPlantUri}}">
+        <button class="form-button" type="button">Add Plant</button>
+    </a>
 
 
     <h2>My Plants</h2>
