@@ -34,13 +34,21 @@ public class TagService {
         tagRepository.save(new Tag(tagName, garden));
     }
 
+    /**
+     * Get tag suggestions based on user input.
+     * Used by javascript to show the autocomplete suggestions.
+     *
+     * @param query User entered tag.
+     * @param limit Maximum number of suggestions shown
+     * @return List of tag name suggestions.
+     */
     public List<String> findAutocompleteSuggestions(String query, int limit) {
         List<Tag> tags = tagRepository.findByNameStartingWith(query);
         List<String> tagStrings = new ArrayList<>();
         for (Tag tag: tags) {
             tagStrings.add(tag.getName());
         }
-        return tagStrings;
+        return tagStrings.subList(0, Math.min(limit, tagStrings.size()));
     }
     public void deleteAll() {
         tagRepository.deleteAll();
