@@ -37,6 +37,8 @@ public class TagService {
     /**
      * Get tag suggestions based on user input.
      * Used by javascript to show the autocomplete suggestions.
+     * JPA does not have support for adding a limit parameter
+     * so the logic is completed in the service.
      *
      * @param query User entered tag.
      * @param limit Maximum number of suggestions shown
