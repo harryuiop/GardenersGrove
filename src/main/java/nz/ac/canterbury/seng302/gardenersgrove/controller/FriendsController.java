@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.NEW_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MANAGE_FRIENDS_URI_STRING;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewFriendsUri;
 
 @Controller
@@ -25,7 +25,7 @@ public class FriendsController {
         this.friendRequestService = friendRequestService;
     }
 
-    @GetMapping(NEW_GARDEN_URI_STRING)
+    @GetMapping(MANAGE_FRIENDS_URI_STRING)
     public String getFriendsPage(Model model) {
         logger.info("GET {}", viewFriendsUri());
 

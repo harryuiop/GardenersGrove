@@ -11,7 +11,7 @@ public interface FriendRequestRepository extends CrudRepository<FriendRequest, L
 
     List<FriendRequest> findFriendRequestsBySender(User sender);
 
-    List<FriendRequest> findFriendRequestsByReciever(User reciever);
+    List<FriendRequest> findFriendRequestsByReceiver(User receiver);
 
     Optional<FriendRequest> findFriendRequestById(Long requestId);
 
