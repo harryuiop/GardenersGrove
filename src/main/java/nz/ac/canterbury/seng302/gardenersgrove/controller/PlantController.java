@@ -83,7 +83,7 @@ public class PlantController extends GardensSidebar {
                     String imageSizeError,
                     String plantImageUploadError,
                     String plantName,
-                    Integer plantCount,
+                    String plantCount,
                     String plantDescription,
                     LocalDate plantedDate,
                     String plantImagePath,
@@ -170,7 +170,7 @@ public class PlantController extends GardensSidebar {
         return loadPlantForm(
                         "", "", "", "", "", "", "",
                         plant.getName(),
-                        plant.getCount(),
+                        plant.getCount().toString(),
                         plant.getDescription(),
                         plant.getPlantedOn(),
                         plant.getImageFilePath(),
@@ -237,7 +237,7 @@ public class PlantController extends GardensSidebar {
     public String submitNewPlant(
                     @PathVariable long gardenId,
                     @RequestParam String plantName,
-                    @RequestParam(required = false) Integer plantCount,
+                    @RequestParam(required = false) String plantCount,
                     @RequestParam(required = false) String plantDescription,
                     @RequestParam(required = false) String plantedDate,
                     @RequestParam(required = false) MultipartFile plantImage,
@@ -272,7 +272,7 @@ public class PlantController extends GardensSidebar {
                             errors.getOrDefault("plantImageUploadError", ""),
                             plantName,
                             plantCount,
-                            plantDescription,
+                    plantDescription,
                             date,
                             "/images/default-plant.jpg",
                             garden.getName(),
@@ -281,7 +281,12 @@ public class PlantController extends GardensSidebar {
                             model
             );
         }
-        Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageFileName, garden);
+        Integer intPlantCount = null;
+        if (plantCount != null) {
+            intPlantCount = Integer.parseInt(plantCount, 10);
+        }
+
+        Plant plant = new Plant(plantName, intPlantCount, plantDescription, date, imageFileName, garden);
         plantService.savePlant(plant);
         return "redirect:" + viewGardenUri(garden.getId());
     }
@@ -305,7 +310,7 @@ public class PlantController extends GardensSidebar {
                     @PathVariable long plantId,
                     @PathVariable long gardenId,
                     @RequestParam String plantName,
-                    @RequestParam(required = false) Integer plantCount,
+                    @RequestParam(required = false) String plantCount,
                     @RequestParam(required = false) String plantDescription,
                     @RequestParam(required = false) String plantedDate,
                     @RequestParam(required = false) MultipartFile plantImage,
@@ -352,8 +357,12 @@ public class PlantController extends GardensSidebar {
             );
         }
 
+        Integer intPlantCount = null;
+        if (plantCount != null) {
+            intPlantCount = Integer.parseInt(plantCount, 10);
+        }
         plant.setName(plantName);
-        plant.setCount(plantCount);
+        plant.setCount(intPlantCount);
         plant.setDescription(plantDescription);
         plant.setPlantedOn(date);
         if (imageFileName != null) {
