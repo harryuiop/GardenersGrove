@@ -126,7 +126,7 @@ public class ErrorChecker {
             );
         }
 
-        if (!FormValuesValidator.checkIsInt(plantCount)) {
+        if (!FormValuesValidator.checkValidPlantCount(plantCount)) {
             errors.put("plantCountError", "Plant count must be positive number, and only contain the digits 0-9");
         }
 
