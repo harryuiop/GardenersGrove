@@ -408,4 +408,16 @@ public class ErrorChecker {
 
         return errors;
     }
+
+    public static String tagNameErrors(String tag) {
+        String errors = "";
+
+        if(!FormValuesValidator.checkTagName(tag))
+            errors += "The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" ";
+
+        if (!FormValuesValidator.checkTagNameLength(tag))
+            errors += (!errors.isEmpty() ? "\n" : "") + "A tag cannot exceed 25 characters";
+
+        return errors;
+    }
 }

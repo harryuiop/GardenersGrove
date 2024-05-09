@@ -11,6 +11,7 @@ import java.time.format.DateTimeParseException;
 public class FormValuesValidator {
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
     static String namePattern = "^[a-zA-Z\\-' ]+$";
+    static String tagPattern = "^[a-zA-Z\\-'\"_ ]+$";
 
     /**
      * Checks the String contains valid characters
@@ -135,5 +136,27 @@ public class FormValuesValidator {
      */
     public static boolean emailInUse(String email, UserService userService) {
         return userService.getUserByEmail(email) == null;
+    }
+
+
+    /**
+     * Checks tags' name contains only valid characters
+     *
+     * @param tag tag name inputted by user
+     * @return true if tag name is valid, false otherwise
+     */
+    public static boolean checkTagName(String tag) {
+        return tag.matches(tagPattern);
+    }
+
+
+    /**
+     * Checks tags' name not exceed 25 characters
+     *
+     * @param tag tag name inputted by user
+     * @return true if string length is less than or equal to 25, false otherwise
+     */
+    public static boolean checkTagNameLength(String tag) {
+        return tag.length() <= 25;
     }
 }

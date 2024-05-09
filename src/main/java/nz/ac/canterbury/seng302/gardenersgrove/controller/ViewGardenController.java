@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchPlantException;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,9 +66,14 @@ public class ViewGardenController extends GardensSidebar {
                     URI editGardenUri,
                     URI newPlantUri,
                     List<Plant> plants,
-                    Model model
+                    Model model,
+                    String...errorMessages
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
+
+        if (errorMessages.length > 0) {
+            model.addAttribute("tagErrors", errorMessages[0]);
+        }
 
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
@@ -171,8 +178,22 @@ public class ViewGardenController extends GardensSidebar {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
-        tagService.saveTag(tagName, garden);
-        return "redirect:" + viewGardenUri(gardenId);
+        String errorMessages = ErrorChecker.tagNameErrors(tagName);
+
+        if (!errorMessages.isEmpty())
+            model.addAttribute("tagErrors", errorMessages);
+        else
+            tagService.saveTag(tagName, garden);
+
+
+        return loadGardenPage(
+                optionalGarden.get(),
+                editGardenUri(gardenId),
+                newPlantUri(gardenId),
+                plantService.getAllPlantsInGarden(optionalGarden.get()),
+                model,
+                errorMessages
+        );
     }
 
 
