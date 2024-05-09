@@ -60,13 +60,14 @@ function renderAutocomplete(tags) {
 
         primaryTextElement.innerHTML = tag;
 
-        autocompleteList.appendChild(suggestionElement);
-
         // TODO auto submit form
         suggestionElement.addEventListener('click', function() {
             tagField.value = tag;
             removeAutocompleteBox();
         });
+
+        suggestionElement.appendChild(primaryTextElement);
+        autocompleteList.appendChild(suggestionElement);
     });
 }
 
