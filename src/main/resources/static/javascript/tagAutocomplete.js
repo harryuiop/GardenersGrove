@@ -1,5 +1,6 @@
 const tagField = document.getElementById('tagName');
 const autocompleteList = document.getElementById('autocomplete-list');
+const tagSubmitBtn = document.getElementById('tag-submit');
 const debounceTimeMs = 100;
 
 let timer;
@@ -60,10 +61,9 @@ function renderAutocomplete(tags) {
 
         primaryTextElement.innerHTML = tag;
 
-        // TODO auto submit form
-        suggestionElement.addEventListener('click', function() {
+        suggestionElement.addEventListener('click', function () {
             tagField.value = tag;
-            removeAutocompleteBox();
+            tagSubmitBtn.click();
         });
 
         suggestionElement.appendChild(primaryTextElement);
