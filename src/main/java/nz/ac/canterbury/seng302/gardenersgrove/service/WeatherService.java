@@ -3,7 +3,10 @@ package nz.ac.canterbury.seng302.gardenersgrove.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
@@ -13,10 +16,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class WeatherService {
+    Logger logger = LoggerFactory.getLogger(WeatherService.class);
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    public String getJsonFromApi(float latitude, float longitude) throws InterruptedException {
+    private String getJsonFromApi(float latitude, float longitude) throws InterruptedException {
         URI uri = new DefaultUriBuilderFactory().builder()
                 .scheme("https")
                 .host("api.open-meteo.com")
@@ -33,22 +37,19 @@ public class WeatherService {
                 .uri(uri)
                 .GET()
                 .build();
+
         try (HttpClient client = HttpClient.newHttpClient()) {
             return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            throw new UnableToFetchWeatherException("IOException occurred while getting weather data from API", exception);
         }
-        return null;
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        WeatherService weatherService = new WeatherService();
-        String json = weatherService.getJsonFromApi(-43.533f, 172.6333f);
+    public WeatherResponse getWeatherData(float latitude, float longitude) throws InterruptedException {
         try {
-            WeatherResponse weatherResponse = weatherService.objectMapper.readValue(json, WeatherResponse.class);
-            System.out.println(weatherResponse);
+            return objectMapper.readValue(getJsonFromApi(latitude, longitude), WeatherResponse.class);
         } catch (JsonProcessingException exception) {
-            exception.printStackTrace();
+            throw new UnableToFetchWeatherException("Failed to parse JSON response from API", exception);
         }
     }
 }
