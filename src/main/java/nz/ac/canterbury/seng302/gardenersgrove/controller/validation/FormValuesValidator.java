@@ -77,13 +77,14 @@ public class FormValuesValidator {
     }
 
     /**
-     * Checks that a string only contains digits, and is less than 1 billion.
+     * Checks that a string only contains digits, and is less than 1 billion, and is not "0".
+     * Regex pattern was helped via Chat-GPT.
      *
      * @param value The string value to check, used in plant count.
-     * @return  true if the number only contains digits and less than 1 billion, otherwise false.
+     * @return  true if the number only contains digits and less than 1 billion and is not "0", otherwise false.
      */
     public static boolean checkValidPlantCount(String value) {
-        return value == null || value.matches("^[0-9]{0,9}");
+        return value == null || value.matches("^(?!0$)[0-9]{0,9}$");
     }
 
     /**
