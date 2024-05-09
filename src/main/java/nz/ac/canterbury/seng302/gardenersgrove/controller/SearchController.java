@@ -67,14 +67,7 @@ public class SearchController extends GardensSidebar {
     @PostMapping(SEARCH_URI_STRING)
     public String getSearchedUsers(@RequestParam String search, Model model) {
         model.addAttribute("searchUri", searchUri());
-        List<User> searchResults = new ArrayList<User>();
-        for (User user: userService.getAllUsers()) {
-            if ((user.getFirstName() + " " +user.getLastName()).contains(search)) {
-                searchResults.add(user);
-                logger.info(user.getFirstName());
-            }
-        }
-        model.addAttribute("users", searchResults);
+        model.addAttribute("users", userService.getSearchedUser(search));
         model.addAttribute("user", userService.getAuthenticatedUser());
         return "searchFriends";
     }

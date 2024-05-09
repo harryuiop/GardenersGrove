@@ -8,7 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import static java.lang.Integer.parseInt;
@@ -39,7 +41,7 @@ public class UserService {
         user1.setConfirmation(true);
         this.addUsers(user1);
         User user2 = new User
-                ("user2@gmail.com", "Default", "User", "Password1!", "2000-01-01");
+                ("user2@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
         user2.setConfirmation(true);
         this.addUsers(user2);
     }
@@ -177,5 +179,15 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public List<User> getSearchedUser(String searchString) {
+        List<User> searchResults = new ArrayList<User>();
+        for (User user: getAllUsers()) {
+            if ((user.getFirstName() + " " +user.getLastName()).toLowerCase().contains(searchString.toLowerCase())) {
+                searchResults.add(user);
+            }
+        }
+        return searchResults;
     }
 }

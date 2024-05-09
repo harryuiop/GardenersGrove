@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -120,5 +122,32 @@ public class UserServiceIntegrationTest {
         User user = userService.addUsers(new User(email,
                 firstName, lname, password, dob));
         Assertions.assertNull(user);
+    }
+
+    @Test
+    void getSearchedUser_searchUser_returnUser() {
+        List<User> mockRespositoryUsers = new ArrayList<>();
+        mockRespositoryUsers.add(new User
+                ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
+        mockRespositoryUsers.add(new User
+                ("user2@gmail.com", "John", "Doe", "Password1!", "2000-01-01"));
+        when(userRepositoryMock.findAll()).thenReturn(mockRespositoryUsers);
+        List<User> users = new ArrayList<>();
+        users.add(new User
+                ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01"));
+        Assertions.assertEquals(users, userService.getSearchedUser("User"));
+    }
+
+    @Test
+    void getSearchedUser_searchJane_returnEmptyList() {
+        Assertions.assertEquals(new ArrayList<>(), userService.getSearchedUser("Jane"));
+    }
+
+    @Test
+    void getSearchedUser_searchJohn_returnJohn() {
+        List<User> users = new ArrayList<User>();
+        users.add(new User
+                ("user1@gmail.com", "John", "Doe", "Password1!", "2000-01-01"));
+        Assertions.assertEquals(users, userService.getSearchedUser("John"));
     }
 }
