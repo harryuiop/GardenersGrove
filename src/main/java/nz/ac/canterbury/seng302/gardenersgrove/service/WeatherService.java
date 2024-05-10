@@ -22,17 +22,19 @@ public class WeatherService {
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    private String getJsonFromApi(float latitude, float longitude) throws InterruptedException {
+    public String getJsonFromApi(float latitude, float longitude) throws InterruptedException {
         URI uri = new DefaultUriBuilderFactory().builder()
                 .scheme("https")
                 .host("api.open-meteo.com")
                 .path("v1/forecast")
                 .queryParam("latitude", latitude)
                 .queryParam("longitude", longitude)
-                .queryParam("hourly", "temperature_2m,weather_code")
+                .queryParam("hourly", "relative_humidity_2m")
+                .queryParam("current", "temperature_2m,relative_humidity_2m,weather_code")
+                .queryParam("daily", "weather_code,temperature_2m_max,temperature_2m_min")
                 .queryParam("timezone", "auto")
                 .queryParam("past_days", 2)
-                .queryParam("forecast_days", 3)
+                .queryParam("forecast_days", 4)
                 .build();
 
         HttpRequest request = HttpRequest.newBuilder()

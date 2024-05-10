@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @java.lang.SuppressWarnings("all")
 public class WeatherResponse {
@@ -21,7 +22,15 @@ public class WeatherResponse {
     @JsonProperty("hourly_units")
     private HourlyUnits hourlyUnits;
     @JsonProperty("hourly")
-    private HourlyWeather hourly;
+    private HourlyWeather hourlyWeather;
+    @JsonProperty("daily")
+    private DailyWeather dailyWeather;
+    @JsonProperty("daily_units")
+    private DailyUnits dailyUnits;
+    @JsonProperty("current")
+    private CurrentWeather currentWeather;
+    @JsonProperty("current_units")
+    private CurrentUnits currentUnits;
 
     @Override
     public String toString() {
@@ -34,12 +43,16 @@ public class WeatherResponse {
                 ", timezone_abbreviation='" + timezoneAbbreviation + '\'' +
                 ", elevation=" + elevation +
                 ", hourly_units=" + hourlyUnits +
-                ", hourly=" + hourly +
+                ", hourly=" + hourlyWeather +
+                ", daily=" + dailyWeather +
+                ", daily_units=" + dailyUnits +
+                ", current=" + currentWeather +
+                ", current_units=" + currentUnits +
                 '}';
     }
 
-    public HourlyWeather getHourly() {
-        return hourly;
+    public HourlyWeather getHourlyWeather() {
+        return hourlyWeather;
     }
 
     public void setLatitude(double latitude) {
@@ -50,32 +63,32 @@ public class WeatherResponse {
         this.longitude = longitude;
     }
 
-    public void setGenerationtime_ms(double generationtime_ms) {
-        this.timeToGenerate = generationtime_ms;
+    public void setGenerationtime_ms(double timeToGenerate) {
+        this.timeToGenerate = timeToGenerate;
     }
 
-    public void setUtc_offset_seconds(int utc_offset_seconds) {
-        this.utcOffetTime = utc_offset_seconds;
+    public void setUtc_offset_seconds(int utcOffsetSeconds) {
+        this.utcOffetTime = utcOffetTime;
     }
 
     public void setTimezone(String timezone) {
         this.timezone = timezone;
     }
 
-    public void setTimezone_abbreviation(String timezone_abbreviation) {
-        this.timezoneAbbreviation = timezone_abbreviation;
+    public void setTimezone_abbreviation(String timezoneAbbreviation) {
+        this.timezoneAbbreviation = timezoneAbbreviation;
     }
 
     public void setElevation(double elevation) {
         this.elevation = elevation;
     }
 
-    public void setHourly_units(HourlyUnits hourly_units) {
-        this.hourlyUnits = hourly_units;
+    public void setHourly_units(HourlyUnits hourlyUnits) {
+        this.hourlyUnits = hourlyUnits;
     }
 
-    public void setHourly(HourlyWeather hourly) {
-        this.hourly = hourly;
+    public void setHourlyWeather(HourlyWeather hourlyWeather) {
+        this.hourlyWeather = hourlyWeather;
     }
 }
 
