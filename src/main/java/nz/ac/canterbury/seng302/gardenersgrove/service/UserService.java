@@ -185,9 +185,9 @@ public class UserService {
     }
 
     /**
-     * Checks if any of the users' names contain the given string.
+     * Checks if any of the users' names or emails contain the given string.
      * @param searchString a string entered by the user in search of a user.
-     * @return a list of users whos' names contain the string.
+     * @return a list of users whos' names or emails contain the string.
      */
     public List<User> getSearchedUser(String searchString) {
         List<User> searchResults = new ArrayList<>();
