@@ -101,7 +101,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request ->
                         // Allow "/", "/register", and "/login" to anyone (permitAll)
                         request
-                                .requestMatchers("/", "/register/**", "/login", "/check-email-duplication", "/login/reset-password/verify/{token}")
+                                .requestMatchers("/", "/register/**", "/login/**", "/check-email-duplication", "/login/reset-password/verify/{token}")
                                 .permitAll()
                                 // Only allow admins to reach the "/admin" page
                                 .requestMatchers("/admin")
