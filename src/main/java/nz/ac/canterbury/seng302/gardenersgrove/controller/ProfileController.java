@@ -255,5 +255,4 @@ public class ProfileController extends GardensSidebar {
         logger.info("POST {}", logoutUri());
         return "login";
     }
-
 }

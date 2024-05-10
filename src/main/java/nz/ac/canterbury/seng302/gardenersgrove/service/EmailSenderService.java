@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import static java.util.concurrent.TimeUnit.*;
+
+import java.net.URI;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +70,12 @@ public class EmailSenderService {
             case "passwordUpdatedEmail":
                 emailTitle = "GARDENER'S GROVE :: YOUR PASSWORD HAS BEEN UPDATED ::";
                 break;
+            case "resetPasswordEmail":
+                user = userService.grantUserToken(user);
+                emailTitle = "GARDENER'S GROVE :: RESET PASSWORD ::";
+                URI tokenLink = UriConfig.resetPasswordUri(user.getToken());
+                model.put("tokenLink", tokenLink);
+                break;
             default:
                 emailTitle = "GARDENER'S GROVE";
         }
@@ -108,7 +117,7 @@ public class EmailSenderService {
      *
      * @param email Users email
      */
-    public void CheckEmailVerifiedInTime(String email) {
+    public void checkEmailVerifiedInTime(String email) {
         Runnable checkAndDeleteUser = () -> {
             User user = userService.getUserByEmail(email);
             if (!user.isConfirmed()) {

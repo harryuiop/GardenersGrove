@@ -1,11 +1,21 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
@@ -17,6 +27,22 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 public class LogInController {
 
     private static final Logger logger = LoggerFactory.getLogger(LogInController.class);
+
+    private final EmailSenderService emailSenderService;
+
+    private final UserService userService;
+
+    /**
+     * Constructor for LogInController.
+     *
+     * @param emailSenderService the EmailSenderService responsible for email-sending-related operations
+     * @param userService        the UserService responsible for user-related operations.
+     */
+    @Autowired
+    public LogInController(EmailSenderService emailSenderService, UserService userService) {
+        this.emailSenderService = emailSenderService;
+        this.userService = userService;
+    }
 
     /**
      * Handles GET requests to the "/login" URL.
@@ -42,5 +68,47 @@ public class LogInController {
         model.addAttribute("homeUri", homeUri());
         model.addAttribute("registerUri", registerUri());
         return "login";
+    }
+
+    /**
+     * Handles GET requests to the reset password URI.
+     * Displays a form in which the user is able to reset their password
+     *
+     * @param model The Model object used for adding attributes to the view.
+     * @return The name of the template
+     */
+    @GetMapping(RESET_PASSWORD_URI_STRING)
+    public String resetPassword(Model model, @PathVariable String token) {
+        logger.info("GET {}", resetPasswordUri(token));
+
+        logger.info(token);
+
+        model.addAttribute("resetPasswordUri", resetPasswordUri(token));
+        return "resetPassword";
+    }
+
+    /**
+     * Handles POST requests to the reset password URI.
+     *
+     * @param newPassword       Users new password
+     * @param retypeNewPassword Users new password retyped
+     * @param model             The Model object used for adding attributes to the view.
+     * @return The name of the template.
+     */
+    @PostMapping(RESET_PASSWORD_URI_STRING)
+    public String confirmEditPassword(
+            @RequestParam String newPassword,
+            @RequestParam String retypeNewPassword,
+            @PathVariable String token,
+            Model model
+    ) {
+        logger.info("POST {}", resetPasswordUri(token));
+
+        User user = userService.getUserById(3);
+
+        // send verification email
+        emailSenderService.sendEmail(user, "passwordUpdatedEmail");
+
+        return "redirect:" + viewProfileUri();
     }
 }

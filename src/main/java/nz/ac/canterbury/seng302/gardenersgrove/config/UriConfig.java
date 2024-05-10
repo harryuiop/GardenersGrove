@@ -10,6 +10,7 @@ public class UriConfig {
     public static final String LOGOUT_URI_STRING = "/logout";
     public static final String REGISTER_URI_STRING = "/register";
     public static final String VERIFY_EMAIL_URI_STRING = "/register/verify";
+    public static final String RESET_PASSWORD_URI_STRING = "/login/reset-password/verify/{token}";
     public static final String VIEW_PROFILE_URI_STRING = "/profile";
     public static final String EDIT_PROFILE_URI_STRING = "/profile/edit";
     public static final String EDIT_PASSWORD_URI_STRING = "/profile/edit/password";
@@ -23,6 +24,7 @@ public class UriConfig {
     public static final String VIEW_ALL_GARDENS_URI_STRING = "/gardens";
 
 
+    private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
     private static final UriTemplate EDIT_GARDEN_URI = new UriTemplate(EDIT_GARDEN_URI_STRING);
     private static final UriTemplate NEW_PLANT_URI = new UriTemplate(NEW_PLANT_URI_STRING);
@@ -69,6 +71,9 @@ public class UriConfig {
         return URI.create(UPLOAD_PROFILE_IMAGE_URI_STRING);
     }
 
+    public static URI resetPasswordUri(String token) {
+        return RESET_PASSWORD_URI.expand(token);
+    }
     public static URI newGardenUri() {
         return URI.create(NEW_GARDEN_URI_STRING);
     }
