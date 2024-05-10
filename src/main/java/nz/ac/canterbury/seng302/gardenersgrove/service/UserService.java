@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 import static java.lang.Integer.parseInt;
@@ -182,9 +181,10 @@ public class UserService {
     }
 
     public List<User> getSearchedUser(String searchString) {
-        List<User> searchResults = new ArrayList<User>();
+        List<User> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
-            if ((user.getFirstName() + " " +user.getLastName()).toLowerCase().contains(searchString.toLowerCase())) {
+            if ((user.getFirstName() + " " +user.getLastName()).toLowerCase().contains(searchString.toLowerCase()) ||
+                user.getEmail().contains(searchString)) {
                 searchResults.add(user);
             }
         }
