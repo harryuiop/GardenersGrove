@@ -20,7 +20,7 @@
     <article class="in-line"><p>Size: </p>
         <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
     </article>
-    <form th:action="@{${makeGardenPublic}}" method="post">
+    <form th:if="${owner}" th:action="@{${makeGardenPublic}}" method="post">
         <label for="publicGarden" class="publicGardenCheckbox">
             <input
                     type="checkbox"
