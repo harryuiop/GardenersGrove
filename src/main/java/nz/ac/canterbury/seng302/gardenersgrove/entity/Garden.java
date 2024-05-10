@@ -31,6 +31,9 @@ public class Garden {
     @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
     private List<Plant> plants;
 
+    @Column
+    private boolean publicGarden;
+
     /**
      * JPA required no-args constructor
      */
@@ -50,6 +53,7 @@ public class Garden {
         this.location = location;
         this.size = size;
         this.plants = new ArrayList<>();
+        this.publicGarden = false;
     }
 
 
@@ -99,6 +103,14 @@ public class Garden {
 
     public void addPlant(Plant plant) {
         this.plants.add(plant);
+    }
+
+    public boolean getPublicGarden() {
+        return publicGarden;
+    }
+
+    public void setPublicGarden(boolean publicGarden) {
+        this.publicGarden = publicGarden;
     }
 
     @Override

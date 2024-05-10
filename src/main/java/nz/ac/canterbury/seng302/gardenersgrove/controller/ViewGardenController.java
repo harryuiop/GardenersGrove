@@ -70,6 +70,7 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("plants", plants);
         model.addAttribute("editPlantUriString", EDIT_PLANT_URI_STRING);
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
+        model.addAttribute("makeGardenPublic", MAKE_GARDEN_PUBLIC);
         return "viewGarden";
     }
 
@@ -86,7 +87,9 @@ public class ViewGardenController extends GardensSidebar {
         logger.info("GET {}", viewGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
+        if (optionalGarden.isEmpty() ||
+                (optionalGarden.get().getOwner() != userService.getAuthenticatedUser() &&
+                !optionalGarden.get().getPublicGarden())) {
             throw new NoSuchGardenException(gardenId);
         }
         return loadGardenPage(
@@ -144,5 +147,25 @@ public class ViewGardenController extends GardensSidebar {
         }
 
         return "redirect:" + viewGardenUri(gardenId);
+    }
+
+    /**
+     * Chnages the garden so that it is public (viewable by all)
+     * @param gardenId                  The Id of the garden being made public
+     * @param publicGarden              A string of whether the garden should be public or not
+     * @return                          The edit garden page the user was already on
+     * @throws NoSuchGardenException    If the garden can't be found by the given Id will throw this error
+     */
+    @PostMapping(MAKE_GARDEN_PUBLIC)
+    public String makeGardenPublic(@RequestParam long gardenId, @RequestParam(required = false) String publicGarden)
+    throws NoSuchGardenException {
+        boolean isGardenPublic = publicGarden == "true";
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            throw new NoSuchGardenException(gardenId);
+        }
+        optionalGarden.get().setPublicGarden(isGardenPublic);
+        gardenService.saveGarden(optionalGarden.get());
+        return "redirect:"+viewGardenUri(gardenId);
     }
 }
