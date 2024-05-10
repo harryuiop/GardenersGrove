@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.ResetPasswordToken;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.*;
 
@@ -35,6 +37,8 @@ public class EmailSenderService {
     private final TemplateEngine templateEngine;
     private final UserService userService;
 
+    private final ResetPasswordTokenService resetPasswordTokenService;
+
 
     // Sets the email address that the email will be sent FROM
     @Value("${spring.mail.username}") private String sender;
@@ -45,10 +49,11 @@ public class EmailSenderService {
      * @param javaMailSender JavaMailSender that will be autowired
      */
     @Autowired
-    public EmailSenderService(JavaMailSender javaMailSender, TemplateEngine templateEngine, UserService userService) {
+    public EmailSenderService(JavaMailSender javaMailSender, TemplateEngine templateEngine, UserService userService, ResetPasswordTokenService resetPasswordTokenService) {
         this.javaMailSender = javaMailSender;
         this.templateEngine = templateEngine;
         this.userService = userService;
+        this.resetPasswordTokenService = resetPasswordTokenService;
     }
 
     /**
@@ -71,9 +76,12 @@ public class EmailSenderService {
                 emailTitle = "GARDENER'S GROVE :: YOUR PASSWORD HAS BEEN UPDATED ::";
                 break;
             case "resetPasswordEmail":
-                user = userService.grantUserToken(user);
+                long userId = user.getUserId();
+                String token = UUID.randomUUID().toString();
+                resetPasswordTokenService.addToken(new ResetPasswordToken(token, userId));
+
                 emailTitle = "GARDENER'S GROVE :: RESET PASSWORD ::";
-                URI tokenLink = UriConfig.resetPasswordUri(user.getToken(), user.getUserId());
+                URI tokenLink = UriConfig.resetPasswordUri(token, userId);
                 model.put("tokenLink", tokenLink);
                 break;
             default:

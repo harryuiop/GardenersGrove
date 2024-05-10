@@ -4,6 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecke
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ResetPasswordTokenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,8 @@ public class LogInController {
 
     private final UserService userService;
 
+    private final ResetPasswordTokenService resetPasswordTokenService;
+
     /**
      * Constructor for LogInController.
      *
@@ -39,9 +42,10 @@ public class LogInController {
      * @param userService        the UserService responsible for user-related operations.
      */
     @Autowired
-    public LogInController(EmailSenderService emailSenderService, UserService userService) {
+    public LogInController(EmailSenderService emailSenderService, UserService userService, ResetPasswordTokenService resetPasswordTokenService) {
         this.emailSenderService = emailSenderService;
         this.userService = userService;
+        this.resetPasswordTokenService = resetPasswordTokenService;
     }
 
     /**
@@ -83,6 +87,12 @@ public class LogInController {
                                 @PathVariable long userId) {
         logger.info("GET {}", resetPasswordUri(token, userId));
 
+        // TODO Verify token (uuid)
+        if (resetPasswordTokenService.checkTokenExists(token)) {
+            logger.info("success");
+        } else {
+            logger.info("fail");
+        }
         logger.info(token);
 
         model.addAttribute("resetPasswordUri", resetPasswordUri(token, userId));
