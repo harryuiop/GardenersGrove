@@ -98,7 +98,24 @@ public class EmailSenderService {
         } catch (MessagingException e) {
             logger.debug("Failing to Send an email to the recipient");
             logger.error(e.toString());
-            return false;
+            return false;    /**
+     * This method is called after a user is registered in /Register and begins a 10-minute timer. If after 10 minutes
+     * the user has not input their verification code, their account is deleted from the database
+     *
+     * @param email Users email
+     */
+    public void CheckEmailVerifiedInTime(String email) {
+        Runnable checkAndDeleteUser = () -> {
+            User user = userService.getUserByEmail(email);
+            if (!user.isConfirmed()) {
+                logger.info(user.getEmail() + "'s account has been deleted due to no verification within the given time");
+                userService.deleteUser(user);
+            }
+        };
+        scheduler.schedule(checkAndDeleteUser, 10, MINUTES);
+    }
+}
+
         }
     }
 
