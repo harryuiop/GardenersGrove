@@ -25,7 +25,7 @@ public class FriendRequestService {
         this.friendRequestRepository = friendRequestRepository;
     }
 
-    public void addFriendRequest(User sender, User receiver) {
+    public void sendFriendRequest(User sender, User receiver) {
         FriendRequest save = friendRequestRepository.save(new FriendRequest(sender, receiver));
     }
 }
