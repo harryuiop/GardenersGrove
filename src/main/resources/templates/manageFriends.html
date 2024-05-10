@@ -32,103 +32,25 @@
                 <div style="max-height: 600px; overflow-y: auto;">
                 <table class="table table-borderless">
                     <tbody>
-                        <tr>
+                    <tr th:each="friend : ${user.getFriends()}">
                             <td>
                                 <div class="card" style="width:25vw">
                                     <div class="card-body">
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
+                                                    <img th:src="@{${user.getProfilePictureFilePath()}}"
+                                                         class="rounded-circle" style="width: 5vw" alt="Profile Image">
                                                 </div>
                                                 <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
+                                                    <a href="#"
+                                                       class="link-offset-2 link-underline link-underline-opacity-0"
+                                                       style="color: #142915; font-size: 30px"
+                                                       th:text="${friend.getName()}"></a>
                                                     <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card" style="width:25vw">
-                                    <div class="card-body">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
-                                                    <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card" style="width:25vw">
-                                    <div class="card-body">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
-                                                    <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card" style="width:25vw">
-                                    <div class="card-body">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
-                                                    <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card" style="width:25vw">
-                                    <div class="card-body">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
-                                                    <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
+                                                        <a th:href="#" class="btn btn-primary"
+                                                           style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See
+                                                            Gardens</a>
                                                     </div>
                                                 </div>
                                             </div>

@@ -95,6 +95,7 @@ public class User {
         this.password = password;
         this.dob = dob;
         this.confirmation = false;
+        this.friends = new ArrayList<>();
     }
 
     public int getId() {
@@ -128,6 +129,15 @@ public class User {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /**
+     * Retrieves the user's full name.
+     *
+     * @return User's first and last name together.
+     */
+    public String getName() {
+        return lastName == null ? firstName : firstName + ' ' + lastName;
     }
 
     /**
