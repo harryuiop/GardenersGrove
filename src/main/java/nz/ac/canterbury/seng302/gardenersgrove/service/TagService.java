@@ -62,4 +62,9 @@ public class TagService {
     public void deleteAll() {
         tagRepository.deleteAll();
     }
+
+    public Tag findByName(String name) {
+
+        return tagRepository.findByName(name);
+    }
 }

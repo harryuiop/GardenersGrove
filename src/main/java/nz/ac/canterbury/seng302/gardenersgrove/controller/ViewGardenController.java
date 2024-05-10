@@ -180,9 +180,10 @@ public class ViewGardenController extends GardensSidebar {
         Garden garden = optionalGarden.get();
         String errorMessages = ErrorChecker.tagNameErrors(tagName);
 
+
         if (!errorMessages.isEmpty())
             model.addAttribute("tagErrors", errorMessages);
-        else
+        else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
             tagService.saveTag(tagName, garden);
 
 

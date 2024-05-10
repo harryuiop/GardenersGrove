@@ -7,8 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface TagRepository extends CrudRepository<Tag, Long> {
-    public boolean existsByName(String name);
-    public Tag findByName(String name);
+    boolean existsByName(String name);
+    Tag findByName(String name);
 
     /**
      * Find autocomplete suggestions by finding all the tags that contain the input text.
