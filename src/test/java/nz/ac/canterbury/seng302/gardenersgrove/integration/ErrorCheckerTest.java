@@ -858,4 +858,20 @@ class ErrorCheckerTest {
         Assertions.assertTrue(errors.containsKey("passwordConfirmError"));
         Assertions.assertEquals(correctErrors.get("passwordConfirmError"), errors.get("passwordConfirmError"));
     }
+
+
+    @Test
+    void viewGardenFromErrors_checkNewTagNameIsInvalid_returnsErrorMessage() {
+        String tagName = "ajlkf$%(Q*@&(*";
+        String error = ErrorChecker.tagNameErrors(tagName);
+        Assertions.assertEquals("The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" "
+                                , error);
+    }
+
+    @Test
+    void viewGardenFromErrors_checkNewTagNameExceed25Characters_returnsErrorMessage() {
+        String tagName = "slakdjghlakghdjsffhalikjghsdlkafjhldsakugajhsdkrjfhalkjdsfhlakjgh";
+        String error = ErrorChecker.tagNameErrors(tagName);
+        Assertions.assertEquals("A tag cannot exceed 25 characters", error);
+    }
 }
