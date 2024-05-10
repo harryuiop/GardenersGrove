@@ -36,11 +36,29 @@ public class UserService {
         User user1 = new User
                 ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01");
         user1.setConfirmation(true);
-        this.addUsers(user1);
         User user2 = new User
                 ("user2@gmail.com", "Default", "User", "Password1!", "2000-01-01");
         user2.setConfirmation(true);
+        User user3 = new User
+                ("user3@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
+        user2.setConfirmation(true);
+        User user4 = new User
+                ("user4@gmail.com", "Jane", "Doe", "Password1!", "2000-01-01");
+        user2.setConfirmation(true);
+        this.addUsers(user1);
         this.addUsers(user2);
+        this.addUsers(user3);
+        this.addUsers(user4);
+        user1.addFriend(user2);
+        user1.addFriend(user3);
+        user1.addFriend(user4);
+        user2.addFriend(user1);
+        user3.addFriend(user1);
+        user4.addFriend(user1);
+        this.updateUser(user1);
+        this.updateUser(user2);
+        this.updateUser(user3);
+        this.updateUser(user4);
     }
 
     /**
@@ -106,7 +124,7 @@ public class UserService {
      * @param id The ID of the user.
      * @return The User object if found, otherwise null.
      */
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         return userRepository.findByUserId(id);
     }
 

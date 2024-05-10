@@ -38,10 +38,10 @@
         <button class="form-button" type="submit" th:id="submitPublicGarden" style="display: none;">Submit</button>
 
     </form>
-    <a th:href="@{${editGardenUri}}">
+    <a th:if="${owner}" th:href="@{${editGardenUri}}">
         <button class="form-button" type="button">Edit Garden</button>
     </a>
-    <a th:href="@{${newPlantUri}}">
+    <a th:if="${owner}" th:href="@{${newPlantUri}}">
         <button class="form-button" type="button">Add Plant</button>
     </a>
 
@@ -93,7 +93,8 @@
                 <td><span th:text="${plant.getDescription()}"> Description </span></td>
                 <td><span th:text="${plant.getCount()}"> Count </span></td>
                 <td><span th:text="${plant.getDateString()}"> Date Planted </span></td>
-                <td><a th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
+                <td><a th:if="${owner}"
+                       th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
                     <button type="button">Edit</button>
                 </a></td>
             </tr>
