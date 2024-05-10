@@ -2,10 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +29,8 @@ public class Tag {
 
     public Tag(String name, Garden garden) {
         this.name = name;
-        this.gardens = Arrays.asList(garden);
+        this.gardens = new ArrayList<>();
+        this.gardens.add(garden);
     }
 
     public String getName() {
@@ -41,5 +39,16 @@ public class Tag {
 
     public void addGarden(Garden garden) {
         gardens.add(garden);
+    }
+    public List<Garden> getGardens() {
+        return gardens;
+    }
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", gardens_count='" + gardens.size() + '\'' +
+                '}';
     }
 }
