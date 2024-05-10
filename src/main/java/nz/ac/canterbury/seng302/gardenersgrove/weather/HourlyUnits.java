@@ -1,7 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.weather;
 
-@java.lang.SuppressWarnings("all")
-class HourlyUnits {
+@java.lang.SuppressWarnings({"java:S100", "java:S116", "java:S117"})
+public class HourlyUnits {
     private String time;
     private String temperature_2m;
     private String weather_code;

@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.weather;
 
-@java.lang.SuppressWarnings("all")
+@java.lang.SuppressWarnings({"java:S100", "java:S116", "java:S117"})
 public class WeatherResponse {
     private double latitude;
     private double longitude;

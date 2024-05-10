@@ -2,8 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather;
 
 import java.util.List;
 
-@java.lang.SuppressWarnings("all")
-class Hourly {
+@java.lang.SuppressWarnings({"java:S100", "java:S116", "java:S117"})
+public class Hourly {
     private List<String> time;
     private List<Double> temperature_2m;
     private List<Integer> weather_code;
