@@ -25,7 +25,9 @@
             margin-left: 3vw;
             text-align: justify;
             color: #666;
-
+        }
+        p {
+            margin-left: 3vw;
         }
         #token {
             text-align: center;
@@ -38,7 +40,6 @@
 
 <div>
     <h1 id="welcome-title" th:text="'Welcome ' + ${firstName} + ' ' + ${lastName} + '!'"></h1>
-    <br />
     <br />
     <h3 id="instruction">Thank you for sign-up. To complete your registration, please copy this token and paste to your register webpage to register your email.</h3>
     <p id="token" th:text="${token}"></p>
