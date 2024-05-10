@@ -73,7 +73,7 @@ public class EmailSenderService {
             case "resetPasswordEmail":
                 user = userService.grantUserToken(user);
                 emailTitle = "GARDENER'S GROVE :: RESET PASSWORD ::";
-                URI tokenLink = UriConfig.resetPasswordUri(user.getToken());
+                URI tokenLink = UriConfig.resetPasswordUri(user.getToken(), user.getUserId());
                 model.put("tokenLink", tokenLink);
                 break;
             default:

@@ -78,12 +78,15 @@ public class LogInController {
      * @return The name of the template
      */
     @GetMapping(RESET_PASSWORD_URI_STRING)
-    public String resetPassword(Model model, @PathVariable String token) {
-        logger.info("GET {}", resetPasswordUri(token));
+    public String resetPassword(Model model,
+                                @PathVariable String token,
+                                @PathVariable long userId) {
+        logger.info("GET {}", resetPasswordUri(token, userId));
 
         logger.info(token);
 
-        model.addAttribute("resetPasswordUri", resetPasswordUri(token));
+        model.addAttribute("resetPasswordUri", resetPasswordUri(token, userId));
+        model.addAttribute("userId", userId);
         return "resetPassword";
     }
 
@@ -96,17 +99,17 @@ public class LogInController {
      * @return The name of the template.
      */
     @PostMapping(RESET_PASSWORD_URI_STRING)
-    public String confirmEditPassword(
+    public String submitResetPassword(
             @RequestParam String newPassword,
             @RequestParam String retypeNewPassword,
+            @PathVariable long userId,
             @PathVariable String token,
             Model model
     ) {
-        logger.info("POST {}", resetPasswordUri(token));
+        logger.info("POST {}", resetPasswordUri(token, userId));
 
-        User user = userService.getUserById(3);
+        User user = userService.getUserById((int) userId);
 
-        // send verification email
         emailSenderService.sendEmail(user, "passwordUpdatedEmail");
 
         return "redirect:" + viewProfileUri();
