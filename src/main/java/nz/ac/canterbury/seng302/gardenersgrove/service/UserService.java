@@ -176,10 +176,19 @@ public class UserService {
         return encoder.encode(passwordInPlainText);
     }
 
+    /**
+     * Gets all the users in the repository and returns a list of them all.
+     * @return a list of all the users in the repository.
+     */
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    /**
+     * Checks if any of the users' names contain the given string.
+     * @param searchString a string entered by the user in search of a user.
+     * @return a list of users whos' names contain the string.
+     */
     public List<User> getSearchedUser(String searchString) {
         List<User> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
