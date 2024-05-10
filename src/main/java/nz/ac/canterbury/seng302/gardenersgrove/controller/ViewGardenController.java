@@ -60,6 +60,7 @@ public class ViewGardenController extends GardensSidebar {
                     URI editGardenUri,
                     URI newPlantUri,
                     List<Plant> plants,
+                    boolean owner,
                     Model model
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
@@ -68,6 +69,7 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("editGardenUri", editGardenUri.toString());
         model.addAttribute("newPlantUri", newPlantUri.toString());
         model.addAttribute("plants", plants);
+        model.addAttribute("owner", owner);
         model.addAttribute("editPlantUriString", EDIT_PLANT_URI_STRING);
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
         return "viewGarden";
@@ -94,7 +96,35 @@ public class ViewGardenController extends GardensSidebar {
                         editGardenUri(gardenId),
                         newPlantUri(gardenId),
                         plantService.getAllPlantsInGarden(optionalGarden.get()),
-                        model
+                true,
+                model
+        );
+    }
+
+    /**
+     * Set up view garden page and display attributes but no editing features to friend of owner.
+     *
+     * @return Thyme leaf html template of the view garden page.
+     */
+    @GetMapping(VIEW_FRIENDS_GARDEN_URI_STRING)
+    public String displayFriendsGarden(
+            @PathVariable long gardenId,
+            @PathVariable long friendId,
+            Model model
+    ) throws NoSuchGardenException {
+        logger.info("GET {}", viewFriendsGardenUri(friendId, gardenId));
+
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty() || !optionalGarden.get().getOwner().getFriends().contains(userService.getAuthenticatedUser())) {
+            throw new NoSuchGardenException(gardenId);
+        }
+        return loadGardenPage(
+                optionalGarden.get(),
+                editGardenUri(gardenId),
+                newPlantUri(gardenId),
+                plantService.getAllPlantsInGarden(optionalGarden.get()),
+                false,
+                model
         );
     }
 

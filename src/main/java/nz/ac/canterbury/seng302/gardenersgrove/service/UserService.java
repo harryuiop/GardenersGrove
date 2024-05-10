@@ -124,7 +124,7 @@ public class UserService {
      * @param id The ID of the user.
      * @return The User object if found, otherwise null.
      */
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         return userRepository.findByUserId(id);
     }
 

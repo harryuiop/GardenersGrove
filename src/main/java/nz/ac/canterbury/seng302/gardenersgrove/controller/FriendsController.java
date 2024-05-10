@@ -9,8 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MANAGE_FRIENDS_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewFriendsUri;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 @Controller
 public class FriendsController {
@@ -30,6 +29,7 @@ public class FriendsController {
         logger.info("GET {}", viewFriendsUri());
 
         model.addAttribute("user", userService.getAuthenticatedUser());
+        model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
         return "manageFriends";
     }
 }

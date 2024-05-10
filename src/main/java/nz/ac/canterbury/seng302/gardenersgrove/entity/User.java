@@ -47,7 +47,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_ID", nullable = false)
-    private Integer userId;
+    private long userId;
 
     @Column(name = "profile_picture_file_name")
     private String profilePictureFileName;
@@ -98,7 +98,7 @@ public class User {
         this.friends = new ArrayList<>();
     }
 
-    public int getId() {
+    public long getId() {
         return userId;
     }
 
@@ -196,7 +196,9 @@ public class User {
      *
      * @return User's ID.
      */
-    public int getUserId() { return userId; }
+    public long getUserId() {
+        return userId;
+    }
 
     /**
      * Retrieves the user's password.
