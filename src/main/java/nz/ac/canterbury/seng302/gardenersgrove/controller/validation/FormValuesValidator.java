@@ -33,8 +33,8 @@ public class FormValuesValidator {
             URL url = new URL("https://www.purgomalum.com/service/containsprofanity?text=" + string);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            con.setConnectTimeout(5000);
-            con.setReadTimeout(5000);
+            con.setConnectTimeout(1000);
+            con.setReadTimeout(1000);
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
