@@ -34,4 +34,8 @@ public class ResetPasswordToken {
         this.token = token;
         this.userId = userId;
     }
+
+    public String getToken() {
+        return token;
+    }
 }

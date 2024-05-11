@@ -14,6 +14,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.context.IExpressionContext;
+import org.thymeleaf.linkbuilder.ILinkBuilder;
+
 import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.*;
@@ -66,6 +69,7 @@ public class EmailSenderService {
         String emailTitle;
         Map<String, Object> model = new HashMap<>();
 
+
         switch (template) {
             case "registrationEmail":
                 user = userService.grantUserToken(user);
@@ -78,7 +82,7 @@ public class EmailSenderService {
             case "resetPasswordEmail":
                 long userId = user.getUserId();
                 String token = UUID.randomUUID().toString();
-                resetPasswordTokenService.addToken(new ResetPasswordToken(token, userId));
+                resetPasswordTokenService.addToken(token, userId);
 
                 emailTitle = "GARDENER'S GROVE :: RESET PASSWORD ::";
                 URI tokenLink = UriConfig.resetPasswordUri(token, userId);

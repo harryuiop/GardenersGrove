@@ -9,6 +9,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -86,14 +87,17 @@ public class LogInController {
                                 @PathVariable String token,
                                 @PathVariable long userId) {
         logger.info("GET {}", resetPasswordUri(token, userId));
-
-        // TODO Verify token (uuid)
-        if (resetPasswordTokenService.checkTokenExists(token)) {
-            logger.info("success");
-        } else {
-            logger.info("fail");
+        String hashedToken = resetPasswordTokenService.getTokenByUserId(userId);
+        logger.info(hashedToken);
+        if (hashedToken != null) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            boolean tokenValid = encoder.matches(token, resetPasswordTokenService.getTokenByUserId(userId));
+            if (tokenValid) {
+                logger.info("success");
+            } else {
+                logger.info("fail");
+            }
         }
-        logger.info(token);
 
         model.addAttribute("resetPasswordUri", resetPasswordUri(token, userId));
         model.addAttribute("userId", userId);
@@ -120,7 +124,7 @@ public class LogInController {
 
         User user = userService.getUserById((int) userId);
 
-        emailSenderService.sendEmail(user, "passwordUpdatedEmail");
+        emailSenderService.sendEmail(user, "resetPasswordEmail");
 
         return "redirect:" + viewProfileUri();
     }
