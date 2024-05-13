@@ -409,6 +409,13 @@ public class ErrorChecker {
         return errors;
     }
 
+
+    /**
+     * Checks provided tag name is less than or equal to 25 characters and has valid characters
+     *
+     * @param tag tag name user provided
+     * @return String of error message
+     */
     public static String tagNameErrors(String tag) {
         String errors = "";
 
