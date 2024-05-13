@@ -3,18 +3,15 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.TagRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -73,6 +70,17 @@ public class ViewGardenControllerTest {
                 .andExpect(view().name("viewGarden"));
         Tag tag = tagService.findByName(tagName);
 
+        Assertions.assertNull(tag);
+    }
+
+    @Test
+    public void userInputTagNameExceed25CharactersAndHasInvalidCharacters () throws Exception {
+        String tagName = "Thi$ i$ inv@lid t@g name with inv@lid ch@r@cter which will give you @ lot of @nnoy";
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(1)).param("tagName", tagName))
+                .andExpect(status().isOk())
+                .andExpect(view().name("viewGarden"));
+
+        Tag tag = tagService.findByName(tagName);
         Assertions.assertNull(tag);
     }
 
