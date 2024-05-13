@@ -31,6 +31,9 @@ public class Garden {
     @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
     private List<Plant> plants;
 
+    @ManyToMany(mappedBy = "gardens", cascade = CascadeType.REMOVE)
+    private List<Tag> tags;
+
     /**
      * JPA required no-args constructor
      */
@@ -50,6 +53,7 @@ public class Garden {
         this.location = location;
         this.size = size;
         this.plants = new ArrayList<>();
+        this.tags = new ArrayList<>();
     }
 
 
@@ -101,6 +105,10 @@ public class Garden {
         this.plants.add(plant);
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
     @Override
     public String toString() {
         return "Garden{" +
@@ -108,6 +116,7 @@ public class Garden {
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
                 ", size=" + size +
+                ", tags=" + tags +
                 '}';
     }
 }
