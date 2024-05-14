@@ -12,10 +12,10 @@ public class DailyWeather {
     List<Integer> weatherCodes;
 
     @JsonProperty("temperature_2m_max")
-    List<Float> maximumTemperatures;
+    List<Double> maximumTemperatures;
 
     @JsonProperty("temperature_2m_min")
-    List<Float> minimumTemperatures;
+    List<Double> minimumTemperatures;
 
     public List<String> getTimeStamps() {
         return timeStamps;
@@ -33,19 +33,19 @@ public class DailyWeather {
         this.weatherCodes = weatherCodes;
     }
 
-    public List<Float> getMaximumTemperatures() {
+    public List<Double> getMaximumTemperatures() {
         return maximumTemperatures;
     }
 
-    public void setMaximumTemperatures(List<Float> maximumTemperatures) {
+    public void setMaximumTemperatures(List<Double> maximumTemperatures) {
         this.maximumTemperatures = maximumTemperatures;
     }
 
-    public List<Float> getMinimumTemperatures() {
+    public List<Double> getMinimumTemperatures() {
         return minimumTemperatures;
     }
 
-    public void setMinimumTemperatures(List<Float> minimumTemperatures) {
+    public void setMinimumTemperatures(List<Double> minimumTemperatures) {
         this.minimumTemperatures = minimumTemperatures;
     }
 
