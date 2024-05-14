@@ -30,7 +30,10 @@
                 <div class="form-field">
                     <label class="form-input" for="gardenDescription"> Garden Description: </label>
                     <input type="text" class="form-control" id="gardenDescription" th:name="gardenDescription"
-                           th:value="*{gardenDescription}" data-cy="gardenName" autofocus>
+                           th:value="*{gardenDescription}" data-cy="gardenDescription" autofocus>
+                    <p>Description Length: <span id="counter-display" class="tag is-success"
+                                                 th:text="${gardenDescription == null ? 0 : gardenDescription.length()}"></span>/512
+                    </p>
                     <p class="errorMessage" th:text="${gardenDescriptionError}"></p>
                 </div>
                 <br/>
@@ -102,6 +105,7 @@
     </div>
 </div>
 
+<script th:src="@{/javascript/characterCount.js}"></script>
 <script th:src="@{/javascript/locationAutocomplete.js}"></script>
 </body>
 </html>
