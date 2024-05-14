@@ -47,9 +47,10 @@ public class Garden {
      * @param location The details of the physical place where the garden is
      * @param size     The physical size of the garden in square metres
      */
-    public Garden(User owner, String name, Location location, Float size) {
+    public Garden(User owner, String name, String description, Location location, Float size) {
         this.owner = owner;
         this.name = name;
+        this.description = description;
         this.location = location;
         this.size = size;
         this.plants = new ArrayList<>();
