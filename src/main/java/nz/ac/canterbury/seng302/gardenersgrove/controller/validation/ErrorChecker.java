@@ -2,14 +2,13 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
@@ -39,6 +38,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> gardenFormErrors(
                     String gardenName, Float gardenSize,
+                    String gardenDescription,
                     String country,
                     String city,
                     String streetAddress,
@@ -53,6 +53,18 @@ public class ErrorChecker {
             errors.put(
                             "gardenNameError",
                             "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
+        }
+
+        if (!FormValuesValidator.checkDescription(gardenDescription) || !FormValuesValidator.checkContainsText(gardenDescription)) {
+            errors.put("gardenDescriptionError", "Description must be 512 characters or less and contain some text");
+        } else {
+            try {
+                if (FormValuesValidator.checkProfanity(gardenDescription)) {
+                    errors.put("gardenDescriptionError", "The description does not match the language standards of the app");
+                }
+            } catch (Exception e) {
+                errors.put("profanityCheckError", "Garden cannot be made public");
+            }
         }
 
         if (!FormValuesValidator.checkSize(gardenSize)) {

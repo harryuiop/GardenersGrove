@@ -21,6 +21,9 @@ public class Garden {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 
+    @Column(length = 512)
+    private String description;
+
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
@@ -30,6 +33,9 @@ public class Garden {
 
     @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
     private List<Plant> plants;
+
+    @ManyToMany(mappedBy = "gardens", cascade = CascadeType.REMOVE)
+    private List<Tag> tags;
 
     @Column
     private boolean publicGarden;
@@ -47,12 +53,14 @@ public class Garden {
      * @param location The details of the physical place where the garden is
      * @param size     The physical size of the garden in square metres
      */
-    public Garden(User owner, String name, Location location, Float size) {
+    public Garden(User owner, String name, String description, Location location, Float size) {
         this.owner = owner;
         this.name = name;
+        this.description = description;
         this.location = location;
         this.size = size;
         this.plants = new ArrayList<>();
+        this.tags = new ArrayList<>();
         this.publicGarden = false;
     }
 
@@ -69,12 +77,20 @@ public class Garden {
         this.size = newSize;
     }
 
+    public void setDescription(String newDescription) {
+        this.description = newDescription;
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Location getLocation() {
@@ -105,6 +121,10 @@ public class Garden {
         this.plants.add(plant);
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
     public boolean getPublicGarden() {
         return publicGarden;
     }
@@ -120,6 +140,7 @@ public class Garden {
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
                 ", size=" + size +
+                ", tags=" + tags +
                 '}';
     }
 }

@@ -29,8 +29,8 @@ public class GardenService {
     public void addDefaults() {
         User user1 = userService.getUserById(1);
         User user2 = userService.getUserById(2);
-        this.saveGarden(new Garden(user1, "Garden 1", new Location("New Zealand", "Christchurch"), 1F));
-        this.saveGarden(new Garden(user2, "Garden 2", new Location("New Zealand", "Christchurch"), 2F));
+        this.saveGarden(new Garden(user1, "Garden 1", null, new Location("New Zealand", "Christchurch"), 1F));
+        this.saveGarden(new Garden(user2, "Garden 2", null, new Location("New Zealand", "Christchurch"), 2F));
     }
 
     public List<Garden> getAllGardens(UserService userService) {
