@@ -128,4 +128,11 @@ public class LogInController {
 
         return "redirect:" + viewProfileUri();
     }
+
+    @GetMapping(RESET_PASSWORD_EMAIL)
+    public String returnForgotPasswordForm () {
+        logger.info("GET {}", resetPasswordEmailUri());
+
+        return "forgotPasswordForm";
+    }
 }
