@@ -1,6 +1,8 @@
 # SENG302 Team 400 Project
 
-Project's tech stack includes ```gradle```, ```Spring Boot```, ```Thymeleaf```, ```Spring Boot Starter Mail```, ```MapTiler``` and ```GitLab CI```.
+Project's tech stack
+includes ```gradle```, ```Spring Boot```, ```Thymeleaf```, ```Spring Boot Starter Mail```, ```MapTiler```,```PurgoMalum```
+and ```GitLab CI```.
 
 ## How to run tests
 
