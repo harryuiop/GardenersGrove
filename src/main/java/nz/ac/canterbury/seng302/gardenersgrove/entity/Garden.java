@@ -40,6 +40,9 @@ public class Garden {
     @Column
     private boolean publicGarden;
 
+    @Column
+    private boolean verifiedDescription;
+
     /**
      * JPA required no-args constructor
      */
@@ -53,7 +56,7 @@ public class Garden {
      * @param location The details of the physical place where the garden is
      * @param size     The physical size of the garden in square metres
      */
-    public Garden(User owner, String name, String description, Location location, Float size) {
+    public Garden(User owner, String name, String description, Location location, Float size, boolean verifiedDescription) {
         this.owner = owner;
         this.name = name;
         this.description = description;
@@ -62,6 +65,7 @@ public class Garden {
         this.plants = new ArrayList<>();
         this.tags = new ArrayList<>();
         this.publicGarden = false;
+        this.verifiedDescription = verifiedDescription;
     }
 
 
@@ -131,6 +135,14 @@ public class Garden {
 
     public void setPublicGarden(boolean publicGarden) {
         this.publicGarden = publicGarden;
+    }
+
+    public boolean getVerifiedDescription() {
+        return verifiedDescription;
+    }
+
+    public void setVerifiedDescription(boolean verifiedDescription) {
+        this.verifiedDescription = verifiedDescription;
     }
 
     @Override

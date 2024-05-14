@@ -196,10 +196,13 @@ public class ViewGardenController extends GardensSidebar {
     @PostMapping(MAKE_GARDEN_PUBLIC)
     public String makeGardenPublic(@RequestParam long gardenId, @RequestParam(required = false) String publicGarden)
     throws NoSuchGardenException {
-        boolean isGardenPublic = publicGarden == null ? false : (publicGarden.equals("true"));
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
             throw new NoSuchGardenException(gardenId);
+        }
+        boolean isGardenPublic = false;
+        if (optionalGarden.get().getVerifiedDescription()) {
+            isGardenPublic = publicGarden == null ? false : (publicGarden.equals("true"));
         }
         optionalGarden.get().setPublicGarden(isGardenPublic);
         gardenService.saveGarden(optionalGarden.get());
