@@ -94,12 +94,13 @@ public class ViewGardenController extends GardensSidebar {
                 !optionalGarden.get().getPublicGarden())) {
             throw new NoSuchGardenException(gardenId);
         }
+        boolean owner = optionalGarden.get().getOwner() == userService.getAuthenticatedUser();
         return loadGardenPage(
                         optionalGarden.get(),
                         editGardenUri(gardenId),
                         newPlantUri(gardenId),
                         plantService.getAllPlantsInGarden(optionalGarden.get()),
-                true,
+                owner,
                 model
         );
     }
