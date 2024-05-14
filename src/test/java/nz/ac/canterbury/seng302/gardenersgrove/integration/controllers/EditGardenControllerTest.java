@@ -82,7 +82,7 @@ class EditGardenControllerTest {
         initialGardenLocation.setSuburb(initialSuburb);
         initialGardenLocation.setPostcode(initialPostcode);
 
-        Garden garden = new Garden(user, initialGardenName, null, initialGardenLocation, initialGardenSize);
+        Garden garden = new Garden(user, initialGardenName, null, initialGardenLocation, initialGardenSize, true);
 
         gardenRepository.save(garden);
         gardenId = garden.getId();

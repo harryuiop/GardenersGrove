@@ -45,8 +45,8 @@ class TagServiceTest {
 
     @Test
     void saveExistingTag() {
-        Garden garden1 = new Garden(user, "Test Garden1", new Location("New Zealand", "Christchurch"), null);
-        Garden garden2 = new Garden(user, "Test Garden2", new Location("New Zealand", "Christchurch"), null);
+        Garden garden1 = new Garden(user, "Test Garden1", null, new Location("New Zealand", "Christchurch"), null, true);
+        Garden garden2 = new Garden(user, "Test Garden2", null, new Location("New Zealand", "Christchurch"), null, true);
         gardenRepository.save(garden1);
         gardenRepository.save(garden2);
 
@@ -62,7 +62,7 @@ class TagServiceTest {
 
     @Test
     void saveNewTag() {
-        Garden garden1 = new Garden(user, "Test Garden1", new Location("New Zealand", "Christchurch"), null);
+        Garden garden1 = new Garden(user, "Test Garden1", null, new Location("New Zealand", "Christchurch"), null, true);
         gardenRepository.save(garden1);
 
         tagService.saveTag("tag", garden1);
