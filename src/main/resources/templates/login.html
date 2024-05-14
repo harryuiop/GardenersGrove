@@ -14,7 +14,7 @@
             <p th:text="${accountActiveMessage}" style="font-size: small; font-style: italic;"></p>
         </div>
         <div class="loginForm">
-            <form th:action="@{login}" method="post" name="loginForm">
+            <form th:action="@{${loginUri}}" method="post" name="loginForm">
                 <label for="email">Email Address:</label>
                 <input
                         class="inputStyle"
@@ -37,8 +37,8 @@
 
                 <input class="inputStyle" id="sign_in_button" type="submit" value="Sign In">
             </form>
-            <p class="registerLink">Don't have an account? <a th:href="@{/register}">Register here.</a></p>
-            <p class="registerLink">Don't want to login? <a th:href="@{/}">Cancel.</a></p>
+            <p class="registerLink">Don't have an account? <a th:href="@{${registerUri}}">Register here.</a></p>
+            <p class="registerLink">Don't want to login? <a th:href="@{${homeUri}}">Cancel.</a></p>
         </div>
     </main>
 </div>

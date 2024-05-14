@@ -500,6 +500,31 @@ textarea {
     background-color: var(--dark-neutral);
 }
 
+.display-tags {
+    padding: 0.5rem;
+}
+
+.display-tags .tag-text:hover {
+    font-weight: bold;
+    color: var(--dark-color);
+    cursor: pointer;
+}
+
+#tag-form button {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 1rem;
+    background-color: var(--neutral);
+    color: #fff;
+    text-decoration: none;
+    width: 3rem;
+}
+
+#tag-form button:hover {
+    background-color: var(--dark-neutral);
+    cursor: pointer;
+}
+
 
 /* ------------------ Error page ------------------- */
 .errorBox {

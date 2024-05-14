@@ -124,7 +124,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> plantFormErrors(
                     String plantName,
-                    Integer plantCount,
+                    String plantCount,
                     String plantDescription,
                     MultipartFile imageFile
     ) {
@@ -138,8 +138,8 @@ public class ErrorChecker {
             );
         }
 
-        if (!FormValuesValidator.checkCount(plantCount)) {
-            errors.put("plantCountError", "Plant count must be positive number");
+        if (!FormValuesValidator.checkValidPlantCount(plantCount)) {
+            errors.put("plantCountError", "Plant count must be positive number, and only contain the digits 0-9");
         }
 
         if (!FormValuesValidator.checkDescription(plantDescription)) {
