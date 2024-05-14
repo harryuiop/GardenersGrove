@@ -72,6 +72,7 @@ public class LogInController {
         model.addAttribute("loginUri", loginUri());
         model.addAttribute("homeUri", homeUri());
         model.addAttribute("registerUri", registerUri());
+        model.addAttribute("forgotPasswordUri", resetPasswordEmailUri());
         return "login";
     }
 
