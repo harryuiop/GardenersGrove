@@ -27,27 +27,22 @@ public class FormValuesValidator {
      * @param string is the test that needs checking
      * @return true if contains profanity, false otherwise
      */
-    public static boolean checkProfanity(String string) {
-        try {
-            string = string.replace(" ", "%20");
-            URL url = new URL("https://www.purgomalum.com/service/containsprofanity?text=" + string);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setConnectTimeout(1000);
-            con.setReadTimeout(1000);
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuilder content = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-            in.close();
-            return Objects.equals(String.valueOf(content), "true");
-        } catch (Exception e) {
-            logger.info(e.toString());
-            return false;
+    public static boolean checkProfanity(String string) throws Exception {
+        string = string.replace(" ", "%20");
+        URL url = new URL("https://www.purgomalum.com/service/containsprofanity?text=" + string);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setConnectTimeout(1000);
+        con.setReadTimeout(1000);
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuilder content = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
         }
+        in.close();
+        return Objects.equals(String.valueOf(content), "true");
     }
 
     /**

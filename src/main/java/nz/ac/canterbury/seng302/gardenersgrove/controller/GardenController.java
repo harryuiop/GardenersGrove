@@ -109,9 +109,11 @@ public class GardenController extends GardensSidebar {
      * @param gardenId The ID number of the garden.
      * @param model    The map used to pass data through to thymeleaf.
      */
-    public void loadLocationErrorMessagePopup(long gardenId, Model model) {
+    public void loadErrorMessagePopup(long gardenId, boolean locationFound, boolean profanityCheckWorked, Model model) {
         model.addAttribute("viewGardenUri", viewGardenUri(gardenId));
         model.addAttribute("editGardenUri", editGardenUri(gardenId));
+        model.addAttribute("locationFound", locationFound);
+        model.addAttribute("profanityCheckWorked", profanityCheckWorked);
     }
 
     /**
@@ -164,7 +166,10 @@ public class GardenController extends GardensSidebar {
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
                 gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode
         );
-        if (errors.isEmpty()) {
+        if (errors.isEmpty() || (errors.containsKey("profanityCheckError") && errors.size() == 1)) {
+
+            boolean profanityCheckWorked = !errors.containsKey("profanityCheckError");
+
             Location locationEntity = new Location(country, city);
 
             boolean locationFound = updateLocationCoordinates(locationEntity, streetAddress, country, city);
@@ -175,10 +180,10 @@ public class GardenController extends GardensSidebar {
             Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName, locationEntity, gardenSize);
             gardenService.saveGarden(garden);
 
-            if (locationFound) {
+            if (locationFound && profanityCheckWorked) {
                 return "redirect:" + viewGardenUri(garden.getId());
             } else {
-                loadLocationErrorMessagePopup(garden.getId(), model);
+                loadErrorMessagePopup(garden.getId(), locationFound, profanityCheckWorked, model);
             }
         }
         return loadGardenForm(
@@ -259,10 +264,11 @@ public class GardenController extends GardensSidebar {
         Map<String, String> errors = ErrorChecker.gardenFormErrors(
                 gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode
         );
-        if (errors.isEmpty()) {
+        if (errors.isEmpty() || (errors.containsKey("profanityCheckError") && errors.size() == 1)) {
             Location locationEntity = garden.getLocation();
 
             boolean locationFound = true;
+            boolean profanityCheckWorked = !errors.containsKey("profanityCheckError");
             // Get new location from API request
             if (locationEntity.getStreetAddress() == null
                     || !locationEntity.getStreetAddress().equals(streetAddress)
@@ -281,10 +287,10 @@ public class GardenController extends GardensSidebar {
             garden.setDescription(gardenDescription);
             garden.setLocation(locationEntity);
             gardenService.saveGarden(garden);
-            if (locationFound) {
+            if (locationFound && profanityCheckWorked) {
                 return "redirect:" + viewGardenUri(garden.getId());
             } else {
-                loadLocationErrorMessagePopup(gardenId, model);
+                loadErrorMessagePopup(gardenId, locationFound, profanityCheckWorked, model);
             }
         }
         return loadGardenForm(
