@@ -1,5 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.weather;
 
-public class CurrentWeatherData {
-
+public interface CurrentWeatherData {
+     String getDescription();
+     double getTemperature();
+     int getHumidity();
 }

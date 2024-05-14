@@ -1,9 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-@java.lang.SuppressWarnings("all")
 public class WeatherResponse {
     @JsonProperty("latitude")
     private double latitude;
