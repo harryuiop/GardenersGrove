@@ -11,7 +11,7 @@ public class UriConfig {
     public static final String REGISTER_URI_STRING = "/register";
     public static final String VERIFY_EMAIL_URI_STRING = "/register/verify";
     public static final String RESET_PASSWORD_URI_STRING = "/login/reset-password/verify/{token}/{userId}";
-    public static final String RESET_PASSWORD_EMAIL_URI_STRING = "/login/reset-password-email";
+    public static final String RESET_PASSWORD_EMAIL_URI_STRING = "/login/reset-password/email";
     public static final String VIEW_PROFILE_URI_STRING = "/profile";
     public static final String EDIT_PROFILE_URI_STRING = "/profile/edit";
     public static final String EDIT_PASSWORD_URI_STRING = "/profile/edit/password";

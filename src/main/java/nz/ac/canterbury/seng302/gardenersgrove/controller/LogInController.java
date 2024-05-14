@@ -72,7 +72,7 @@ public class LogInController {
         model.addAttribute("loginUri", loginUri());
         model.addAttribute("homeUri", homeUri());
         model.addAttribute("registerUri", registerUri());
-        model.addAttribute("forgotPasswordUri", resetPasswordEmailUri());
+        model.addAttribute("resetPasswordEmailUri", resetPasswordEmailUri());
         return "login";
     }
 
@@ -89,17 +89,11 @@ public class LogInController {
                                 @PathVariable long userId) {
         logger.info("GET {}", resetPasswordUri(token, userId));
         String hashedToken = resetPasswordTokenService.getTokenByUserId(userId);
-        logger.info(hashedToken);
-        if (hashedToken != null) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            boolean tokenValid = encoder.matches(token, resetPasswordTokenService.getTokenByUserId(userId));
-            if (tokenValid) {
-                logger.info("success");
-            } else {
-                logger.info("fail");
-            }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (hashedToken == null || !encoder.matches(token, resetPasswordTokenService.getTokenByUserId(userId))) {
+            logger.info("Invalid token, redirecting to login page");
+            return "redirect:" + loginUri();
         }
-
         model.addAttribute("resetPasswordUri", resetPasswordUri(token, userId));
         model.addAttribute("userId", userId);
         return "resetPassword";
@@ -114,7 +108,7 @@ public class LogInController {
      * @return The name of the template.
      */
     @PostMapping(RESET_PASSWORD_URI_STRING)
-    public String submitResetPassword(
+    public String confirmResetPassword(
             @RequestParam String newPassword,
             @RequestParam String retypeNewPassword,
             @PathVariable long userId,
@@ -125,15 +119,44 @@ public class LogInController {
 
         User user = userService.getUserById((int) userId);
 
-        emailSenderService.sendEmail(user, "resetPasswordEmail");
+        if (user == null) {
+            logger.info("Invalid user, redirecting to login page");
+            return "redirect:" + loginUri();
+        }
+
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+
+        if (!errors.isEmpty()) {
+            model.addAllAttributes(errors);
+            model.addAttribute("newPassword", newPassword);
+            model.addAttribute("retypeNewPassword", retypeNewPassword);
+            return "resetPassword";
+        }
+
+        user.setPassword(userService.hashUserPassword(newPassword));
+        userService.updateUser(user);
+
+        // send verification email
+        emailSenderService.sendEmail(user, "passwordUpdatedEmail");
 
         return "redirect:" + viewProfileUri();
     }
-
     @GetMapping(RESET_PASSWORD_EMAIL_URI_STRING)
-    public String returnForgotPasswordForm () {
+    public String returnForgotPasswordForm(Model model) {
         logger.info("GET {}", resetPasswordEmailUri());
 
+        model.addAttribute("resetPasswordEmailUri", resetPasswordEmailUri());
         return "forgotPasswordForm";
+    }
+
+    @PostMapping(RESET_PASSWORD_EMAIL_URI_STRING)
+    public String submitEmailForResetPassword(Model model,
+                                              @RequestParam String userEmail) {
+        logger.info("POST {}", resetPasswordEmailUri());
+        User user = userService.getUserByEmail(userEmail);
+        if (user != null) emailSenderService.sendEmail(user, "resetPasswordEmail");
+        model.addAttribute("confirmationMessage", true);
+        return "forgotPasswordForm";
+
     }
 }

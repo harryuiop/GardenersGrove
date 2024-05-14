@@ -671,7 +671,7 @@ class ErrorCheckerTest {
         String oldPassword = "";
         String newPassword = "Password1!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("oldPasswordError", "Password cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
@@ -682,7 +682,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password!1valid";
         String newPassword = "Password1!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("oldPasswordError", "Your old password is incorrect");
         Assertions.assertEquals(correctErrors, errors);
@@ -692,7 +692,7 @@ class ErrorCheckerTest {
          String oldPassword = "Password1!";
          String newPassword = "short";
          String retypeNewPassword = "Password1!";
-         Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+         Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
          Map<String, String> correctErrors = new HashMap<>();
          correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
          Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -703,7 +703,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiop";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -714,7 +714,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "password1!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -725,7 +725,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "PASSWORD1!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -736,7 +736,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
         Assertions.assertTrue(errors.containsValue("Password cannot be empty"));
     }
@@ -745,7 +745,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -757,7 +757,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -768,7 +768,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "short";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
         Assertions.assertTrue(errors.containsValue("Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"));
 
@@ -778,7 +778,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiop";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -789,7 +789,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -800,7 +800,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "PASSWORD1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -811,7 +811,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Password cannot be empty");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -822,7 +822,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "Password1";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -833,7 +833,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "Password!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -844,7 +844,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "NewPassword1!";
         String retypeNewPassword = "NewPassword1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Assertions.assertTrue(errors.isEmpty());
     }
     @Test
@@ -852,7 +852,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "NewPassword1!";
         String retypeNewPassword = "BadPassword!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("passwordConfirmError", "The new passwords do not match");
         Assertions.assertTrue(errors.containsKey("passwordConfirmError"));
