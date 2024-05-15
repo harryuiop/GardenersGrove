@@ -11,7 +11,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Featu
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.LocationService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.WeatherService;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
