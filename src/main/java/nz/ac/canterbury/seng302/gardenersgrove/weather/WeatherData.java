@@ -2,23 +2,20 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather;
 
 import java.time.LocalDate;
 
-public class ForecastWeatherData {
+public class WeatherData {
     private final LocalDate date;
-    private final double maximumTemperature;
-    private final double minimumTemperature;
+    private final double temperature;
     private final double humidity;
     private final String weatherDescription;
 
-    public ForecastWeatherData(
+    public WeatherData(
             LocalDate date,
-            double maximumTemperature,
-            double minimumTemperature,
+            double temperature,
             String weatherDescription,
             double humidity
     ) {
         this.date = date;
-        this.maximumTemperature = maximumTemperature;
-        this.minimumTemperature = minimumTemperature;
+        this.temperature = temperature;
         this.weatherDescription = weatherDescription;
         this.humidity = humidity;
     }
@@ -27,12 +24,8 @@ public class ForecastWeatherData {
         return date;
     }
 
-    public double getMaximumTemperature() {
-        return maximumTemperature;
-    }
-
-    public double getMinimumTemperature() {
-        return minimumTemperature;
+    public double temperature() {
+        return temperature;
     }
 
     public double getHumidity() {
@@ -45,10 +38,9 @@ public class ForecastWeatherData {
 
     @Override
     public String toString() {
-        return "ForecastWeatherData{" +
+        return "WeatherData{" +
                 "date=" + date +
-                ", maximumTemperature=" + maximumTemperature +
-                ", minimumTemperature=" + minimumTemperature +
+                ", temperature=" + temperature +
                 ", humidity=" + humidity +
                 ", weatherDescription='" + weatherDescription + '\'' +
                 '}';

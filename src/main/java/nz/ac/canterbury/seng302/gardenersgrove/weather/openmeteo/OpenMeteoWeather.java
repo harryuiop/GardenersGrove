@@ -3,7 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nz.ac.canterbury.seng302.gardenersgrove.weather.ForecastWeatherData;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.springframework.stereotype.Component;
@@ -15,6 +15,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class OpenMeteoWeather implements WeatherService {
      * @throws InterruptedException if the Http request send operation is interrupted
      * @throws UnableToFetchWeatherException if the server request fails
      */
-    private String getJsonFromApi(float latitude, float longitude) throws InterruptedException {
+    private String getJsonFromApi(double latitude, double longitude) throws InterruptedException {
         URI uri = new DefaultUriBuilderFactory().builder()
                 .scheme("https")
                 .host("api.open-meteo.com")
@@ -41,7 +42,7 @@ public class OpenMeteoWeather implements WeatherService {
                 .queryParam("longitude", longitude)
                 .queryParam("hourly", "relative_humidity_2m")
                 .queryParam("current", "temperature_2m,relative_humidity_2m,weather_code")
-                .queryParam("daily", "weather_code,temperature_2m_max,temperature_2m_min")
+                .queryParam("daily", "weather_code,temperature_2m_max")
                 .queryParam("timezone", "auto")
                 .queryParam("past_days", 2)
                 .queryParam("forecast_days", 4)
@@ -69,7 +70,8 @@ public class OpenMeteoWeather implements WeatherService {
      * @throws InterruptedException if the Http request send operation is interrupted
      * @throws UnableToFetchWeatherException if the server request fails or JSON parsing fails
      */
-    public List<ForecastWeatherData> getWeatherData(float latitude, float longitude) throws InterruptedException {
+    @Override
+    public List<WeatherData> getWeatherData(double latitude, double longitude) throws InterruptedException {
         try {
             WeatherResponse response = objectMapper.readValue(getJsonFromApi(latitude, longitude), WeatherResponse.class);
             return convertWeatherResponse(response);
@@ -84,22 +86,29 @@ public class OpenMeteoWeather implements WeatherService {
      * @param response a response from the Open-Meteo API
      * @return an array list of ForecastWeatherData objects
      */
-    private List<ForecastWeatherData> convertWeatherResponse(WeatherResponse response) {
-        ArrayList<ForecastWeatherData> dataArrayList = new ArrayList<>();
+    private List<WeatherData> convertWeatherResponse(WeatherResponse response) {
+        ArrayList<WeatherData> dataArrayList = new ArrayList<>();
         List<String> timeStamps = response.getDailyWeather().getTimeStamps();
-        List<Double> maxTemps = response.getDailyWeather().getMaximumTemperatures();
-        List<Double> minTemps = response.getDailyWeather().getMinimumTemperatures();
+        List<Double> temps = response.getDailyWeather().getMaximumTemperatures();
         List<Integer> weatherCodes = response.getDailyWeather().getWeatherCodes();
         List<Integer> dailyHumidity = getDailyHumidity(response);
         for (int i=0; i < timeStamps.size(); i++) {
-            dataArrayList.add(new ForecastWeatherData(
-                    LocalDate.parse(timeStamps.get(i)),
-                    maxTemps.get(i),
-                    minTemps.get(i),
+            LocalDate date = LocalDate.parse(timeStamps.get(i));
+            dataArrayList.add(new WeatherData(
+                    date,
+                    temps.get(i),
                     WeatherResponse.weatherCodes.get(weatherCodes.get(i))[0],
                     dailyHumidity.get(i)
             ));
         }
+
+        // add the current weather data into the array list
+        double currentTemp = response.getCurrentWeather().getTemperature2m();
+        LocalDate currentDate = LocalDateTime.parse(response.getCurrentWeather().getTime()).toLocalDate();
+        String currentDescription = WeatherResponse.weatherCodes.get(response.getCurrentWeather().getWeatherCode())[0];
+        int currentHumidity = response.getCurrentWeather().getRelativeHumidity2m();
+        WeatherData currentWeatherData = new WeatherData(currentDate, currentTemp, currentDescription, currentHumidity);
+        dataArrayList.set(2, currentWeatherData);
         return dataArrayList;
     }
 

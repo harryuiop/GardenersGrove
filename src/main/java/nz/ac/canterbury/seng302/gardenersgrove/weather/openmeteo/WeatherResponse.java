@@ -1,7 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import nz.ac.canterbury.seng302.gardenersgrove.weather.CurrentWeatherData;
 
 import java.util.HashMap;
 
@@ -61,44 +60,100 @@ public class WeatherResponse {
                 '}';
     }
 
-    public HourlyWeather getHourlyWeather() {
-        return hourlyWeather;
+    public double getLatitude() {
+        return latitude;
     }
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
+    public double getLongitude() {
+        return longitude;
+    }
+
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public void setGenerationtime_ms(double timeToGenerate) {
+    public double getTimeToGenerate() {
+        return timeToGenerate;
+    }
+
+    public void setTimeToGenerate(double timeToGenerate) {
         this.timeToGenerate = timeToGenerate;
     }
 
-    public void setUtc_offset_seconds(int utcOffsetSeconds) {
+    public int getUtcOffetTime() {
+        return utcOffetTime;
+    }
+
+    public void setUtcOffetTime(int utcOffetTime) {
         this.utcOffetTime = utcOffetTime;
+    }
+
+    public String getTimezone() {
+        return timezone;
     }
 
     public void setTimezone(String timezone) {
         this.timezone = timezone;
     }
 
-    public void setTimezone_abbreviation(String timezoneAbbreviation) {
+    public String getTimezoneAbbreviation() {
+        return timezoneAbbreviation;
+    }
+
+    public void setTimezoneAbbreviation(String timezoneAbbreviation) {
         this.timezoneAbbreviation = timezoneAbbreviation;
+    }
+
+    public double getElevation() {
+        return elevation;
     }
 
     public void setElevation(double elevation) {
         this.elevation = elevation;
     }
 
-    public void setHourly_units(HourlyUnits hourlyUnits) {
+    public HourlyUnits getHourlyUnits() {
+        return hourlyUnits;
+    }
+
+    public void setHourlyUnits(HourlyUnits hourlyUnits) {
         this.hourlyUnits = hourlyUnits;
+    }
+
+    public HourlyWeather getHourlyWeather() {
+        return hourlyWeather;
     }
 
     public void setHourlyWeather(HourlyWeather hourlyWeather) {
         this.hourlyWeather = hourlyWeather;
+    }
+
+    public DailyUnits getDailyUnits() {
+        return dailyUnits;
+    }
+
+    public void setDailyUnits(DailyUnits dailyUnits) {
+        this.dailyUnits = dailyUnits;
+    }
+
+    public CurrentWeather getCurrentWeather() {
+        return currentWeather;
+    }
+
+    public void setCurrentWeather(CurrentWeather currentWeather) {
+        this.currentWeather = currentWeather;
+    }
+
+    public CurrentUnits getCurrentUnits() {
+        return currentUnits;
+    }
+
+    public void setCurrentUnits(CurrentUnits currentUnits) {
+        this.currentUnits = currentUnits;
     }
 
     protected static final HashMap<Integer, String[]> weatherCodes = new HashMap<>();
