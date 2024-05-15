@@ -5,6 +5,9 @@
     <title>Gardeners' Grove</title>
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
 </head>
 <body>
 <div th:insert="~{fragments/fragments :: title}">Header</div>
@@ -110,8 +113,6 @@
         </table>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-<script th:src="@{/javascript/tagAutocomplete.js}"></script>
 <script>
     function submitForm(id) {
         console.log("Image Uploaded on form: " + id);
