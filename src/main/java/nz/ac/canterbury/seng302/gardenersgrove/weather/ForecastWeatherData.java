@@ -13,12 +13,14 @@ public class ForecastWeatherData {
             LocalDate date,
             double maximumTemperature,
             double minimumTemperature,
-            String weatherDescription
+            String weatherDescription,
+            double humidity
     ) {
         this.date = date;
         this.maximumTemperature = maximumTemperature;
         this.minimumTemperature = minimumTemperature;
         this.weatherDescription = weatherDescription;
+        this.humidity = humidity;
     }
 
     public LocalDate getDate() {
@@ -39,5 +41,16 @@ public class ForecastWeatherData {
 
     public String getWeatherDescription() {
         return weatherDescription;
+    }
+
+    @Override
+    public String toString() {
+        return "ForecastWeatherData{" +
+                "date=" + date +
+                ", maximumTemperature=" + maximumTemperature +
+                ", minimumTemperature=" + minimumTemperature +
+                ", humidity=" + humidity +
+                ", weatherDescription='" + weatherDescription + '\'' +
+                '}';
     }
 }
