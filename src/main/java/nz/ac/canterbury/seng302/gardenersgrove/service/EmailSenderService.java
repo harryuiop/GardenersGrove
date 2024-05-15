@@ -39,6 +39,7 @@ public class EmailSenderService {
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
     private final UserService userService;
+    private String baseURL;
 
     private final ResetPasswordTokenService resetPasswordTokenService;
 
@@ -65,7 +66,7 @@ public class EmailSenderService {
      * @param user User Entity
      * @param template html file containing the template for the email to be sent
      */
-    public boolean sendEmail(User user, String template) {
+    public boolean sendEmail(User user, String template, String...url) {
         String emailTitle;
         Map<String, Object> model = new HashMap<>();
 
@@ -85,7 +86,7 @@ public class EmailSenderService {
                 resetPasswordTokenService.addToken(token, userId);
 
                 emailTitle = "GARDENER'S GROVE :: RESET PASSWORD ::";
-                URI tokenLink = UriConfig.resetPasswordUri(token, userId);
+                String tokenLink = url[0] + UriConfig.resetPasswordUri(token, userId);
                 model.put("tokenLink", tokenLink);
                 break;
             default:

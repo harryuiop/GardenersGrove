@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
@@ -150,11 +151,13 @@ public class LogInController {
     }
 
     @PostMapping(RESET_PASSWORD_EMAIL_URI_STRING)
-    public String submitEmailForResetPassword(Model model,
+    public String submitEmailForResetPassword(HttpServletRequest req,
+                                              Model model,
                                               @RequestParam String userEmail) {
         logger.info("POST {}", resetPasswordEmailUri());
         User user = userService.getUserByEmail(userEmail);
-        if (user != null) emailSenderService.sendEmail(user, "resetPasswordEmail");
+        if (user != null) emailSenderService.sendEmail(user, "resetPasswordEmail",
+                req.getRequestURL().toString().split("/login/reset-password/email")[0]);
         model.addAttribute("confirmationMessage", true);
         return "forgotPasswordForm";
 
