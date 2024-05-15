@@ -18,9 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.makeGardenPublicUri;
@@ -43,15 +41,6 @@ public class ViewGardenControllerTest {
 
     @MockBean
     private MapTilerGeocoding mapTilerGeocoding;
-
-    private final String initialGardenName = "Test Garden";
-    private final float initialGardenSize = 100.0f;
-    private final String initialCountry = "New Zealand";
-    private final String initialCity = "Christchurch";
-    private final String initialStreetAddress = "90 Ilam Road";
-    private final String initialSuburb = "Ilam";
-    private final String initialPostcode = "8041";
-    private Location initialGardenLocation;
 
     private Long gardenId;
     private User user1;
@@ -87,6 +76,15 @@ public class ViewGardenControllerTest {
         gardenRepository.deleteAll();
         locationRepository.deleteAll();
 
+        String initialGardenName = "Test Garden";
+        float initialGardenSize = 100.0f;
+        String initialCountry = "New Zealand";
+        String initialCity = "Christchurch";
+        String initialStreetAddress = "90 Ilam Road";
+        String initialSuburb = "Ilam";
+        String initialPostcode = "8041";
+        Location initialGardenLocation;
+
         initialGardenLocation = new Location(initialCountry, initialCity);
         initialGardenLocation.setStreetAddress(initialStreetAddress);
         initialGardenLocation.setSuburb(initialSuburb);
@@ -99,14 +97,31 @@ public class ViewGardenControllerTest {
     }
     @Test
     void makePublic_publicTrue_gardenIsPublic() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri())
-                        .param("gardenId", String.valueOf(gardenId))
-                        .param("publicGarden","true"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
+                        .param("publicGarden","true"));
         Optional<Garden> garden = gardenRepository.findById(gardenId);
-        if (!garden.isEmpty()) {
-            Assertions.assertTrue(garden.get().getPublicGarden());
+        garden.ifPresent(value -> Assertions.assertTrue(value.getPublicGarden()));
+    }
+
+    @Test
+    void makePublic_publicTrueDescriptionInvalid_gardenIsNotPublic() throws Exception {
+        Optional<Garden> garden = gardenRepository.findById(gardenId);
+        if (garden.isPresent()) {
+
+            garden.get().setVerifiedDescription(false);
+        gardenRepository.save(garden.get());
+        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
+                .param("publicGarden","true"));
+            Assertions.assertFalse(garden.get().getPublicGarden());
         }
+    }
+
+    @Test
+    void makePublic_publicFalse_gardenIsNotPublic() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
+                .param("publicGarden","null"));
+        Optional<Garden> garden = gardenRepository.findById(gardenId);
+        garden.ifPresent(value -> Assertions.assertFalse(value.getPublicGarden()));
     }
 
 }

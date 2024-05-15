@@ -6,7 +6,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuc
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
@@ -78,7 +77,7 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
-        model.addAttribute("makeGardenPublic", MAKE_GARDEN_PUBLIC);
+        model.addAttribute("makeGardenPublic", makeGardenPublicUri(garden.getId()));
         return "viewGarden";
     }
 
@@ -187,14 +186,14 @@ public class ViewGardenController extends GardensSidebar {
     }
 
     /**
-     * Chnages the garden so that it is public (viewable by all)
+     * Changes the garden so that it is public (viewable by all)
      * @param gardenId                  The Id of the garden being made public
      * @param publicGarden              A string of whether the garden should be public or not
      * @return                          The edit garden page the user was already on
      * @throws NoSuchGardenException    If the garden can't be found by the given Id will throw this error
      */
-    @PostMapping(MAKE_GARDEN_PUBLIC)
-    public String makeGardenPublic(@RequestParam long gardenId, @RequestParam(required = false) String publicGarden)
+    @PostMapping(MAKE_GARDEN_PUBLIC_STRING)
+    public String makeGardenPublic(@PathVariable long gardenId, @RequestParam(required = false) String publicGarden)
     throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -202,7 +201,7 @@ public class ViewGardenController extends GardensSidebar {
         }
         boolean isGardenPublic = false;
         if (optionalGarden.get().getVerifiedDescription()) {
-            isGardenPublic = publicGarden == null ? false : (publicGarden.equals("true"));
+            isGardenPublic = publicGarden != null && (publicGarden.equals("true"));
         }
         optionalGarden.get().setPublicGarden(isGardenPublic);
         gardenService.saveGarden(optionalGarden.get());
@@ -212,7 +211,6 @@ public class ViewGardenController extends GardensSidebar {
     /**
      * Create new tag for a garden.
      *
-     * @param model Model to add attributes to
      * @param gardenId Id of garden
      * @param tagName User inputted tag name
      * @return Redirect to view garden page
@@ -220,8 +218,7 @@ public class ViewGardenController extends GardensSidebar {
      * or does not exist.
      */
     @PostMapping(NEW_GARDEN_TAG_URI_STRING)
-    public String submitGardenTag(Model model,
-                                  @PathVariable long gardenId,
+    public String submitGardenTag(@PathVariable long gardenId,
                                   @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
