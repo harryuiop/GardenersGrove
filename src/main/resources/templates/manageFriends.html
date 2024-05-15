@@ -86,12 +86,16 @@
                                                        style="color: #142915; font-size: 30px"
                                                        th:text="${request.getSender().getName()}"></a>
                                                     <div>
-                                                        <a th:href="@{${viewFriendsGardensUriString}(friendId=${request.getSender().getId()})}"
+                                                        <button th:name="submit" th:type="submit" th:value="Accept"
                                                            class="btn btn-primary"
-                                                           style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">Accept</a>
-                                                        <a th:href="@{${viewFriendsGardensUriString}(friendId=${request.getSender().getId()})}"
+                                                                style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">
+                                                            Accept
+                                                        </button>
+                                                        <button th:name="submit" th:type="submit" th:value="Decline"
                                                            class="btn btn-primary"
-                                                           style="border-color: #7c2f2f; width: 100px; font-size: 12px; background-color: #7c2f2f">Decline</a>
+                                                                style="border-color: #7c2f2f; width: 100px; font-size: 12px; background-color: #7c2f2f">
+                                                            Decline
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

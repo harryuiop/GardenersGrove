@@ -66,7 +66,6 @@ public class UriConfig {
         return URI.create(MANAGE_FRIENDS_URI_STRING);
     }
 
-
     public static URI editProfileUri() {
         return URI.create(EDIT_PROFILE_URI_STRING);
     }
