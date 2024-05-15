@@ -19,7 +19,7 @@ import java.util.Objects;
 public class FormValuesValidator {
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
     static String namePattern = "^[a-zA-Z\\-' ]+$";
-    static String tagPattern = "^[a-zA-Z\\-'\"_ ]+$";
+    static String tagPattern = "^[a-zA-Z0-9\\-'\"_ ]+$";
     static Logger logger = LoggerFactory.getLogger(GardenController.class);
 
     /**
