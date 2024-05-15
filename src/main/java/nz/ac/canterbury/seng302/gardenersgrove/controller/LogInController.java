@@ -124,6 +124,13 @@ public class LogInController {
             return "redirect:" + loginUri();
         }
 
+        String hashedToken = resetPasswordTokenService.getTokenByUserId(userId);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (hashedToken == null || !encoder.matches(token, resetPasswordTokenService.getTokenByUserId(userId))) {
+            logger.info("Invalid token, redirecting to login page");
+            return "redirect:" + loginUri();
+        }
+
         Map<String, String> errors = ErrorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
 
         if (!errors.isEmpty()) {
@@ -139,7 +146,7 @@ public class LogInController {
         // send verification email
         emailSenderService.sendEmail(user, "passwordUpdatedEmail");
 
-        return "redirect:" + viewProfileUri();
+        return "redirect:" + loginUri();
     }
     @GetMapping(RESET_PASSWORD_EMAIL_URI_STRING)
     public String returnForgotPasswordForm(Model model) {
