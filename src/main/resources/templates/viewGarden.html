@@ -31,12 +31,15 @@
         </span>
     </div>
 
-    <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form">
+    <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
         <label class="form-input" for="tagName"> Create new tag: </label>
         <div style="display: flex;">
-            <input type="text" class="form-control" id="tagName" th:name="tagName"
-                   data-cy="tagName" autofocus>
-            <button type="submit">+</button>
+            <div>
+                <input type="text" class="form-control" id="tagName" th:name="tagName"
+                       data-cy="tagName" autofocus>
+                <div id="autocomplete-list" class="inputStyle"></div>
+            </div>
+            <button id="tag-submit" type="submit">+</button>
         </div>
     </form>
 
@@ -106,8 +109,8 @@
         </table>
     </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script th:src="@{/javascript/tagAutocomplete.js}"></script>
 <script>
     function submitForm(id) {
         console.log("Image Uploaded on form: " + id);
