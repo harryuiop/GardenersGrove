@@ -60,64 +60,33 @@ public class WeatherResponse {
                 '}';
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
     }
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public double getTimeToGenerate() {
-        return timeToGenerate;
-    }
-
     public void setTimeToGenerate(double timeToGenerate) {
         this.timeToGenerate = timeToGenerate;
-    }
-
-    public int getUtcOffetTime() {
-        return utcOffetTime;
     }
 
     public void setUtcOffetTime(int utcOffetTime) {
         this.utcOffetTime = utcOffetTime;
     }
 
-    public String getTimezone() {
-        return timezone;
-    }
-
     public void setTimezone(String timezone) {
         this.timezone = timezone;
-    }
-
-    public String getTimezoneAbbreviation() {
-        return timezoneAbbreviation;
     }
 
     public void setTimezoneAbbreviation(String timezoneAbbreviation) {
         this.timezoneAbbreviation = timezoneAbbreviation;
     }
 
-    public double getElevation() {
-        return elevation;
-    }
-
     public void setElevation(double elevation) {
         this.elevation = elevation;
-    }
-
-    public HourlyUnits getHourlyUnits() {
-        return hourlyUnits;
     }
 
     public void setHourlyUnits(HourlyUnits hourlyUnits) {
@@ -132,10 +101,6 @@ public class WeatherResponse {
         this.hourlyWeather = hourlyWeather;
     }
 
-    public DailyUnits getDailyUnits() {
-        return dailyUnits;
-    }
-
     public void setDailyUnits(DailyUnits dailyUnits) {
         this.dailyUnits = dailyUnits;
     }
@@ -146,10 +111,6 @@ public class WeatherResponse {
 
     public void setCurrentWeather(CurrentWeather currentWeather) {
         this.currentWeather = currentWeather;
-    }
-
-    public CurrentUnits getCurrentUnits() {
-        return currentUnits;
     }
 
     public void setCurrentUnits(CurrentUnits currentUnits) {

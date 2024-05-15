@@ -24,7 +24,7 @@ public class WeatherData {
         return date;
     }
 
-    public double temperature() {
+    public double getTemperature() {
         return temperature;
     }
 

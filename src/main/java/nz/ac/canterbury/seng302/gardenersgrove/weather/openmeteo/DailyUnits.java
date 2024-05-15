@@ -12,24 +12,12 @@ public class DailyUnits {
     @JsonProperty("temperature_2m_max")
     private String maximumTemperatures;
 
-    public String getTime() {
-        return timestamps;
-    }
-
     public void setTime(String time) {
         this.timestamps = time;
     }
 
-    public String getWeatherCode() {
-        return weatherCodes;
-    }
-
     public void setWeatherCode(String weatherCode) {
         this.weatherCodes = weatherCode;
-    }
-
-    public String getTemperatureMax() {
-        return maximumTemperatures;
     }
 
     public void setTemperatureMax(String temperatureMax) {
