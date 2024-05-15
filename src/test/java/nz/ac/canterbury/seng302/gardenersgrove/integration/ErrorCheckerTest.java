@@ -1032,4 +1032,31 @@ class ErrorCheckerTest {
         Assertions.assertTrue(errors.containsKey("passwordConfirmError"));
         Assertions.assertEquals(correctErrors.get("passwordConfirmError"), errors.get("passwordConfirmError"));
     }
+
+    @Test
+    void resetPasswordEmailErrors_incorrectFormat_showError() {
+        String email = "jane@doe";
+        Map<String, String> errors = ErrorChecker.emailErrorsResetPassword(email);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
+        Assertions.assertTrue(errors.containsKey("emailError"));
+        Assertions.assertEquals(1, errors.size());
+    }
+
+    @Test
+    void resetPasswordEmailErrors_emptyEmail_showError() {
+        String email = "";
+        Map<String, String> errors = ErrorChecker.emailErrorsResetPassword(email);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
+        Assertions.assertTrue(errors.containsKey("emailError"));
+        Assertions.assertEquals(1, errors.size());
+    }
+
+    @Test
+    void resetPasswordEmailErrors_validEmail_showError() {
+        String email = "jane@doe.com";
+        Map<String, String> errors = ErrorChecker.emailErrorsResetPassword(email);
+        Assertions.assertEquals(0, errors.size());
+    }
 }

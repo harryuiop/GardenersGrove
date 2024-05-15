@@ -51,14 +51,17 @@ class LogInControllerResetPasswordTest {
     @MockBean
     private EmailSenderService emailSenderService;
 
+    private String userEmail;
+
     @BeforeEach
     void setUp() {
         Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any()))
                 .thenReturn(true);
 
+        userEmail = "test@domain.net";
         if (user == null) {
             user = new User(
-                    "test@domain.net",
+                    userEmail,
                     "Test",
                     "User",
                     "Password1!",
