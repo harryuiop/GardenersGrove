@@ -3,8 +3,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -27,10 +27,10 @@ public class OpenMeteoWeather implements WeatherService {
     /**
      * Gets the json data from the Open Meteo API
      *
-     * @param latitude specified by the location of the garden
+     * @param latitude  specified by the location of the garden
      * @param longitude specified by the location of the garden
      * @return a string containing the JSON data required
-     * @throws InterruptedException if the Http request send operation is interrupted
+     * @throws InterruptedException          if the Http request send operation is interrupted
      * @throws UnableToFetchWeatherException if the server request fails
      */
     private String getJsonFromApi(double latitude, double longitude) throws InterruptedException {
@@ -64,10 +64,10 @@ public class OpenMeteoWeather implements WeatherService {
      * Gets the weather data from the API and converts the weather response
      * to a list of ForecastWeatherData objects
      *
-     * @param latitude specified by the location of the garden
+     * @param latitude  specified by the location of the garden
      * @param longitude specified by the location of the garden
      * @return a converted weather response to a list of ForecastWeatherData objects
-     * @throws InterruptedException if the Http request send operation is interrupted
+     * @throws InterruptedException          if the Http request send operation is interrupted
      * @throws UnableToFetchWeatherException if the server request fails or JSON parsing fails
      */
     @Override
@@ -92,7 +92,7 @@ public class OpenMeteoWeather implements WeatherService {
         List<Double> temps = response.getDailyWeather().getMaximumTemperatures();
         List<Integer> weatherCodes = response.getDailyWeather().getWeatherCodes();
         List<Integer> dailyHumidity = getDailyHumidity(response);
-        for (int i=0; i < timeStamps.size(); i++) {
+        for (int i = 0; i < timeStamps.size(); i++) {
             LocalDate date = LocalDate.parse(timeStamps.get(i));
             dataArrayList.add(new WeatherData(
                     date,
@@ -119,15 +119,15 @@ public class OpenMeteoWeather implements WeatherService {
      * @param response a response from the Open-Meteo API
      * @return a list of calculated averages representing the dailyHumidity
      */
-    public List<Integer> getDailyHumidity(WeatherResponse response) {
+    private List<Integer> getDailyHumidity(WeatherResponse response) {
         List<Integer> dailyHumidity = new ArrayList<>();
         List<Integer> hourlyHumidity = response.getHourlyWeather().getRelativeHumidity();
         final int NUM_DAYS = 6; // number of days of data to be fetched according to the AC's
         final int NUM_HOURS = 24; // number of hours in a day
         int humiditySum = 0;
-        for (int i=0; i < NUM_DAYS; i++) {
+        for (int i = 0; i < NUM_DAYS; i++) {
             int humidityAvg;
-            for (int j=0; j < NUM_HOURS; j++) {
+            for (int j = 0; j < NUM_HOURS; j++) {
                 humiditySum += hourlyHumidity.get(i * NUM_HOURS + j);
             }
             humidityAvg = humiditySum / NUM_HOURS;
