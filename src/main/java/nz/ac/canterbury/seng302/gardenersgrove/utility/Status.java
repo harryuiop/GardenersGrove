@@ -11,4 +11,9 @@ public enum Status {
     private Status(String string) {
         this.string = string;
     }
+
+    @Override
+    public String toString() {
+        return string;
+    }
 }

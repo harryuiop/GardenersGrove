@@ -54,6 +54,10 @@ public class FriendRequestService {
         return friendRequestRepository.findFriendRequestsByReceiverAndStatus(receiver, Status.PENDING);
     }
 
+    public List<FriendRequest> findRequestBySender(User receiver) {
+        return friendRequestRepository.findFriendRequestsBySender(receiver);
+    }
+
     public Optional<FriendRequest> findRequestById(Long id) {
         return friendRequestRepository.findFriendRequestById(id);
     }
