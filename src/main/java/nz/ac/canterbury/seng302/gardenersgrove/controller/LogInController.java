@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.ResetPasswordToken;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
@@ -89,9 +90,9 @@ public class LogInController {
                                 @PathVariable String token,
                                 @PathVariable long userId) {
         logger.info("GET {}", resetPasswordUri(token, userId));
-        String hashedToken = resetPasswordTokenService.getTokenByUserId(userId);
+        ResetPasswordToken hashedTokenEntity = resetPasswordTokenService.getTokenByUserId(userId);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (hashedToken == null || !encoder.matches(token, resetPasswordTokenService.getTokenByUserId(userId))) {
+        if (hashedTokenEntity == null || !encoder.matches(token, hashedTokenEntity.getToken())) {
             logger.info("Invalid token, redirecting to login page");
             return "redirect:" + loginUri();
         }
@@ -125,9 +126,9 @@ public class LogInController {
             return "redirect:" + loginUri();
         }
 
-        String hashedToken = resetPasswordTokenService.getTokenByUserId(userId);
+        ResetPasswordToken hashedTokenEntity = resetPasswordTokenService.getTokenByUserId(userId);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (hashedToken == null || !encoder.matches(token, resetPasswordTokenService.getTokenByUserId(userId))) {
+        if (hashedTokenEntity == null || !encoder.matches(token, hashedTokenEntity.getToken())) {
             logger.info("Invalid token, redirecting to login page");
             return "redirect:" + loginUri();
         }

@@ -116,6 +116,13 @@ public class EmailSenderService {
             // send an email
             javaMailSender.send(message);
             logger.debug("Success to send the email to the recipient");
+
+            // triggered if email send specific templates
+            switch (template) {
+                case "registrationEmail", "resetPasswordEmail"
+                        -> this.checkEmailVerifiedInTime(user.getEmail(), template);
+            }
+
             return true;
         } catch (MessagingException e) {
             logger.debug("Failing to Send an email to the recipient");
@@ -130,7 +137,8 @@ public class EmailSenderService {
      *
      * @param email Users email
      */
-    public void checkEmailVerifiedInTime(String email) {
+    private void checkEmailVerifiedInTime(String email, String template) {
+
         Runnable checkAndDeleteUser = () -> {
             User user = userService.getUserByEmail(email);
             if (!user.isConfirmed()) {
@@ -138,6 +146,16 @@ public class EmailSenderService {
                 userService.deleteUser(user);
             }
         };
-        scheduler.schedule(checkAndDeleteUser, 10, MINUTES);
+
+        Runnable checkAndDeleteResetPasswordToken = () -> {
+            ResetPasswordToken resetTokenEntity = resetPasswordTokenService.getTokenByUserId(userService.getUserByEmail(email).getUserId());
+            logger.info(resetTokenEntity.getToken() + " is removed ");
+            resetPasswordTokenService.deleteToken(resetTokenEntity);
+        };
+
+        switch (template) {
+            case "registrationEmail" -> scheduler.schedule(checkAndDeleteUser, 10, MINUTES);
+            case "resetPasswordEmail" -> scheduler.schedule(checkAndDeleteResetPasswordToken, 10, MINUTES);
+        }
     }
 }

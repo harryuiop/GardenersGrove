@@ -22,12 +22,11 @@ public class ResetPasswordTokenService {
 
     /**
      * @param userId Users id associated with token.
-     * @return String value of token (hashed), or null if token is not found by user id.
+     * @return ResetPasswordToken entity or null if entity is not found by user id.
      */
-    public String getTokenByUserId(long userId) {
-        ResetPasswordToken tokenEntity = resetPasswordTokenRepository.getResetPasswordTokenByUserId(userId);
-        if (tokenEntity == null) return null;
-        return tokenEntity.getToken();
+    public ResetPasswordToken getTokenByUserId(long userId) {
+
+        return resetPasswordTokenRepository.getResetPasswordTokenByUserId(userId);
     }
 
     /**
@@ -39,6 +38,15 @@ public class ResetPasswordTokenService {
     public void addToken(String token, long userId) {
         String hashedToken = hashToken(token);
         resetPasswordTokenRepository.save(new ResetPasswordToken(hashedToken, userId));
+    }
+
+    /**
+     * Delete reset password token entity
+     *
+     * @param token entity to delete
+     */
+    public void deleteToken(ResetPasswordToken token) {
+        resetPasswordTokenRepository.delete(token);
     }
 
     private String hashToken(String resetPasswordTokenUUID) {

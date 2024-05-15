@@ -134,7 +134,6 @@ public class RegisterController {
 
         // send verification email
         emailSenderService.sendEmail(newUser, "registrationEmail");
-        emailSenderService.checkEmailVerifiedInTime(newUser.getEmail());
 
         return "redirect:" + verifyEmailUri();
     }
