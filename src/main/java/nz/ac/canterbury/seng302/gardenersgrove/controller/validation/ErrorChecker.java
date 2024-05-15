@@ -226,6 +226,17 @@ public class ErrorChecker {
     }
 
     /**
+     * Check email errors for the reset password form.
+     * @param email         The email string.
+     * @return A Map<String, String> of errors containing  <error model name, error message>.
+     */
+    public static Map<String, String> emailErrorsResetPassword(String email) {
+        Map<String, String> errors = new HashMap<>();
+        if (FormValuesValidator.checkBlank(email) || !emailIsValid(email)) errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
+        return errors;
+    }
+
+    /**
      * Given the user's birthdate checks whether the data is present, in valid format, and the user is older than 13 but
      * younger than 120.  Returns these error messages in a form to place into the model.
      * @param dateOfBirth A string the birthdate

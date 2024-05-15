@@ -163,9 +163,17 @@ public class LogInController {
                                               @RequestParam String userEmail) {
         logger.info("POST {}", resetPasswordEmailUri());
         User user = userService.getUserByEmail(userEmail);
-        if (user != null) emailSenderService.sendEmail(user, "resetPasswordEmail",
-                req.getRequestURL().toString().split("/login/reset-password/email")[0]);
-        model.addAttribute("confirmationMessage", true);
+
+        Map<String, String> errors = ErrorChecker.emailErrorsResetPassword(userEmail);
+        if (!errors.isEmpty()) {
+            model.addAllAttributes(errors);
+            model.addAttribute("confirmationMessage", false);
+            model.addAttribute("userEmail", userEmail);
+        } else {
+            model.addAttribute("confirmationMessage", true);
+            if (user != null) emailSenderService.sendEmail(user, "resetPasswordEmail",
+                    req.getRequestURL().toString().split("/login/reset-password/email")[0]);
+        }
         return "forgotPasswordForm";
 
     }
