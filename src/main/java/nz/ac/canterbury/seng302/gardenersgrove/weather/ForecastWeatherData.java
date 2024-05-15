@@ -3,11 +3,11 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather;
 import java.time.LocalDate;
 
 public class ForecastWeatherData {
-    private LocalDate date;
-    private double maximumTemperature;
-    private double minimumTemperature;
-    private double humidity;
-    private String weatherDescription;
+    private final LocalDate date;
+    private final double maximumTemperature;
+    private final double minimumTemperature;
+    private final double humidity;
+    private final String weatherDescription;
 
     public ForecastWeatherData(
             LocalDate date,
