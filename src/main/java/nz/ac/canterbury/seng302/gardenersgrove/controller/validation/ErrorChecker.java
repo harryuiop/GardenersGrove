@@ -38,6 +38,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> gardenFormErrors(
                     String gardenName, Float gardenSize,
+                    String gardenDescription,
                     String country,
                     String city,
                     String streetAddress,
@@ -52,6 +53,18 @@ public class ErrorChecker {
             errors.put(
                             "gardenNameError",
                             "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
+        }
+
+        if (!FormValuesValidator.checkDescription(gardenDescription) || !FormValuesValidator.checkContainsText(gardenDescription)) {
+            errors.put("gardenDescriptionError", "Description must be 512 characters or less and contain some text");
+        } else {
+            try {
+                if (FormValuesValidator.checkProfanity(gardenDescription)) {
+                    errors.put("gardenDescriptionError", "The description does not match the language standards of the app");
+                }
+            } catch (Exception e) {
+                errors.put("profanityCheckError", "Garden cannot be made public");
+            }
         }
 
         if (!FormValuesValidator.checkSize(gardenSize)) {
@@ -111,7 +124,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> plantFormErrors(
                     String plantName,
-                    Integer plantCount,
+                    String plantCount,
                     String plantDescription,
                     MultipartFile imageFile
     ) {
@@ -125,8 +138,8 @@ public class ErrorChecker {
             );
         }
 
-        if (!FormValuesValidator.checkCount(plantCount)) {
-            errors.put("plantCountError", "Plant count must be positive number");
+        if (!FormValuesValidator.checkValidPlantCount(plantCount)) {
+            errors.put("plantCountError", "Plant count must be positive number, and only contain the digits 0-9");
         }
 
         if (!FormValuesValidator.checkDescription(plantDescription)) {

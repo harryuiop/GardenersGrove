@@ -59,6 +59,10 @@ public class TagService {
         }
         return tagStrings;
     }
+
+    /**
+     * Delete all tags in tag repository.
+     */
     public void deleteAll() {
         tagRepository.deleteAll();
     }

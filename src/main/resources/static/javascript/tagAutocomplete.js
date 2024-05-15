@@ -5,6 +5,11 @@ const debounceTimeMs = 100;
 
 let timer;
 let previousInput = "";
+
+/**
+ * Update autocomplete when users input for tag field is changed.
+ * Set debouncing time is used.
+ */
 tagField.addEventListener('input', function() {
     clearTimeout(timer);
     timer = setTimeout(function() {

@@ -77,7 +77,7 @@ class PlantControllerEditTest {
         gardenLocation.setSuburb("Ilam");
         gardenLocation.setPostcode("8041");
 
-        Garden garden = gardenRepository.save(new Garden(user, "Test Garden", gardenLocation, null));
+        Garden garden = gardenRepository.save(new Garden(user, "Test Garden", null, gardenLocation, null));
         plantRepository.deleteAll();
         plantRepository.save(new Plant(
                         originalPlantName, originalPlantCount, originalPlantDescription, originalPlantedDate, null, garden

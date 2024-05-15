@@ -30,6 +30,13 @@ public class TagController {
         this.tagService = tagService;
     }
 
+    /**
+     * Get autocomplete suggestions based on users search result.
+     *
+     * @param query User input for tag field.
+     * @return Autocomplete suggestions based on user input.
+     * A set max amount of suggestions shown, given by MAX_SUGGESTIONS variable.
+     */
     @GetMapping("/show-autocomplete")
     public List<String> getSearchResults(@RequestParam String query) {
         logger.info("GET /show-autocomplete");

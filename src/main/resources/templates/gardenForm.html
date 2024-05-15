@@ -27,12 +27,22 @@
                     <p class="errorMessage" th:text="${gardenSizeError}"></p>
                 </div>
                 <br/>
+                <div class="form-field">
+                    <label class="form-input" for="gardenDescription"> Garden Description: </label>
+                    <input type="text" class="form-control" id="gardenDescription" th:name="gardenDescription"
+                           th:value="*{gardenDescription}" data-cy="gardenDescription" autofocus>
+                    <p>Description Length: <span id="counter-display" class="tag is-success"
+                                                 th:text="${gardenDescription == null ? 0 : gardenDescription.length()}"></span>/512
+                    </p>
+                    <p class="errorMessage" th:text="${gardenDescriptionError}"></p>
+                </div>
+                <br/>
                 <h2>Location</h2>
                 <div class="form-field">
                     <label class="form-input" for="streetAddress"> Street Address: </label>
                     <p class="info-message">Start typing location to see suggestions.</p>
                     <input type="text" class="form-control" id="streetAddress" th:name="streetAddress"
-                           th:value="*{streetAddress}" data-cy="streetAddress" autofocus>
+                           th:value="*{streetAddress}" data-cy="streetAddress" autocomplete="off">
                     <p class="errorMessage" th:text="${streetAddressError}"></p>
                     <div id="autocomplete-list" class="inputStyle"></div>
                 </div>
@@ -78,10 +88,14 @@
 <div th:if="${editGardenUri != null}">
     <div id="noLocationFoundModal" class="modal">
         <div class="modal-content">
-            <p>
+            <p th:if="!${locationFound}">
                 Your garden has been saved.
                 However, no matching location was found.
                 Location-based services will not work for this garden.
+            </p>
+            <p th:if="!${profanityCheckWorked}">
+                There was an issue checking the description for inappropriate language.
+                This garden cannot be made public until the description is edited and language checks are completed.
             </p>
             <div class="modal-buttons">
                 <a th:href="@{${editGardenUri}}" id="backToFormBtn">Edit garden</a>
@@ -91,6 +105,7 @@
     </div>
 </div>
 
+<script th:src="@{/javascript/characterCount.js}"></script>
 <script th:src="@{/javascript/locationAutocomplete.js}"></script>
 </body>
 </html>
