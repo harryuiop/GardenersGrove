@@ -30,6 +30,7 @@ public class FriendsController {
 
         model.addAttribute("user", userService.getAuthenticatedUser());
         model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
+        model.addAttribute("requestservice", friendRequestService);
         return "manageFriends";
     }
 }

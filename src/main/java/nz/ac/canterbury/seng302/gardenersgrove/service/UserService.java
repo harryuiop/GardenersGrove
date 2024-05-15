@@ -41,14 +41,18 @@ public class UserService {
         user2.setConfirmation(true);
         User user3 = new User
                 ("user3@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
-        user2.setConfirmation(true);
+        user3.setConfirmation(true);
         User user4 = new User
                 ("user4@gmail.com", "Jane", "Doe", "Password1!", "2000-01-01");
-        user2.setConfirmation(true);
+        user4.setConfirmation(true);
+        User user5 = new User
+                ("user5@gmail.com", "Joe", "Doe", "Password1!", "2000-01-01");
+        user5.setConfirmation(true);
         this.addUsers(user1);
         this.addUsers(user2);
         this.addUsers(user3);
         this.addUsers(user4);
+        this.addUsers(user5);
         user1.addFriend(user2);
         user1.addFriend(user3);
         user1.addFriend(user4);
