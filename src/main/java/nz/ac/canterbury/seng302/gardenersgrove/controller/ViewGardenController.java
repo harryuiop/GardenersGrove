@@ -44,6 +44,7 @@ public class ViewGardenController extends GardensSidebar {
     private final GardenService gardenService;
     private final PlantService plantService;
     private final UserService userService;
+    private final TagService tagService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
