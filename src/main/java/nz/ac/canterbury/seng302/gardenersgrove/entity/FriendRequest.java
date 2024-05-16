@@ -14,10 +14,10 @@ public class FriendRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.REMOVE, optional = false)
     private User sender;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.REMOVE, optional = false)
     private User receiver;
 
     @Column

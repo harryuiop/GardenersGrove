@@ -63,9 +63,16 @@ public class User {
     @JoinColumn(name = "userId")
     private List<Authority> userRoles;
 
-    @Column
     @ManyToMany
+    @JoinTable(name = "tbl_friends",
+            joinColumns = @JoinColumn(name = "personId"),
+            inverseJoinColumns = @JoinColumn(name = "friendId")
+    )
     private List<User> friends;
+
+    @ManyToMany(mappedBy = "friends", cascade = CascadeType.ALL)
+    private List<User> friendOf;
+
 
     /**
      * JPA Empty Constructor
