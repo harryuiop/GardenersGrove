@@ -1,7 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ResetPasswordTokenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
@@ -51,17 +50,14 @@ class LogInControllerResetPasswordTest {
     @MockBean
     private EmailSenderService emailSenderService;
 
-    private String userEmail;
-
     @BeforeEach
     void setUp() {
         Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any()))
                 .thenReturn(true);
 
-        userEmail = "test@domain.net";
         if (user == null) {
             user = new User(
-                    userEmail,
+                    "test@domain.net",
                     "Test",
                     "User",
                     "Password1!",
