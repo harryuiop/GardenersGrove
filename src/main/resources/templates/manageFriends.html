@@ -17,7 +17,6 @@
         <h1>Manage my friends</h1>
 
         <div class="input-group rounded mx-auto" style="width: 20vw;">
-            <form th:action="@{${searchUsersUri}}" method="post" id="search-users">
                 <input type="text" id="searchUsers"
                        th:name="searchUser"
                        th:value="*{search}"
@@ -25,10 +24,9 @@
                        placeholder="Search for new friends"
                        aria-label="Search"
                        aria-describedby="search-addon" />
-                <button class="input-group-text border-0" id="search-addon" type="submit">
+                <span class="input-group-text border-0" id="search-addon">
                     <i class="bi bi-search"></i>
-                </button>
-            </form>
+                </span>
             <div id="autocomplete-list" class="inputStyle">
                 <table class="search-result">
                     <tbody>
@@ -209,5 +207,6 @@
 
         </div>
     </div>
+<script th:src="@{/javascript/searchAutoComplete.js}"></script>
 </body>
 </html>

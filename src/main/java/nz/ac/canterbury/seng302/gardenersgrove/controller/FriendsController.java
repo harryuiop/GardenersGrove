@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 @Controller
@@ -78,25 +76,6 @@ public class FriendsController {
         model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
         model.addAttribute("requestService", friendRequestService);
-        return "manageFriends";
-    }
-
-    /**
-     * Handles POST requests to the home (root) URL.
-     * Displays a separate page depending on authentication status.
-     *
-     * @return the landing page if the user is not authenticated, otherwise the home page
-     */
-    @PostMapping(SEARCH_USERS_STRING)
-    public String getSearchedUsers(@RequestParam String searchUser, Model model) {
-        List<User> userOptions = userService.getSearchedUser(searchUser);
-        logger.info("Users found: " + searchUser);
-        model.addAttribute("foundUsers", userOptions);
-        model.addAttribute("user", userService.getAuthenticatedUser());
-        model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
-        model.addAttribute("requestService", friendRequestService);
-        model.addAttribute("searchUsersUri", searchUsersUri());
-        model.addAttribute("search", "");
         return "manageFriends";
     }
 }

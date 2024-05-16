@@ -223,11 +223,11 @@ public class UserService {
      * @param searchString a string entered by the user in search of a user.
      * @return a list of users whos' names contain the string.
      */
-    public List<User> getSearchedUser(String searchString) {
-        List<User> searchResults = new ArrayList<>();
+    public List<String> getSearchedUser(String searchString) {
+        List<String> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
             if ((user.getFirstName() + " " +user.getLastName()).toLowerCase().contains(searchString.toLowerCase())) {
-                searchResults.add(user);
+                searchResults.add(user.getEmail());
             }
         }
         return searchResults;
