@@ -52,12 +52,15 @@ public class ViewGardenController extends GardensSidebar {
      * @param gardenService A Garden database access object.
      * @param plantService  A Plant database access object.
      * @param userService   A User database access object.
+     * @param tagService    A Tag database access object.
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService,
+                                TagService tagService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
+        this.tagService = tagService;
     }
 
     private String loadGardenPage(
