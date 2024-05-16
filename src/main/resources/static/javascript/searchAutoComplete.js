@@ -2,6 +2,7 @@ var modal = document.getElementById("confirm-send-request")
 const searchField = document.getElementById('searchUsers')
 const autocompleteList = document.getElementById('autocomplete-list');
 const debounceTimeMs = 50;
+var requestedUser;
 
 let timer;
 let previousInput = "";
@@ -67,10 +68,21 @@ function showAutocompleteBox() {
 
 function sendRequest(user) {
     var text = document.getElementById("request-user")
+    requestedUser = user
     text.textContent = `Would you like to request ${user} as a friend?`
     modal.style.display="block"
 }
 
 function closeModal() {
     modal.style.display="none"
+}
+
+function makeFriends() {
+    fetch(`/send/request?email=${requestedUser}`)
+        .then(response => {
+
+        }).catch(error => {
+            colsole.error('Error: ', error)
+    })
+    closeModal()
 }

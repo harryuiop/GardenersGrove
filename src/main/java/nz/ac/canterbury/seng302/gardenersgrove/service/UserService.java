@@ -226,7 +226,7 @@ public class UserService {
     public List<String> getSearchedUser(String searchString) {
         List<String> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
-            if ((user.getFirstName() + " " +user.getLastName()).toLowerCase().contains(searchString.toLowerCase())) {
+            if ((user.getEmail()).toLowerCase().contains(searchString.toLowerCase())) {
                 searchResults.add(user.getEmail());
             }
         }
