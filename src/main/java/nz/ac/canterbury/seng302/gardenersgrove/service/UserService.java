@@ -39,18 +39,34 @@ public class UserService {
                 ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01");
         user1.setConfirmation(true);
         User user2 = new User
-                ("user2@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
+                ("user2@gmail.com", "Jack", "Doe", "Password1!", "2000-01-01");
         user2.setConfirmation(true);
         User user3 = new User
                 ("user3@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
-        user2.setConfirmation(true);
+        user3.setConfirmation(true);
         User user4 = new User
                 ("user4@gmail.com", "Jane", "Doe", "Password1!", "2000-01-01");
-        user2.setConfirmation(true);
+        user4.setConfirmation(true);
+        User user5 = new User
+                ("user5@gmail.com", "Joe", "Doe", "Password1!", "2000-01-01");
+        user5.setConfirmation(true);
+        User user6 = new User
+                ("user6@gmail.com", "Josephine", "Doe", "Password1!", "2000-01-01");
+        user6.setConfirmation(true);
+        User user7 = new User
+                ("user7@gmail.com", "Justin", "Doe", "Password1!", "2000-01-01");
+        user7.setConfirmation(true);
+        User user8 = new User
+                ("user8@gmail.com", "Janet", "Doe", "Password1!", "2000-01-01");
+        user8.setConfirmation(true);
         this.addUsers(user1);
         this.addUsers(user2);
         this.addUsers(user3);
         this.addUsers(user4);
+        this.addUsers(user5);
+        this.addUsers(user6);
+        this.addUsers(user7);
+        this.addUsers(user8);
         user1.addFriend(user2);
         user1.addFriend(user3);
         user1.addFriend(user4);
