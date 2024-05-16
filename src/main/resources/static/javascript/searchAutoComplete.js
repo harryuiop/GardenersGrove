@@ -1,12 +1,11 @@
+var modal = document.getElementById("confirm-send-request")
 const searchField = document.getElementById('searchUsers')
-const searchButton = document.getElementById('search-addon')
 const autocompleteList = document.getElementById('autocomplete-list');
 const debounceTimeMs = 50;
 
 let timer;
 let previousInput = "";
 searchField.addEventListener('input', function() {
-    console.log("addEvent listener: "+searchField.value)
     clearTimeout(timer);
     timer = setTimeout(function() {
         const inputValue = searchField.value;
@@ -22,7 +21,6 @@ searchField.addEventListener('input', function() {
 });
 
 function updateAutocomplete(searchString) {
-    console.log(`Search String: ${searchString}`)
     fetch(`/search?searchUser=${searchString}`)
         .then(response => {
             if (!response.ok) {
@@ -50,7 +48,7 @@ function renderAutocomplete(users) {
         primaryTextElement.innerHTML = user;
 
         suggestionElement.addEventListener('click', function () {
-            console.log(`clicked ${user}`)
+            sendRequest(user)
         });
 
         suggestionElement.appendChild(primaryTextElement);
@@ -65,4 +63,14 @@ function removeAutocompleteBox() {
 
 function showAutocompleteBox() {
     autocompleteList.style.display = 'block';
+}
+
+function sendRequest(user) {
+    var text = document.getElementById("request-user")
+    text.textContent = `Would you like to request ${user} as a friend?`
+    modal.style.display="block"
+}
+
+function closeModal() {
+    modal.style.display="none"
 }
