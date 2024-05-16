@@ -41,12 +41,13 @@ function renderAutocomplete(users) {
     }
     autocompleteList.innerHTML = '';
     showAutocompleteBox()
+    console.log(users)
     users.forEach(user => {
         let suggestionElement = document.createElement("div");
         let primaryTextElement = document.createElement("div");
         primaryTextElement.classList.add("primary-text")
 
-        primaryTextElement.innerHTML = user;
+        primaryTextElement.innerHTML = user.name;
 
         suggestionElement.addEventListener('click', function () {
             sendRequest(user)
@@ -68,8 +69,7 @@ function showAutocompleteBox() {
 
 function sendRequest(user) {
     var text = document.getElementById("request-user")
-    requestedUser = user
-    text.textContent = `Would you like to request ${user} as a friend?`
+    text.textContent = `Would you like to request ${user.name} as a friend?`
     modal.style.display="block"
 }
 
@@ -78,7 +78,7 @@ function closeModal() {
 }
 
 function makeFriends() {
-    fetch(`/send/request?email=${requestedUser}`)
+    fetch(`/send/request?email=${requestedUser.email}`)
         .then(response => {
 
         }).catch(error => {

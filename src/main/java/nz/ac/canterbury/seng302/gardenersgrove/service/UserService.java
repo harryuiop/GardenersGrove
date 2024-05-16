@@ -8,9 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
@@ -223,11 +221,14 @@ public class UserService {
      * @param searchString a string entered by the user in search of a user.
      * @return a list of users whos' names contain the string.
      */
-    public List<String> getSearchedUser(String searchString) {
-        List<String> searchResults = new ArrayList<>();
+    public List<Map<String, String>> getSearchedUser(String searchString) {
+        List<Map<String, String>> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
             if ((user.getEmail()).toLowerCase().contains(searchString.toLowerCase())) {
-                searchResults.add(user.getEmail());
+                Map<String, String> newMap = new HashMap<>();
+                newMap.put("email", user.getEmail());
+                newMap.put("name", user.getName());
+                searchResults.add(newMap);
             }
         }
         return searchResults;

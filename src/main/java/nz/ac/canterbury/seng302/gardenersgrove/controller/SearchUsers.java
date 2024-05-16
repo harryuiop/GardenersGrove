@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.SEARCH_USERS_STRING;
 
@@ -32,7 +32,7 @@ public class SearchUsers {
      * @return the landing page if the user is not authenticated, otherwise the home page
      */
     @GetMapping(SEARCH_USERS_STRING)
-    public List<String> getSearchedUsers(@RequestParam String searchUser) {
+    public List<Map<String, String>> getSearchedUsers(@RequestParam String searchUser) {
         return userService.getSearchedUser(searchUser);
     }
 
