@@ -18,9 +18,33 @@
     <article class="in-line"><p>Location: </p>
         <p th:text="${garden.getLocationString()}"></p></article>
     <article class="in-line"><p>Size: </p>
-        <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p></article>
-    <article class="in-line"><p>Weather: </p>
-        <p th:text="${weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng())}"></p></article>
+        <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
+    </article>
+    <article class="in-line"><p>Description: </p>
+        <p th:text="${garden.getDescription()}"></p></article>
+
+    <!-- Garden tags -->
+    <div class="display-tags">
+        <span th:each="tag, iterStat : ${tags}">
+            <span class="tag-text" th:text="'#' + ${tag.getName()}"></span>
+            <span th:if="${!iterStat.last}">&nbsp;&nbsp;&nbsp;</span>
+        </span>
+    </div>
+
+    <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
+        <label class="form-input" for="tagName"> Create new tag: </label>
+        <div style="display: flex;">
+            <div>
+                <input type="text" class="form-control" id="tagName" th:name="tagName"
+                       data-cy="tagName" autofocus>
+                <div id="autocomplete-list" class="inputStyle"></div>
+            </div>
+            <button id="tag-submit" type="submit">+</button>
+        </div>
+    </form>
+    <p class="errorMessage" th:text="${tagErrors}"></p>
+
+    <br>
 
     <a th:href="@{${editGardenUri}}">
         <button class="form-button" type="button">Edit Garden</button>
@@ -28,6 +52,7 @@
     <a th:href="@{${newPlantUri}}">
         <button class="form-button" type="button">Add Plant</button>
     </a>
+
 
     <h2>My Plants</h2>
     <div id="plant-entries" class="plant-entries">
@@ -85,8 +110,7 @@
         </table>
     </div>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
 <script>
     function submitForm(id) {
         console.log("Image Uploaded on form: " + id);
@@ -95,5 +119,7 @@
         document.getElementById(id + 'submit').click()
     }
 </script>
-</body>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
 </html>

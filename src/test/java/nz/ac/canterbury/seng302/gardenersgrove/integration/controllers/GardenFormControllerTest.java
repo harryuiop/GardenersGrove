@@ -136,6 +136,92 @@ class GardenFormControllerTest {
     }
 
     @Test
+    void submitForm_NoTextDescription_gardenNotSaved() throws Exception {
+        String gardenName = "TestGarden";
+        float gardenSize = 4f;
+        String gardenDescription = "#$%^&*()";
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
+                        .param("gardenName", gardenName)
+                        .param("gardenSize", Float.toString(gardenSize))
+                        .param("gardenDescription", gardenDescription)
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", streetAddress)
+                        .param("suburb", suburb)
+                        .param("postcode", postcode))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
+        assertTrue(allGardens.isEmpty());
+    }
+
+    @Test
+    void submitForm_InappropriateDescription_gardenNotSaved() throws Exception {
+        String gardenName = "TestGarden";
+        float gardenSize = 4f;
+        String gardenDescription = "Fucking Hell";
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
+                        .param("gardenName", gardenName)
+                        .param("gardenSize", Float.toString(gardenSize))
+                        .param("gardenDescription", gardenDescription)
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", streetAddress)
+                        .param("suburb", suburb)
+                        .param("postcode", postcode))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
+        assertTrue(allGardens.isEmpty());
+    }
+
+    @Test
+    void submitForm_TooLongDescription_gardenNotSaved() throws Exception {
+        String gardenName = "TestGarden";
+        float gardenSize = 4f;
+        String gardenDescription = "vikbyyigjgnxbfpofwuziotuihtetvqubddfoicvrdxgtgflixdgoqkgwfwvlxxoqrmqbithgjxizgpyali" +
+                "hbbopjkuvwedepvvdlzflotpsgdffexfrdhrenbvmyinlvmdrrlymywwhszlzijdbvbktzbpqcbusuaowzwvozbaeswdjbgmaswhwb" +
+                "rbkqccmetbwgdnymvtcksubenexrltbpvwziscmvacmanceytclzghurliqaumlttukelwdpdlageimoviqtlezbciyksfufnxocrh" +
+                "blmtmtijopubgkpujmagotgdfinwtpmxrjhdevqrlzpmnofkypuisfkbovqfdwmznbjeasfwfbyhhfizjxjzntihbzgrmgkudkdtjr" +
+                "ranlhzohychbxshgniecquyviibvuqozlwhhiziskuungizxznbfezhvuilrvgafmnfhuowibbqppsjbcmklvfzneesaohqbrjkxkr" +
+                "gggdbozsruiapzizkpfhvv";
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
+                        .param("gardenName", gardenName)
+                        .param("gardenSize", Float.toString(gardenSize))
+                        .param("gardenDescription", gardenDescription)
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", streetAddress)
+                        .param("suburb", suburb)
+                        .param("postcode", postcode))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+
+        List<Garden> allGardens = gardenRepository.findAllByOwner(user);
+        assertTrue(allGardens.isEmpty());
+    }
+
+    @Test
     void submitForm_invalidLocation_noCountry_gardenNotSaved() throws Exception {
         String gardenName = "Test Garden";
         float gardenSize = 4f;
