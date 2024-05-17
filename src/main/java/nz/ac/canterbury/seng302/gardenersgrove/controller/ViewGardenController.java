@@ -12,6 +12,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo.OpenMeteoWeather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ public class ViewGardenController extends GardensSidebar {
     private final PlantService plantService;
     private final UserService userService;
     private final TagService tagService;
+    private final OpenMeteoWeather weatherService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -54,11 +57,12 @@ public class ViewGardenController extends GardensSidebar {
      */
     @Autowired
     public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService,
-                                TagService tagService) {
+                                TagService tagService, OpenMeteoWeather weatherService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
         this.tagService = tagService;
+        this.weatherService = weatherService;
     }
 
     private String loadGardenPage(
@@ -68,12 +72,14 @@ public class ViewGardenController extends GardensSidebar {
                     List<Plant> plants,
                     Model model,
                     String...errorMessages
-    ) {
+    ) throws InterruptedException {
         this.updateGardensSidebar(model, gardenService, userService);
 
         if (errorMessages.length > 0) {
             model.addAttribute("tagErrors", errorMessages[0]);
         }
+
+        List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng());
 
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
@@ -83,6 +89,8 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
+        model.addAttribute("weatherData", weatherData);
+
         return "viewGarden";
     }
 
@@ -95,7 +103,7 @@ public class ViewGardenController extends GardensSidebar {
     public String displayGarden(
                     @PathVariable long gardenId,
                     Model model
-    ) throws NoSuchGardenException {
+    ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
@@ -172,7 +180,7 @@ public class ViewGardenController extends GardensSidebar {
     @PostMapping(NEW_GARDEN_TAG_URI_STRING)
     public String submitGardenTag(Model model,
                                   @PathVariable long gardenId,
-                                  @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException {
+                                  @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException, InterruptedException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
             throw new NoSuchGardenException(gardenId);
@@ -180,12 +188,10 @@ public class ViewGardenController extends GardensSidebar {
         Garden garden = optionalGarden.get();
         String errorMessages = ErrorChecker.tagNameErrors(tagName);
 
-
         if (!errorMessages.isEmpty())
             model.addAttribute("tagErrors", errorMessages);
         else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
             tagService.saveTag(tagName, garden);
-
 
         return loadGardenPage(
                 optionalGarden.get(),
@@ -196,6 +202,4 @@ public class ViewGardenController extends GardensSidebar {
                 errorMessages
         );
     }
-
-
 }
