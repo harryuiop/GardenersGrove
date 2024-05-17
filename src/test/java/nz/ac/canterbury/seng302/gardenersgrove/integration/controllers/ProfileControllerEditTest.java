@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_PROFILE_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.editProfileUri;
 
 @SpringBootTest
 @WithMockUser(value = "1")
@@ -66,8 +65,6 @@ public class ProfileControllerEditTest {
                         .param("dateOfBirth", newDateOfBirth))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl(VIEW_PROFILE_URI_STRING));
-
-        //User updatedUser = userService.getUserById(user.getId());
 
         Assertions.assertEquals(newEmail, user.getEmail());
         Assertions.assertEquals(newFirstName, user.getFirstName());
@@ -234,22 +231,20 @@ public class ProfileControllerEditTest {
         String newFirstName = "First";
         String newLastName = "Last";
         boolean noSurname = false;
-        String newDateOfBirth = "2000-05-05";
+        String newDateOfBirth = "";
         mockMvc.perform(MockMvcRequestBuilders.post(editProfileUri())
                         .param("email", newEmail)
                         .param("firstName", newFirstName)
                         .param("lastName", newLastName)
                         .param("noSurname", String.valueOf(noSurname))
                         .param("dateOfBirth", newDateOfBirth))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl(VIEW_PROFILE_URI_STRING));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("editProfile"));
 
-        Assertions.assertEquals(newEmail, user.getEmail());
-        Assertions.assertEquals(newFirstName, user.getFirstName());
-        Assertions.assertEquals(newLastName, user.getLastName());
-        Assertions.assertEquals(newDateOfBirth, user.getDob());
-    }
-
+        Assertions.assertNotEquals(newEmail, user.getEmail());
+        Assertions.assertNotEquals(newFirstName, user.getFirstName());
+        Assertions.assertNotEquals(newLastName, user.getLastName());
+        Assertions.assertNotEquals(newDateOfBirth, user.getDob());
 
 
 }
