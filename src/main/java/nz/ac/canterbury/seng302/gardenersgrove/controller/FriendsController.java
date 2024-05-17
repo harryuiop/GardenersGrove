@@ -38,13 +38,13 @@ public class FriendsController {
         model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
         model.addAttribute("requestService", friendRequestService);
-        model.addAttribute("searchUsersUri", searchUsersUri());
+        model.addAttribute("searchResultsUri", searchResultsUri());
         model.addAttribute("search", "");
         return "manageFriends";
     }
 
     @PostMapping(MANAGE_FRIENDS_URI_STRING)
-    public String submitFriendsPage(Model model, @RequestParam String action, @RequestParam Long request) throws NoSuchGardenException {
+    public String submitFriendsPage(@RequestParam String action, @RequestParam Long request) throws NoSuchGardenException {
         logger.info("POST {}", viewFriendsUri());
         logger.info(request.toString());
         FriendRequest friendRequest = friendRequestService.findRequestById(request).isPresent() ? friendRequestService.findRequestById(request).get() : null;
@@ -72,10 +72,7 @@ public class FriendsController {
             default:
                 logger.info("Default in switch statement");
         }
-        model.addAttribute("user", userService.getAuthenticatedUser());
-        model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
-        model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
-        model.addAttribute("requestService", friendRequestService);
-        return "manageFriends";
+
+        return "redirect:"+MANAGE_FRIENDS_URI_STRING;
     }
 }

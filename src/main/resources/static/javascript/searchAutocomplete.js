@@ -41,7 +41,6 @@ function renderAutocomplete(users) {
     }
     autocompleteList.innerHTML = '';
     showAutocompleteBox()
-    console.log(users)
     users.forEach(user => {
         let suggestionElement = document.createElement("div");
         let primaryTextElement = document.createElement("div");
@@ -83,7 +82,7 @@ function makeFriends() {
         .then(response => {
 
         }).catch(error => {
-            colsole.error('Error: ', error)
+            console.error('Error: ', error)
     })
     closeModal()
 }

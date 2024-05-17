@@ -26,7 +26,8 @@ public class UriConfig {
     public static final String VIEW_FRIENDS_GARDEN_URI_STRING = "/friends/{friendId}/garden/{gardenId}";
 
     public static final String SEARCH_USERS_STRING = "/search";
-
+    public static final String SEARCH_RESULTS_STRING = "/search/results";
+    public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
 
 
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
@@ -36,7 +37,6 @@ public class UriConfig {
     private static final UriTemplate NEW_PLANT_URI = new UriTemplate(NEW_PLANT_URI_STRING);
     private static final UriTemplate EDIT_PLANT_URI = new UriTemplate(EDIT_PLANT_URI_STRING);
     private static final UriTemplate UPLOAD_PLANT_IMAGE_URI = new UriTemplate(UPLOAD_PLANT_IMAGE_URI_STRING);
-    private static final UriTemplate SEARCH_USERS_URI = new UriTemplate(SEARCH_USERS_STRING);
 
     private UriConfig() {
         throw new IllegalStateException("Utility class");
@@ -118,5 +118,7 @@ public class UriConfig {
         return URI.create(VIEW_ALL_GARDENS_URI_STRING);
     }
     public static URI searchUsersUri() {return URI.create(SEARCH_USERS_STRING);}
+    public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
+    public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
 
 }

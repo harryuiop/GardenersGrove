@@ -15,27 +15,28 @@
 <body style="">
     <div class="container-fluid p-5 text-white text-center" style="background-color: #477641">
         <h1>Manage my friends</h1>
-
-        <div class="input-group rounded mx-auto" style="width: 20vw;">
-                <input type="text" id="searchUsers"
-                       th:name="searchUser"
-                       th:value="*{search}"
-                       class="form-control rounded"
-                       placeholder="Search for new friends"
-                       aria-label="Search"
-                       aria-describedby="search-addon"
-                        autocomplete="off"/>
-                <span class="input-group-text border-0" id="search-addon">
-                    <i class="bi bi-search"></i>
-                </span>
-            <div id="autocomplete-list" class="inputStyle">
-                <table class="search-result">
-                    <tbody>
-                        <tr th:each="possibleFriend : ${foundUsers}"></tr>
-                    </tbody>
-                </table>
+        <form th:action="@{${searchResultsUri}}" method="post">
+            <div class="input-group rounded mx-auto" style="width: 20vw;">
+                    <input type="text" id="searchUsers"
+                           th:name="searchUser"
+                           th:value="*{search}"
+                           class="form-control rounded"
+                           placeholder="Search for new friends"
+                           aria-label="Search"
+                           aria-describedby="search-addon"
+                            autocomplete="off"/>
+                    <button class="input-group-text border-0" id="search-addon" type="submit" th:for="searchForm">
+                        <i class="bi bi-search"></i>
+                    </button>
+                <div id="autocomplete-list" class="inputStyle">
+                    <table class="search-result">
+                        <tbody>
+                            <tr th:each="possibleFriend : ${foundUsers}"></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
     <div class="modal" tabindex="-1" role="dialog" id="confirm-send-request">
@@ -225,6 +226,6 @@
 
         </div>
     </div>
-<script th:src="@{/javascript/searchAutoComplete.js}"></script>
+<script th:src="@{/javascript/searchAutocomplete.js}"></script>
 </body>
 </html>
