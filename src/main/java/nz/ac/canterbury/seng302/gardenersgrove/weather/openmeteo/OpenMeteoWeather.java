@@ -19,6 +19,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a
+ */
 @Component
 public class OpenMeteoWeather implements WeatherService {
     private final ObjectMapper objectMapper = new ObjectMapper()
