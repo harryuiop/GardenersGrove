@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -141,8 +143,10 @@ public class UserServiceIntegrationTest {
         mockRespositoryUsers.add(user1);
         mockRespositoryUsers.add(user2);
         when(userRepositoryMock.findAll()).thenReturn(mockRespositoryUsers);
-        List<User> users = new ArrayList<>();
-        users.add(user1);
+        List<Map<String,String>> users = new ArrayList<>();
+        users.add(new HashMap<>());
+        users.getFirst().put("email", user1.getEmail());
+        users.getFirst().put("name", user1.getName());
         Assertions.assertEquals(users, userService.getSearchedUser("Ben"));
     }
 
@@ -152,8 +156,10 @@ public class UserServiceIntegrationTest {
         mockRespositoryUsers.add(user1);
         mockRespositoryUsers.add(user2);
         when(userRepositoryMock.findAll()).thenReturn(mockRespositoryUsers);
-        List<User> users = new ArrayList<>();
-        users.add(user2);
+        List<Map<String,String>> users = new ArrayList<>();
+        users.add(new HashMap<>());
+        users.getFirst().put("email", user2.getEmail());
+        users.getFirst().put("name", user2.getName());
         Assertions.assertEquals(users, userService.getSearchedUser("Smith"));
     }
 
@@ -163,9 +169,13 @@ public class UserServiceIntegrationTest {
         mockRespositoryUsers.add(user1);
         mockRespositoryUsers.add(user2);
         when(userRepositoryMock.findAll()).thenReturn(mockRespositoryUsers);
-        List<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
+        List<Map<String,String>> users = new ArrayList<>();
+        users.add(new HashMap<>());
+        users.getFirst().put("email", user1.getEmail());
+        users.getFirst().put("name", user1.getName());
+        users.add(new HashMap<>());
+        users.getLast().put("email", user2.getEmail());
+        users.getLast().put("name", user2.getName());
         Assertions.assertEquals(users, userService.getSearchedUser("Marshal"));
     }
 }
