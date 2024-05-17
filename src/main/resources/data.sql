@@ -1,10 +1,12 @@
 INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
                    "sign-up_token", user_id)
-VALUES (TRUE, '2000-01-01', 'user@gmail.com', 'Default', 'User', '{noop}Password1!', NULL, NULL, 1);
+VALUES (TRUE, '2000-01-01', 'user1@gmail.com', 'Default', 'User',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 1);
 
 INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
                    "sign-up_token", user_id)
-VALUES (TRUE, '2001-02-02', 'user@proton.me', 'Second', 'User', '{noop}Password2!', NULL, NULL, 2);
+VALUES (TRUE, '2001-02-02', 'user2@gmail.com', 'Second', 'User',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 2);
 
 
 INSERT INTO location (city, country, lat, lng, postcode, street_address, suburb, id)
