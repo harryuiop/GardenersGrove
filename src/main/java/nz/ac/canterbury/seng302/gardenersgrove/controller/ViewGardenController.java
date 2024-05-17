@@ -3,12 +3,15 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchPlantException;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
@@ -25,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,6 +46,7 @@ public class ViewGardenController extends GardensSidebar {
     private final PlantService plantService;
     private final UserService userService;
     private final FriendshipService friendshipService;
+    private final TagService tagService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -51,11 +56,12 @@ public class ViewGardenController extends GardensSidebar {
      * @param userService   A User database access object.
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, FriendshipService friendshipService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
         this.friendshipService = friendshipService;
+        this.tagService = tagService;
     }
 
     private String loadGardenPage(
@@ -64,9 +70,14 @@ public class ViewGardenController extends GardensSidebar {
                     URI newPlantUri,
                     List<Plant> plants,
                     boolean owner,
-                    Model model
+                    Model model,
+                    String...errorMessages
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
+
+        if (errorMessages.length > 0) {
+            model.addAttribute("tagErrors", errorMessages[0]);
+        }
 
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
@@ -75,6 +86,8 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("owner", owner);
         model.addAttribute("editPlantUriString", EDIT_PLANT_URI_STRING);
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
+        model.addAttribute("tags", garden.getTags());
+        model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
         return "viewGarden";
     }
 
@@ -99,8 +112,8 @@ public class ViewGardenController extends GardensSidebar {
                         editGardenUri(gardenId),
                         newPlantUri(gardenId),
                         plantService.getAllPlantsInGarden(optionalGarden.get()),
-                true,
-                model
+                        true,
+                        model
         );
     }
 
@@ -178,4 +191,44 @@ public class ViewGardenController extends GardensSidebar {
 
         return "redirect:" + viewGardenUri(gardenId);
     }
+
+    /**
+     * Create new tag for a garden.
+     *
+     * @param model Model to add attributes to
+     * @param gardenId Id of garden
+     * @param tagName User inputted tag name
+     * @return Redirect to view garden page
+     * @throws NoSuchGardenException If garden is not found, either by wrong/unauthorized owner
+     * or does not exist.
+     */
+    @PostMapping(NEW_GARDEN_TAG_URI_STRING)
+    public String submitGardenTag(Model model,
+                                  @PathVariable long gardenId,
+                                  @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException {
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
+            throw new NoSuchGardenException(gardenId);
+        }
+        Garden garden = optionalGarden.get();
+        String errorMessages = ErrorChecker.tagNameErrors(tagName);
+
+
+        if (!errorMessages.isEmpty())
+            model.addAttribute("tagErrors", errorMessages);
+        else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
+            tagService.saveTag(tagName, garden);
+
+
+        return loadGardenPage(
+                optionalGarden.get(),
+                editGardenUri(gardenId),
+                newPlantUri(gardenId),
+                plantService.getAllPlantsInGarden(optionalGarden.get()),
+                model,
+                errorMessages
+        );
+    }
+
+
 }
