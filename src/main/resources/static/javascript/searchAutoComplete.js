@@ -68,6 +68,7 @@ function showAutocompleteBox() {
 }
 
 function sendRequest(user) {
+    requestedUser = user
     var text = document.getElementById("request-user")
     text.textContent = `Would you like to request ${user.name} as a friend?`
     modal.style.display="block"

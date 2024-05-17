@@ -224,7 +224,8 @@ public class UserService {
     public List<Map<String, String>> getSearchedUser(String searchString) {
         List<Map<String, String>> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
-            if ((user.getEmail()).toLowerCase().contains(searchString.toLowerCase())) {
+            if ((user.getEmail()).toLowerCase().contains(searchString.toLowerCase()) ||
+                    (user.getName()).toLowerCase().contains(searchString.toLowerCase())) {
                 Map<String, String> newMap = new HashMap<>();
                 newMap.put("email", user.getEmail());
                 newMap.put("name", user.getName());
