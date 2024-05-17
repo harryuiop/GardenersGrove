@@ -150,6 +150,13 @@ public class LogInController {
 
         return "redirect:" + loginUri();
     }
+
+    /**
+     * return reset password form when user click forgot password
+     *
+     * @param model The Model object used for adding attributes to the view.
+     * @return The name of the template
+     */
     @GetMapping(RESET_PASSWORD_EMAIL_URI_STRING)
     public String returnForgotPasswordForm(Model model) {
         logger.info("GET {}", resetPasswordEmailUri());
@@ -158,6 +165,14 @@ public class LogInController {
         return "forgotPasswordForm";
     }
 
+    /**
+     * send an email that has link to reset their password to user and return template
+     *
+     * @param req http servlet Request to get base url
+     * @param model The Model object used for adding attributes to the view.
+     * @param userEmail user email to send an email
+     * @return name of html template
+     */
     @PostMapping(RESET_PASSWORD_EMAIL_URI_STRING)
     public String submitEmailForResetPassword(HttpServletRequest req,
                                               Model model,

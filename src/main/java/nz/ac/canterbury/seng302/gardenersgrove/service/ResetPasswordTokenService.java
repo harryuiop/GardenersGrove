@@ -49,6 +49,12 @@ public class ResetPasswordTokenService {
         resetPasswordTokenRepository.delete(token);
     }
 
+    /**
+     * hash token before save to db
+     *
+     * @param resetPasswordTokenUUID token to use for link of reset password
+     * @return encoded token
+     */
     private String hashToken(String resetPasswordTokenUUID) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
         return encoder.encode(resetPasswordTokenUUID);
