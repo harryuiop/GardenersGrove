@@ -31,7 +31,7 @@
         </span>
     </div>
 
-    <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
+    <form th:if="${owner}" th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
         <label class="form-input" for="tagName"> Create new tag: </label>
         <div style="display: flex;">
             <div>
