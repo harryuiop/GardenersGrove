@@ -16,4 +16,6 @@ public interface FriendRequestRepository extends CrudRepository<FriendRequest, L
 
     Optional<FriendRequest> findFriendRequestById(Long requestId);
 
+    void deleteById(Long id);
+
 }

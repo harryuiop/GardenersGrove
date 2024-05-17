@@ -64,8 +64,7 @@ public class FriendsController {
             case "Accept":
                 logger.info("Accepted Request");
                 friendshipService.addFriend(sender, receiver);
-                friendRequest.setStatus(Status.ACCEPTED);
-                friendRequestService.updateRequest(friendRequest);
+                friendRequestService.removeAcceptedRequest(friendRequest);
                 break;
             case "Decline":
                 logger.info("Declined Request");

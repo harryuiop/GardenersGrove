@@ -65,4 +65,9 @@ public class FriendRequestService {
     public void updateRequest(FriendRequest request) {
         friendRequestRepository.save(request);
     }
+
+    public void removeAcceptedRequest(FriendRequest request) {
+        friendRequestRepository.deleteById(request.getId());
+    }
+
 }
