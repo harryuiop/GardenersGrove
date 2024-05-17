@@ -65,16 +65,6 @@ public class UserService {
         this.addUsers(user6);
         this.addUsers(user7);
         this.addUsers(user8);
-        user1.addFriend(user2);
-        user1.addFriend(user3);
-        user1.addFriend(user4);
-        user2.addFriend(user1);
-        user3.addFriend(user1);
-        user4.addFriend(user1);
-        this.updateUser(user1);
-        this.updateUser(user2);
-        this.updateUser(user3);
-        this.updateUser(user4);
     }
 
     /**

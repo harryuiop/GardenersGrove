@@ -63,16 +63,11 @@ public class User {
     @JoinColumn(name = "userId")
     private List<Authority> userRoles;
 
-    @ManyToMany
-    @JoinTable(name = "tbl_friends",
-            joinColumns = @JoinColumn(name = "personId"),
-            inverseJoinColumns = @JoinColumn(name = "friendId")
-    )
-    private List<User> friends;
+    @OneToMany(mappedBy = "friend1", cascade = CascadeType.REMOVE)
+    private List<Friendship> friends1;
 
-    @ManyToMany(mappedBy = "friends", cascade = CascadeType.ALL)
-    private List<User> friendOf;
-
+    @OneToMany(mappedBy = "friend2", cascade = CascadeType.REMOVE)
+    private List<Friendship> friends2;
 
     /**
      * JPA Empty Constructor
@@ -102,23 +97,10 @@ public class User {
         this.password = password;
         this.dob = dob;
         this.confirmation = false;
-        this.friends = new ArrayList<>();
     }
 
     public long getId() {
         return userId;
-    }
-
-    public List<User> getFriends() {
-        return friends;
-    }
-
-    public void addFriend(User friend) {
-        friends.add(friend);
-    }
-
-    public void removeFriend(User friend) {
-        friends.remove(friend);
     }
 
     /**
