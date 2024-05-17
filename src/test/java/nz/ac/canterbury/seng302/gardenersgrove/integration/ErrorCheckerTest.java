@@ -1068,6 +1068,7 @@ class ErrorCheckerTest {
         String email = "jane@doe.com";
         Map<String, String> errors = ErrorChecker.emailErrorsResetPassword(email);
         Assertions.assertEquals(0, errors.size());
+    }
 
     @Test
     void gardenFormErrors_Inappropriate_returnsDescriptionError() {
