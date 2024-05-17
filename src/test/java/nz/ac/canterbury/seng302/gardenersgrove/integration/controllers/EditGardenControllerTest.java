@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.editGardenUri;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewGardenUri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -83,7 +82,7 @@ class EditGardenControllerTest {
         initialGardenLocation.setSuburb(initialSuburb);
         initialGardenLocation.setPostcode(initialPostcode);
 
-        Garden garden = new Garden(user, initialGardenName, initialGardenLocation, initialGardenSize);
+        Garden garden = new Garden(user, initialGardenName, null, initialGardenLocation, initialGardenSize);
 
         gardenRepository.save(garden);
         gardenId = garden.getId();

@@ -7,10 +7,13 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 
 @DataJpaTest
@@ -152,5 +155,16 @@ public class FormValuesValidationTest {
         String dob = LocalDate.now().minusYears(20).toString();
         Mockito.when(userRepository.findByEmail(email)).thenReturn(new User(email, firstName, lastName,password,dob));
         Assertions.assertFalse(FormValuesValidator.emailInUse(email, userService));
+    }
+    @ParameterizedTest
+    @ValueSource(strings = {"1", "100", "9923", "999999999", "01"})
+    void checkValidPlantCount_returnTrue(String value) {
+       Assertions.assertTrue(FormValuesValidator.checkValidPlantCount(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"1.0", "abc", "#!12", "9999999999", "0", "-1"})
+    void checkValidPlantCount_returnFalse(String value) {
+        Assertions.assertFalse(FormValuesValidator.checkValidPlantCount(value));
     }
 }
