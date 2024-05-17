@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.GardenController;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.FriendRequestRepository;
@@ -7,11 +8,14 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureMockMvc(addFilters = false)
 public class FriendControllerTest {
 
+    Logger logger = LoggerFactory.getLogger(GardenController.class);
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -48,6 +54,9 @@ public class FriendControllerTest {
 
     @Autowired
     private FriendRequestService friendRequestService;
+
+    @Autowired
+    private FriendshipService friendshipService;
 
     @SpyBean
     private UserService userService;
@@ -85,10 +94,7 @@ public class FriendControllerTest {
             user1 = new User("test1@domain.net", "Test", "User", "Password1!", "2000-01-01");
             user1.setConfirmation(true);
             userRepository.save(user1);
-            user.addFriend(user1);
-            user1.addFriend(user);
-            userRepository.save(user);
-            userRepository.save(user1);
+            friendshipService.addFriend(user1, user);
         }
 
         if (user2 == null) {
@@ -116,33 +122,38 @@ public class FriendControllerTest {
 
     @Test
     void decline_Request_Request_Removed() throws Exception {
+
         mockMvc.perform(MockMvcRequestBuilders.post(viewFriendsUri())
                         .param("action", "Decline")
-                        .param("request", "1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("manageFriends"));
+                        .param("request", request.getId().toString()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/friends"));
 
-        List<User> userFriends = user.getFriends();
+        FriendRequest updatedRequest = friendRequestService.findRequestById(request.getId()).get();
+        FriendRequest updatedRequest1 = friendRequestService.findRequestById(request1.getId()).get();
+        List<User> userFriends = friendshipService.getFriends(user);
         assertEquals(1, userFriends.size());
-        assertEquals(Status.DECLINED, request.getStatus());
+        assertEquals(Status.DECLINED, updatedRequest.getStatus());
         assertEquals(1, friendRequestRepository.findFriendRequestsByReceiverAndStatus(user, Status.PENDING).size());
-        assertEquals(Status.PENDING, request1.getStatus());
+        assertEquals(Status.PENDING, updatedRequest1.getStatus());
     }
 
     @Test
     void accept_Request_Friend_Added() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(viewFriendsUri())
                         .param("action", "Accept")
-                        .param("request", "1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("manageFriends"));
+                        .param("request", request.getId().toString()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/friends"));
 
-        List<User> userFriends = user.getFriends();
+        FriendRequest updatedRequest = friendRequestService.findRequestById(request.getId()).get();
+        FriendRequest updatedRequest1 = friendRequestService.findRequestById(request1.getId()).get();
+        List<User> userFriends = friendshipService.getFriends(user);
         assertEquals(2, userFriends.size());
-        assertEquals(user2, userFriends.get(1));
-        assertEquals(Status.ACCEPTED, request.getStatus());
+        assertEquals(user2.getId(), userFriends.get(1).getId());
+        assertEquals(Status.ACCEPTED, updatedRequest.getStatus());
         assertEquals(1, friendRequestRepository.findFriendRequestsByReceiverAndStatus(user, Status.PENDING).size());
-        assertEquals(Status.PENDING, request1.getStatus());
+        assertEquals(Status.PENDING, updatedRequest1.getStatus());
     }
 
 }

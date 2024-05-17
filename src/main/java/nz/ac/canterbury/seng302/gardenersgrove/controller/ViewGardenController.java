@@ -6,6 +6,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuc
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -40,6 +41,7 @@ public class ViewGardenController extends GardensSidebar {
     private final GardenService gardenService;
     private final PlantService plantService;
     private final UserService userService;
+    private final FriendshipService friendshipService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -49,10 +51,11 @@ public class ViewGardenController extends GardensSidebar {
      * @param userService   A User database access object.
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, FriendshipService friendshipService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
+        this.friendshipService = friendshipService;
     }
 
     private String loadGardenPage(
@@ -115,7 +118,7 @@ public class ViewGardenController extends GardensSidebar {
         logger.info("GET {}", viewFriendsGardenUri(friendId, gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty() || !optionalGarden.get().getOwner().getFriends().contains(userService.getAuthenticatedUser())) {
+        if (optionalGarden.isEmpty() || !friendshipService.getFriends(optionalGarden.get().getOwner()).contains(userService.getAuthenticatedUser())) {
             throw new NoSuchGardenException(gardenId);
         }
         return loadGardenPage(

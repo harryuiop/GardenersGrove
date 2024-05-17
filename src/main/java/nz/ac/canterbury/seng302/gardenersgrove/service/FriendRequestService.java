@@ -23,7 +23,7 @@ public class FriendRequestService {
     private final UserService userService;
 
     /**
-     * Constructor for UserService.
+     * Constructor for Friendship Service.
      *
      * @param friendRequestRepository The FriendRequestRepository instance.
      */
