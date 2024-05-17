@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class ErrorCheckerTest {
 
     UserService userService = mock(UserService.class);
-    PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    PasswordEncoder encoder = new BCryptPasswordEncoder(8);
     private boolean userCreated = false;
     User user;
 

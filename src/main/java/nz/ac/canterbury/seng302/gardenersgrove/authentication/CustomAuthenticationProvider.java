@@ -2,13 +2,11 @@ package nz.ac.canterbury.seng302.gardenersgrove.authentication;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.emailIsValid;
@@ -25,9 +23,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      */
     private final UserService userService;
 
-    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
-    @Autowired
     public CustomAuthenticationProvider(UserService userService) {
         super();
         this.userService = userService;
@@ -47,18 +42,22 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // Check if either email or password is null or empty
         if (
-                email == null || email.isEmpty() || !emailIsValid(email) ||
-                        password == null || password.isEmpty()
+                email == null || email.isEmpty() || !emailIsValid(email)
         ) {
-            throw new BadCredentialsException("Bad_Credentials");
+            throw new BadCredentialsException("Invalid_Email");
+        } else if (
+                password == null || password.isEmpty()
+        ) {
+            throw new BadCredentialsException("Invalid_Password");
         }
 
         // Attempt to retrieve user from the database using email and password
         User user = userService.getUserByEmail(email);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
-        // If user is not found, throw BadCredentialsException
-        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException("Invalid");
+        // If user is not found or the password is incorrect, throw BadCredentialsException
+        if (user == null || !encoder.matches(password, user.getPassword())) {
+            throw new BadCredentialsException("Authentication_Failed");
         }
 
         if (!user.isConfirmed()) {
@@ -67,7 +66,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // If user is found, create and return a UsernamePasswordAuthenticationToken
         return new UsernamePasswordAuthenticationToken(
-                user.getUserId(), // User ID - NOTE: This is how you change the principle name for spring secuirty of user entitys
+                user.getUserId(), // User ID - NOTE: This is how you change the principle name for spring security of user entities
                 null, // Null credentials as they're already authenticated
                 user.getAuthorities() // User's authorities (roles)
         );

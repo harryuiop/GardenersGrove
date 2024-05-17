@@ -4,7 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +20,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
  */
 public class ErrorChecker {
     static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
-    private static final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
     private ErrorChecker() {
          throw new IllegalStateException("Utility class");
