@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This is a
+ * This is a class that implements the WeatherService interface
+ * and provides the methods specific to the Open-Meteo API that
+ * fetch and deserialize weather data.
  */
 @Component
 public class OpenMeteoWeather implements WeatherService {

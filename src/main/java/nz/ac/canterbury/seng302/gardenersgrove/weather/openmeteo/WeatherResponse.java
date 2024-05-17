@@ -4,6 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
 
+/**
+ * This is a class specific to the Open-Meteo API
+ * that deserialize the weather data (in JSON form)
+ * into Java variables.
+ */
 public class WeatherResponse {
     @JsonProperty("latitude")
     private double latitude;

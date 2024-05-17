@@ -2,6 +2,10 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather;
 
 import java.util.List;
 
+/**
+ * An interface for classes dedicated to any given weather
+ * API that specify how they should fetch weather data
+ */
 public interface WeatherService {
 
     /**

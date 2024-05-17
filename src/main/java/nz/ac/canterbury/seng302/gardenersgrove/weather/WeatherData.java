@@ -2,6 +2,10 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather;
 
 import java.time.LocalDate;
 
+/**
+ * This class specifies what data items are needed
+ * by the application and generalizes them.
+ */
 public class WeatherData {
     private final LocalDate date;
     private final double temperature;
