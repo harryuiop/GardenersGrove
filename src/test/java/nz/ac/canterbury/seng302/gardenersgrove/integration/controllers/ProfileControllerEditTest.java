@@ -246,5 +246,5 @@ public class ProfileControllerEditTest {
         Assertions.assertNotEquals(newLastName, user.getLastName());
         Assertions.assertNotEquals(newDateOfBirth, user.getDob());
 
-
+    }
 }
