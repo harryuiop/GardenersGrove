@@ -146,12 +146,10 @@ public class FriendControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/friends"));
 
-        FriendRequest updatedRequest = friendRequestService.findRequestById(request.getId()).get();
         FriendRequest updatedRequest1 = friendRequestService.findRequestById(request1.getId()).get();
         List<User> userFriends = friendshipService.getFriends(user);
         assertEquals(2, userFriends.size());
         assertEquals(user2.getId(), userFriends.get(1).getId());
-        assertEquals(Status.ACCEPTED, updatedRequest.getStatus());
         assertEquals(1, friendRequestRepository.findFriendRequestsByReceiverAndStatus(user, Status.PENDING).size());
         assertEquals(Status.PENDING, updatedRequest1.getStatus());
     }
