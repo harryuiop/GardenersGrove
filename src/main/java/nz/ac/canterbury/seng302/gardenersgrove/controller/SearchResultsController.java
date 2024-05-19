@@ -10,12 +10,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.sendFriendRequestUri;
 
 @Controller
 public class SearchResultsController {
@@ -31,7 +34,7 @@ public class SearchResultsController {
 
     @GetMapping(SEARCH_RESULTS_STRING)
     public String getSearchResultsPage(@RequestParam String searchUser, Model model) {
-        logger.info("Get /search/result");
+        logger.info("Get /search/result/{}", searchUser);
         List<Map<String, String>> usersFound = searchUsersController.getSearchedUsers(searchUser);
         List<User> displayUsers = new ArrayList<>();
         for (Map<String,String> mappedUser : usersFound) {
@@ -39,12 +42,15 @@ public class SearchResultsController {
         }
         model.addAttribute("usersFound", displayUsers);
         model.addAttribute("sendFriendRequestUri", sendFriendRequestUri());
+        model.addAttribute("search", searchUser);
         return "searchResults";
     }
 
     @PostMapping(SEARCH_RESULTS_STRING)
-    public String getSearchResults(@RequestParam String searchUser) {
-        return "redirect:"+SEARCH_RESULTS_STRING+"?searchUser="+searchUser;
+    public String getSearchResults(@RequestParam String searchUser, RedirectAttributes redirectAttributes) {
+        logger.info("POST /search/result/{}", searchUser);
+        redirectAttributes.addAttribute("searchUser", searchUser);
+        return "redirect:"+SEARCH_RESULTS_STRING;
     }
 
     @PostMapping(SEND_FREIND_REQUEST_STRING)

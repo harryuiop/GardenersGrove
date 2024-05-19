@@ -28,13 +28,6 @@
                     <button class="input-group-text border-0" id="search-addon" type="submit" th:for="searchForm">
                         <i class="bi bi-search"></i>
                     </button>
-                <div id="autocomplete-list" class="inputStyle">
-                    <table class="search-result">
-                        <tbody>
-                            <tr th:each="possibleFriend : ${foundUsers}"></tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </form>
     </div>
@@ -226,6 +219,5 @@
 
         </div>
     </div>
-<script th:src="@{/javascript/searchAutocomplete.js}"></script>
 </body>
 </html>
