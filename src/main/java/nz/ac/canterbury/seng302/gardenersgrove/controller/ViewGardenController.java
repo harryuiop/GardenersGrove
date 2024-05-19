@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchPlantException;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,8 +67,13 @@ public class ViewGardenController extends GardensSidebar {
                     List<Plant> plants,
                     boolean owner,
                     Model model
+                    String...errorMessages
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
+
+        if (errorMessages.length > 0) {
+            model.addAttribute("tagErrors", errorMessages[0]);
+        }
 
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
@@ -211,6 +218,7 @@ public class ViewGardenController extends GardensSidebar {
     /**
      * Create new tag for a garden.
      *
+     * @param model Model to add attributes to
      * @param gardenId Id of garden
      * @param tagName User inputted tag name
      * @return Redirect to view garden page
@@ -218,15 +226,31 @@ public class ViewGardenController extends GardensSidebar {
      * or does not exist.
      */
     @PostMapping(NEW_GARDEN_TAG_URI_STRING)
-    public String submitGardenTag(@PathVariable long gardenId,
+    public String submitGardenTag(Model model,
+                                  @PathVariable long gardenId,
                                   @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
-        tagService.saveTag(tagName, garden);
-        return "redirect:" + viewGardenUri(gardenId);
+        String errorMessages = ErrorChecker.tagNameErrors(tagName);
+
+
+        if (!errorMessages.isEmpty())
+            model.addAttribute("tagErrors", errorMessages);
+        else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
+            tagService.saveTag(tagName, garden);
+
+
+        return loadGardenPage(
+                optionalGarden.get(),
+                editGardenUri(gardenId),
+                newPlantUri(gardenId),
+                plantService.getAllPlantsInGarden(optionalGarden.get()),
+                model,
+                errorMessages
+        );
     }
 
 
