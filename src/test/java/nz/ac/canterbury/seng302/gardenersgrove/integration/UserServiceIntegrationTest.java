@@ -135,19 +135,13 @@ public class UserServiceIntegrationTest {
 
     @Test
     void getSearchedUser_searchJane_returnEmptyList() {
-        List<User> mockRespositoryUsers = new ArrayList<>();
-        mockRespositoryUsers.add(user1);
-        mockRespositoryUsers.add(user2);
-        when(userRepositoryMock.findAll()).thenReturn(mockRespositoryUsers);
+        when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
         Assertions.assertEquals(new ArrayList<>(), userService.getSearchedUser("Jane"));
     }
 
     @Test
     void getSearchedUser_searchBen_returnUser1() {
-        List<User> mockRespositoryUsers = new ArrayList<>();
-        mockRespositoryUsers.add(user1);
-        mockRespositoryUsers.add(user2);
-        when(userRepositoryMock.findAll()).thenReturn(mockRespositoryUsers);
+        when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
         List<Map<String,String>> users = new ArrayList<>();
         users.add(new HashMap<>());
         users.getFirst().put("email", user1.getEmail());
@@ -157,10 +151,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void getSearchedUser_searchSmithWithRandomCasing_returnUser2() {
-        List<User> mockRespositoryUsers = new ArrayList<>();
-        mockRespositoryUsers.add(user1);
-        mockRespositoryUsers.add(user2);
-        when(userRepositoryMock.findAll()).thenReturn(mockRespositoryUsers);
+        when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
         List<Map<String,String>> users = new ArrayList<>();
         users.add(new HashMap<>());
         users.getFirst().put("email", user2.getEmail());
@@ -170,10 +161,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void getSearchedUser_searchMarshal_returnBothUsers() {
-        List<User> mockRespositoryUsers = new ArrayList<>();
-        mockRespositoryUsers.add(user1);
-        mockRespositoryUsers.add(user2);
-        when(userRepositoryMock.findAll()).thenReturn(mockRespositoryUsers);
+        when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
         List<Map<String,String>> users = new ArrayList<>();
         users.add(new HashMap<>());
         users.getFirst().put("email", user1.getEmail());
@@ -187,23 +175,31 @@ public class UserServiceIntegrationTest {
     @Test
     void getSearchedUser_searchUser1AtGmail_returnUser1() {
         when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
-        List<User> users = new ArrayList<>();
-        users.add(user1);
+        List<Map<String,String>> users = new ArrayList<>();
+        users.add(new HashMap<>());
+        users.getFirst().put("email", user1.getEmail());
+        users.getFirst().put("name", user1.getName());
         Assertions.assertEquals(users, userService.getSearchedUser("user1@gmail.com"));
     }
     @Test
     void getSearchedUser_searchUser2AtGmail_returnUser1() {
         when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
-        List<User> users = new ArrayList<>();
-        users.add(user2);
+        List<Map<String,String>> users = new ArrayList<>();
+        users.add(new HashMap<>());
+        users.getLast().put("email", user2.getEmail());
+        users.getLast().put("name", user2.getName());
         Assertions.assertEquals(users, userService.getSearchedUser("user2@gmail.com"));
     }
     @Test
     void getSearchedUser_searchAtGmail_returnUser1And2() {
         when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
-        List<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
+        List<Map<String,String>> users = new ArrayList<>();
+        users.add(new HashMap<>());
+        users.getFirst().put("email", user1.getEmail());
+        users.getFirst().put("name", user1.getName());
+        users.add(new HashMap<>());
+        users.getLast().put("email", user2.getEmail());
+        users.getLast().put("name", user2.getName());
         Assertions.assertEquals(users, userService.getSearchedUser("@gmail.com"));
     }
 }
