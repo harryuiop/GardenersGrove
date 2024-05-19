@@ -64,13 +64,16 @@ public class FriendsController {
             case "Accept":
                 logger.info("Accepted Request");
                 friendshipService.addFriend(sender, receiver);
-                friendRequestService.removeAcceptedRequest(friendRequest);
+                friendRequestService.removeRequest(friendRequest);
                 break;
             case "Decline":
                 logger.info("Declined Request");
                 friendRequest.setStatus(Status.DECLINED);
                 friendRequestService.updateRequest(friendRequest);
                 break;
+            case "Cancel":
+                logger.info("Declined Request");
+                friendRequestService.removeRequest(friendRequest);
             default:
                 logger.info("Default in switch statement");
         }
