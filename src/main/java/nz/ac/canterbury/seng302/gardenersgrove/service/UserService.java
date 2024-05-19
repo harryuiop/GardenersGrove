@@ -8,9 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
@@ -38,11 +36,45 @@ public class UserService {
         User user1 = new User
                 ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01");
         user1.setConfirmation(true);
-        this.addUsers(user1);
         User user2 = new User
-                ("user2@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
+                ("user2@gmail.com", "Jack", "Doe", "Password1!", "2000-01-01");
         user2.setConfirmation(true);
+        User user3 = new User
+                ("user3@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
+        user3.setConfirmation(true);
+        User user4 = new User
+                ("user4@gmail.com", "Jane", "Doe", "Password1!", "2000-01-01");
+        user4.setConfirmation(true);
+        User user5 = new User
+                ("user5@gmail.com", "Joe", "Doe", "Password1!", "2000-01-01");
+        user5.setConfirmation(true);
+        User user6 = new User
+                ("user6@gmail.com", "Josephine", "Doe", "Password1!", "2000-01-01");
+        user6.setConfirmation(true);
+        User user7 = new User
+                ("user7@gmail.com", "Justin", "Doe", "Password1!", "2000-01-01");
+        user7.setConfirmation(true);
+        User user8 = new User
+                ("user8@gmail.com", "Janet", "Doe", "Password1!", "2000-01-01");
+        user8.setConfirmation(true);
+        this.addUsers(user1);
         this.addUsers(user2);
+        this.addUsers(user3);
+        this.addUsers(user4);
+        this.addUsers(user5);
+        this.addUsers(user6);
+        this.addUsers(user7);
+        this.addUsers(user8);
+        user1.addFriend(user2);
+        user1.addFriend(user3);
+        user1.addFriend(user4);
+        user2.addFriend(user1);
+        user3.addFriend(user1);
+        user4.addFriend(user1);
+        this.updateUser(user1);
+        this.updateUser(user2);
+        this.updateUser(user3);
+        this.updateUser(user4);
     }
 
     /**
@@ -108,7 +140,7 @@ public class UserService {
      * @param id The ID of the user.
      * @return The User object if found, otherwise null.
      */
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         return userRepository.findByUserId(id);
     }
 
@@ -189,12 +221,15 @@ public class UserService {
      * @param searchString a string entered by the user in search of a user.
      * @return a list of users whos' names or emails contain the string.
      */
-    public List<User> getSearchedUser(String searchString) {
-        List<User> searchResults = new ArrayList<>();
+    public List<Map<String, String>> getSearchedUser(String searchString) {
+        List<Map<String, String>> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
-            if ((user.getFirstName() + " " +user.getLastName()).toLowerCase().contains(searchString.toLowerCase()) ||
-                user.getEmail().contains(searchString)) {
-                searchResults.add(user);
+            if ((user.getEmail()).toLowerCase().contains(searchString.toLowerCase()) ||
+                    (user.getName()).toLowerCase().contains(searchString.toLowerCase())) {
+                Map<String, String> newMap = new HashMap<>();
+                newMap.put("email", user.getEmail());
+                newMap.put("name", user.getName());
+                searchResults.add(newMap);
             }
         }
         return searchResults;

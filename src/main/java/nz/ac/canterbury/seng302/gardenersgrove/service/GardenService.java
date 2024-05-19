@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
 import jakarta.annotation.PostConstruct;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
@@ -36,6 +37,13 @@ public class GardenService {
         return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
     }
 
+    public List<Garden> getAllFriendsGardens(long friendId, UserService userService) throws NoSuchGardenException {
+        if (userService.getAuthenticatedUser().getFriends().contains(userService.getUserById(friendId))) {
+            return gardenRepository.findAllByOwner(userService.getUserById(friendId));
+        } else {
+            throw new NoSuchGardenException();
+        }
+    }
     public Optional<Garden> getGardenById(Long id) {
         return gardenRepository.findById(id);
     }
