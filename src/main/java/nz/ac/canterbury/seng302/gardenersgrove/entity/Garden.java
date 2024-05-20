@@ -31,10 +31,10 @@ public class Garden {
     @Column()
     private Float size;
 
-    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Plant> plants;
 
-    @ManyToMany(mappedBy = "gardens", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "gardens", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Tag> tags;
 
     @Column
@@ -156,6 +156,8 @@ public class Garden {
                 ", location='" + location + '\'' +
                 ", size=" + size +
                 ", tags=" + tags +
+                ", publicGarden=" + publicGarden +
+                ", verifiedDescription=" + verifiedDescription +
                 '}';
     }
 }

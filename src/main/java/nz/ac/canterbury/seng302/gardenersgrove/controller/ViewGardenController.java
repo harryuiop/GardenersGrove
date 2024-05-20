@@ -200,7 +200,7 @@ public class ViewGardenController extends GardensSidebar {
      * @throws NoSuchGardenException    If the garden can't be found by the given Id will throw this error
      */
     @PostMapping(MAKE_GARDEN_PUBLIC_STRING)
-    public String makeGardenPublic(@PathVariable long gardenId, @RequestParam(required = false) String publicGarden)
+    public String makeGardenPublic(@PathVariable long gardenId, @RequestParam(required = false) String publicGarden, Model model)
     throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -212,7 +212,14 @@ public class ViewGardenController extends GardensSidebar {
         }
         optionalGarden.get().setPublicGarden(isGardenPublic);
         gardenService.saveGarden(optionalGarden.get());
-        return "redirect:"+viewGardenUri(gardenId);
+        return loadGardenPage(
+                optionalGarden.get(),
+                editGardenUri(gardenId),
+                newPlantUri(gardenId),
+                plantService.getAllPlantsInGarden(optionalGarden.get()),
+                true,
+                model
+        );
     }
 
     /**
