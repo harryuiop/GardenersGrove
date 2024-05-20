@@ -66,7 +66,7 @@ public class ViewGardenController extends GardensSidebar {
                     URI newPlantUri,
                     List<Plant> plants,
                     boolean owner,
-                    Model model
+                    Model model,
                     String...errorMessages
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
@@ -242,12 +242,13 @@ public class ViewGardenController extends GardensSidebar {
         else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
             tagService.saveTag(tagName, garden);
 
-
+        boolean owner = userService.getAuthenticatedUser().getId() == garden.getOwner().getId();
         return loadGardenPage(
                 optionalGarden.get(),
                 editGardenUri(gardenId),
                 newPlantUri(gardenId),
                 plantService.getAllPlantsInGarden(optionalGarden.get()),
+                owner,
                 model,
                 errorMessages
         );

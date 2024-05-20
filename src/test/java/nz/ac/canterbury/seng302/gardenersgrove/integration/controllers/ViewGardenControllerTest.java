@@ -5,6 +5,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.TagRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
@@ -27,9 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Optional;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.makeGardenPublicUri;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.newGardenTagUri;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewGardenUri;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -49,6 +48,8 @@ public class ViewGardenControllerTest {
     private TagRepository tagRepository;
     @SpyBean
     private UserService userService;
+    @SpyBean
+    private GardenService gardenService;
     private LocationRepository locationRepository;
 
     @Autowired
@@ -89,17 +90,8 @@ public class ViewGardenControllerTest {
             userRepository.save(user2);
         }
         tagRepository.deleteAll();
-    }
-
-    @Test
-    public void checkUserHasGarden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(1)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("viewGarden"));
-    }
 
         gardenRepository.deleteAll();
-        locationRepository.deleteAll();
 
         String initialGardenName = "Test Garden";
         float initialGardenSize = 100.0f;
@@ -120,6 +112,14 @@ public class ViewGardenControllerTest {
         gardenRepository.save(garden);
         gardenId = garden.getId();
     }
+
+    @Test
+    public void checkUserHasGarden() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(1)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("viewGarden"));
+    }
+
     @Test
     public void userInputInvalidTagName () throws Exception {
         String tagName = "alkals@U)$(*%&(#*!$&@)";
@@ -129,11 +129,6 @@ public class ViewGardenControllerTest {
                 .andExpect(view().name("viewGarden"));
         Tag tag = tagService.findByName(tagName);
         Assertions.assertNull(tag);
-    void makePublic_publicTrue_gardenIsPublic() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
-                        .param("publicGarden","true"));
-        Optional<Garden> garden = gardenRepository.findById(gardenId);
-        garden.ifPresent(value -> Assertions.assertTrue(value.getPublicGarden()));
     }
 
     @Test
@@ -146,16 +141,6 @@ public class ViewGardenControllerTest {
         Tag tag = tagService.findByName(tagName);
 
         Assertions.assertNull(tag);
-    void makePublic_publicTrueDescriptionInvalid_gardenIsNotPublic() throws Exception {
-        Optional<Garden> garden = gardenRepository.findById(gardenId);
-        if (garden.isPresent()) {
-
-            garden.get().setVerifiedDescription(false);
-        gardenRepository.save(garden.get());
-        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
-                .param("publicGarden","true"));
-            Assertions.assertFalse(garden.get().getPublicGarden());
-        }
     }
 
     @Test
@@ -167,11 +152,6 @@ public class ViewGardenControllerTest {
 
         Tag tag = tagService.findByName(tagName);
         Assertions.assertNull(tag);
-    void makePublic_publicFalse_gardenIsNotPublic() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
-                .param("publicGarden","null"));
-        Optional<Garden> garden = gardenRepository.findById(gardenId);
-        garden.ifPresent(value -> Assertions.assertFalse(value.getPublicGarden()));
     }
 
     @Test
@@ -184,5 +164,38 @@ public class ViewGardenControllerTest {
         Tag tag = tagService.findByName(validTagName);
 
         Assertions.assertNotNull(tag);
+    }
+
+    @Test
+    void makePublic_publicTrue_gardenIsPublic() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
+                        .param("publicGarden","true"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("viewGarden"));;
+        Optional<Garden> garden = gardenRepository.findById(gardenId);
+        garden.ifPresent(value -> Assertions.assertTrue(value.getPublicGarden()));
+    }
+
+    @Test
+    void makePublic_publicTrueDescriptionInvalid_gardenIsNotPublic() throws Exception {
+        Optional<Garden> garden = gardenRepository.findById(gardenId);
+        if (garden.isPresent()) {
+            garden.get().setVerifiedDescription(false);
+            gardenRepository.save(garden.get());
+            mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
+                    .param("publicGarden","true"))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("viewGarden"));
+            ;
+            Assertions.assertFalse(garden.get().getPublicGarden());
+        }
+    }
+
+    @Test
+    void makePublic_publicFalse_gardenIsNotPublic() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
+                .param("publicGarden","null"));
+        Optional<Garden> garden = gardenRepository.findById(gardenId);
+        garden.ifPresent(value -> Assertions.assertFalse(value.getPublicGarden()));
     }
 }
