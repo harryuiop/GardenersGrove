@@ -7,7 +7,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecke
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
@@ -27,7 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,7 +65,7 @@ public class ViewGardenController extends GardensSidebar {
                     URI newPlantUri,
                     List<Plant> plants,
                     boolean owner,
-                    Model model
+                    Model model,
                     String...errorMessages
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
@@ -216,12 +214,12 @@ public class ViewGardenController extends GardensSidebar {
         else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
             tagService.saveTag(tagName, garden);
 
-
         return loadGardenPage(
                 optionalGarden.get(),
                 editGardenUri(gardenId),
                 newPlantUri(gardenId),
                 plantService.getAllPlantsInGarden(optionalGarden.get()),
+                true,
                 model,
                 errorMessages
         );
