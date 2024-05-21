@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendRequestException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
@@ -21,7 +22,7 @@ import java.util.Optional;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 @Controller
-public class FriendsController {
+public class FriendsController extends GardensSidebar {
 
     Logger logger = LoggerFactory.getLogger(GardenController.class);
     private final UserService userService;
@@ -45,6 +46,8 @@ public class FriendsController {
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
         model.addAttribute("requestService", friendRequestService);
         model.addAttribute("friendshipService", friendshipService);
+        model.addAttribute("viewAllGardensUri", viewAllGardensUri());
+        model.addAttribute("newGardenUri", newGardenUri());
         return "manageFriends";
     }
 
