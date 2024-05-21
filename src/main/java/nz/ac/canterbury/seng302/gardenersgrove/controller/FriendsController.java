@@ -30,6 +30,13 @@ public class FriendsController extends GardensSidebar {
 
     private FriendshipService friendshipService;
 
+    /**
+     * Constructor for controller of manage friends page
+     *
+     * @param userService          used to get users from ids
+     * @param friendRequestService used to change the status of friend requests
+     * @param friendshipService    used to adjust friendships between users
+     */
     @Autowired
     public FriendsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService) {
         this.userService = userService;
@@ -37,6 +44,11 @@ public class FriendsController extends GardensSidebar {
         this.friendshipService = friendshipService;
     }
 
+    /**
+     * Load manage friends page
+     * @param model to pass attributes to html
+     * @return manage friends page
+     */
     @GetMapping(MANAGE_FRIENDS_URI_STRING)
     public String getFriendsPage(Model model) {
         logger.info("GET {}", viewFriendsUri());
@@ -51,6 +63,14 @@ public class FriendsController extends GardensSidebar {
         return "manageFriends";
     }
 
+    /**
+     * Called when a friend request is accepted, declined, canceled or a friend is removed
+     * @param model to pass attributes to the html page
+     * @param action states if there hase been a request accepted, declined or cancelled or otherwise a friend removed
+     * @param request is the id of the friend or request being altered
+     * @return a redirect to the manage friends page
+     * @throws NoSuchFriendRequestException
+     */
     @PostMapping(MANAGE_FRIENDS_URI_STRING)
     public String submitFriendsPage(Model model, @RequestParam String action, @RequestParam Long request) throws NoSuchFriendRequestException {
         logger.info("POST {}", viewFriendsUri());
