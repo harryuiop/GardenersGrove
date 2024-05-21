@@ -42,7 +42,7 @@
                     <label class="form-input" for="streetAddress"> Street Address: </label>
                     <p class="info-message">Start typing location to see suggestions.</p>
                     <input type="text" class="form-control" id="streetAddress" th:name="streetAddress"
-                           th:value="*{streetAddress}" data-cy="streetAddress" autofocus>
+                           th:value="*{streetAddress}" data-cy="streetAddress" autocomplete="off">
                     <p class="errorMessage" th:text="${streetAddressError}"></p>
                     <div id="autocomplete-list" class="inputStyle"></div>
                 </div>
@@ -104,8 +104,7 @@
         </div>
     </div>
 </div>
-
-<script th:src="@{/javascript/characterCount.js}"></script>
-<script th:src="@{/javascript/locationAutocomplete.js}"></script>
 </body>
+<script type="text/javascript" th:src="@{/javascript/characterCount.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/locationAutocomplete.js}"></script>
 </html>

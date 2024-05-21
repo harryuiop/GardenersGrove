@@ -2,13 +2,13 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
@@ -417,6 +417,25 @@ public class ErrorChecker {
             errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least " +
                     "one uppercase letter, one lowercase letter, one number, and one special character");
         }
+
+        return errors;
+    }
+
+
+    /**
+     * Checks provided tag name is less than or equal to 25 characters and has valid characters
+     *
+     * @param tag tag name user provided
+     * @return String of error message
+     */
+    public static String tagNameErrors(String tag) {
+        String errors = "";
+
+        if(!FormValuesValidator.checkTagName(tag))
+            errors += "The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" ";
+
+        if (!FormValuesValidator.checkTagNameLength(tag))
+            errors += (!errors.isEmpty() ? "\n" : "") + "A tag cannot exceed 25 characters";
 
         return errors;
     }

@@ -927,4 +927,28 @@ class ErrorCheckerTest {
         correctErrors.put("gardenDescriptionError", "Description must be 512 characters or less and contain some text");
         Assertions.assertEquals(correctErrors, errors);
     }
+
+
+    @Test
+    void viewGardenFromErrors_checkNewTagNameIsInvalid_returnsErrorMessage() {
+        String tagName = "ajlkf$%(Q*@&(*";
+        String error = ErrorChecker.tagNameErrors(tagName);
+        Assertions.assertEquals("The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" "
+                                , error);
+    }
+
+    @Test
+    void viewGardenFromErrors_checkNewTagNameExceed25Characters_returnsErrorMessage() {
+        String tagName = "slakdjghlakghdjsffhalikjghsdlkafjhldsakugajhsdkrjfhalkjdsfhlakjgh";
+        String error = ErrorChecker.tagNameErrors(tagName);
+        Assertions.assertEquals("A tag cannot exceed 25 characters", error);
+    }
+
+    @Test
+    void viewGardenFormErrors_checkNewTagNameIsInvalid_andTagNameExceed25Character_returnsErrorMessage() {
+        String tagName = "slakjdfLOKJ%$(*&Q#($*%&*)##*&$ldkfjgwklasjdhfglakhsfkajdhgsd;klfjhlkasdjfhalkdjfhslkadfjhdskfj";
+        String error = ErrorChecker.tagNameErrors(tagName);
+        Assertions.assertTrue(error.contains("The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" "));
+        Assertions.assertTrue(error.contains("A tag cannot exceed 25 characters"));
+    }
 }

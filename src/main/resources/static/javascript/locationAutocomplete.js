@@ -8,6 +8,12 @@ const debounceTimeMs = 500;
 
 let timer;
 let previousInput = "";
+
+/**
+ * Update autocomplete when users input for street address field is changed.
+ * Set debouncing time is used to avoid API overuse.
+ * Also contains backend rate limiting in case of malicious users altering JS.
+ */
 streetAddressField.addEventListener('input', function() {
     clearTimeout(timer);
     timer = setTimeout(function() {
