@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +38,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> gardenFormErrors(
                     String gardenName, Float gardenSize,
+                    String gardenDescription,
                     String country,
                     String city,
                     String streetAddress,
@@ -53,6 +53,18 @@ public class ErrorChecker {
             errors.put(
                             "gardenNameError",
                             "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
+        }
+
+        if (!FormValuesValidator.checkDescription(gardenDescription) || !FormValuesValidator.checkContainsText(gardenDescription)) {
+            errors.put("gardenDescriptionError", "Description must be 512 characters or less and contain some text");
+        } else {
+            try {
+                if (FormValuesValidator.checkProfanity(gardenDescription)) {
+                    errors.put("gardenDescriptionError", "The description does not match the language standards of the app");
+                }
+            } catch (Exception e) {
+                errors.put("profanityCheckError", "Garden cannot be made public");
+            }
         }
 
         if (!FormValuesValidator.checkSize(gardenSize)) {
@@ -112,7 +124,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> plantFormErrors(
                     String plantName,
-                    Integer plantCount,
+                    String plantCount,
                     String plantDescription,
                     MultipartFile imageFile
     ) {
@@ -126,8 +138,8 @@ public class ErrorChecker {
             );
         }
 
-        if (!FormValuesValidator.checkCount(plantCount)) {
-            errors.put("plantCountError", "Plant count must be positive number");
+        if (!FormValuesValidator.checkValidPlantCount(plantCount)) {
+            errors.put("plantCountError", "Plant count must be positive number, and only contain the digits 0-9");
         }
 
         if (!FormValuesValidator.checkDescription(plantDescription)) {
@@ -405,6 +417,25 @@ public class ErrorChecker {
             errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least " +
                     "one uppercase letter, one lowercase letter, one number, and one special character");
         }
+
+        return errors;
+    }
+
+
+    /**
+     * Checks provided tag name is less than or equal to 25 characters and has valid characters
+     *
+     * @param tag tag name user provided
+     * @return String of error message
+     */
+    public static String tagNameErrors(String tag) {
+        String errors = "";
+
+        if(!FormValuesValidator.checkTagName(tag))
+            errors += "The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" ";
+
+        if (!FormValuesValidator.checkTagNameLength(tag))
+            errors += (!errors.isEmpty() ? "\n" : "") + "A tag cannot exceed 25 characters";
 
         return errors;
     }
