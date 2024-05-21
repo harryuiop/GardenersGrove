@@ -89,7 +89,7 @@ public class OpenMeteoWeather implements WeatherService {
      * Converts the weather response to a list of ForecastWeatherData objects
      *
      * @param response a response from the Open-Meteo API
-     * @return an array list of ForecastWeatherData objects
+     * @return an array list of WeatherData objects
      */
     private List<WeatherData> convertWeatherResponse(WeatherResponse response) {
         ArrayList<WeatherData> dataArrayList = new ArrayList<>();
@@ -103,7 +103,8 @@ public class OpenMeteoWeather implements WeatherService {
                     date,
                     temps.get(i),
                     WeatherResponse.weatherCodes.get(weatherCodes.get(i))[0],
-                    dailyHumidity.get(i)
+                    dailyHumidity.get(i),
+                    WeatherResponse.weatherCodes.get(weatherCodes.get(i))[1]
             ));
         }
 
@@ -111,8 +112,10 @@ public class OpenMeteoWeather implements WeatherService {
         double currentTemp = response.getCurrentWeather().getTemperature2m();
         LocalDate currentDate = LocalDateTime.parse(response.getCurrentWeather().getTime()).toLocalDate();
         String currentDescription = WeatherResponse.weatherCodes.get(response.getCurrentWeather().getWeatherCode())[0];
+        String weatherIconName = WeatherResponse.weatherCodes.get(response.getCurrentWeather().getWeatherCode())[1];
         int currentHumidity = response.getCurrentWeather().getRelativeHumidity2m();
-        WeatherData currentWeatherData = new WeatherData(currentDate, currentTemp, currentDescription, currentHumidity);
+        WeatherData currentWeatherData = new WeatherData(currentDate, currentTemp, currentDescription,
+                currentHumidity, weatherIconName);
         dataArrayList.set(2, currentWeatherData);
         return dataArrayList;
     }
@@ -122,7 +125,7 @@ public class OpenMeteoWeather implements WeatherService {
      * values by averaging them over a 24-hour period as specified
      *
      * @param response a response from the Open-Meteo API
-     * @return a list of calculated averages representing the dailyHumidity
+     * @return a list of calculated averages representing the daily humidity
      */
     private List<Integer> getDailyHumidity(WeatherResponse response) {
         List<Integer> dailyHumidity = new ArrayList<>();

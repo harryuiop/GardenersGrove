@@ -11,17 +11,20 @@ public class WeatherData {
     private final double temperature;
     private final double humidity;
     private final String weatherDescription;
+    private final String weatherIconName;
 
     public WeatherData(
             LocalDate date,
             double temperature,
             String weatherDescription,
-            double humidity
+            double humidity,
+            String weatherIconName
     ) {
         this.date = date;
         this.temperature = temperature;
         this.weatherDescription = weatherDescription;
         this.humidity = humidity;
+        this.weatherIconName = weatherIconName;
     }
 
     public LocalDate getDate() {

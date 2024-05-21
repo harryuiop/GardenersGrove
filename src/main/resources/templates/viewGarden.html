@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Gardeners' Grove</title>
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
 <body>
 <div th:insert="~{fragments/fragments :: title}">Header</div>
@@ -22,22 +22,23 @@
     </article>
     <article class="in-line"><p>Description: </p>
         <p th:text="${garden.getDescription()}"></p></article>
-    <table>
-        <thead>
-        <tr>
-            <th>Date</th>
-            <th>Temperature</th>
-            <th>Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="data : ${weatherData}">
-            <td th:text="${data.date}"></td>
-            <td th:text="${data.temperature}"></td>
-            <td th:text="${data.weatherDescription}"></td>
-        </tr>
-        </tbody>
-    </table>
+
+    <div class="container">
+    <div class="row">
+        <div th:each="data : ${weatherData}" class="col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4 th:text="${data.date}">Date</h4>
+                    <p><strong>Temperature:</strong> <span th:text="${data.temperature}">Temperature</span></p>
+                    <p><strong>Description:</strong> <span th:text="${data.weatherDescription}">Description</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>
+    </div>
 
     <!-- Garden tags -->
     <div class="display-tags">
@@ -127,6 +128,7 @@
     </div>
 </div>
 </body>
+
 <script>
     function submitForm(id) {
         console.log("Image Uploaded on form: " + id);
@@ -135,7 +137,12 @@
         document.getElementById(id + 'submit').click()
     }
 </script>
+
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </html>
