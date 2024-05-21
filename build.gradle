@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.2'
@@ -12,7 +14,15 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	cucumberRuntime {
+		extendsFrom testImplementation
+	}
+}
+
 dependencies {
+
+	// Spring dependencies
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -20,15 +30,32 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-security"
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'com.h2database:h2'
-
-    testImplementation 'junit:junit:4.13.1'
-
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-}
 
+	// JUnit dependencies
+    testImplementation 'junit:junit:4.13.1'
+
+	// Cucumber dependencies
+	testImplementation 'io.cucumber:cucumber-java:7.15.0'
+	testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.15.0'
+	testImplementation 'org.junit.platform:junit-platform-suite:1.10.2'
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register("cucumber", Test) {
+	testLogging.showStandardStreams = true
+	useJUnitPlatform()
+	filter {
+		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.cucumber.*"
+	}
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
+		exceptionFormat TestExceptionFormat.FULL
+	}
+}
+
