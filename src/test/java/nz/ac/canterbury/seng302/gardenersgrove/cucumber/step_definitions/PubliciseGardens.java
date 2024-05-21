@@ -1,96 +1,91 @@
 package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 
-import io.cucumber.java.BeforeAll;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.ViewGardenController;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewGardenUri;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.mockito.Mockito.spy;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @SpringBootTest
-@WebAppConfiguration
+@AutoConfigureMockMvc
 @CucumberContextConfiguration
-@WithMockUser(value="1")
+@WithMockUser
 public class PubliciseGardens {
-    private static MockMvc mockMvc;
-    private static UserService userService;
-    private static GardenService gardenService;
-    private static PlantService plantService;
-    private static TagService tagService;
-    private static User user1;
-    private static User user2;
-    private static Garden garden;
-    private static Location location;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeAll
-    public static void before_or_after_all() {
-        userService = Mockito.mock(UserService.class);
-        gardenService = Mockito.mock(GardenService.class);
-        plantService = Mockito.mock(PlantService.class);
-        tagService = Mockito.mock(TagService.class);
+    @Autowired
+    private GardenRepository gardenRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-        mockMvc = MockMvcBuilders.standaloneSetup(new ViewGardenController(gardenService, plantService,userService,tagService)).build();
+    private Garden garden;
+    private Long gardenId;
+    private User user;
 
-        user1 = new User("user@gmail.com", "Test", "User", "Password1!", null);
-        user2 = new User("other.user@gmail.com", "Other", "User", "Password1!", null);
+    private UserService userService;
 
-        location = new Location("New Zealand", "Christchurch");
-        garden = spy(new Garden(user1, "Garden", "", location, 1F, true));
-        Mockito.when(garden.getId()).thenReturn(1L);
-        Mockito.when(gardenService.getGardenById(Mockito.anyLong())).thenReturn(Optional.of(garden));
-        Mockito.when(plantService.getAllPlantsInGarden(Mockito.any())).thenReturn(new ArrayList<>());
+    @Before
+    public void setup() {
+        gardenRepository.deleteAll();
+        userRepository.deleteAll();
+        userService = spy(new UserService(userRepository));
+        user = new User("test@user.com", "Test", "User", "Password1!", "");
+        userService.addUsers(user);
+        garden = new Garden (user, "Garden 1", "Valid", new Location("NZ", "CHCH"), null, true);
+        gardenRepository.save(garden);
+        gardenId=garden.getId();
     }
 
     @Given("I am on the garden details page for a garden I own")
     public void iAmOnTheGardenDetailsPageForAGardenIOwn() throws Exception {
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user1);
-        Mockito.when(userService.getUserById(Mockito.anyLong())).thenReturn(user1);
-        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId()))).andExpect((MockMvcResultMatchers.status().isOk()));
+        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(gardenId))).andExpect((MockMvcResultMatchers.status().isOk()));
     }
 
     @When("I mark a checkbox labelled “Make my garden public")
-    public void iMarkACheckboxLabelledMakeMyGardenPublic() {
-        garden.setPublicGarden(true);
+    public void iMarkACheckboxLabelledMakeMyGardenPublic() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(garden.getId()))
+                .param("publicGarden", "true"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(view().name("viewGarden"));
     }
 
     @Then("my garden will be visible in search results")
     public void myGardenWillBeVisibleInSearchResults() throws Exception {
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user2);
-        Mockito.when(userService.getUserById(Mockito.anyLong())).thenReturn(user2);
-        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId()))).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Then("my garden is not visible in search results")
+    @WithMockUser(value="2")
     public void myGardenIsNotVisibleInSearchResults() throws Exception {
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user2);
-        Mockito.when(userService.getUserById(Mockito.anyLong())).thenReturn(user2);
-        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId()))).andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Given("I am creating a new garden")
-    public void iAmCreatingANewGarden() {
+    public void iAmCreatingANewGarden() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(newGardenUri()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(view().name("gardenForm"));
     }
 
     @When("I add an optional description of the garden")
@@ -98,11 +93,20 @@ public class PubliciseGardens {
     }
 
     @And("I submit the form")
-    public void iSubmitTheForm() {
+    public void iSubmitTheForm() throws Exception {
+//        mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
+//                .param("gardenName", gardenName)
+//                .param("gardenSize", String.valueOf(size))
+//                .param("description", description)
+//                .param("country", country)
+//                .param("city", city))
+//            .andExpect(MockMvcResultMatchers.status().isOk());
+
     }
 
     @And("the description is valid")
     public void theDescriptionIsValid() {
+//        Assertions.assertTrue();
     }
 
     @When("I remove the description of the garden")
