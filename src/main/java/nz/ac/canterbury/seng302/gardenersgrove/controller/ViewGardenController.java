@@ -97,7 +97,7 @@ public class ViewGardenController extends GardensSidebar {
     /**
      * Set up view garden page and display attributes.
      *
-     * @return Thyme leaf html template of the view garden page.
+     * @return Thymeleaf html template of the view garden page.
      */
     @GetMapping(VIEW_GARDEN_URI_STRING)
     public String displayGarden(

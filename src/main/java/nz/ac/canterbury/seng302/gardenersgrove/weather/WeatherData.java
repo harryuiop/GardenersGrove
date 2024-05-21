@@ -39,6 +39,10 @@ public class WeatherData {
         return humidity;
     }
 
+    public String getWeatherIconName() {
+        return weatherIconName;
+    }
+
     public String getWeatherDescription() {
         return weatherDescription;
     }

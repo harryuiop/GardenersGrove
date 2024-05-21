@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Gardeners' Grove</title>
-    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-</head>
+<head th:insert="~{fragments/importFragment :: headerfiles}"></head>
 <body>
 <div th:insert="~{fragments/fragments :: title}">Header</div>
 <nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
@@ -25,12 +20,13 @@
 
     <div class="container">
     <div class="row">
-        <div th:each="data : ${weatherData}" class="col-md-4">
-            <div class="thumbnail">
-                <div class="caption">
-                    <h4 th:text="${data.date}">Date</h4>
-                    <p><strong>Temperature:</strong> <span th:text="${data.temperature}">Temperature</span></p>
-                    <p><strong>Description:</strong> <span th:text="${data.weatherDescription}">Description</span></p>
+        <div id="weatherCard">
+            <div th:each="data : ${weatherData}" class="col-md-4">
+                <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
+                     th:with="date=${data.date},
+                     temperature=${data.temperature},
+                     description=${data.weatherDescription},
+                     iconName=${data.weatherIconName}">
                 </div>
             </div>
         </div>
@@ -128,7 +124,6 @@
     </div>
 </div>
 </body>
-
 <script>
     function submitForm(id) {
         console.log("Image Uploaded on form: " + id);
@@ -137,12 +132,7 @@
         document.getElementById(id + 'submit').click()
     }
 </script>
-
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </html>
