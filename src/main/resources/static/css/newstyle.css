@@ -1,0 +1,12 @@
+:root {
+  --eerie-black: #141811;
+  --dark-green: #142915;
+  --fern-green: #477641;
+  --khaki: #CEB992;
+  --eggshell: #FAF3DD;
+}
+
+.login-bg {
+  background-image: linear-gradient(to bottom right, var(--dark-green), var(--fern-green));
+}
+

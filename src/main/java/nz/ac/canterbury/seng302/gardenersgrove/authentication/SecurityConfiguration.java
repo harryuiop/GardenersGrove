@@ -77,6 +77,7 @@ public class SecurityConfiguration {
                 "/fonts/**",
                 "/scripts/**",
                 "/javascript/**",
+                "/webjars/**"
         };
 
         // Configure security rules for HTTP requests

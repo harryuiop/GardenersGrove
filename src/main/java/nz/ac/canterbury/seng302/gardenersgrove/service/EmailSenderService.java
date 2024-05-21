@@ -108,7 +108,7 @@ public class EmailSenderService {
      *
      * @param email Users email
      */
-    public void CheckEmailVerifiedInTime(String email) {
+    public void checkEmailVerifiedInTime(String email) {
         Runnable checkAndDeleteUser = () -> {
             User user = userService.getUserByEmail(email);
             if (!user.isConfirmed()) {
