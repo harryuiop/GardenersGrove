@@ -136,6 +136,7 @@ public class EmailSenderService {
      * the user has not input their verification code, their account is deleted from the database
      *
      * @param email Users email
+     * @param template a html template that has already been sent
      */
     private void checkEmailVerifiedInTime(String email, String template) {
 
