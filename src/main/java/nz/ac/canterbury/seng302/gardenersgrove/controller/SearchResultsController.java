@@ -42,6 +42,7 @@ public class SearchResultsController {
         }
         model.addAttribute("usersFound", displayUsers);
         model.addAttribute("sendFriendRequestUri", sendFriendRequestUri());
+        model.addAttribute("searchResultsUri", searchResultsUri());
         model.addAttribute("search", searchUser);
         return "searchResults";
     }
