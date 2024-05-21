@@ -239,6 +239,7 @@ public class ViewGardenController extends GardensSidebar {
                                   @PathVariable long gardenId,
                                   @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
             throw new NoSuchGardenException(gardenId);
         }

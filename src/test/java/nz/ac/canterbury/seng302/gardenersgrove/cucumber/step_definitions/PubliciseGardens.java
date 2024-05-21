@@ -12,6 +12,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,13 +22,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @CucumberContextConfiguration
-@WithMockUser
+@WithMockUser(value="1")
 public class PubliciseGardens {
     @Autowired
     private MockMvc mockMvc;
@@ -41,15 +43,13 @@ public class PubliciseGardens {
     private Long gardenId;
     private User user;
 
-    private UserService userService;
 
     @Before
     public void setup() {
         gardenRepository.deleteAll();
         userRepository.deleteAll();
-        userService = spy(new UserService(userRepository));
         user = new User("test@user.com", "Test", "User", "Password1!", "");
-        userService.addUsers(user);
+        userRepository.save(user);
         garden = new Garden (user, "Garden 1", "Valid", new Location("NZ", "CHCH"), null, true);
         gardenRepository.save(garden);
         gardenId=garden.getId();
@@ -57,7 +57,8 @@ public class PubliciseGardens {
 
     @Given("I am on the garden details page for a garden I own")
     public void iAmOnTheGardenDetailsPageForAGardenIOwn() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(gardenId))).andExpect((MockMvcResultMatchers.status().isOk()));
+        mockMvc.perform(MockMvcRequestBuilders.get("/garden/" + gardenId))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @When("I mark a checkbox labelled “Make my garden public")
