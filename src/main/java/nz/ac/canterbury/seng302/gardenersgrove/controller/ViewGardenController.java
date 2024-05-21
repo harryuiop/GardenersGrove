@@ -101,8 +101,6 @@ public class ViewGardenController extends GardensSidebar {
         logger.info("GET {}", viewGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        logger.info("{}, {}",
-                optionalGarden.get().getOwner(), userService.getAuthenticatedUser());
         if (optionalGarden.isEmpty() ||
                 (optionalGarden.get().getOwner() != userService.getAuthenticatedUser() &&
                 !optionalGarden.get().getPublicGarden())) {
