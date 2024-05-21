@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
@@ -32,7 +32,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  * Responsible for displaying user profile pages, editing profiles, and uploading profile photos.
  */
 @Controller
-public class ProfileController extends GardensSidebar {
+public class ProfileController extends NavBar {
     Logger logger = LoggerFactory.getLogger(ProfileController.class);
     private final UserService userService;
     private final GardenService gardenService;
@@ -63,7 +63,7 @@ public class ProfileController extends GardensSidebar {
 
         model.addAttribute("editProfileUri", editProfileUri());
         model.addAttribute("uploadProfileImageUri", uploadProfileImageUri());
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
         return "profile";
     }
 
@@ -84,7 +84,7 @@ public class ProfileController extends GardensSidebar {
         model.addAttribute("uploadProfileImageUri", uploadProfileImageUri());
         model.addAttribute("editProfileUri", editProfileUri());
         model.addAttribute("profileUri", viewProfileUri());
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
         return "editProfile";
     }
 
@@ -101,7 +101,7 @@ public class ProfileController extends GardensSidebar {
 
         model.addAttribute("editPasswordUri", editPasswordUri());
         model.addAttribute("editProfileUri", editProfileUri());
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
         return "editPassword";
     }
 

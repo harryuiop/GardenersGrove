@@ -1,5 +1,5 @@
-<!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
   <head th:insert="~{fragments/importFragment :: headerfiles}"></head>
   <title>Navbar</title>
   <link
@@ -14,10 +14,13 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <body>
+  <nav th:fragment="navbar">
+    <h1 th:text="${viewAllGardensUri}"></h1>
     <nav class="navbar navbar-expand-lg navbar-light bg-dark-subtle">
       <div class="container-fluid" style="padding-left: 20px">
         <div>
-          <img src="./logo-gardenersgrove.png" width="50" height="50" />
+
+          <img th:src="@{/images/logo-gardenersgrove.png}" width="50" height="50" />
         </div>
         <a
           class="navbar-brand"
@@ -70,27 +73,48 @@
                 aria-expanded="false"
                 style="color: black"
               >
-                Mange Gardens
+                My Gardens
               </button>
               <ul
-                class="dropdown-menu bg-dark-subtle"
-                aria-labelledby="dropdownMenuButton1"
-                style="background-color: #344e41"
+                      class="dropdown-menu bg-dark-subtle"
+                      aria-labelledby="dropdownMenuButton1"
+                      style="background-color: #344e41"
               >
                 <li>
-                  <a class="dropdown-item" th:href="@{${viewAllGardensUri}}"
-                    >My Gardens</a
-                  >
+                  <a class="dropdown-item" th:href="@{${viewAllGardensUri}}">My Gardens</a>
                 </li>
-                <li>
-                  <a class="dropdown-item" th:href="@{${newGardenUri}}"
-                    >Create Garden</a
-                  >
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">Explore Public Gardens</a>
+                <li th:each="garden: ${gardens}">
+                  <a class="dropdown-item" th:href="@{${viewGardenUriString}(gardenId=${garden.getId()})}">
+                    <span th:text="${garden.getName()}"></span>
+                  </a>
                 </li>
               </ul>
+            </div>
+
+            <div class="dropdown">
+              <button
+                      class="btn btn-secondary dropdown-toggle bg-transparent border-0"
+                      type="button"
+                      id="dropdownMenuButton3"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      style="color: black"
+              >
+                Create
+              </button>
+            </div>
+
+            <div class="dropdown">
+              <button
+                      class="btn btn-secondary dropdown-toggle bg-transparent border-0"
+                      type="button"
+                      id="dropdownMenuButton4"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      style="color: black"
+              >
+                Explore
+              </button>
             </div>
           </ul>
           <a
@@ -103,5 +127,6 @@
         </div>
       </div>
     </nav>
+  </nav>
   </body>
 </html>

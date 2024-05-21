@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchPlantException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
@@ -38,7 +38,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  * Controller for the view garden page. For viewing a specific garden.
  */
 @Controller
-public class ViewGardenController extends GardensSidebar {
+public class ViewGardenController extends NavBar {
     Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
 
     private final GardenService gardenService;
@@ -69,7 +69,7 @@ public class ViewGardenController extends GardensSidebar {
                     Model model,
                     String...errorMessages
     ) {
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
 
         if (errorMessages.length > 0) {
             model.addAttribute("tagErrors", errorMessages[0]);

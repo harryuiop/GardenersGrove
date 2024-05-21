@@ -9,16 +9,19 @@ import org.springframework.ui.Model;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
+/**
+ * Class to update and handle the navbar.
+ */
+public class NavBar {
 
-public class GardensSidebar {
     /**
-     * This method passes information to the sidebar thymeleaf fragment.
+     * This method passes information to the navbar thymeleaf fragment.
      * Currently, it just passes the currently logged-in user, and a list of all the user's gardens.
      * @param model The portal which feeds information into the HTML.
      * @param gardenService Garden database access object.
      * @param userService User database access object.
      */
-    public void updateGardensSidebar(Model model, GardenService gardenService, UserService userService) {
+    public void updateGardensNavBar(Model model, GardenService gardenService, UserService userService) {
         model.addAttribute("gardens", gardenService.getAllGardens(userService));
         model.addAttribute("newGardenUri", newGardenUri());
         model.addAttribute("viewAllGardensUri", viewAllGardensUri());
