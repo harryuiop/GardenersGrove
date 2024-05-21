@@ -78,7 +78,7 @@ public class FriendsController {
                     friendRequestService.updateRequest(friendRequest);
                     break;
                 case "Cancel":
-                    logger.info("Declined Request");
+                    logger.info("Canceled Request");
                     friendRequestService.removeRequest(friendRequest);
                 default:
                     logger.info("Default in switch statement");

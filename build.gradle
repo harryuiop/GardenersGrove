@@ -47,15 +47,17 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-tasks.register("cucumber", Test) {
-	testLogging.showStandardStreams = true
-	useJUnitPlatform()
-	filter {
-		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.cucumber.*"
-	}
-	testLogging {
-		events "passed", "skipped", "failed", "standardOut", "standardError"
-		exceptionFormat TestExceptionFormat.FULL
+tasks.register('cucumberCli') {
+	dependsOn assemble, testClasses
+	doLast {
+		javaexec {
+			main = "io.cucumber.core.cli.Main"
+			classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+			args = [
+					'--plugin', 'pretty',
+					'--plugin', 'html:target/cucumber-report.html',
+					'--glue', 'com.baeldung.cucumber',
+					'src/test/resources']
+		}
 	}
 }
-
