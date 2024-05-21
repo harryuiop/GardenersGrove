@@ -36,6 +36,12 @@ public class ResetPasswordTokenService {
      * @param userId User id associated with token.
      */
     public void addToken(String token, long userId) {
+
+        // remove previous token and add new one
+        ResetPasswordToken tokenEntity = resetPasswordTokenRepository.getResetPasswordTokenByUserId(userId);
+        if (tokenEntity != null) {
+            deleteToken(tokenEntity);
+        }
         String hashedToken = hashToken(token);
         resetPasswordTokenRepository.save(new ResetPasswordToken(hashedToken, userId));
     }
