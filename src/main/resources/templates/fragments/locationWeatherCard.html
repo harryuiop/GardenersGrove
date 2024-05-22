@@ -1,11 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-    <div class="thumbnail" th:fragment="weatherCard">
-        <div class="caption">
-            <h4 th:text="${date}">Date</h4>
-            <p><strong>Temperature:</strong> <span th:text="${temperature}">Temperature</span></p>
-            <p><strong>Description:</strong> <span th:text="${description}">Description</span></p>
-            <i class="bi bi-0-circle"></i>
-        </div>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head th:insert="~{fragments/importFragment :: headerfiles}">
+  </head>
+  <body>
+    <div th:fragment="weatherCard" >
+      <div class="container-sm shadow rounded-4 text-center p-5">
+        <h2 class="display-5">Monday</h2>
+        <p th:text="${date}"></p>
+        <p th:text="${description}"></p>
+        <p th:text="${temperature}"></p>
+        <p th:text="${iconName}"></p>
+      </div>
     </div>
+  </body>
 </html>

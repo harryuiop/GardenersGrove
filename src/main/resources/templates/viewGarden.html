@@ -21,14 +21,13 @@
     <div class="container">
     <div class="row">
         <div id="weatherCard">
-            <div th:each="data : ${weatherData}" class="col-md-4">
+            <div th:each="data : ${weatherData}" class="d-inline-grid">
                 <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
                      th:with="date=${data.date},
                      temperature=${data.temperature},
                      description=${data.weatherDescription},
                      iconName=${data.weatherIconName}">
                 </div>
-
             </div>
         </div>
     </div>
