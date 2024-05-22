@@ -225,17 +225,20 @@ public class UserService {
      * @param searchString a string entered by the user in search of a user.
      * @return a list of users whos' names or emails contain the string.
      */
-    public List<Map<String, String>> getSearchedUser(String searchString) {
-        List<Map<String, String>> searchResults = new ArrayList<>();
+    /**
+     * Checks if any of the users' names or emails contain the given string.
+     * @param searchString a string entered by the user in search of a user.
+     * @return a list of users whos' names or emails contain the string.
+     */
+    public List<User> getSearchedUser(String searchString) {
+        List<User> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
             if ((user.getEmail()).equalsIgnoreCase(searchString) ||
                     (user.getName()).equalsIgnoreCase(searchString)) {
-                Map<String, String> newMap = new HashMap<>();
-                newMap.put("email", user.getEmail());
-                newMap.put("name", user.getName());
-                searchResults.add(newMap);
+                searchResults.add(user);
             }
         }
         return searchResults;
     }
+
 }

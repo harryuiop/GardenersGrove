@@ -47,12 +47,8 @@ public class SearchResultsController {
     @GetMapping(SEARCH_RESULTS_STRING)
     public String getSearchResultsPage(@RequestParam String searchUser, Model model) {
         logger.info("Get /search/result/{}", searchUser);
-        List<Map<String, String>> usersFound = userService.getSearchedUser(searchUser);
-        List<User> displayUsers = new ArrayList<>();
-        for (Map<String,String> mappedUser : usersFound) {
-            displayUsers.add(userService.getUserByEmail(mappedUser.get("email")));
-        }
-        model.addAttribute("usersFound", displayUsers);
+        List<User> usersFound = userService.getSearchedUser(searchUser);
+        model.addAttribute("usersFound", usersFound);
         model.addAttribute("sendFriendRequestUri", sendFriendRequestUri());
         model.addAttribute("searchResultsUri", searchResultsUri());
         model.addAttribute("search", searchUser);
