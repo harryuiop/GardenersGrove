@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Gardeners' Grove</title>
-    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
-</head>
+<head th:insert="~{fragments/importFragment :: headerfiles}"></head>
+<title>Gardeners' Grove</title>
 <body>
-<div th:insert="~{fragments/fragments :: title}">Header</div>
-<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
+<nav th:insert="~{fragments/navbar :: navbar}"></nav>
+
 <div class="content">
     <h2>My Gardens</h2>
     <div class="list-container">

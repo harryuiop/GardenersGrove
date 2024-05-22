@@ -1,128 +1,126 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Edit Profile</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-    <script type="text/javascript" th:src="@{/javascript/disableLastName.js}"></script>
-    <script type="text/javascript" th:src="@{/javascript/profilePictureUpload.js}"></script>
-</head>
+<head th:insert="~{fragments/importFragment :: headerfiles}"></head>
+<title>Edit Profile</title>
+<script type="text/javascript" th:src="@{/javascript/disableLastName.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/profilePictureUpload.js}"></script>
+
 <body onload="loadingPage()">
-<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
+<div class="container-fluid p-0 m-0">
+    <nav th:insert="~{fragments/navbar :: navbar}"></nav>
 
-<div class="profileBody">
-    <div class="formContainer">
-        <form
-                id="uploadProfileImage"
-                th:action="@{${uploadProfileImageUri}}"
-                method="post"
-                name="profilePhoto"
-                enctype="multipart/form-data"
-        >
-            <input
-                    id="profilePictureInput"
-                    type="file"
-                    name="image"
-                    accept="image/jpeg, image/png, image/svg+xml"
-                    class="formControlFile"
-                    alt="test"
-            />
-            <p class="errorMessage" id="imageTypeError" th:text="${imageTypeError}"></p>
-            <p class="errorMessage" id="imageSizeError" th:text="${imageSizeError}"></p>
-        </form>
+    <div class="profileBody d-flex align-items-center justify-content-center">
+        <div class="formContainer">
+            <form
+                    id="uploadProfileImage"
+                    th:action="@{${uploadProfileImageUri}}"
+                    method="post"
+                    name="profilePhoto"
+                    enctype="multipart/form-data"
+            >
+                <input
+                        id="profilePictureInput"
+                        type="file"
+                        name="image"
+                        accept="image/jpeg, image/png, image/svg+xml"
+                        class="formControlFile"
+                        alt="test"
+                />
+                <p class="errorMessage" id="imageTypeError" th:text="${imageTypeError}"></p>
+                <p class="errorMessage" id="imageSizeError" th:text="${imageSizeError}"></p>
+            </form>
 
-        <div id="profilePictureWrapper">
-            <img
-                    id="profilePicture"
-                    th:src="@{${user.getProfilePictureFilePath()}}"
-                    alt="User profile picture"
-            />
-            <div id="profilePictureOverlay">
-                <div id="profilePictureOverlayIcon">+</div>
+            <div id="profilePictureWrapper">
+                <img
+                        id="profilePicture"
+                        th:src="@{${user.getProfilePictureFilePath()}}"
+                        alt="User profile picture"
+                />
+                <div id="profilePictureOverlay">
+                    <div id="profilePictureOverlayIcon">+</div>
+                </div>
             </div>
+
+
+            <form
+                    th:action="@{${editProfileUri}}"
+                    method="post"
+                    name="registerForm"
+                    id="editProfileForm"
+            >
+                <label for="firstName">First name:</label>
+                <input
+                        class="inputStyle"
+                        type="text"
+                        id="firstName"
+                        name="firstName"
+                        th:name="firstName"
+                        th:value="${user.getFirstName()}"
+                        autofocus
+                />
+                <p class="errorMessage" id="firstNameError" th:text="${firstNameError}"></p>
+
+
+                <label for="lastName">Last name:</label>
+                <input
+                        class="inputStyle"
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        th:name="lastName"
+                        th:value="${user.getLastName()}"
+                        autofocus
+                />
+
+                <div class="noSurname">
+                    <label for="noSurname" class="noSurnameCheckbox">
+                        <input
+                                type="checkbox"
+                                id="noSurname"
+                                value="checked"
+                                th:name="noSurname"
+                                th:checked="${noSurname}"
+                                th:value="${noSurname}"
+                                autofocus
+                                autocomplete="off"
+                                onchange="updateCheckboxValue()"
+                        />
+                        I have no surname
+                    </label>
+                </div>
+
+                <p class="errorMessage" id="lastNameError" th:text="${lastNameError}"></p>
+
+                <label for="email">Email:</label>
+                <input
+                        class="inputStyle"
+                        type="text"
+                        id="email"
+                        name="email"
+                        th:name="email"
+                        th:value="${user.getEmail()}"
+                        autofocus
+                />
+                <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
+
+                <label for="dateOfBirth">Date of Birth:</label>
+                <input
+                        class="inputStyle"
+                        type="date"
+                        id="dateOfBirth"
+                        name="dateOfBirth"
+                        th:name="dateOfBirth"
+                        th:value="${user.getDob()}"
+                        autofocus
+                />
+                <p class="errorMessage" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
+                <input class="inputStyle" id="submit" type="submit" value="Submit"/>
+            </form>
+            <div class="d-flex justify-content-center w-100 me-2">
+                <a th:href="@{${profileUri}}" class="hrefButtons" type="button">Cancel</a>
+            </div>
+            <a id="changePassword" th:href="@{${editPasswordUri}}">Change Password</a>
         </div>
-
-
-        <form
-                th:action="@{${editProfileUri}}"
-                method="post"
-                name="registerForm"
-                id="editProfileForm"
-        >
-            <label for="firstName">First name:</label>
-            <input
-                    class="inputStyle"
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    th:name="firstName"
-                    th:value="${user.getFirstName()}"
-                    autofocus
-            />
-            <p class="errorMessage" id="firstNameError" th:text="${firstNameError}"></p>
-
-
-            <label for="lastName">Last name:</label>
-            <input
-                    class="inputStyle"
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    th:name="lastName"
-                    th:value="${user.getLastName()}"
-                    autofocus
-            />
-
-            <div class="noSurname">
-                <label for="noSurname" class="noSurnameCheckbox">
-                    <input
-                            type="checkbox"
-                            id="noSurname"
-                            value="checked"
-                            th:name="noSurname"
-                            th:checked="${noSurname}"
-                            th:value="${noSurname}"
-                            autofocus
-                            autocomplete="off"
-                            onchange="updateCheckboxValue()"
-                    />
-                    I have no surname
-                </label>
-            </div>
-
-            <p class="errorMessage" id="lastNameError" th:text="${lastNameError}"></p>
-
-            <label for="email">Email:</label>
-            <input
-                    class="inputStyle"
-                    type="text"
-                    id="email"
-                    name="email"
-                    th:name="email"
-                    th:value="${user.getEmail()}"
-                    autofocus
-            />
-            <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
-
-            <label for="dateOfBirth">Date of Birth:</label>
-            <input
-                    class="inputStyle"
-                    type="date"
-                    id="dateOfBirth"
-                    name="dateOfBirth"
-                    th:name="dateOfBirth"
-                    th:value="${user.getDob()}"
-                    autofocus
-            />
-            <p class="errorMessage" id="dateOfBirthError"  th:text="${dateOfBirthError}"></p>
-            <input class="inputStyle" id="submit" type="submit" value="Submit"/>
-        </form>
-    </div>
-    <div class="hrefDiv">
-        <a th:href="@{${profileUri}}" class="hrefButtons" type="button">Cancel</a>
-    </div>
-    <div>
-        <a id="changePassword" th:href="@{${editPasswordUri}}">Change Password</a>
     </div>
 </div>
 </body>

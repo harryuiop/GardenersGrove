@@ -2,7 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
   <head th:insert="~{fragments/importFragment :: headerfiles}"></head>
   <body>
-  <nav th:insert="~{fragments/navbar :: navbar}"></nav>
-    <h1>Gardener's Grove</h1>
+  <div class="container-fluid p-0 m-0">
+    <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
+    <div class="mt-5" style="text-align: center">
+      <h1>Gardener's Grove</h1>
+    </div>
+  </div>
   </body>
-</html>
