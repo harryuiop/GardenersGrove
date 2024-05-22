@@ -9,17 +9,17 @@ VALUES (TRUE, '2001-02-02', 'user2@gmail.com', 'Second', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 2);
 
 
-INSERT INTO location (city, country, lat, lng, postcode, street_address, suburb, id)
-VALUES ('Christchurch', 'New Zealand', 0.0, 0.0, NULL, NULL, NULL, 1);
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb, id)
+VALUES ('Christchurch', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 1);
 
-INSERT INTO location (city, country, lat, lng, postcode, street_address, suburb, id)
-VALUES ('Tauranga', 'New Zealand', 0.0, 0.0, NULL, NULL, NULL, 2);
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb, id)
+VALUES ('Tauranga', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 2);
 
-INSERT INTO location (city, country, lat, lng, postcode, street_address, suburb, id)
-VALUES ('Wellington', 'New Zealand', 0.0, 0.0, NULL, NULL, NULL, 3);
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb, id)
+VALUES ('Wellington', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 3);
 
-INSERT INTO location (city, country, lat, lng, postcode, street_address, suburb, id)
-VALUES ('Auckland', 'New Zealand', 0.0, 0.0, NULL, NULL, NULL, 4);
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb, id)
+VALUES ('Auckland', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 4);
 
 
 INSERT INTO garden (location_id, name, owner_user_id, size, id)
