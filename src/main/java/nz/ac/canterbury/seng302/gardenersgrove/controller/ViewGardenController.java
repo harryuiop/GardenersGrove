@@ -7,7 +7,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecke
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
@@ -27,7 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,12 +60,12 @@ public class ViewGardenController extends GardensSidebar {
     }
 
     private String loadGardenPage(
-                    Garden garden,
-                    URI editGardenUri,
-                    URI newPlantUri,
-                    List<Plant> plants,
-                    Model model,
-                    String...errorMessages
+            Garden garden,
+            URI editGardenUri,
+            URI newPlantUri,
+            List<Plant> plants,
+            Model model,
+            String... errorMessages
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
 
@@ -93,21 +91,21 @@ public class ViewGardenController extends GardensSidebar {
      */
     @GetMapping(VIEW_GARDEN_URI_STRING)
     public String displayGarden(
-                    @PathVariable long gardenId,
-                    Model model
+            @PathVariable long gardenId,
+            Model model
     ) throws NoSuchGardenException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
+        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) {
             throw new NoSuchGardenException(gardenId);
         }
         return loadGardenPage(
-                        optionalGarden.get(),
-                        editGardenUri(gardenId),
-                        newPlantUri(gardenId),
-                        plantService.getAllPlantsInGarden(optionalGarden.get()),
-                        model
+                optionalGarden.get(),
+                editGardenUri(gardenId),
+                newPlantUri(gardenId),
+                plantService.getAllPlantsInGarden(optionalGarden.get()),
+                model
         );
     }
 
@@ -123,17 +121,17 @@ public class ViewGardenController extends GardensSidebar {
      */
     @PostMapping(UPLOAD_PLANT_IMAGE_URI_STRING)
     public String submitPlantImage(
-                    @PathVariable long gardenId,
-                    @PathVariable long plantId,
-                    @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
-                    RedirectAttributes redirectAttributes
+            @PathVariable long gardenId,
+            @PathVariable long plantId,
+            @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
+            RedirectAttributes redirectAttributes
     ) throws NoSuchPlantException {
         logger.info("POST {}", uploadPlantImageUri(gardenId, plantId));
 
         Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
         if (optionalPlant.isEmpty()) {
             throw new NoSuchPlantException(
-                            "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
+                    "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
             );
         }
         Plant plant = optionalPlant.get();
@@ -162,19 +160,21 @@ public class ViewGardenController extends GardensSidebar {
     /**
      * Create new tag for a garden.
      *
-     * @param model Model to add attributes to
-     * @param gardenId Id of garden
-     * @param tagName User inputted tag name
+     * @param model    Model to add attributes to
+     * @param gardenId The garden's ID number
+     * @param tagName  User inputted tag name
      * @return Redirect to view garden page
      * @throws NoSuchGardenException If garden is not found, either by wrong/unauthorized owner
-     * or does not exist.
+     *                               or does not exist.
      */
     @PostMapping(NEW_GARDEN_TAG_URI_STRING)
-    public String submitGardenTag(Model model,
-                                  @PathVariable long gardenId,
-                                  @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException {
+    public String submitGardenTag(
+            @PathVariable long gardenId,
+            @RequestParam(required = false) String tagName,
+            Model model
+    ) throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
+        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
