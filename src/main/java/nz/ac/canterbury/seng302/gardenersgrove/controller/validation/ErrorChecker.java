@@ -2,14 +2,13 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
 
@@ -20,7 +19,6 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
  */
 public class ErrorChecker {
     static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
     private ErrorChecker() {
          throw new IllegalStateException("Utility class");
@@ -40,6 +38,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> gardenFormErrors(
                     String gardenName, Float gardenSize,
+                    String gardenDescription,
                     String country,
                     String city,
                     String streetAddress,
@@ -54,6 +53,18 @@ public class ErrorChecker {
             errors.put(
                             "gardenNameError",
                             "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
+        }
+
+        if (!FormValuesValidator.checkDescription(gardenDescription) || !FormValuesValidator.checkContainsText(gardenDescription)) {
+            errors.put("gardenDescriptionError", "Description must be 512 characters or less and contain some text");
+        } else {
+            try {
+                if (FormValuesValidator.checkProfanity(gardenDescription)) {
+                    errors.put("gardenDescriptionError", "The description does not match the language standards of the app");
+                }
+            } catch (Exception e) {
+                errors.put("profanityCheckError", "Garden cannot be made public");
+            }
         }
 
         if (!FormValuesValidator.checkSize(gardenSize)) {
@@ -113,7 +124,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> plantFormErrors(
                     String plantName,
-                    Integer plantCount,
+                    String plantCount,
                     String plantDescription,
                     MultipartFile imageFile
     ) {
@@ -127,8 +138,8 @@ public class ErrorChecker {
             );
         }
 
-        if (!FormValuesValidator.checkCount(plantCount)) {
-            errors.put("plantCountError", "Plant count must be positive number");
+        if (!FormValuesValidator.checkValidPlantCount(plantCount)) {
+            errors.put("plantCountError", "Plant count must be positive number, and only contain the digits 0-9");
         }
 
         if (!FormValuesValidator.checkDescription(plantDescription)) {
@@ -223,6 +234,17 @@ public class ErrorChecker {
         } else if (!FormValuesValidator.emailInUse(email, userService) && !oldEmail) {
             errors.put("emailError", "This email address is already in use");
         }
+        return errors;
+    }
+
+    /**
+     * Check email errors for the reset password form.
+     * @param email         The email string.
+     * @return A Map<String, String> of errors containing  <error model name, error message>.
+     */
+    public static Map<String, String> emailErrorsResetPassword(String email) {
+        Map<String, String> errors = new HashMap<>();
+        if (FormValuesValidator.checkBlank(email) || !emailIsValid(email)) errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
         return errors;
     }
 
@@ -335,6 +357,7 @@ public class ErrorChecker {
      */
     public static Map<String, String> loginFormErrors(String email, String password, UserService userService) {
         HashMap<String, String> errors = new HashMap<>();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         if (!UserValidation.emailIsValid(email)) {
             errors.put("emailError",
@@ -342,7 +365,7 @@ public class ErrorChecker {
         }
         User user = userService.getUserByEmail(email);
 
-        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+        if (user == null || !encoder.matches(password, user.getPassword())) {
             errors.put("invalidError",
                             "The email address is unknown, or the password is invalid");
         }
@@ -356,43 +379,82 @@ public class ErrorChecker {
      * @param newPassword Users new password
      * @param retypeNewPassword Users new password retyped
      * @param user The passed in user
+     * @param isOldPasswordNeeded If the old password is needed.
+     *                            Editing password needs old password, resetting does not.
      *
      * @return The hash map of errors
      */
     public static Map<String, String> editPasswordFormErrors(String oldPassword,
                                                       String newPassword,
                                                       String retypeNewPassword,
-                                                      User user
+                                                      User user,
+                                                      boolean isOldPasswordNeeded
     ) {
         Map<String, String> errors = new HashMap<>();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         // Checking old password
-        if (FormValuesValidator.checkBlank(oldPassword)) {
-            errors.put("oldPasswordError", "Password cannot be empty");
-        } else if (!passwordIsValid(oldPassword)) {
-            errors.put("oldPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        } else if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            errors.put("oldPasswordError", "Your old password is incorrect");
+        if (isOldPasswordNeeded) {
+            if (FormValuesValidator.checkBlank(oldPassword)) {
+                errors.put("oldPasswordError", "Password cannot be empty");
+            } else if (!encoder.matches(oldPassword, user.getPassword())) {
+                errors.put("oldPasswordError", "Your old password is incorrect");
+            }
         }
 
-        // Checking new password
-        if (FormValuesValidator.checkBlank(newPassword)) {
-            errors.put("newPasswordError", "Password cannot be empty");
-        } else if (!passwordIsValid(newPassword)) {
-            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
-        }
-
-        // Checking retyped new password
-        if (FormValuesValidator.checkBlank(retypeNewPassword)) {
-            errors.put("retypeNewPasswordError", "Password cannot be empty");
-        } else if (!passwordIsValid(retypeNewPassword)) {
-            errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        if (!passwordIsValid(newPassword)) {
+            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least " +
+                    "one uppercase letter, one lowercase letter, one number, and one special character");
         }
 
         // Check that the new password and the retyped new password match
         if (!FormValuesValidator.checkConfirmPasswords(newPassword, retypeNewPassword)) {
             errors.put("passwordConfirmError", "The new passwords do not match");
         }
+
+        // Checking new password
+        if (FormValuesValidator.checkBlank(newPassword)) {
+            errors.put("newPasswordError", "Password cannot be empty");
+        } else if (newPassword.contains(user.getFirstName()) || newPassword.contains(user.getLastName()) || newPassword.contains(user.getEmail())) {
+            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one" +
+                    " uppercase letter, one lowercase letter, one number, and one special character nor include any current " +
+                    "user profile form fields");
+        } else if (!passwordIsValid(newPassword)) {
+            errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one" +
+                    " uppercase letter, one lowercase letter, one number, and one special character");
+        }
+
+        // Checking retyped new password
+        if (FormValuesValidator.checkBlank(retypeNewPassword)) {
+            errors.put("retypeNewPasswordError", "Password cannot be empty");
+        } else if (retypeNewPassword.contains(user.getFirstName()) || retypeNewPassword.contains(user.getLastName()) || retypeNewPassword.contains(user.getEmail())) {
+            errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one" +
+                    " uppercase letter, one lowercase letter, one number, and one special character nor include any current " +
+                    "user profile form fields");
+        } else if (!passwordIsValid(retypeNewPassword)) {
+            errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least " +
+                    "one uppercase letter, one lowercase letter, one number, and one special character");
+        }
+
+        return errors;
+    }
+
+
+    /**
+     * Checks provided tag name is less than or equal to 25 characters and has valid characters
+     *
+     * @param tag tag name user provided
+     * @return String of error message
+     */
+    public static String tagNameErrors(String tag) {
+        String errors = "";
+
+        if(!FormValuesValidator.checkTagName(tag))
+            errors += "The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" ";
+
+        if (!FormValuesValidator.checkTagNameLength(tag))
+            errors += (!errors.isEmpty() ? "\n" : "") + "A tag cannot exceed 25 characters";
+
         return errors;
     }
 }

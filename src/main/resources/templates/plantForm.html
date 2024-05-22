@@ -5,8 +5,6 @@
     <title>Add Plant</title>
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-    <script th:src="@{/javascript/image.js}"></script>
 </head>
 <body>
 <div th:insert="~{fragments/fragments :: title}">Header</div>
@@ -25,7 +23,12 @@
                 <br/>
                 <div class="form-field">
                     <label class="form-input" for="plantCount"> Number of these plants to add to garden: </label>
-                    <input type="number" step="1" class="form-control" id="plantCount" th:name="plantCount"
+                    <input type="text"
+                           step="1"
+                           max="1000000000"
+                           class="form-control"
+                           id="plantCount"
+                           th:name="plantCount"
                            th:value="*{plantCount}" data-cy="plantCount" autofocus>
                     <h5 th:text="${plantCountError}"></h5>
                 </div>
@@ -66,13 +69,16 @@
                 </div>
 
                 <br>
-                <button class="form-button" type="submit">Submit!</button>
+                <button class="hrefButtons" type="submit">Submit!</button>
                 <a th:href="@{${cancelButtonUri}}">
-                    <button class="form-button" type="button">Cancel</button>
+                    <button class="hrefButtons" type="button">Cancel</button>
                 </a>
             </form>
         </div>
     </div>
 </div>
 </body>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script type="text/javascript" th:src="@{/javascript/image.js}"></script>
 </html>

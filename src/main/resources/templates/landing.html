@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gardener's Grove</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body>
 <div id="landingPage">
@@ -11,10 +11,10 @@
     <p>Welcome to Gardener's Grove!</p>
     <div>
         <button>
-            <a th:href="@{/login}">Sign In</a>
+            <a th:href="@{${loginUri}}">Sign In</a>
         </button>
         <button>
-            <a th:href="@{/register}">Register</a>
+            <a th:href="@{${registerUri}}">Register</a>
         </button>
     </div>
 </div>

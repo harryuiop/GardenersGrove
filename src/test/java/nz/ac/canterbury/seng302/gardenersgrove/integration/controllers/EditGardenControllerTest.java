@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.editGardenUri;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewGardenUri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -83,7 +82,7 @@ class EditGardenControllerTest {
         initialGardenLocation.setSuburb(initialSuburb);
         initialGardenLocation.setPostcode(initialPostcode);
 
-        Garden garden = new Garden(user, initialGardenName, initialGardenLocation, initialGardenSize);
+        Garden garden = new Garden(user, initialGardenName, null, initialGardenLocation, initialGardenSize);
 
         gardenRepository.save(garden);
         gardenId = garden.getId();
@@ -99,8 +98,8 @@ class EditGardenControllerTest {
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
                         .param("postcode", initialPostcode))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl(viewGardenUri(gardenId).toString()));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertEquals(1, allGardens.size());
@@ -360,8 +359,8 @@ class EditGardenControllerTest {
                         .param("streetAddress", initialStreetAddress)
                         .param("suburb", initialSuburb)
                         .param("postcode", initialPostcode))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl(viewGardenUri(gardenId).toString()));
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
 
         List<Garden> allGardens = gardenRepository.findAllByOwner(user);
         assertEquals(1, allGardens.size());

@@ -13,16 +13,16 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String country;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String city;
 
-    @Column()
+    @Column(columnDefinition = "TEXT")
     private String streetAddress;
 
-    @Column()
+    @Column(columnDefinition = "TEXT")
     private String suburb;
 
     @Column()
@@ -33,6 +33,8 @@ public class Location {
 
     @Column()
     private double lng;
+
+    private boolean isCoordinatesSet = false;
 
     /**
      * Initialize a Location with the required fields.
@@ -97,10 +99,28 @@ public class Location {
     public void setLngLat(List<Double> lngLat) {
         this.lng = lngLat.get(0);
         this.lat = lngLat.get(1);
+        isCoordinatesSet = true;
+    }
+
+    /**
+     * @return If latitude and longitude have been set.
+     */
+    public boolean isCoordinatesSet() {
+        return isCoordinatesSet;
     }
 
     @Override
     public String toString() {
-        return String.format("%s, %s, %s, %s, %s", streetAddress, suburb, city, country, postcode);
+        String string = String.format("%s, %s", city, country);
+        if (suburb != null && !suburb.isEmpty() && !suburb.equals(" ")) {
+            string = suburb + ", " + string;
+        }
+        if (streetAddress != null && !streetAddress.isEmpty() && !streetAddress.equals(" ")) {
+            string = streetAddress + ", " + string;
+        }
+        if (postcode != null && !postcode.isEmpty() && !postcode.equals(" ")) {
+            string += (", " + postcode);
+        }
+        return string;
     }
 }

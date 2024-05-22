@@ -72,7 +72,7 @@ class PlantControllerCreateTest {
         gardenLocation.setSuburb("Ilam");
         gardenLocation.setPostcode("8041");
 
-        gardenRepository.save(new Garden(user, "Test Garden", gardenLocation, null));
+        gardenRepository.save(new Garden(user, "Test Garden", null, gardenLocation, null));
         plantRepository.deleteAll();
     }
 

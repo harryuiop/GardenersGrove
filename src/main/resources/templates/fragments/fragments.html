@@ -21,11 +21,11 @@
 <nav class="gardens-list" th:fragment="gardens">
     <a class="userProfile" th:href="@{/profile}">
         <img
-                th:src="${user.getProfilePictureFilePath()}"
+                th:src="@{${user.getProfilePictureFilePath()}}"
 
                 class="userProfileImage"
                 alt="user profile image">
-        <p class="userProfileName" th:text="${user.getLastName() != null ? user.getFirstName() + ' ' + user.getLastName() : user.getFirstName()}"></p>
+        <p class="userProfileName" th:text="'My Profile'"></p>
     </a>
     <a th:href="@{${newGardenUri}}">
         <button>Add New Garden</button>
@@ -33,7 +33,7 @@
     <br/>
     <table>
         <thead>
-        <a th:href="@{${viewAllGardensUri}}">My Gardens</a>
+        <h2><a class="viewGardensLink" th:href="@{${viewAllGardensUri}}">My Gardens</a></h2>
         </thead>
         <tbody>
         <tr th:each="garden : ${gardens}">

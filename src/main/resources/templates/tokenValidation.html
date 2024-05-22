@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>tokenValidation</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body>
 <div class="forumContentsDiv">
@@ -13,14 +13,15 @@
 
     <p>Please enter a 6 digits token to verify your account. </p>
         <br />
-    <form th:action="@{/register/verify}" method="post">
+    <form th:action="@{${verifyEmailUri}}" method="post">
         <label for="token">TOKEN:</label>
         <input id="token" type="text" name="tokenValue" th:name="tokenValue">
         <input id="verify" type="submit" value="verify!">
     </form>
     <p class="errorMessage" th:text="${tokenInvalid}"></p>
 
-    <p>Your account will be removed after 10 minutes from you created this account. If you do not verify.</p>
+    <p>If this was not you, you can ignore this message and the account will be
+        deleted after 10 minutes</p>
 </div>
 </body>
 </html>
