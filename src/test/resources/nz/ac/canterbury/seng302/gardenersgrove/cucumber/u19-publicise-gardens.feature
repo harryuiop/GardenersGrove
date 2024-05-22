@@ -36,24 +36,42 @@ Feature: As Inaya, I want to be able to make my garden public so that others can
     Then the description is deleted
 
   Scenario: AC6 - If a description is longer than 512 characters it is invalid
-    Given I enter an invalid description (i.e. more than 512 characters long, or contains only special characters and numbers )
+    Given I enter a description longer than 512 charaters
     When I submit the form
     Then an error message tells me that “Description must be "512" characters or less and contain some text”
     And the description is not persisted.
 
-  Scenario: AC7 - If there is inappropriate language the description is invalid
-    Given I enter a description that contains inappropriate words
+  Scenario Outline: AC6 - If a description is contains no valid characters it is invalid
+    Given I enter a description <string>
+    When I submit the form
+    Then an error message tells me that “Description must be "512" characters or less and contain some text”
+    And the description is not persisted.
+    Examples:
+    | string |
+    |  " "   |
+    | "$%^&" |
+    | "1234" |
+
+
+  Scenario Outline: AC7 - If there is inappropriate language the description is invalid
+    Given I enter a description that contains inappropriate words <string>
     When I submit the form
     Then an error message tells me that “The description does not match the language standards of the app.”
     And the description is not persisted.
+    Examples:
+    | string                |
+    | "Fuck"                |
+    | "Shit"                |
+    | "Supcalifragalisdick" |
+    | "@sshole"             |
 
   Scenario: AC8 - I can see how many characters of the description that I have typed
     Given I enter some text into the description field
     Then I see an indication of the length of the input text such as “x/512” characters (where x is the current number of characters in the input)
 
   Scenario: AC9 - If the inappropriate langauge is not checked then the description persists but cannot be made public
-    Given I enter a description
+    Given I enter some text into the description field
     When I submit the form
-    Then I am informed my results was accepted but must be editited to be able to make public
-    And the decription is persisted
+    Then I am informed my results was accepted but must be edited to be able to make public
+    And the description is persisted
     And I cannot make the garden public

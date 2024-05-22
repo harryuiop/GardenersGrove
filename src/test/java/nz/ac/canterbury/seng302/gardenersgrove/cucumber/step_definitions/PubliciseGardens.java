@@ -11,12 +11,10 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -25,6 +23,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -58,7 +57,7 @@ public class PubliciseGardens {
     private URI formType;
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         gardenRepository.deleteAll();
         userRepository.deleteAll();
 
@@ -130,12 +129,15 @@ public class PubliciseGardens {
 
     @And("I submit the form")
     public void iSubmitTheForm() throws Exception {
+        if (formType == null) {
+            formType = editGardenUri(gardenId);
+        }
         mockMvc.perform(MockMvcRequestBuilders.post(formType)
                 .with(user(user1Id))
                 .with(csrf())
                 .param("gardenName", name)
                 .param("gardenSize", "")
-                .param("description", description)
+                .param("gardenDescription", description)
                 .param("country", country)
                 .param("city", city)
                 .param("streetAddress", "")
@@ -154,7 +156,7 @@ public class PubliciseGardens {
     }
 
     @When("I remove the description of the garden")
-    public void iRemoveTheDescriptionOfTheGarden() throws Exception {
+    public void iRemoveTheDescriptionOfTheGarden() {
         description = null;
     }
 
@@ -162,7 +164,7 @@ public class PubliciseGardens {
     public void theDescriptionIsDeleted() {
         Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
         if (gardenOptional.isPresent()) {
-            Assertions.assertEquals(null, gardenOptional.get().getDescription());
+            Assertions.assertNull(gardenOptional.get().getDescription());
         }
     }
 
@@ -189,49 +191,67 @@ public class PubliciseGardens {
         }
     }
 
-    @Given("I enter an invalid description \\(i.e. more than 512 characters long, or contains only special characters and numbers )")
-    public void iEnterAnInvalidDescriptionIEMoreThanCharactersLongOrContainsOnlySpecialCharactersAndNumbers() {
+    @Given("I enter a description longer than 512 charaters")
+    public void iEnterADescriptionLongerThan512Charaters() {
+        description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. " +
+                "Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. " +
+                "Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. " +
+                "Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, " +
+                "imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. " +
+                "Cras dapibus. Vivamus el";
     }
 
     @Then("an error message tells me that “Description must be \"512\" characters or less and contain some text”")
     public void anErrorMessageTellsMeThatDescriptionMustBeCharactersOrLessAndContainSomeText() {
+        fail();
     }
 
     @And("the description is not persisted.")
     public void theDescriptionIsNotPersisted() {
+        Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
+        if (gardenOptional.isPresent()) {
+            Assertions.assertNotEquals(description, gardenOptional.get().getDescription());
+        }
     }
 
-    @Given("I enter a description that contains inappropriate words")
-    public void iEnterADescriptionThatContainsInappropriateWords() {
+    @Given("I enter a description {string}")
+    public void iEnterADescriptionString(String string) {
+        description = string;
+    }
+
+    @Given("I enter a description that contains inappropriate words {string}")
+    public void iEnterADescriptionThatContainsInappropriateWords(String string) {
+        description = string;
     }
 
     @Then("an error message tells me that “The description does not match the language standards of the app.”")
     public void anErrorMessageTellsMeThatTheDescriptionDoesNotMatchTheLanguageStandardsOfTheApp() {
+        fail();
     }
 
     @Given("I enter some text into the description field")
     public void iEnterSomeTextIntoTheDescriptionField() {
+        description = "A normal garden description";
     }
 
-    @Then("I see an indication of the length of the input text such as “x\\/512” characters \\(where x is the current number of characters in the input)")
+    @Then("I see an indication of the length of the input text such as “x/512” characters (where x is the current number of characters in the input)")
     public void iSeeAnIndicationOfTheLengthOfTheInputTextSuchAsXCharactersWhereXIsTheCurrentNumberOfCharactersInTheInput() {
+        fail();
     }
 
-    @Given("I enter a description")
-    public void iEnterADescription() {
-    }
-
-    @Then("I am informed my results was accepted but must be editited to be able to make public")
-    public void iAmInformedMyResultsWasAcceptedButMustBeEdititedToBeAbleToMakePublic() {
-    }
-
-    @And("the decription is persisted")
-    public void theDecriptionIsPersisted() {
+    @Then("I am informed my results was accepted but must be edited to be able to make public")
+    public void iAmInformedMyResultsWasAcceptedButMustBeEditedToBeAbleToMakePublic() {
+        fail();
     }
 
     @And("I cannot make the garden public")
-    public void iCannotMakeTheGardenPublic() {
-
+    public void iCannotMakeTheGardenPublic() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(garden.getId()))
+                        .param("publicGarden", "true")
+                        .with(user(user1Id))
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(view().name("viewGarden"));
+        Assertions.assertFalse(garden.getPublicGarden());
     }
-
 }
