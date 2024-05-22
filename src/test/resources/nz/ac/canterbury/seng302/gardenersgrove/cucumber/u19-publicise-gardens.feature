@@ -69,7 +69,7 @@ Feature: As Inaya, I want to be able to make my garden public so that others can
     Given I enter some text into the description field
     Then I see an indication of the length of the input text such as “x/512” characters (where x is the current number of characters in the input)
 
-  Scenario: AC9 - If the inappropriate langauge is not checked then the description persists but cannot be made public
+  Scenario: AC9 - If the inappropriate language is not checked then the description persists but cannot be made public
     Given I enter some text into the description field
     When I submit the form
     Then I am informed my results was accepted but must be edited to be able to make public

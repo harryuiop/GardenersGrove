@@ -6,26 +6,36 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.servlet.View;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @SpringBootTest
@@ -202,8 +212,21 @@ public class PubliciseGardens {
     }
 
     @Then("an error message tells me that “Description must be \"512\" characters or less and contain some text”")
-    public void anErrorMessageTellsMeThatDescriptionMustBeCharactersOrLessAndContainSomeText() {
-        fail();
+    public void anErrorMessageTellsMeThatDescriptionMustBeCharactersOrLessAndContainSomeText() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
+                        .with(user(user1Id))
+                        .with(csrf())
+                        .param("gardenName", name)
+                        .param("gardenSize", "")
+                        .param("gardenDescription", description)
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", "")
+                        .param("suburb", "")
+                        .param("postcode", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(model().attribute("gardenDescriptionError",
+                        hasToString("Description must be 512 characters or less and contain some text")));
     }
 
     @And("the description is not persisted.")
@@ -225,8 +248,21 @@ public class PubliciseGardens {
     }
 
     @Then("an error message tells me that “The description does not match the language standards of the app.”")
-    public void anErrorMessageTellsMeThatTheDescriptionDoesNotMatchTheLanguageStandardsOfTheApp() {
-        fail();
+    public void anErrorMessageTellsMeThatTheDescriptionDoesNotMatchTheLanguageStandardsOfTheApp() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
+                        .with(user(user1Id))
+                        .with(csrf())
+                        .param("gardenName", name)
+                        .param("gardenSize", "")
+                        .param("gardenDescription", description)
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", "")
+                        .param("suburb", "")
+                        .param("postcode", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(model().attribute("gardenDescriptionError",
+                        hasToString("The description does not match the language standards of the app")));
     }
 
     @Given("I enter some text into the description field")
@@ -240,8 +276,30 @@ public class PubliciseGardens {
     }
 
     @Then("I am informed my results was accepted but must be edited to be able to make public")
-    public void iAmInformedMyResultsWasAcceptedButMustBeEditedToBeAbleToMakePublic() {
-        fail();
+    public void iAmInformedMyResultsWasAcceptedButMustBeEditedToBeAbleToMakePublic() throws Exception {
+        try (MockedStatic<ErrorChecker> mockedErrors = Mockito.mockStatic(ErrorChecker.class)) {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("profanityCheckError", "Garden cannot be made public");
+            mockedErrors.when(() -> ErrorChecker.gardenFormErrors(
+                    Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any()))
+                    .thenReturn(errors);
+        }
+        mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
+                        .with(user(user1Id))
+                        .with(csrf())
+                        .param("gardenName", name)
+                        .param("gardenSize", "")
+                        .param("gardenDescription", description)
+                        .param("country", country)
+                        .param("city", city)
+                        .param("streetAddress", "")
+                        .param("suburb", "")
+                        .param("postcode", ""))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(model().attribute("profanityCheckWorked",
+                        hasToString("Garden cannot be made public")));
+
+        Assertions.assertFalse(gardenRepository.findById(gardenId).get().getPublicGarden());
     }
 
     @And("I cannot make the garden public")

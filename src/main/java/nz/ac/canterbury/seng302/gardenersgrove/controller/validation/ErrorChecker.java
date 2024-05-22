@@ -27,13 +27,14 @@ public class ErrorChecker {
     /**
      * Checks for valid user entries that meet the given requirements
      *
-     * @param gardenName    represents the name given
-     * @param gardenSize    represents the size given
-     * @param country       user entered country
-     * @param city          user entered city
-     * @param streetAddress user entered street address
-     * @param suburb        user entered suburb
-     * @param postcode      user entered postcode
+     * @param gardenName        represents the name given
+     * @param gardenSize        represents the size given
+     * @param gardenDescription represents teh garden description
+     * @param country           user entered country
+     * @param city              user entered city
+     * @param streetAddress     user entered street address
+     * @param suburb            user entered suburb
+     * @param postcode          user entered postcode
      * @return a mapping of the error labels and messages
      */
     public static Map<String, String> gardenFormErrors(
