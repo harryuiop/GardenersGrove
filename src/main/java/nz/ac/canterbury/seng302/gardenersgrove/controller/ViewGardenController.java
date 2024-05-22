@@ -7,7 +7,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecke
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
@@ -27,7 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,11 +59,23 @@ public class ViewGardenController extends GardensSidebar {
         this.tagService = tagService;
     }
 
+    /**
+     * Returns the view page for a specific garden
+     * @param garden        The garden being viewed
+     * @param editGardenUri The URI for edit garden
+     * @param newPlantUri   The URi for new plant form
+     * @param plants        The plants in the garden
+     * @param owner         Whether the viewer is the owner of the garden or not
+     * @param model         Puts the data into the template
+     * @param errorMessages Any plant image errors that occurred when re-loading
+     * @return              The view garden page is displayed to user
+     */
     private String loadGardenPage(
                     Garden garden,
                     URI editGardenUri,
                     URI newPlantUri,
                     List<Plant> plants,
+                    boolean owner,
                     Model model,
                     String...errorMessages
     ) {
@@ -79,6 +89,7 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("editGardenUri", editGardenUri.toString());
         model.addAttribute("newPlantUri", newPlantUri.toString());
         model.addAttribute("plants", plants);
+        model.addAttribute("owner", owner);
         model.addAttribute("editPlantUriString", EDIT_PLANT_URI_STRING);
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
         model.addAttribute("tags", garden.getTags());
@@ -89,6 +100,8 @@ public class ViewGardenController extends GardensSidebar {
     /**
      * Set up view garden page and display attributes.
      *
+     * @param gardenId  The id of the garden being viewed
+     * @param model     Puts the data into the template to be viewed
      * @return Thyme leaf html template of the view garden page.
      */
     @GetMapping(VIEW_GARDEN_URI_STRING)
@@ -107,7 +120,35 @@ public class ViewGardenController extends GardensSidebar {
                         editGardenUri(gardenId),
                         newPlantUri(gardenId),
                         plantService.getAllPlantsInGarden(optionalGarden.get()),
-                        model
+                true,
+                model
+        );
+    }
+
+    /**
+     * Set up view garden page and display attributes but no editing features to friend of owner.
+     *
+     * @return Thyme leaf html template of the view garden page.
+     */
+    @GetMapping(VIEW_FRIENDS_GARDEN_URI_STRING)
+    public String displayFriendsGarden(
+            @PathVariable long gardenId,
+            @PathVariable long friendId,
+            Model model
+    ) throws NoSuchGardenException {
+        logger.info("GET {}", viewFriendsGardenUri(friendId, gardenId));
+
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty() || !optionalGarden.get().getOwner().getFriends().contains(userService.getAuthenticatedUser())) {
+            throw new NoSuchGardenException(gardenId);
+        }
+        return loadGardenPage(
+                optionalGarden.get(),
+                editGardenUri(gardenId),
+                newPlantUri(gardenId),
+                plantService.getAllPlantsInGarden(optionalGarden.get()),
+                false,
+                model
         );
     }
 
@@ -186,12 +227,12 @@ public class ViewGardenController extends GardensSidebar {
         else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
             tagService.saveTag(tagName, garden);
 
-
         return loadGardenPage(
                 optionalGarden.get(),
                 editGardenUri(gardenId),
                 newPlantUri(gardenId),
                 plantService.getAllPlantsInGarden(optionalGarden.get()),
+                true,
                 model,
                 errorMessages
         );
