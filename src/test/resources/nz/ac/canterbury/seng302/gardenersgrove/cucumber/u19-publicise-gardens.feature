@@ -16,7 +16,7 @@ Feature: As Inaya, I want to be able to make my garden public so that others can
     And the description is valid
     Then the description is persisted
 
-  Scenario: AC3 - I can edit and existing garden to add a description
+  Scenario: AC3 - I can edit an existing garden to add a description
     Given I am creating a new garden
     When I remove the description of the garden
     And I submit the form
@@ -25,7 +25,8 @@ Feature: As Inaya, I want to be able to make my garden public so that others can
   Scenario: AC4 - If the description is valid the description persists
     Given I am editing an existing garden
     When I add an optional description of the garden
-    And I submit the form, and the description is valid
+    And I submit the form
+    And the description is valid
     Then the description is persisted
 
   Scenario: AC5 - When editing the garden and description is removed the description is removed
