@@ -59,6 +59,17 @@ public class ViewGardenController extends GardensSidebar {
         this.tagService = tagService;
     }
 
+    /**
+     * Returns the view page for a specific garden
+     * @param garden        The garden being viewed
+     * @param editGardenUri The URI for edit garden
+     * @param newPlantUri   The URi for new plant form
+     * @param plants        The plants in the garden
+     * @param owner         Whether the viewer is the owner of the garden or not
+     * @param model         Puts the data into the template
+     * @param errorMessages Any plant image errors that occurred when re-loading
+     * @return              The view garden page is displayed to user
+     */
     private String loadGardenPage(
                     Garden garden,
                     URI editGardenUri,
@@ -89,6 +100,8 @@ public class ViewGardenController extends GardensSidebar {
     /**
      * Set up view garden page and display attributes.
      *
+     * @param gardenId  The id of the garden being viewed
+     * @param model     Puts the data into the template to be viewed
      * @return Thyme leaf html template of the view garden page.
      */
     @GetMapping(VIEW_GARDEN_URI_STRING)
