@@ -8,8 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
@@ -99,7 +98,7 @@ public class UserService {
      * @param id The ID of the user.
      * @return The User object if found, otherwise null.
      */
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         return userRepository.findByUserId(id);
     }
 
@@ -165,5 +164,32 @@ public class UserService {
     public String hashUserPassword(String passwordInPlainText) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
         return encoder.encode(passwordInPlainText);
+    }
+
+    /**
+     * Gets all the users in the repository and returns a list of them all.
+     * @return a list of all the users in the repository.
+     */
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * Checks if any of the users' names or emails contain the given string.
+     * @param searchString a string entered by the user in search of a user.
+     * @return a list of users whos' names or emails contain the string.
+     */
+    public List<Map<String, String>> getSearchedUser(String searchString) {
+        List<Map<String, String>> searchResults = new ArrayList<>();
+        for (User user: getAllUsers()) {
+            if ((user.getEmail()).equalsIgnoreCase(searchString) ||
+                    (user.getName()).equalsIgnoreCase(searchString)) {
+                Map<String, String> newMap = new HashMap<>();
+                newMap.put("email", user.getEmail());
+                newMap.put("name", user.getName());
+                searchResults.add(newMap);
+            }
+        }
+        return searchResults;
     }
 }

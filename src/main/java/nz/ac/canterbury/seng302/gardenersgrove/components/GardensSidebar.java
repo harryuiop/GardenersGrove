@@ -18,6 +18,7 @@ public class GardensSidebar {
     public void updateGardensSidebar(Model model, GardenService gardenService, UserService userService) {
         model.addAttribute("gardens", gardenService.getAllGardens(userService));
         model.addAttribute("newGardenUri", newGardenUri());
+        model.addAttribute("viewFriendsUri", viewFriendsUri());
         model.addAttribute("viewAllGardensUri", viewAllGardensUri());
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         model.addAttribute("user", userService.getAuthenticatedUser());

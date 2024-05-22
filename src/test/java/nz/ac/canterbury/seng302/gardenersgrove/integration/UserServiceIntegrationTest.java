@@ -11,6 +11,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -21,11 +25,24 @@ public class UserServiceIntegrationTest {
     private UserRepository userRepositoryMock;
     private UserService userService;
 
+    User user1;
+    User user2;
+    List<User> mockRepositoryUsers;
+
     @BeforeEach
     public void setUp() {
         userRepositoryMock = Mockito.mock(UserRepository.class);
         userService = new UserService(userRepositoryMock);
         assertTrue(true);
+        user1 = new User
+                ("user1@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
+        user2 = new User
+                ("user2@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
+        mockRepositoryUsers = new ArrayList<>();
+        mockRepositoryUsers.add(user1);
+        mockRepositoryUsers.add(user2);
+
+
     }
 
     @Test
@@ -35,7 +52,6 @@ public class UserServiceIntegrationTest {
         String lname = "Smith";
         String password = "Password123!";
         String dob = "2000-01-01";
-        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
@@ -54,7 +70,6 @@ public class UserServiceIntegrationTest {
         String lname = "Smith";
         String password = "Password123!";
         String dob = "2000-01-01";
-        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
@@ -69,7 +84,6 @@ public class UserServiceIntegrationTest {
         String lname = "Smith";
         String password = "Password123!";
         String dob = "2000-01-01";
-        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
@@ -84,7 +98,6 @@ public class UserServiceIntegrationTest {
         String lname = "Smith;;";
         String password = "Password123!";
         String dob = "2000-01-01";
-        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
@@ -99,7 +112,6 @@ public class UserServiceIntegrationTest {
         String lname = "Smith";
         String password = "password1";
         String dob = "2000-01-01";
-        boolean validated = false;
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
         User user = userService.addUsers(new User(email,
@@ -113,7 +125,6 @@ public class UserServiceIntegrationTest {
         String firstName = "John";
         String lname = "Smith";
         String password = "Password123!";
-        boolean validated = false;
         String dob = LocalDate.now().toString();
         when(userRepositoryMock.save(Mockito.any())).thenReturn(new User(email,
                 firstName, lname, password, dob));
@@ -121,4 +132,50 @@ public class UserServiceIntegrationTest {
                 firstName, lname, password, dob));
         Assertions.assertNull(user);
     }
+
+    @Test
+    void getSearchedUser_searchJane_returnEmptyList() {
+        when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
+        Assertions.assertEquals(new ArrayList<>(), userService.getSearchedUser("Jane"));
+    }
+
+    @Test
+    void getSearchedUser_searchU1Email_returnUser1() {
+        when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
+        List<Map<String,String>> users = new ArrayList<>();
+        users.add(new HashMap<>());
+        users.getFirst().put("email", user1.getEmail());
+        users.getFirst().put("name", user1.getName());
+        Assertions.assertEquals(users, userService.getSearchedUser("user1@gmail.com"));
+    }
+
+    @Test
+    void getSearchedUser_searchU2Email_returnUser2() {
+        when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
+        List<Map<String,String>> users = new ArrayList<>();
+        users.add(new HashMap<>());
+        users.getFirst().put("email", user2.getEmail());
+        users.getFirst().put("name", user2.getName());
+        Assertions.assertEquals(users, userService.getSearchedUser("user2@gmail.com"));
+    }
+
+    @Test
+    void getSearchedUser_searchJohnDoe_returnUser1And2() {
+        when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
+        List<Map<String,String>> users = new ArrayList<>();
+        users.add(new HashMap<>());
+        users.getFirst().put("email", user1.getEmail());
+        users.getFirst().put("name", user1.getName());
+        users.add(new HashMap<>());
+        users.getLast().put("email", user2.getEmail());
+        users.getLast().put("name", user2.getName());
+        Assertions.assertEquals(users, userService.getSearchedUser("John Doe"));
+    }
+    @Test
+    void getSearchedUser_searchJohn_returnEmptyList() {
+        when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
+        List<Map<String,String>> users = new ArrayList<>();
+        Assertions.assertEquals(users, userService.getSearchedUser("John"));
+    }
+
 }

@@ -25,6 +25,13 @@ public class GardenService {
         return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
     }
 
+    public List<Garden> getAllFriendsGardens(long friendId, UserService userService) throws NoSuchGardenException {
+        if (userService.getAuthenticatedUser().getFriends().contains(userService.getUserById(friendId))) {
+            return gardenRepository.findAllByOwner(userService.getUserById(friendId));
+        } else {
+            throw new NoSuchFriendException();
+        }
+    }
     public Optional<Garden> getGardenById(Long id) {
         return gardenRepository.findById(id);
     }
