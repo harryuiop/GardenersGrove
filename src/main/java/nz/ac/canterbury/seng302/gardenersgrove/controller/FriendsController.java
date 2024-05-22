@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
+/**
+ * Controls the manage friends page which displays current friends and, incoming and outgoing friend requests.
+ */
 @Controller
 public class FriendsController {
 
@@ -24,12 +27,22 @@ public class FriendsController {
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 
+    /**
+     * Sets up services.
+     * @param userService           Allows access to users information
+     * @param friendRequestService  Allows access to current friend requests
+     */
     @Autowired
     public FriendsController(UserService userService, FriendRequestService friendRequestService) {
         this.userService = userService;
         this.friendRequestService = friendRequestService;
     }
 
+    /**
+     * Fills out the manage friends template before displaying it to the user.
+     * @param   model Connects the template to the information
+     * @return  manage friends page displayed to user
+     */
     @GetMapping(MANAGE_FRIENDS_URI_STRING)
     public String getFriendsPage(Model model) {
         logger.info("GET {}", viewFriendsUri());
@@ -43,6 +56,13 @@ public class FriendsController {
         return "manageFriends";
     }
 
+    /**
+     * Used to accept and decline friend requests
+     * @param action                    determines whether to accept or decline the friend request
+     * @param request                   the Id of the friend requests source user
+     * @return                          redirects back to the manage friends page
+     * @throws NoSuchGardenException    If the user Id cannot find a corresponding user throws this error
+     */
     @PostMapping(MANAGE_FRIENDS_URI_STRING)
     public String submitFriendsPage(@RequestParam String action, @RequestParam Long request) throws NoSuchGardenException {
         logger.info("POST {}", viewFriendsUri());

@@ -26,7 +26,6 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.sendFrien
  */
 @Controller
 public class SearchResultsController {
-    SearchUsersController searchUsersController;
     Logger logger = LoggerFactory.getLogger(GardenController.class);
     private final UserService userService;
 
@@ -48,7 +47,7 @@ public class SearchResultsController {
     @GetMapping(SEARCH_RESULTS_STRING)
     public String getSearchResultsPage(@RequestParam String searchUser, Model model) {
         logger.info("Get /search/result/{}", searchUser);
-        List<Map<String, String>> usersFound = searchUsersController.getSearchedUsers(searchUser);
+        List<Map<String, String>> usersFound = userService.getSearchedUser(searchUser);
         List<User> displayUsers = new ArrayList<>();
         for (Map<String,String> mappedUser : usersFound) {
             displayUsers.add(userService.getUserByEmail(mappedUser.get("email")));

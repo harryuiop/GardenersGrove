@@ -28,7 +28,6 @@ public class UriConfig {
     public static final String VIEW_ALL_FRIENDS_GARDENS_URI_STRING = "/friends/{friendId}/gardens";
     public static final String VIEW_FRIENDS_GARDEN_URI_STRING = "/friends/{friendId}/garden/{gardenId}";
 
-    public static final String SEARCH_USERS_STRING = "/search";
     public static final String SEARCH_RESULTS_STRING = "/search/results";
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
 
@@ -132,7 +131,6 @@ public class UriConfig {
     public static URI viewAllGardensUri() {
         return URI.create(VIEW_ALL_GARDENS_URI_STRING);
     }
-    public static URI searchUsersUri() {return URI.create(SEARCH_USERS_STRING);}
     public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
     public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
 
