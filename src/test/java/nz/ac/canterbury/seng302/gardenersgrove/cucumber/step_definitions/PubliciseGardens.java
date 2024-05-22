@@ -7,14 +7,13 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
-import org.mockito.MockedStatic;
+import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.servlet.View;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -30,7 +28,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -277,12 +274,16 @@ public class PubliciseGardens {
 
     @Then("I am informed my results was accepted but must be edited to be able to make public")
     public void iAmInformedMyResultsWasAcceptedButMustBeEditedToBeAbleToMakePublic() throws Exception {
-        try (MockedStatic<ErrorChecker> mockedErrors = Mockito.mockStatic(ErrorChecker.class)) {
-            Map<String, String> errors = new HashMap<>();
-            errors.put("profanityCheckError", "Garden cannot be made public");
-            mockedErrors.when(() -> ErrorChecker.gardenFormErrors(
-                    Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any()))
-                    .thenReturn(errors);
+        Map<String, String> errors = new HashMap<>();
+        errors.put("profanityCheckError", "Garden cannot be made public");
+        try {
+            MockedConstruction<ErrorChecker> mockedErrorChecker = Mockito.mockConstruction(ErrorChecker.class,
+                    ((errorChecker, context) -> Mockito.when(errorChecker.gardenFormErrors(
+                            Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
+                            Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()
+                    )).thenReturn(errors)));
+        } catch (Exception e) {
+            fail();
         }
         mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                         .with(user(user1Id))
