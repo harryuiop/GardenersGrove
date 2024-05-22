@@ -242,7 +242,8 @@ public class ViewGardenController extends GardensSidebar {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
-        String errorMessages = ErrorChecker.tagNameErrors(tagName);
+        ErrorChecker errorChecker = new ErrorChecker();
+        String errorMessages = errorChecker.tagNameErrors(tagName);
 
 
         if (!errorMessages.isEmpty())

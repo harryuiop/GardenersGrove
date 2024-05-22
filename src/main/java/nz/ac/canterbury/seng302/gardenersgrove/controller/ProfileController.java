@@ -37,6 +37,7 @@ public class ProfileController extends GardensSidebar {
     private final UserService userService;
     private final GardenService gardenService;
     private final EmailSenderService emailSenderService;
+    private final ErrorChecker errorChecker = new ErrorChecker();
 
     /**
      * Constructor for ProfileController.
@@ -177,7 +178,7 @@ public class ProfileController extends GardensSidebar {
             dateOfBirthValid = false;
         }
 
-        Map<String, String> errors = ErrorChecker.profileFormErrors(
+        Map<String, String> errors = errorChecker.profileFormErrors(
                 firstName, lastName, noSurname,
                 email, newEmail, userService,
                 dateOfBirthValid, dateOfBirth
@@ -225,7 +226,7 @@ public class ProfileController extends GardensSidebar {
         User user = userService.getAuthenticatedUser();
         model.addAttribute(user);
 
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
 
         if (!errors.isEmpty()) {
             model.addAllAttributes(errors);

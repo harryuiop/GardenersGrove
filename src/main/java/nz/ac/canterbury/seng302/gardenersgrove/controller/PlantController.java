@@ -37,6 +37,7 @@ public class PlantController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
+    private final ErrorChecker errorChecker = new ErrorChecker();
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -251,7 +252,7 @@ public class PlantController extends GardensSidebar {
         }
         Garden garden = optionalGarden.get();
 
-        Map<String, String> errors = ErrorChecker.plantFormErrors(
+        Map<String, String> errors = errorChecker.plantFormErrors(
                         plantName,
                         plantCount,
                         plantDescription,
@@ -326,7 +327,7 @@ public class PlantController extends GardensSidebar {
         }
         Plant plant = optionalPlant.get();
 
-        Map<String, String> errors = ErrorChecker.plantFormErrors(
+        Map<String, String> errors = errorChecker.plantFormErrors(
                         plantName,
                         plantCount,
                         plantDescription,

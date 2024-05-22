@@ -20,10 +20,6 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
 public class ErrorChecker {
     static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
 
-    private ErrorChecker() {
-         throw new IllegalStateException("Utility class");
-    }
-
     /**
      * Checks for valid user entries that meet the given requirements
      *
@@ -37,7 +33,7 @@ public class ErrorChecker {
      * @param postcode          user entered postcode
      * @return a mapping of the error labels and messages
      */
-    public static Map<String, String> gardenFormErrors(
+    public Map<String, String> gardenFormErrors(
                     String gardenName, Float gardenSize,
                     String gardenDescription,
                     String country,
@@ -97,7 +93,7 @@ public class ErrorChecker {
      * @param fieldRequired If the field is required or not
      * @param errors        Error hashmap to update
      */
-    private static void validateLocationField(
+    private void validateLocationField(
                     String fieldValue,
                     String errorName,
                     String fieldName,
@@ -123,7 +119,7 @@ public class ErrorChecker {
      * @param plantDescription The string description of the plant.
      * @return A HashMap<String, String> of the errors that have occurred based on the outcome of the error checks.
      */
-    public static Map<String, String> plantFormErrors(
+    public Map<String, String> plantFormErrors(
                     String plantName,
                     String plantCount,
                     String plantDescription,
@@ -162,7 +158,7 @@ public class ErrorChecker {
      * @param firstName The first name string.
      * @return A Map<String, String> of errors containing  <error model name, error message>.
      */
-    public static Map<String, String> firstNameErrors(String firstName) {
+    public Map<String, String> firstNameErrors(String firstName) {
         Map<String, String> errors = new HashMap<>();
         if (FormValuesValidator.checkBlank(firstName)) {
             errors.put("firstNameError", "First name cannot be empty");
@@ -193,7 +189,7 @@ public class ErrorChecker {
      * @param noSurname a boolean value of whether the lastName should be null or not.
      * @return A Map<String, String> of errors containing  <error model name, error message>.
      */
-    public static Map<String, String> lastNameErrors(String lastName, boolean noSurname) {
+    public Map<String, String> lastNameErrors(String lastName, boolean noSurname) {
         Map<String, String> errors = new HashMap<>();
         if (!noSurname) {
             if (FormValuesValidator.checkBlank(lastName)) {
@@ -226,7 +222,7 @@ public class ErrorChecker {
      * @param userService   The current user service to check whether the new email is in use.
      * @return A Map<String, String> of errors containing  <error model name, error message>.
      */
-    public static Map<String, String> emailErrors(String email, boolean oldEmail, UserService userService) {
+    public Map<String, String> emailErrors(String email, boolean oldEmail, UserService userService) {
         Map<String, String> errors = new HashMap<>();
         if (FormValuesValidator.checkBlank(email)) {
             errors.put("emailError", "Email cannot be empty");
@@ -245,7 +241,7 @@ public class ErrorChecker {
      * @param validDate   A boolean value of whether the date is a valid date or not.
      * @return A Map<String, String> of errors containing  <error model name, error message>.
      */
-    public static Map<String, String> dateOfBirthErrors(String dateOfBirth, boolean validDate) {
+    public Map<String, String> dateOfBirthErrors(String dateOfBirth, boolean validDate) {
         Map<String, String> errors = new HashMap<>();
         if (validDate) {
             if (!FormValuesValidator.checkBlank(dateOfBirth)) {
@@ -268,7 +264,7 @@ public class ErrorChecker {
      * @param passwordConfirm   A string of the attempted password copy .
      * @return A Map<String, String> of errors containing  <error model name, error message>.
      */
-    public static Map<String, String> passwordErrors(String password, String passwordConfirm) {
+    public Map<String, String> passwordErrors(String password, String passwordConfirm) {
         Map<String, String> errors = new HashMap<>();
         if (FormValuesValidator.checkBlank(password)) {
             errors.put("passwordError", "Password cannot be empty");
@@ -296,7 +292,7 @@ public class ErrorChecker {
      *                        exists with the given information.
      * @return A HashMap<String, String> of the errors that have occurred based on the outcome of the error checks.
      */
-    public static Map<String, String> profileFormErrors(String firstName, String lastName, Boolean noSurname,
+    public Map<String, String> profileFormErrors(String firstName, String lastName, Boolean noSurname,
                                                         String email, boolean oldEmail, UserService userService,
                                                         boolean validDate, String dateOfBirth ) {
         Map<String, String> errors = firstNameErrors(firstName);
@@ -322,7 +318,7 @@ public class ErrorChecker {
      *                        exists with the given information.
      * @return A HashMap<String, String> of the errors that have occurred based on the outcome of the error checks.
      */
-    public static Map<String, String> registerUserFormErrors(String firstName, String lastName, Boolean noSurname,
+    public Map<String, String> registerUserFormErrors(String firstName, String lastName, Boolean noSurname,
                                                              String email, boolean oldEmail, UserService userService,
                                                              String password, String passwordConfirm,
                                                              boolean validDate, String dateOfBirth) {
@@ -345,7 +341,7 @@ public class ErrorChecker {
      *                    exists with the given information.
      * @return A HashMap<String, String> of the errors that have occurred based on the outcome of the error checks.
      */
-    public static Map<String, String> loginFormErrors(String email, String password, UserService userService) {
+    public Map<String, String> loginFormErrors(String email, String password, UserService userService) {
         HashMap<String, String> errors = new HashMap<>();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
@@ -372,7 +368,7 @@ public class ErrorChecker {
      *
      * @return The hash map of errors
      */
-    public static Map<String, String> editPasswordFormErrors(String oldPassword,
+    public Map<String, String> editPasswordFormErrors(String oldPassword,
                                                       String newPassword,
                                                       String retypeNewPassword,
                                                       User user
@@ -429,7 +425,7 @@ public class ErrorChecker {
      * @param tag tag name user provided
      * @return String of error message
      */
-    public static String tagNameErrors(String tag) {
+    public String tagNameErrors(String tag) {
         String errors = "";
 
         if(!FormValuesValidator.checkTagName(tag))

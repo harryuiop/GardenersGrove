@@ -35,6 +35,7 @@ public class GardenController extends GardensSidebar {
     private final LocationService locationService;
     private final MapTilerGeocoding mapTilerGeocoding;
     private String refererUrl;
+    private ErrorChecker errorChecker = new ErrorChecker();
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -163,7 +164,7 @@ public class GardenController extends GardensSidebar {
     ) {
         logger.info("POST {}", newGardenUri());
 
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+        Map<String, String> errors = errorChecker.gardenFormErrors(
                 gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode
         );
         if (errors.isEmpty() || (errors.containsKey("profanityCheckError") && errors.size() == 1)) {
@@ -261,7 +262,7 @@ public class GardenController extends GardensSidebar {
         }
         Garden garden = optionalGarden.get();
 
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+        Map<String, String> errors = errorChecker.gardenFormErrors(
                 gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode
         );
         if (errors.isEmpty() || (errors.containsKey("profanityCheckError") && errors.size() == 1)) {
