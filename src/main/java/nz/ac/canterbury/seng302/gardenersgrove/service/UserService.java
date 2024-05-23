@@ -3,7 +3,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.service;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.SearchedUserResult;
+import nz.ac.canterbury.seng302.gardenersgrove.friends.SearchedUserResult;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -230,19 +231,22 @@ public class UserService {
     /**
      * Checks if any of the users' names or emails contain the given string.
      * @param searchString a string entered by the user in search of a user.
-     * @return a list of users whos' names or emails contain the string.
+     * @param loggedInUser User that is logged in
+     * @param friendRequestService Friend request service, used to find status in relation to logged in user.
+     * @return a list of users whos' names or emails contain the string and their status in relation to the
+     * logged in user.
      */
     public List<SearchedUserResult> getSearchedUserAndFriendStatus(String searchString, User loggedInUser, FriendRequestService friendRequestService) {
         List<SearchedUserResult> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
             if ((user.getEmail()).equalsIgnoreCase(searchString) ||
                     (user.getName()).equalsIgnoreCase(searchString)) {
-                String statusText = loggedInUser.getFriends().contains(user) ? "Already Friends" : "Send Friend Request";
+                Status status = loggedInUser.getFriends().contains(user) ? Status.FRIENDS : Status.SEND_REQUEST;
                 List<FriendRequest> friendRequests = friendRequestService.findRequestBySenderAndReceiver(loggedInUser, user);
                 if (!friendRequests.isEmpty()) {
-                    statusText =  friendRequests.getFirst().getStatus().toString();
+                    status =  friendRequests.getFirst().getStatus();
                 }
-                searchResults.add(new SearchedUserResult(user, statusText));
+                searchResults.add(new SearchedUserResult(user, status));
             }
         }
         return searchResults;
