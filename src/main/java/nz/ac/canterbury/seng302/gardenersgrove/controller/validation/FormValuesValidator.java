@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
-import nz.ac.canterbury.seng302.gardenersgrove.controller.GardenController;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ public class FormValuesValidator {
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
     static String namePattern = "^[a-zA-Z\\-' ]+$";
     static String tagPattern = "^[a-zA-Z0-9\\-'\"_ ]+$";
-    static Logger logger = LoggerFactory.getLogger(GardenController.class);
+    static Logger logger = LoggerFactory.getLogger(FormValuesValidator.class);
 
     /**
      * Checks if a given string contains inappropriate language
