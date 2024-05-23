@@ -33,4 +33,12 @@ public class SearchedUserResult {
     public String getStatusText() {
         return status.toString();
     }
+
+
+    /**
+     * @return If user can send friend request.
+     */
+    public boolean isRequestEnabled() {
+        return status == Status.SEND_REQUEST;
+    }
 }

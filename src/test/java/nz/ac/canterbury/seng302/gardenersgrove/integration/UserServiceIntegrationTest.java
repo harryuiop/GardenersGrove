@@ -136,7 +136,7 @@ public class UserServiceIntegrationTest {
     @Test
     void getSearchedUser_searchJane_returnEmptyList() {
         when(userRepositoryMock.findAll()).thenReturn(mockRepositoryUsers);
-        Assertions.assertEquals(new ArrayList<>(), userService.getSearchedUser("Jane"));
+        Assertions.assertEquals(new ArrayList<>(), userService.getSearchedUserAndFriendStatus("Jane"));
     }
 
     @Test
