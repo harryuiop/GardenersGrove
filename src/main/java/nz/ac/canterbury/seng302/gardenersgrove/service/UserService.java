@@ -1,7 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.SearchedUserResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -230,12 +232,17 @@ public class UserService {
      * @param searchString a string entered by the user in search of a user.
      * @return a list of users whos' names or emails contain the string.
      */
-    public List<User> getSearchedUser(String searchString) {
-        List<User> searchResults = new ArrayList<>();
+    public List<SearchedUserResult> getSearchedUserAndFriendStatus(String searchString, User loggedInUser, FriendRequestService friendRequestService) {
+        List<SearchedUserResult> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
             if ((user.getEmail()).equalsIgnoreCase(searchString) ||
                     (user.getName()).equalsIgnoreCase(searchString)) {
-                searchResults.add(user);
+                String statusText = loggedInUser.getFriends().contains(user) ? "Already Friends" : "Send Friend Request";
+                List<FriendRequest> friendRequests = friendRequestService.findRequestBySenderAndReceiver(loggedInUser, user);
+                if (!friendRequests.isEmpty()) {
+                    statusText =  friendRequests.getFirst().getStatus().toString();
+                }
+                searchResults.add(new SearchedUserResult(user, statusText));
             }
         }
         return searchResults;

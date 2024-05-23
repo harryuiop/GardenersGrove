@@ -44,21 +44,22 @@
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <img th:src="@{${friend.getProfilePictureFilePath()}}"
+                                                <img th:src="@{${friend.getUser().getProfilePictureFilePath()}}"
                                                      class="rounded-circle" style="width: 5vw" alt="Profile Image">
                                             </div>
                                             <div class="col-sm-8">
                                                 <a href="#"
                                                    class="link-offset-2 link-underline link-underline-opacity-0"
                                                    style="color: #142915; font-size: 30px"
-                                                   th:text="${friend.getName()}"></a>
-                                                <p th:text="${friend.getEmail()}"></p>
+                                                   th:text="${friend.getUser().getName()}"></a>
+                                                <p th:text="${friend.getUser().getEmail()}"></p>
                                                 <div>
                                                     <form th:action="@{${sendFriendRequestUri}}" method="post">
-                                                        <input type="hidden" th:name="Id" th:value="${friend.getId()}">
+                                                        <input type="hidden" th:name="Id" th:value="${friend.getUser().getId()}">
                                                         <button
                                                                 class="btn btn-primary"
-                                                                style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">Request Friend
+                                                                style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641"
+                                                                th:text="${friend.getStatusText()}">
                                                         </button>
                                                     </form>
                                                 </div>
@@ -75,21 +76,22 @@
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <img th:src="@{${usersFound[iterStat.index + 1].getProfilePictureFilePath()}}"
+                                                <img th:src="@{${usersFound[iterStat.index + 1].getUser().getProfilePictureFilePath()}}"
                                                      class="rounded-circle" style="width: 5vw" alt="Profile Image">
                                             </div>
                                             <div class="col-sm-8">
                                                 <a href="#"
                                                    class="link-offset-2 link-underline link-underline-opacity-0"
                                                    style="color: #142915; font-size: 30px"
-                                                   th:text="${usersFound[iterStat.index + 1].getName()}"></a>
-                                                <p th:text="${usersFound[iterStat.index + 1].getEmail()}"></p>
+                                                   th:text="${usersFound[iterStat.index + 1].getUser().getName()}"></a>
+                                                <p th:text="${usersFound[iterStat.index + 1].getUser().getEmail()}"></p>
                                                 <div>
                                                     <form th:action="@{${sendFriendRequestUri}}" method="post">
-                                                        <input type="hidden" th:name="Id" th:value="${usersFound[iterStat.index + 1].getId()}">
+                                                        <input type="hidden" th:name="Id" th:value="${usersFound[iterStat.index + 1].getUser().getId()}">
                                                         <button
                                                                 class="btn btn-primary"
-                                                                style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">Request Friend
+                                                                style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641"
+                                                                th:text="${usersFound[iterStat.index + 1].getStatusText()}">
                                                         </button>
                                                     </form>
                                                 </div>

@@ -8,6 +8,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,8 +55,14 @@ public class FriendRequestService {
         return friendRequestRepository.findFriendRequestsByReceiverAndStatus(receiver, Status.PENDING);
     }
 
-    public List<FriendRequest> findRequestBySender(User receiver) {
-        return friendRequestRepository.findFriendRequestsBySender(receiver);
+    public List<FriendRequest> findRequestBySender(User sender) {
+        return friendRequestRepository.findFriendRequestsBySender(sender);
+    }
+
+    public List<FriendRequest> findRequestBySenderAndReceiver(User sender, User receiver) {
+        System.out.println("s" + sender.getId());
+        System.out.println("r" + receiver.getId());
+        return friendRequestRepository.findFriendRequestBySenderAndReceiver(sender, receiver);
     }
 
     public Optional<FriendRequest> findRequestById(Long id) {

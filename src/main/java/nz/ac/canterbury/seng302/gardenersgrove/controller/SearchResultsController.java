@@ -1,7 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.SearchedUserResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +30,16 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.sendFrien
 public class SearchResultsController {
     Logger logger = LoggerFactory.getLogger(GardenController.class);
     private final UserService userService;
+    private final FriendRequestService friendRequestService;
 
     /**
      * This sets up the current user service so that the current users can be reached.
      * @param userService the current service being used to get information about the users
      */
     @Autowired
-    public SearchResultsController(UserService userService) {
+    public SearchResultsController(UserService userService, FriendRequestService friendRequestService) {
         this.userService = userService;
+        this.friendRequestService = friendRequestService;
     }
 
     /**
@@ -47,7 +51,8 @@ public class SearchResultsController {
     @GetMapping(SEARCH_RESULTS_STRING)
     public String getSearchResultsPage(@RequestParam String searchUser, Model model) {
         logger.info("Get /search/result/{}", searchUser);
-        List<User> usersFound = userService.getSearchedUser(searchUser);
+        List<SearchedUserResult> usersFound = userService.getSearchedUserAndFriendStatus(searchUser,
+                userService.getAuthenticatedUser(), friendRequestService);
         model.addAttribute("usersFound", usersFound);
         model.addAttribute("sendFriendRequestUri", sendFriendRequestUri());
         model.addAttribute("searchResultsUri", searchResultsUri());
