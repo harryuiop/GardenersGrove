@@ -28,6 +28,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -90,6 +92,8 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
         model.addAttribute("weatherData", weatherData);
+        model.addAttribute("dateFormatter",  DateTimeFormatter.ofPattern("d MMM yyyy"));
+
 
         return "viewGarden";
     }
