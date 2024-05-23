@@ -6,7 +6,7 @@
     <div th:fragment="weatherCard" >
       <div class="container-sm shadow rounded-4 text-center p-5">
         <h2 class="display-5">Monday</h2>
-        <p th:text="${#dates.format(date, 'EEEE, MMMM d, yyyy')}"></p>
+        <p th:text="${date}"></p>
         <i class="bi bi-cloud-drizzle"></i>
         <p th:text="${description}"></p>
         <p th:text="${temperature}"></p>
