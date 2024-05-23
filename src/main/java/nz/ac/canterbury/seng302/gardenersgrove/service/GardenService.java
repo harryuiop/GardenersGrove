@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,11 @@ public class GardenService {
         return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
     }
 
-    public List<Garden> getAllFriendsGardens(long friendId, UserService userService) throws NoSuchGardenException {
+    public List<Garden> getAllFriendsGardens(long friendId, UserService userService) throws NoSuchFriendException {
         if (userService.getAuthenticatedUser().getFriends().contains(userService.getUserById(friendId))) {
             return gardenRepository.findAllByOwner(userService.getUserById(friendId));
         } else {
-            throw new NoSuchFriendException();
+            throw new NoSuchFriendException(friendId);
         }
     }
     public Optional<Garden> getGardenById(Long id) {
