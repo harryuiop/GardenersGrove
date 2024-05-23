@@ -8,6 +8,54 @@ INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, pa
 VALUES (TRUE, '2001-02-02', 'user2@gmail.com', 'Second', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 2);
 
+INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
+                   "sign-up_token", user_id)
+VALUES (TRUE, '2001-02-02', 'user3@gmail.com', 'Third', 'User',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 3);
+
+INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
+                   "sign-up_token", user_id)
+VALUES (TRUE, '2001-02-02', 'user4@gmail.com', 'Fourth', 'User',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 4);
+
+INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
+                   "sign-up_token", user_id)
+VALUES (TRUE, '2001-02-02', 'user5@gmail.com', 'Fifth', 'User',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 5);
+
+INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
+                   "sign-up_token", user_id)
+VALUES (TRUE, '2001-02-02', 'user6@gmail.com', 'Sixth', 'User',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 6);
+
+INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
+                   "sign-up_token", user_id)
+VALUES (TRUE, '2001-02-02', 'user7@gmail.com', 'Seventh', 'User',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 7);
+
+INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
+                   "sign-up_token", user_id)
+VALUES (TRUE, '2001-02-02', 'user8@gmail.com', 'Eighth', 'User',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 8);
+
+INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
+                   "sign-up_token", user_id)
+VALUES (TRUE, '2001-02-02', 'user9@gmail.com', 'Ninth', 'User',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 9);
+
+
+INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
+VALUES (1, 1, 5);
+
+INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
+VALUES (1, 1, 6);
+
+INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
+VALUES (1, 1, 7);
+
+INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
+VALUES (1, 1, 8);
+
 
 INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb, id)
 VALUES ('Christchurch', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 1);
