@@ -25,7 +25,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.sendFrien
  */
 @Controller
 public class SearchResultsController {
-    Logger logger = LoggerFactory.getLogger(GardenController.class);
+    Logger logger = LoggerFactory.getLogger(SearchResultsController.class);
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 

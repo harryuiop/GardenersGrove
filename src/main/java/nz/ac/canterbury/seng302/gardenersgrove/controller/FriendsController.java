@@ -23,7 +23,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 @Controller
 public class FriendsController {
 
-    Logger logger = LoggerFactory.getLogger(GardenController.class);
+    Logger logger = LoggerFactory.getLogger(FriendsController.class);
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 
