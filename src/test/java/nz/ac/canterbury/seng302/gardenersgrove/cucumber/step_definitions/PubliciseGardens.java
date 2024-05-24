@@ -6,15 +6,20 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -38,8 +43,12 @@ public class PubliciseGardens {
 
     @Autowired
     private GardenRepository gardenRepository;
+
     @Autowired
     private UserRepository userRepository;
+
+    @MockBean
+    private FormValuesValidator mockFormValuesValidator;
 
     private Garden garden;
     private Long gardenId;
@@ -113,6 +122,7 @@ public class PubliciseGardens {
 
     @Given("I am creating a new garden")
     public void iAmCreatingANewGarden() throws Exception {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(true);
         formType = newGardenUri();
         mockMvc.perform(MockMvcRequestBuilders.get(newGardenUri())
                     .with(user(user1Id))
@@ -165,6 +175,7 @@ public class PubliciseGardens {
 
     @Given("I am editing an existing garden")
     public void iAmEditingAnExistingGarden() throws Exception {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(true);
         formType = editGardenUri(gardenId);
         mockMvc.perform(MockMvcRequestBuilders.get(editGardenUri(gardenId))
                         .with(user(user1Id))
@@ -185,7 +196,8 @@ public class PubliciseGardens {
     }
 
     @Given("I enter a description longer than 512 charaters")
-    public void iEnterADescriptionLongerThan512Charaters() {
+    public void iEnterADescriptionLongerThan512Charaters() throws Exception {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(true);
         description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. " +
                 "Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. " +
                 "Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. " +
@@ -219,12 +231,14 @@ public class PubliciseGardens {
     }
 
     @Given("I enter a description {string}")
-    public void iEnterADescriptionString(String string) {
+    public void iEnterADescriptionString(String string) throws Exception {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(true);
         description = string;
     }
 
     @Given("I enter a description that contains inappropriate words {string}")
-    public void iEnterADescriptionThatContainsInappropriateWords(String string) {
+    public void iEnterADescriptionThatContainsInappropriateWords(String string) throws ProfanityCheckingException, InterruptedException {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
         description = string;
     }
 
@@ -247,12 +261,15 @@ public class PubliciseGardens {
     }
 
     @Given("I enter some text into the description field")
-    public void iEnterSomeTextIntoTheDescriptionField() {
+    public void iEnterSomeTextIntoTheDescriptionField() throws ProfanityCheckingException, InterruptedException {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(true);
         description = "A normal garden description";
     }
 
     @Then("I am informed my results was accepted but must be edited to be able to make public")
     public void iAmInformedMyResultsWasAcceptedButMustBeEditedToBeAbleToMakePublic() throws Exception {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString()))
+                .thenThrow(new ProfanityCheckingException("Failed to check for profanity"));
         mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                         .with(user(user1Id))
                         .with(csrf())
