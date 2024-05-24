@@ -1,16 +1,13 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ProfanityChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.Objects;
 
 /**
  * This class is used to provide static methods for validation of fields.
@@ -27,22 +24,8 @@ public class FormValuesValidator {
      * @param string is the test that needs checking
      * @return true if contains profanity, false otherwise
      */
-    public static boolean checkProfanity(String string) throws Exception {
-        string = string.replace(" ", "%20");
-        URL url = new URL("https://www.purgomalum.com/service/containsprofanity?text=" + string);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setConnectTimeout(1000);
-        con.setReadTimeout(1000);
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        return Objects.equals(String.valueOf(content), "true");
+    public static boolean checkProfanity(String string) throws ProfanityCheckingException, InterruptedException {
+        return ProfanityChecker.checkProfanity(string);
     }
 
     /**
