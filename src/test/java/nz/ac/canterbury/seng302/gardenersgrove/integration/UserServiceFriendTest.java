@@ -44,7 +44,7 @@ class UserServiceFriendTest {
         userRepositoryMock = Mockito.mock(UserRepository.class);
         friendRequestRepositoryMock = Mockito.mock(FriendRequestRepository.class);
         userService = new UserService(userRepositoryMock);
-        friendRequestService = new FriendRequestService(friendRequestRepositoryMock, userService);
+        friendRequestService = new FriendRequestService(friendRequestRepositoryMock);
 
         loggedInUser = new User
                 ("user1@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
