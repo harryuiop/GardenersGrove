@@ -19,6 +19,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
  */
 public class ErrorChecker {
     static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
+    private final FormValuesValidator formValuesValidator = new FormValuesValidator();
 
     /**
      * Checks for valid user entries that meet the given requirements
@@ -44,19 +45,19 @@ public class ErrorChecker {
     ) {
         Map<String, String> errors = new HashMap<>();
 
-        if (FormValuesValidator.checkBlank(gardenName)) {
+        if (formValuesValidator.checkBlank(gardenName)) {
             errors.put("gardenNameError", "Garden name cannot by empty");
-        } else if (!FormValuesValidator.checkCharacters(gardenName)) {
+        } else if (!formValuesValidator.checkCharacters(gardenName)) {
             errors.put(
                             "gardenNameError",
                             "Garden name must only include letters, numbers, spaces, commas, dots, hyphens or apostrophes");
         }
 
-        if (!FormValuesValidator.checkDescription(gardenDescription) || !FormValuesValidator.checkContainsText(gardenDescription)) {
+        if (!formValuesValidator.checkDescription(gardenDescription) || !formValuesValidator.checkContainsText(gardenDescription)) {
             errors.put("gardenDescriptionError", "Description must be 512 characters or less and contain some text");
         } else {
             try {
-                if (FormValuesValidator.checkProfanity(gardenDescription)) {
+                if (formValuesValidator.checkProfanity(gardenDescription)) {
                     errors.put("gardenDescriptionError", "The description does not match the language standards of the app");
                 }
             } catch (Exception e) {
@@ -64,13 +65,13 @@ public class ErrorChecker {
             }
         }
 
-        if (!FormValuesValidator.checkSize(gardenSize)) {
+        if (!formValuesValidator.checkSize(gardenSize)) {
             errors.put("gardenSizeError", "Garden size must be a positive number");
         }
 
-        if (FormValuesValidator.checkBlank(country)) {
+        if (formValuesValidator.checkBlank(country)) {
             errors.put("countryError", "Country is required");
-        } else if (!FormValuesValidator.checkCharactersWithForwardSlash(country)) {
+        } else if (!formValuesValidator.checkCharactersWithForwardSlash(country)) {
             errors.put(
                             "countryError",
                             "Country must only include letters, numbers, spaces, " +
@@ -100,9 +101,9 @@ public class ErrorChecker {
                     boolean fieldRequired,
                     Map<String, String> errors
     ) {
-        if (fieldRequired && FormValuesValidator.checkBlank(fieldValue)) {
+        if (fieldRequired && formValuesValidator.checkBlank(fieldValue)) {
             errors.put(errorName, String.format("%s is required", fieldName));
-        } else if (!FormValuesValidator.checkCharacters(fieldValue)) {
+        } else if (!formValuesValidator.checkCharacters(fieldValue)) {
             errors.put(
                             errorName,
                             String.format("%s must only include letters, numbers, spaces, " +
@@ -127,7 +128,7 @@ public class ErrorChecker {
     ) {
         HashMap<String, String> errors = new HashMap<>();
 
-        if (FormValuesValidator.checkBlank(plantName) || !FormValuesValidator.checkCharacters(plantName)) {
+        if (formValuesValidator.checkBlank(plantName) || !formValuesValidator.checkCharacters(plantName)) {
             errors.put(
                             "plantNameError",
                             "Plant name cannot be empty and must only include " +
@@ -135,11 +136,11 @@ public class ErrorChecker {
             );
         }
 
-        if (!FormValuesValidator.checkValidPlantCount(plantCount)) {
+        if (!formValuesValidator.checkValidPlantCount(plantCount)) {
             errors.put("plantCountError", "Plant count must be positive number, and only contain the digits 0-9");
         }
 
-        if (!FormValuesValidator.checkDescription(plantDescription)) {
+        if (!formValuesValidator.checkDescription(plantDescription)) {
             errors.put("plantDescriptionError", "Plant description must be less than 512 characters");
         }
 
@@ -160,18 +161,18 @@ public class ErrorChecker {
      */
     public Map<String, String> firstNameErrors(String firstName) {
         Map<String, String> errors = new HashMap<>();
-        if (FormValuesValidator.checkBlank(firstName)) {
+        if (formValuesValidator.checkBlank(firstName)) {
             errors.put("firstNameError", "First name cannot be empty");
         } else {
-            if (!FormValuesValidator.checkNameLength(firstName) && !FormValuesValidator.checkUserName(firstName)) {
+            if (!formValuesValidator.checkNameLength(firstName) && !formValuesValidator.checkUserName(firstName)) {
                 errors.put(
                         "firstNameError",
                         "First name cannot exceed length of 64 characters and " +
                         "first name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
                 );
-            } else if (!FormValuesValidator.checkNameLength(firstName)) {
+            } else if (!formValuesValidator.checkNameLength(firstName)) {
                 errors.put("firstNameError", "First name cannot exceed length of 64 characters");
-            } else if (!FormValuesValidator.checkUserName(firstName)) {
+            } else if (!formValuesValidator.checkUserName(firstName)) {
                 errors.put(
                         "firstNameError",
                         "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
@@ -192,18 +193,18 @@ public class ErrorChecker {
     public Map<String, String> lastNameErrors(String lastName, boolean noSurname) {
         Map<String, String> errors = new HashMap<>();
         if (!noSurname) {
-            if (FormValuesValidator.checkBlank(lastName)) {
+            if (formValuesValidator.checkBlank(lastName)) {
                 errors.put("lastNameError", "Last name cannot be empty unless box is ticked");
             } else {
-                if (!FormValuesValidator.checkNameLength(lastName) && !FormValuesValidator.checkUserName(lastName)) {
+                if (!formValuesValidator.checkNameLength(lastName) && !formValuesValidator.checkUserName(lastName)) {
                     errors.put(
                             "lastNameError",
                             "Last name cannot exceed length of 64 characters and "+
                                     "last name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
                     );
-                } else if (!FormValuesValidator.checkNameLength(lastName)) {
+                } else if (!formValuesValidator.checkNameLength(lastName)) {
                     errors.put("lastNameError", "Last name cannot exceed length of 64 characters");
-                } else if (!FormValuesValidator.checkUserName(lastName)) {
+                } else if (!formValuesValidator.checkUserName(lastName)) {
                     errors.put(
                             "lastNameError",
                             "Last name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
@@ -224,11 +225,11 @@ public class ErrorChecker {
      */
     public Map<String, String> emailErrors(String email, boolean oldEmail, UserService userService) {
         Map<String, String> errors = new HashMap<>();
-        if (FormValuesValidator.checkBlank(email)) {
+        if (formValuesValidator.checkBlank(email)) {
             errors.put("emailError", "Email cannot be empty");
         } else if (!emailIsValid(email)) {
             errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
-        } else if (!FormValuesValidator.emailInUse(email, userService) && !oldEmail) {
+        } else if (!formValuesValidator.emailInUse(email, userService) && !oldEmail) {
             errors.put("emailError", "This email address is already in use");
         }
         return errors;
@@ -244,10 +245,10 @@ public class ErrorChecker {
     public Map<String, String> dateOfBirthErrors(String dateOfBirth, boolean validDate) {
         Map<String, String> errors = new HashMap<>();
         if (validDate) {
-            if (!FormValuesValidator.checkBlank(dateOfBirth)) {
+            if (!formValuesValidator.checkBlank(dateOfBirth)) {
                 if (!dobIsValid(dateOfBirth)) {
                     errors.put("dateOfBirthError", "You must be 13 years or older to create an account");
-                } else if (!FormValuesValidator.checkUnder120(dateOfBirth)) {
+                } else if (!formValuesValidator.checkUnder120(dateOfBirth)) {
                     errors.put("dateOfBirthError", "The maximum age allowed is 120 years");
                 }
             }
@@ -266,14 +267,14 @@ public class ErrorChecker {
      */
     public Map<String, String> passwordErrors(String password, String passwordConfirm) {
         Map<String, String> errors = new HashMap<>();
-        if (FormValuesValidator.checkBlank(password)) {
+        if (formValuesValidator.checkBlank(password)) {
             errors.put("passwordError", "Password cannot be empty");
         } else if (!passwordIsValid(password)) {
             errors.put(
                     "passwordError",
                     "Your password must be at least 8 characters long and include at least one uppercase letter, " +
                             "one lowercase letter, one number, and one special character");
-        }else if (!FormValuesValidator.checkConfirmPasswords(password, passwordConfirm)) {
+        }else if (!formValuesValidator.checkConfirmPasswords(password, passwordConfirm)) {
             errors.put("passwordConfirmError", "Passwords do not match");
         }
         return errors;
@@ -377,7 +378,7 @@ public class ErrorChecker {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         // Checking old password
-        if (FormValuesValidator.checkBlank(oldPassword)) {
+        if (formValuesValidator.checkBlank(oldPassword)) {
             errors.put("oldPasswordError", "Password cannot be empty");
         } else if (!encoder.matches(oldPassword, user.getPassword())) {
             errors.put("oldPasswordError", "Your old password is incorrect");
@@ -387,12 +388,12 @@ public class ErrorChecker {
     }
 
         // Check that the new password and the retyped new password match
-        if (!FormValuesValidator.checkConfirmPasswords(newPassword, retypeNewPassword)) {
+        if (!formValuesValidator.checkConfirmPasswords(newPassword, retypeNewPassword)) {
             errors.put("passwordConfirmError", "The new passwords do not match");
         }
 
         // Checking new password
-        if (FormValuesValidator.checkBlank(newPassword)) {
+        if (formValuesValidator.checkBlank(newPassword)) {
             errors.put("newPasswordError", "Password cannot be empty");
         } else if (newPassword.contains(user.getFirstName()) || newPassword.contains(user.getLastName()) || newPassword.contains(user.getEmail())) {
             errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one" +
@@ -404,7 +405,7 @@ public class ErrorChecker {
         }
 
         // Checking retyped new password
-        if (FormValuesValidator.checkBlank(retypeNewPassword)) {
+        if (formValuesValidator.checkBlank(retypeNewPassword)) {
             errors.put("retypeNewPasswordError", "Password cannot be empty");
         } else if (retypeNewPassword.contains(user.getFirstName()) || retypeNewPassword.contains(user.getLastName()) || retypeNewPassword.contains(user.getEmail())) {
             errors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one" +
@@ -428,10 +429,10 @@ public class ErrorChecker {
     public String tagNameErrors(String tag) {
         String errors = "";
 
-        if(!FormValuesValidator.checkTagName(tag))
+        if(!formValuesValidator.checkTagName(tag))
             errors += "The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" ";
 
-        if (!FormValuesValidator.checkTagNameLength(tag))
+        if (!formValuesValidator.checkTagNameLength(tag))
             errors += (!errors.isEmpty() ? "\n" : "") + "A tag cannot exceed 25 characters";
 
         return errors;

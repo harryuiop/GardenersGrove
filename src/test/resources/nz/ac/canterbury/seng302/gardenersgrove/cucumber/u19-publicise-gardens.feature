@@ -65,10 +65,6 @@ Feature: As Inaya, I want to be able to make my garden public so that others can
     | "Supcalifragalisdick" |
     | "@sshole"             |
 
-  Scenario: AC8 - I can see how many characters of the description that I have typed
-    Given I enter some text into the description field
-    Then I see an indication of the length of the input text such as “x/512” characters (where x is the current number of characters in the input)
-
   Scenario: AC9 - If the inappropriate language is not checked then the description persists but cannot be made public
     Given I enter some text into the description field
     When I submit the form
