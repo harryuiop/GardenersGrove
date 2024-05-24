@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.FriendRequestRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
@@ -8,13 +9,12 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.crypto.password.PasswordEncoder;import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -37,20 +35,28 @@ class RegisterControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private PlantRepository plantRepository;
+
     @Autowired
     private GardenRepository gardenRepository;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    @Autowired
+    private FriendRequestRepository friendRequestRepository;
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     @MockBean
     private EmailSenderService emailSenderService;
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
     @BeforeEach
     void setUp() {
         plantRepository.deleteAll();
         gardenRepository.deleteAll();
+        friendRequestRepository.deleteAll();
         userRepository.deleteAll();
         Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any())).thenReturn(true);
     }
@@ -65,8 +71,6 @@ class RegisterControllerTest {
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .param("email", email)
                         .param("firstName", firstName)
@@ -84,7 +88,7 @@ class RegisterControllerTest {
         assertEquals(firstName, user.getFirstName());
         assertEquals(lastName, user.getLastName());
         assertEquals(email, user.getEmail());
-        assertTrue(encoder.matches(password, user.getPassword()));
+        assertTrue(passwordEncoder.matches(password, user.getPassword()));
         assertEquals(dateOfBirth, user.getDob());
     }
 
@@ -98,8 +102,6 @@ class RegisterControllerTest {
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .param("email", email)
                         .param("firstName", firstName)
@@ -117,7 +119,7 @@ class RegisterControllerTest {
         assertEquals(firstName, user.getFirstName());
         assertEquals(lastName, user.getLastName());
         assertEquals(email, user.getEmail());
-        assertTrue(encoder.matches(password, user.getPassword()));
+        assertTrue(passwordEncoder.matches(password, user.getPassword()));
         assertEquals(dateOfBirth, user.getDob());
     }
 

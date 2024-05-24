@@ -236,6 +236,17 @@ public class ErrorChecker {
     }
 
     /**
+     * Check email errors for the reset password form.
+     * @param email         The email string.
+     * @return A Map<String, String> of errors containing  <error model name, error message>.
+     */
+    public Map<String, String> emailErrorsResetPassword(String email) {
+        Map<String, String> errors = new HashMap<>();
+        if (formValuesValidator.checkBlank(email) || !emailIsValid(email)) errors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
+        return errors;
+    }
+
+    /**
      * Given the user's birthdate checks whether the data is present, in valid format, and the user is older than 13 but
      * younger than 120.  Returns these error messages in a form to place into the model.
      * @param dateOfBirth A string the birthdate
@@ -366,26 +377,33 @@ public class ErrorChecker {
      * @param newPassword Users new password
      * @param retypeNewPassword Users new password retyped
      * @param user The passed in user
+     * @param isOldPasswordNeeded If the old password is needed.
+     *                            Editing password needs old password, resetting does not.
      *
      * @return The hash map of errors
      */
     public Map<String, String> editPasswordFormErrors(String oldPassword,
                                                       String newPassword,
                                                       String retypeNewPassword,
-                                                      User user
+                                                      User user,
+                                                      boolean isOldPasswordNeeded
     ) {
         Map<String, String> errors = new HashMap<>();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         // Checking old password
-        if (formValuesValidator.checkBlank(oldPassword)) {
-            errors.put("oldPasswordError", "Password cannot be empty");
-        } else if (!encoder.matches(oldPassword, user.getPassword())) {
-            errors.put("oldPasswordError", "Your old password is incorrect");
-        } else if (!passwordIsValid(newPassword)) {
+        if (isOldPasswordNeeded) {
+            if (formValuesValidator.checkBlank(oldPassword)) {
+                errors.put("oldPasswordError", "Password cannot be empty");
+            } else if (!encoder.matches(oldPassword, user.getPassword())) {
+                errors.put("oldPasswordError", "Your old password is incorrect");
+            }
+        }
+
+        if (!passwordIsValid(newPassword)) {
             errors.put("newPasswordError", "Your password must be at least 8 characters long and include at least " +
                     "one uppercase letter, one lowercase letter, one number, and one special character");
-    }
+        }
 
         // Check that the new password and the retyped new password match
         if (!formValuesValidator.checkConfirmPasswords(newPassword, retypeNewPassword)) {

@@ -226,7 +226,7 @@ public class ProfileController extends GardensSidebar {
         User user = userService.getAuthenticatedUser();
         model.addAttribute(user);
 
-        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
 
         if (!errors.isEmpty()) {
             model.addAllAttributes(errors);
@@ -256,5 +256,4 @@ public class ProfileController extends GardensSidebar {
         logger.info("POST {}", logoutUri());
         return "login";
     }
-
 }

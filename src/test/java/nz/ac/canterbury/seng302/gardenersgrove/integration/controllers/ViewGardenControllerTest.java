@@ -11,7 +11,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -44,40 +43,52 @@ class ViewGardenControllerTest {
     private TagRepository tagRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @SpyBean
     private UserService userService;
+
+    @Autowired
+    private PlantRepository plantRepository;
 
     @Autowired
     private GardenRepository gardenRepository;
 
+    private boolean isSetUp = false;
     private Long gardenId;
-    private User user;
 
     @BeforeEach
     void setUp() {
-        tagRepository.deleteAll();
-        gardenRepository.deleteAll();
-        user = userService.getUserById(1);
+        if (isSetUp) {
+            return;
+        }
+
+        User user = new User("test@mail.com", "Test", "User", "Password1!", "01/01/2000");
+        userRepository.save(user);
+
         Location location = new Location("New Zealand", "Christchurch");
-        Garden garden = new Garden(user, "Test Garden", "Test Description", location, 1f, true);
+        Garden garden = new Garden(user, "Test Garden", "Test Description", location, 1f);
         gardenRepository.save(garden);
 
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
+
         gardenId = garden.getId();
+
+        isSetUp = true;
     }
 
-
-
     @Test
-    public void checkUserHasGarden() throws Exception {
+    void checkUserHasGarden() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(gardenId)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("viewGarden"));
     }
 
     @Test
-    public void userInputInvalidTagName () throws Exception {
+    void userInputInvalidTagName() throws Exception {
         String tagName = "alkals@U)$(*%&(#*!$&@)";
-        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
-                        .param("tagName", tagName))
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(1))
+                .param("tagName", tagName))
                 .andExpect(status().isOk())
                 .andExpect(view().name("viewGarden"));
         Tag tag = tagService.findByName(tagName);
@@ -85,9 +96,9 @@ class ViewGardenControllerTest {
     }
 
     @Test
-    public void userInputTagNameExceed25Characters () throws Exception {
+    void userInputTagNameExceed25Characters() throws Exception {
         String tagName = "This is invalid tag name which will give you a lot of annoy";
-        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(1))
                         .param("tagName", tagName))
                 .andExpect(status().isOk())
                 .andExpect(view().name("viewGarden"));
@@ -97,19 +108,21 @@ class ViewGardenControllerTest {
     }
 
     @Test
-    public void userInputTagNameExceed25CharactersAndHasInvalidCharacters () throws Exception {
+    void userInputTagNameExceed25CharactersAndHasInvalidCharacters() throws Exception {
         String tagName = "Thi$ i$ inv@lid t@g name with inv@lid ch@r@cter which will give you @ lot of @nnoy";
-        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId)).param("tagName", tagName))
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
+                        .param("tagName", tagName))
                 .andExpect(status().isOk())
                 .andExpect(view().name("viewGarden"));
+
         Tag tag = tagService.findByName(tagName);
         Assertions.assertNull(tag);
     }
 
     @Test
-    public void userInputValidTagName () throws Exception {
+    void userInputValidTagName() throws Exception {
         String validTagName = "Invalid tag name";
-        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(1))
                         .param("tagName", validTagName))
                 .andExpect(status().isOk())
                 .andExpect(view().name("viewGarden"));

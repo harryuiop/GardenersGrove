@@ -20,8 +20,10 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-security"
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'com.h2database:h2'
+	implementation 'org.webjars:bootstrap:5.3.2'
 
-    testImplementation 'junit:junit:4.13.1'
+
+	testImplementation 'junit:junit:4.13.1'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -32,7 +34,6 @@ dependencies {
 	testImplementation 'org.junit.platform:junit-platform-suite:1.10.2'
 	testImplementation 'io.cucumber:cucumber-spring:7.15.0'
 }
-
 
 tasks.named('test') {
 	useJUnitPlatform()

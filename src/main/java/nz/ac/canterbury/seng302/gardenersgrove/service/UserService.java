@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
@@ -33,32 +33,6 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        User user1 = new User
-                ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01");
-        user1.setConfirmation(true);
-        User user2 = new User
-                ("user2@gmail.com", "Default", "User", "Password1!", "2000-01-01");
-        user2.setConfirmation(true);
-        User user3 = new User
-                ("user3@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
-        user2.setConfirmation(true);
-        User user4 = new User
-                ("user4@gmail.com", "Jane", "Doe", "Password1!", "2000-01-01");
-        user2.setConfirmation(true);
-        this.addUsers(user1);
-        this.addUsers(user2);
-        this.addUsers(user3);
-        this.addUsers(user4);
-        user1.addFriend(user2);
-        user1.addFriend(user3);
-        user1.addFriend(user4);
-        user2.addFriend(user1);
-        user3.addFriend(user1);
-        user4.addFriend(user1);
-        this.updateUser(user1);
-        this.updateUser(user2);
-        this.updateUser(user3);
-        this.updateUser(user4);
     }
 
     /**
@@ -190,5 +164,32 @@ public class UserService {
     public String hashUserPassword(String passwordInPlainText) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
         return encoder.encode(passwordInPlainText);
+    }
+
+    /**
+     * Gets all the users in the repository and returns a list of them all.
+     * @return a list of all the users in the repository.
+     */
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * Checks if any of the users' names or emails contain the given string.
+     * @param searchString a string entered by the user in search of a user.
+     * @return a list of users whos' names or emails contain the string.
+     */
+    public List<Map<String, String>> getSearchedUser(String searchString) {
+        List<Map<String, String>> searchResults = new ArrayList<>();
+        for (User user: getAllUsers()) {
+            if ((user.getEmail()).equalsIgnoreCase(searchString) ||
+                    (user.getName()).equalsIgnoreCase(searchString)) {
+                Map<String, String> newMap = new HashMap<>();
+                newMap.put("email", user.getEmail());
+                newMap.put("name", user.getName());
+                searchResults.add(newMap);
+            }
+        }
+        return searchResults;
     }
 }
