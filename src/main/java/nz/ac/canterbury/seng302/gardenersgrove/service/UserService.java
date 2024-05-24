@@ -232,21 +232,26 @@ public class UserService {
      * Checks if any of the users' names or emails contain the given string.
      * @param searchString a string entered by the user in search of a user.
      * @param loggedInUser User that is logged in
-     * @param friendRequestService Friend request service, used to find status in relation to logged in user.
+     * @param friendRequestService Friend request service, used to find status in relation to logged-in user.
      * @return a list of users whos' names or emails contain the string and their status in relation to the
-     * logged in user.
+     * logged-in user.
      */
     public List<SearchedUserResult> getSearchedUserAndFriendStatus(String searchString, User loggedInUser, FriendRequestService friendRequestService) {
         List<SearchedUserResult> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
             if ((user.getEmail()).equalsIgnoreCase(searchString) ||
                     (user.getName()).equalsIgnoreCase(searchString)) {
-                Status status = loggedInUser.getFriends().contains(user) ? Status.FRIENDS : Status.SEND_REQUEST;
-                List<FriendRequest> friendRequests = friendRequestService.findRequestBySenderAndReceiver(loggedInUser, user);
-                if (!friendRequests.isEmpty()) {
-                    status =  friendRequests.getFirst().getStatus();
+
+                if ( user == loggedInUser) {
+                    searchResults.add(new SearchedUserResult(user, Status.SELF));
+                } else {
+                    Status status = loggedInUser.getFriends().contains(user) ? Status.FRIENDS : Status.SEND_REQUEST;
+                    List<FriendRequest> friendRequests = friendRequestService.findRequestBySenderAndReceiver(loggedInUser, user);
+                    if (!friendRequests.isEmpty()) {
+                        status =  friendRequests.getFirst().getStatus();
+                    }
+                    searchResults.add(new SearchedUserResult(user, status));
                 }
-                searchResults.add(new SearchedUserResult(user, status));
             }
         }
         return searchResults;

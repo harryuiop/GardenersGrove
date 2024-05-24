@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -74,7 +75,7 @@ public class SearchResultsController {
 
     /**
      * Incomplete send friend request function.
-     * @param userId    The Id of the user the friend request is being sent to.
+     * @param userId    The id of the user the friend request is being sent to.
      * @return      Redirection to friends page.
      */
     @PostMapping(SEND_FREIND_REQUEST_STRING)
@@ -83,7 +84,6 @@ public class SearchResultsController {
         User loggedInUser = userService.getAuthenticatedUser();
         User sentUser = userService.getUserById(userId);
         friendRequestService.sendFriendRequest(loggedInUser, sentUser);
-        // Show some user feedback
         return "redirect:" + MANAGE_FRIENDS_URI_STRING;
     }
 }

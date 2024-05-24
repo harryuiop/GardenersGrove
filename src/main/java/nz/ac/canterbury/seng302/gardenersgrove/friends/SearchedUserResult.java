@@ -41,4 +41,11 @@ public class SearchedUserResult {
     public boolean isRequestEnabled() {
         return status == Status.SEND_REQUEST;
     }
+
+    /**
+     * @return if the user searched is themselves.
+     */
+    public boolean isUserSelf() {
+        return status == Status.SELF;
+    }
 }

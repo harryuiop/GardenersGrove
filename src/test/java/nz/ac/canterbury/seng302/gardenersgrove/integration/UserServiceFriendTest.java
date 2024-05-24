@@ -166,4 +166,14 @@ class UserServiceFriendTest {
         Assertions.assertEquals(0, actualSearchedResults.size());
     }
 
+    @Test
+    void searchUser_searchSelfByEmail_returnSelf() {
+        List<SearchedUserResult> actualSearchedResults = userService.getSearchedUserAndFriendStatus(
+                loggedInUser.getEmail(), loggedInUser, friendRequestService);
+
+        Assertions.assertEquals(1, actualSearchedResults.size());
+        Assertions.assertEquals(loggedInUser, actualSearchedResults.getFirst().getUser());
+        Assertions.assertEquals(Status.SELF.toString(), actualSearchedResults.getFirst().getStatusText());
+    }
+
 }
