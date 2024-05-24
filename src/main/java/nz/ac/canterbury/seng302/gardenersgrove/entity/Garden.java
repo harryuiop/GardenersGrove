@@ -34,7 +34,7 @@ public class Garden {
     @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
     private List<Plant> plants;
 
-    @ManyToMany(mappedBy = "gardens", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "gardens", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Tag> tags;
 
     /**

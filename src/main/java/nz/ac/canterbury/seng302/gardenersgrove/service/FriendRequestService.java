@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import jakarta.annotation.PostConstruct;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.FriendRequestRepository;
@@ -20,34 +19,18 @@ public class FriendRequestService {
 
     private final FriendRequestRepository friendRequestRepository;
 
-    private final UserService userService;
-
     /**
      * Constructor for UserService.
      *
      * @param friendRequestRepository The FriendRequestRepository instance.
      */
     @Autowired
-    public FriendRequestService(FriendRequestRepository friendRequestRepository, UserService userService) {
+    public FriendRequestService(FriendRequestRepository friendRequestRepository) {
         this.friendRequestRepository = friendRequestRepository;
-        this.userService = userService;
-    }
-
-    @PostConstruct
-    public void addDefaults() {
-        User user1 = userService.getUserById(1);
-        User user5 = userService.getUserById(5);
-        User user6 = userService.getUserById(6);
-        User user7 = userService.getUserById(7);
-        User user8 = userService.getUserById(8);
-        this.sendFriendRequest(user5, user1);
-        this.sendFriendRequest(user6, user1);
-        this.sendFriendRequest(user7, user1);
-        this.sendFriendRequest(user8, user1);
     }
 
     public void sendFriendRequest(User sender, User receiver) {
-        FriendRequest save = friendRequestRepository.save(new FriendRequest(sender, receiver));
+        friendRequestRepository.save(new FriendRequest(sender, receiver));
     }
 
     public List<FriendRequest> findRequestByReceiver(User receiver) {
