@@ -5,8 +5,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.TagRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -40,16 +38,10 @@ class ViewGardenControllerTest {
     private TagService tagService;
 
     @Autowired
-    private TagRepository tagRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @SpyBean
     private UserService userService;
-
-    @Autowired
-    private PlantRepository plantRepository;
 
     @Autowired
     private GardenRepository gardenRepository;
@@ -87,7 +79,7 @@ class ViewGardenControllerTest {
     @Test
     void userInputInvalidTagName() throws Exception {
         String tagName = "alkals@U)$(*%&(#*!$&@)";
-        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(1))
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
                 .param("tagName", tagName))
                 .andExpect(status().isOk())
                 .andExpect(view().name("viewGarden"));
@@ -98,7 +90,7 @@ class ViewGardenControllerTest {
     @Test
     void userInputTagNameExceed25Characters() throws Exception {
         String tagName = "This is invalid tag name which will give you a lot of annoy";
-        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(1))
+        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
                         .param("tagName", tagName))
                 .andExpect(status().isOk())
                 .andExpect(view().name("viewGarden"));
@@ -138,8 +130,6 @@ class ViewGardenControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("viewGarden"));
         Optional<Garden> garden = gardenRepository.findById(gardenId);
-        boolean isPublic = garden.isPresent() ? garden.get().getPublicGarden() : null;
-        System.out.println(""+isPublic);
         garden.ifPresent(value -> Assertions.assertTrue(value.getPublicGarden()));
     }
 
