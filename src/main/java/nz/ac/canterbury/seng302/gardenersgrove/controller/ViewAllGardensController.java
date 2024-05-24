@@ -1,7 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendException;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;

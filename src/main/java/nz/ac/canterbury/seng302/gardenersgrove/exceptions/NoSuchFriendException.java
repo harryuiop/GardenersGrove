@@ -1,4 +1,4 @@
-package nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses;
+package nz.ac.canterbury.seng302.gardenersgrove.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

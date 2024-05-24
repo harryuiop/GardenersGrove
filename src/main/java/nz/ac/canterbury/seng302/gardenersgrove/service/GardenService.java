@@ -1,7 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
