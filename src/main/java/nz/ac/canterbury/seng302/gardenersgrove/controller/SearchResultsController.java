@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.friends.SearchedUserResult;
@@ -64,7 +65,8 @@ public class SearchResultsController {
      * @return  a redirect to the get page.
      */
     @PostMapping(SEARCH_RESULTS_STRING)
-    public String getSearchResults(@RequestParam String searchUser, RedirectAttributes redirectAttributes) {
+    public String getSearchResults(@RequestParam String searchUser,
+                                   RedirectAttributes redirectAttributes) {
         logger.info("POST /search/result/{}", searchUser);
         redirectAttributes.addAttribute("searchUser", searchUser);
         return "redirect:"+SEARCH_RESULTS_STRING;
@@ -72,12 +74,16 @@ public class SearchResultsController {
 
     /**
      * Incomplete send friend request function.
-     * @param Id    The Id of the user the friend request is being sent to.
-     * @return      Goes back to the manage friends page.
+     * @param userId    The Id of the user the friend request is being sent to.
+     * @return      Redirection to friends page.
      */
     @PostMapping(SEND_FREIND_REQUEST_STRING)
-    public String sendFriendRequest(@RequestParam String Id) {
-        logger.info("User Id: " + Id);
+    public String sendFriendRequest(@RequestParam long userId) {
+        logger.info("POST /search/send/{}", userId);
+        User loggedInUser = userService.getAuthenticatedUser();
+        User sentUser = userService.getUserById(userId);
+        friendRequestService.sendFriendRequest(loggedInUser, sentUser);
+        // Show some user feedback
         return "redirect:" + MANAGE_FRIENDS_URI_STRING;
     }
 }
