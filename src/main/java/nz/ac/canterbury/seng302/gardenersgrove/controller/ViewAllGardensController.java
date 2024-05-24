@@ -1,7 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
@@ -60,7 +60,7 @@ public class ViewAllGardensController extends GardensSidebar {
      * @return          The view all gardens HTML template.
      */
     @GetMapping(VIEW_ALL_FRIENDS_GARDENS_URI_STRING)
-    public String viewAllFriendsGardens(@PathVariable long friendId, Model model) throws NoSuchGardenException {
+    public String viewAllFriendsGardens(@PathVariable long friendId, Model model) throws NoSuchFriendException {
         logger.info("GET {}", viewAllFriendsGardensUri(friendId));
         this.updateGardensSidebar(model, gardenService, userService);
         model.addAttribute("gardenList", gardenService.getAllFriendsGardens(friendId, userService));
