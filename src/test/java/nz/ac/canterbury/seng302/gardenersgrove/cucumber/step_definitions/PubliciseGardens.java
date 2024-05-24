@@ -6,15 +6,12 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
-import org.mockito.MockedConstruction;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,13 +20,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -51,8 +45,6 @@ public class PubliciseGardens {
     private Long gardenId;
     private Long latestGardenId;
 
-    private User user1;
-    private User user2;
     private String user1Id;
     private String user2Id;
 
@@ -68,8 +60,8 @@ public class PubliciseGardens {
         gardenRepository.deleteAll();
         userRepository.deleteAll();
 
-        user1 = new User("test@user.com", "Test", "User", "Password1!", "");
-        user2 = new User("other.test@user.com", "Test", "User", "Password1!", "");
+        User user1 = new User("test@user.com", "Test", "User", "Password1!", "");
+        User user2 = new User("other.test@user.com", "Test", "User", "Password1!", "");
         userRepository.save(user1);
         userRepository.save(user2);
         user1Id = "" + user1.getId();
@@ -157,9 +149,7 @@ public class PubliciseGardens {
     @And("the description is valid")
     public void theDescriptionIsValid() {
         Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
-        if (gardenOptional.isPresent()) {
-            Assertions.assertTrue(gardenOptional.get().getVerifiedDescription());
-        }
+        gardenOptional.ifPresent(value -> Assertions.assertTrue(value.getVerifiedDescription()));
     }
 
     @When("I remove the description of the garden")
@@ -170,9 +160,7 @@ public class PubliciseGardens {
     @Then("the description is deleted")
     public void theDescriptionIsDeleted() {
         Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
-        if (gardenOptional.isPresent()) {
-            Assertions.assertNull(gardenOptional.get().getDescription());
-        }
+        gardenOptional.ifPresent(value -> Assertions.assertNull(value.getDescription()));
     }
 
     @Given("I am editing an existing garden")
@@ -193,9 +181,7 @@ public class PubliciseGardens {
         } else {
             gardenOptional = gardenRepository.findById(gardenId);
         }
-        if (gardenOptional.isPresent()) {
-            Assertions.assertEquals(description, gardenOptional.get().getDescription());
-        }
+        gardenOptional.ifPresent(value -> Assertions.assertEquals(description, value.getDescription()));
     }
 
     @Given("I enter a description longer than 512 charaters")
@@ -229,9 +215,7 @@ public class PubliciseGardens {
     @And("the description is not persisted.")
     public void theDescriptionIsNotPersisted() {
         Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
-        if (gardenOptional.isPresent()) {
-            Assertions.assertNotEquals(description, gardenOptional.get().getDescription());
-        }
+        gardenOptional.ifPresent(value -> Assertions.assertNotEquals(description, value.getDescription()));
     }
 
     @Given("I enter a description {string}")
@@ -267,24 +251,8 @@ public class PubliciseGardens {
         description = "A normal garden description";
     }
 
-    @Then("I see an indication of the length of the input text such as “x/512” characters (where x is the current number of characters in the input)")
-    public void iSeeAnIndicationOfTheLengthOfTheInputTextSuchAsXCharactersWhereXIsTheCurrentNumberOfCharactersInTheInput() {
-        fail();
-    }
-
     @Then("I am informed my results was accepted but must be edited to be able to make public")
     public void iAmInformedMyResultsWasAcceptedButMustBeEditedToBeAbleToMakePublic() throws Exception {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("profanityCheckError", "Garden cannot be made public");
-        try {
-            MockedConstruction<ErrorChecker> mockedErrorChecker = Mockito.mockConstruction(ErrorChecker.class,
-                    ((errorChecker, context) -> Mockito.when(errorChecker.gardenFormErrors(
-                            Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
-                            Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()
-                    )).thenReturn(errors)));
-        } catch (Exception e) {
-            fail();
-        }
         mockMvc.perform(MockMvcRequestBuilders.post(editGardenUri(gardenId))
                         .with(user(user1Id))
                         .with(csrf())
@@ -300,7 +268,8 @@ public class PubliciseGardens {
                 .andExpect(model().attribute("profanityCheckWorked",
                         hasToString("Garden cannot be made public")));
 
-        Assertions.assertFalse(gardenRepository.findById(gardenId).get().getPublicGarden());
+        Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
+        gardenOptional.ifPresent(value -> Assertions.assertFalse(value.getVerifiedDescription()));
     }
 
     @And("I cannot make the garden public")

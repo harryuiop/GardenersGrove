@@ -47,6 +47,5 @@ tasks.register("cucumber", Test) {
 	}
 	testLogging {
 		events "passed", "skipped", "failed", "standardOut", "standardError"
-		exceptionFormat TestExceptionFormat.FULL
 	}
 }
