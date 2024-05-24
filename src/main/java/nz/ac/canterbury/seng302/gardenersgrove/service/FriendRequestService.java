@@ -60,8 +60,6 @@ public class FriendRequestService {
     }
 
     public List<FriendRequest> findRequestBySenderAndReceiver(User sender, User receiver) {
-        System.out.println("s" + sender.getId());
-        System.out.println("r" + receiver.getId());
         return friendRequestRepository.findFriendRequestBySenderAndReceiver(sender, receiver);
     }
 

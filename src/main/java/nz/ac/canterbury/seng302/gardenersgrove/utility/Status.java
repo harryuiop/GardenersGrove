@@ -8,7 +8,7 @@ public enum Status {
     ACCEPTED("Accepted"),
     PENDING("Pending"),
     DECLINED("Declined"),
-    FRIENDS("Already friends"),
+    FRIENDS("Friends"),
     SEND_REQUEST("Send Friend Request");
 
     public final String string;
