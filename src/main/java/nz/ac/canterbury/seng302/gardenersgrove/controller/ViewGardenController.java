@@ -43,6 +43,7 @@ public class ViewGardenController extends GardensSidebar {
     private final PlantService plantService;
     private final UserService userService;
     private final TagService tagService;
+    private final ErrorChecker errorChecker;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -52,11 +53,12 @@ public class ViewGardenController extends GardensSidebar {
      * @param userService   A User database access object.
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, ErrorChecker errorChecker) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
         this.tagService = tagService;
+        this.errorChecker = errorChecker;
     }
 
     /**
@@ -254,7 +256,6 @@ public class ViewGardenController extends GardensSidebar {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
-        ErrorChecker errorChecker = new ErrorChecker();
         String errorMessages = errorChecker.tagNameErrors(tagName);
 
 

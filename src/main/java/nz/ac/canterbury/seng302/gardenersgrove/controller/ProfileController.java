@@ -37,7 +37,7 @@ public class ProfileController extends GardensSidebar {
     private final UserService userService;
     private final GardenService gardenService;
     private final EmailSenderService emailSenderService;
-    private final ErrorChecker errorChecker = new ErrorChecker();
+    private final ErrorChecker errorChecker;
 
     /**
      * Constructor for ProfileController.
@@ -47,10 +47,11 @@ public class ProfileController extends GardensSidebar {
      * @param emailSenderService the EmailSenderService responsible for email-sending-related operations
      */
     @Autowired
-    public ProfileController(UserService userService, GardenService gardenService, EmailSenderService emailSenderService) {
+    public ProfileController(UserService userService, GardenService gardenService, EmailSenderService emailSenderService, ErrorChecker errorChecker) {
         this.userService = userService;
         this.gardenService = gardenService;
         this.emailSenderService = emailSenderService;
+        this.errorChecker = errorChecker;
     }
 
     /**

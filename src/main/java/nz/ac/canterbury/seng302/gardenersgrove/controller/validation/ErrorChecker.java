@@ -4,7 +4,9 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -17,10 +19,15 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
 /**
  * Checks the validity of the entries into the garden form
  */
+@Component
 public class ErrorChecker {
     static Logger logger = LoggerFactory.getLogger(ErrorChecker.class);
-    private final FormValuesValidator formValuesValidator = new FormValuesValidator();
+    private final FormValuesValidator formValuesValidator;
 
+    @Autowired
+    public ErrorChecker(FormValuesValidator formValuesValidator) {
+        this.formValuesValidator = formValuesValidator;
+    }
     /**
      * Checks for valid user entries that meet the given requirements
      *

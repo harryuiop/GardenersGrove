@@ -5,6 +5,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ProfanityChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -12,6 +13,7 @@ import java.time.format.DateTimeParseException;
 /**
  * This class is used to provide static methods for validation of fields.
  */
+@Component
 public class FormValuesValidator {
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
     static String namePattern = "^[a-zA-Z\\-' ]+$";

@@ -35,7 +35,7 @@ public class GardenController extends GardensSidebar {
     private final LocationService locationService;
     private final MapTilerGeocoding mapTilerGeocoding;
     private String refererUrl;
-    private ErrorChecker errorChecker = new ErrorChecker();
+    private final ErrorChecker errorChecker;
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -50,12 +50,14 @@ public class GardenController extends GardensSidebar {
             GardenService gardenService,
             UserService userService,
             LocationService locationService,
-            MapTilerGeocoding mapTilerGeocoding
+            MapTilerGeocoding mapTilerGeocoding,
+            ErrorChecker errorChecker
     ) {
         this.gardenService = gardenService;
         this.userService = userService;
         this.locationService = locationService;
         this.mapTilerGeocoding = mapTilerGeocoding;
+        this.errorChecker = errorChecker;
     }
 
     /**

@@ -32,7 +32,7 @@ public class RegisterController {
     private final UserService userService;
 
     private final EmailSenderService emailSenderService;
-    private final ErrorChecker errorChecker = new ErrorChecker();
+    private final ErrorChecker errorChecker;
 
     /**
      * The RegisterController constructor need not be called ever.
@@ -42,9 +42,10 @@ public class RegisterController {
      * @param emailSenderService The email sender service.
      */
     @Autowired
-    public RegisterController(UserService userService, EmailSenderService emailSenderService) {
+    public RegisterController(UserService userService, EmailSenderService emailSenderService, ErrorChecker errorChecker) {
         this.userService = userService;
         this.emailSenderService = emailSenderService;
+        this.errorChecker = errorChecker;
     }
 
     /**

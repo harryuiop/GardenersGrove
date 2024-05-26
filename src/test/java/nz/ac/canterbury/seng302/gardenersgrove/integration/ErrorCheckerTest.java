@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -23,7 +24,10 @@ class ErrorCheckerTest {
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private boolean userCreated = false;
     User user;
-    ErrorChecker errorChecker = new ErrorChecker();
+
+    FormValuesValidator formValuesValidator = new FormValuesValidator();
+
+    ErrorChecker errorChecker = new ErrorChecker(formValuesValidator);
 
     @BeforeEach
     void setUp() {
@@ -757,8 +761,6 @@ class ErrorCheckerTest {
         String newPassword = "Password1";
         String retypeNewPassword = "Password1!";
         Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
         Assertions.assertTrue(errors.containsValue("Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"));
 
@@ -931,8 +933,6 @@ class ErrorCheckerTest {
         String newPassword = "Password1";
         String retypeNewPassword = "Password1!";
         Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertFalse(errors.containsKey("oldPasswordError"));
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
         Assertions.assertTrue(errors.containsValue("Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"));
@@ -1048,8 +1048,6 @@ class ErrorCheckerTest {
     void resetPasswordEmailErrors_incorrectFormat_showError() {
         String email = "jane@doe";
         Map<String, String> errors = errorChecker.emailErrorsResetPassword(email);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
         Assertions.assertTrue(errors.containsKey("emailError"));
         Assertions.assertEquals(1, errors.size());
     }
@@ -1058,8 +1056,6 @@ class ErrorCheckerTest {
     void resetPasswordEmailErrors_emptyEmail_showError() {
         String email = "";
         Map<String, String> errors = errorChecker.emailErrorsResetPassword(email);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
         Assertions.assertTrue(errors.containsKey("emailError"));
         Assertions.assertEquals(1, errors.size());
     }

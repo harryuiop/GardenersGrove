@@ -37,7 +37,7 @@ public class LogInController {
 
     private final ResetPasswordTokenService resetPasswordTokenService;
 
-    private final ErrorChecker errorChecker = new ErrorChecker();
+    private final ErrorChecker errorChecker;
 
     /**
      * Constructor for LogInController.
@@ -46,10 +46,11 @@ public class LogInController {
      * @param userService        the UserService responsible for user-related operations.
      */
     @Autowired
-    public LogInController(EmailSenderService emailSenderService, UserService userService, ResetPasswordTokenService resetPasswordTokenService) {
+    public LogInController(EmailSenderService emailSenderService, UserService userService, ResetPasswordTokenService resetPasswordTokenService, ErrorChecker errorChecker) {
         this.emailSenderService = emailSenderService;
         this.userService = userService;
         this.resetPasswordTokenService = resetPasswordTokenService;
+        this.errorChecker = errorChecker;
     }
 
     /**

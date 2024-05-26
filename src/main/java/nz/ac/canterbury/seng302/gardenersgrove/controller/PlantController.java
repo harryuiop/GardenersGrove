@@ -37,7 +37,7 @@ public class PlantController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
-    private final ErrorChecker errorChecker = new ErrorChecker();
+    private final ErrorChecker errorChecker;
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -48,10 +48,11 @@ public class PlantController extends GardensSidebar {
      * @param userService   The User database access object.
      */
     @Autowired
-    public PlantController(PlantService plantService, GardenService gardenService, UserService userService) {
+    public PlantController(PlantService plantService, GardenService gardenService, UserService userService, ErrorChecker errorChecker) {
         this.plantService = plantService;
         this.gardenService = gardenService;
         this.userService = userService;
+        this.errorChecker = errorChecker;
     }
 
     /**
