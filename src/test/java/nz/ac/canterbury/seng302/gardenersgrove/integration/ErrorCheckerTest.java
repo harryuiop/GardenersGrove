@@ -3,12 +3,14 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
@@ -25,12 +27,16 @@ class ErrorCheckerTest {
     private boolean userCreated = false;
     User user;
 
-    FormValuesValidator formValuesValidator = new FormValuesValidator();
+    @SpyBean
+    FormValuesValidator mockFormValuesValidator;
 
-    ErrorChecker errorChecker = new ErrorChecker(formValuesValidator);
+    ErrorChecker errorChecker;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ProfanityCheckingException, InterruptedException {
+        mockFormValuesValidator = Mockito.spy(new FormValuesValidator());
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
+        errorChecker = new ErrorChecker(mockFormValuesValidator);
         if (!userCreated) {
             user = new User(
                     "test@domain.net",
@@ -1068,7 +1074,8 @@ class ErrorCheckerTest {
     }
 
     @Test
-    void gardenFormErrors_Inappropriate_returnsDescriptionError() {
+    void gardenFormErrors_Inappropriate_returnsDescriptionError() throws ProfanityCheckingException, InterruptedException {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(true);
         String name = "Garden 1";
         Float size = 1.5f;
         String description = "Shithead";

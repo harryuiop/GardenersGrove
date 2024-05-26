@@ -1,6 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.FriendRequestRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
@@ -12,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;import org.springframework.test.web.servlet.MockMvc;
@@ -20,8 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +46,8 @@ class RegisterControllerTest {
     @Autowired
     private FriendRequestRepository friendRequestRepository;
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    @SpyBean
+    private FormValuesValidator mockFormValuesValidator;
 
     @MockBean
     private EmailSenderService emailSenderService;
@@ -53,12 +55,13 @@ class RegisterControllerTest {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ProfanityCheckingException, InterruptedException {
         plantRepository.deleteAll();
         gardenRepository.deleteAll();
         friendRequestRepository.deleteAll();
         userRepository.deleteAll();
         Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
     }
 
     @Test

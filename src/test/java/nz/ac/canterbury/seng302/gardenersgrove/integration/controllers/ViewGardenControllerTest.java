@@ -1,9 +1,11 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
@@ -43,6 +45,9 @@ class ViewGardenControllerTest {
     @SpyBean
     private UserService userService;
 
+    @SpyBean
+    private FormValuesValidator mockFormValuesValidator;
+
     @Autowired
     private GardenRepository gardenRepository;
 
@@ -50,7 +55,7 @@ class ViewGardenControllerTest {
     private Long gardenId;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ProfanityCheckingException, InterruptedException {
         if (isSetUp) {
             return;
         }
@@ -63,6 +68,7 @@ class ViewGardenControllerTest {
         gardenRepository.save(garden);
 
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
 
         gardenId = garden.getId();
 
