@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.friends.SearchedUserResult;
 import org.slf4j.Logger;
@@ -31,14 +32,17 @@ public class SearchResultsController {
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 
+    private final FriendshipService friendshipService;
+
     /**
      * This sets up the current user service so that the current users can be reached.
      * @param userService the current service being used to get information about the users
      */
     @Autowired
-    public SearchResultsController(UserService userService, FriendRequestService friendRequestService) {
+    public SearchResultsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService) {
         this.userService = userService;
         this.friendRequestService = friendRequestService;
+        this.friendshipService = friendshipService;
     }
 
     /**
@@ -51,7 +55,7 @@ public class SearchResultsController {
     public String getSearchResultsPage(@RequestParam String searchUser, Model model) {
         logger.info("Get /search/result/{}", searchUser);
         List<SearchedUserResult> usersFound = userService.getSearchedUserAndFriendStatus(searchUser,
-                userService.getAuthenticatedUser(), friendRequestService);
+                userService.getAuthenticatedUser(), friendRequestService, friendshipService);
         model.addAttribute("usersFound", usersFound);
         model.addAttribute("sendFriendRequestUri", sendFriendRequestUri());
         model.addAttribute("searchResultsUri", searchResultsUri());
