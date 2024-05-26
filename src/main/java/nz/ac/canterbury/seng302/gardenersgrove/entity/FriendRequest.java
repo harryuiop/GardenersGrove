@@ -30,6 +30,9 @@ public class FriendRequest {
         status = Status.PENDING;
     }
 
+    /**
+     * JPA required no-args constructor
+     */
     public FriendRequest() {
 
     }

@@ -47,7 +47,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Invalid_Email");
         } else if (
                 password == null || password.isEmpty()
-        ){
+        ) {
             throw new BadCredentialsException("Invalid_Password");
         }
 

@@ -4,6 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendRequestException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -21,10 +22,13 @@ import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
+/**
+ * Controls the manage friends page which displays current friends and, incoming and outgoing friend requests.
+ */
 @Controller
 public class FriendsController extends GardensSidebar {
 
-    Logger logger = LoggerFactory.getLogger(GardenController.class);
+    Logger logger = LoggerFactory.getLogger(FriendsController.class);
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 
@@ -45,9 +49,9 @@ public class FriendsController extends GardensSidebar {
     }
 
     /**
-     * Load manage friends page
-     * @param model to pass attributes to html
-     * @return manage friends page
+     * Fills out the manage friends template before displaying it to the user.
+     * @param   model Connects the template to the information
+     * @return  manage friends page displayed to user
      */
     @GetMapping(MANAGE_FRIENDS_URI_STRING)
     public String getFriendsPage(Model model) {
@@ -60,6 +64,8 @@ public class FriendsController extends GardensSidebar {
         model.addAttribute("friendshipService", friendshipService);
         model.addAttribute("viewAllGardensUri", viewAllGardensUri());
         model.addAttribute("newGardenUri", newGardenUri());
+        model.addAttribute("searchResultsUri", searchResultsUri());
+        model.addAttribute("search", "");
         return "manageFriends";
     }
 
