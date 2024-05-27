@@ -26,8 +26,8 @@
                     type="checkbox"
                     id="publicGarden"
                     th:name="publicGarden"
-                    th:checked="${garden.getPublicGarden()}"
-                    th:value="${garden.getPublicGarden()}"
+                    th:checked="${garden.isGardenPublic()}"
+                    th:value="${garden.isGardenPublic()}"
                     autofocus
                     autocomplete="off"
                     onchange="submitPublic()"

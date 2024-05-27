@@ -70,16 +70,16 @@ INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, str
 VALUES ('Auckland', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 4);
 
 
-INSERT INTO garden (location_id, name, description, owner_user_id, size, public_garden, verified_description, id)
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description, id)
 VALUES (1, 'Default User''s first Garden', 'The first garden created.', 1, 2, TRUE, TRUE, 1);
 
-INSERT INTO garden (location_id, name, description, owner_user_id, size, public_garden, verified_description, id)
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description, id)
 VALUES (2, 'Default User''s Second Garden', NULL, 1, NULL, FALSE, TRUE, 2);
 
-INSERT INTO garden (location_id, name, description, owner_user_id, size, public_garden, verified_description, id)
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description, id)
 VALUES (3, 'Second User''s First Garden', 'A demonstration garden.', 2, 0.5, FALSE, TRUE, 3);
 
-INSERT INTO garden (location_id, name, description, owner_user_id, size, public_garden, verified_description, id)
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description, id)
 VALUES (4, 'Second User''s Second Garden', 'This description needs to be edited first as it is not verified', 2, 0.5, FALSE, FALSE, 4);
 
 

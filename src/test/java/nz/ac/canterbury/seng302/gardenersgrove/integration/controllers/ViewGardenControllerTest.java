@@ -133,10 +133,10 @@ class ViewGardenControllerTest {
     void makePublic_publicTrue_gardenIsPublic() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
                         .param("publicGarden","true"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("viewGarden"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/garden/"+gardenId));
         Optional<Garden> garden = gardenRepository.findById(gardenId);
-        garden.ifPresent(value -> Assertions.assertTrue(value.getPublicGarden()));
+        garden.ifPresent(value -> Assertions.assertTrue(value.isGardenPublic()));
     }
 
     @Test
@@ -147,9 +147,9 @@ class ViewGardenControllerTest {
             gardenRepository.save(garden.get());
             mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
                     .param("publicGarden","true"))
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("viewGarden"));
-            Assertions.assertFalse(garden.get().getPublicGarden());
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(view().name("redirect:/garden/"+gardenId));
+            Assertions.assertFalse(garden.get().isGardenPublic());
         }
     }
 
@@ -157,9 +157,9 @@ class ViewGardenControllerTest {
     void makePublic_publicFalse_gardenIsNotPublic() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
                 .param("publicGarden","null"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("viewGarden"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/garden/"+gardenId));
         Optional<Garden> garden = gardenRepository.findById(gardenId);
-        garden.ifPresent(value -> Assertions.assertFalse(value.getPublicGarden()));
+        garden.ifPresent(value -> Assertions.assertFalse(value.isGardenPublic()));
     }
 }

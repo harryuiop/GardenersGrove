@@ -30,8 +30,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -101,8 +100,8 @@ public class PubliciseGardens {
                 .param("publicGarden", "true")
                 .with(user(user1Id))
                 .with(csrf()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(view().name("viewGarden"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/garden/"+gardenId));
     }
 
     @Then("my garden will be visible in search results")
@@ -292,8 +291,8 @@ public class PubliciseGardens {
                         .param("publicGarden", "true")
                         .with(user(user1Id))
                         .with(csrf()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(view().name("viewGarden"));
-        Assertions.assertFalse(garden.getPublicGarden());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/garden/"+gardenId));
+        Assertions.assertFalse(garden.isGardenPublic());
     }
 }

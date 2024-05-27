@@ -83,10 +83,6 @@ public class ViewGardenController extends GardensSidebar {
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
 
-        if (errorMessages.length > 0) {
-            model.addAttribute("tagErrors", errorMessages[0]);
-        }
-
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
         model.addAttribute("newPlantUri", newPlantUri.toString());
@@ -116,7 +112,7 @@ public class ViewGardenController extends GardensSidebar {
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty() || (optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) &&
-                !optionalGarden.get().getPublicGarden()){
+                !optionalGarden.get().isGardenPublic()){
             throw new NoSuchGardenException(gardenId);
         }
         boolean owner = optionalGarden.get().getOwner() == userService.getAuthenticatedUser();
@@ -213,7 +209,8 @@ public class ViewGardenController extends GardensSidebar {
      * @throws NoSuchGardenException    If the garden can't be found by the given Id will throw this error
      */
     @PostMapping(MAKE_GARDEN_PUBLIC_STRING)
-    public String makeGardenPublic(@PathVariable long gardenId, @RequestParam(required = false) String publicGarden, Model model)
+    public String makeGardenPublic(@PathVariable long gardenId, @RequestParam(required = false)
+                                    String publicGarden, RedirectAttributes redirectAttributes)
     throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
@@ -224,20 +221,13 @@ public class ViewGardenController extends GardensSidebar {
             isGardenPublic = publicGarden != null && (publicGarden.equals("true"));
         }
         if (!isGardenPublic) {
-            model.addAttribute("gardenDescriptionError",
+            redirectAttributes.addFlashAttribute("gardenDescriptionError",
                     "Garden description has not been checked against our langauge standards. " +
                             "You must edit your description before this garden can be made public");
         }
-        optionalGarden.get().setPublicGarden(isGardenPublic);
+        optionalGarden.get().setIsGardenPublic(isGardenPublic);
         gardenService.saveGarden(optionalGarden.get());
-        return loadGardenPage(
-                optionalGarden.get(),
-                editGardenUri(gardenId),
-                newPlantUri(gardenId),
-                plantService.getAllPlantsInGarden(optionalGarden.get()),
-                true,
-                model
-        );
+        return "redirect:" + viewGardenUri(gardenId);
     }
 
     /**
@@ -254,7 +244,7 @@ public class ViewGardenController extends GardensSidebar {
     public String submitGardenTag(
             @PathVariable long gardenId,
             @RequestParam(required = false) String tagName,
-            Model model
+            RedirectAttributes redirectAttributes
     ) throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) {
@@ -265,20 +255,11 @@ public class ViewGardenController extends GardensSidebar {
 
 
         if (!errorMessages.isEmpty())
-            model.addAttribute("tagErrors", errorMessages);
+            redirectAttributes.addFlashAttribute("tagErrors", errorMessages);
         else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
             tagService.saveTag(tagName, garden);
 
-        boolean owner = userService.getAuthenticatedUser().getId() == garden.getOwner().getId();
-        return loadGardenPage(
-                optionalGarden.get(),
-                editGardenUri(gardenId),
-                newPlantUri(gardenId),
-                plantService.getAllPlantsInGarden(optionalGarden.get()),
-                owner,
-                model,
-                errorMessages
-        );
+        return "redirect:" + viewGardenUri(gardenId);
     }
 
 

@@ -27,7 +27,6 @@ class ErrorCheckerTest {
     private boolean userCreated = false;
     User user;
 
-    @SpyBean
     FormValuesValidator mockFormValuesValidator;
 
     ErrorChecker errorChecker;

@@ -38,7 +38,7 @@ public class Garden {
     private List<Tag> tags;
 
     @Column
-    private boolean publicGarden;
+    private boolean isGardenPublic;
 
     @Column
     private boolean verifiedDescription;
@@ -67,7 +67,7 @@ public class Garden {
         this.size = size;
         this.plants = new ArrayList<>();
         this.tags = new ArrayList<>();
-        this.publicGarden = false;
+        this.isGardenPublic = false;
         this.verifiedDescription = verifiedDescription;
     }
 
@@ -132,12 +132,12 @@ public class Garden {
         return tags;
     }
 
-    public boolean getPublicGarden() {
-        return publicGarden;
+    public boolean isGardenPublic() {
+        return isGardenPublic;
     }
 
-    public void setPublicGarden(boolean publicGarden) {
-        this.publicGarden = publicGarden;
+    public void setIsGardenPublic(boolean isGardenPublic) {
+        this.isGardenPublic = isGardenPublic;
     }
 
     public boolean getVerifiedDescription() {
@@ -156,7 +156,7 @@ public class Garden {
                 ", location='" + location + '\'' +
                 ", size=" + size +
                 ", tags=" + tags +
-                ", publicGarden=" + publicGarden +
+                ", isGardenPublic=" + isGardenPublic +
                 ", verifiedDescription=" + verifiedDescription +
                 '}';
     }
