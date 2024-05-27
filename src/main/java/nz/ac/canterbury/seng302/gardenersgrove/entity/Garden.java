@@ -28,7 +28,7 @@ public class Garden {
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
-    @Column()
+    @Column
     private Float size;
 
     @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
