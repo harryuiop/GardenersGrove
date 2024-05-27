@@ -83,6 +83,10 @@ public class ViewGardenController extends GardensSidebar {
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
 
+        if (errorMessages.length > 0) {
+            model.addAttribute("tagErrors", errorMessages[0]);
+        }
+
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
         model.addAttribute("newPlantUri", newPlantUri.toString());
@@ -205,13 +209,16 @@ public class ViewGardenController extends GardensSidebar {
      * Changes the garden so that it is public (viewable by all)
      * @param gardenId                  The Id of the garden being made public
      * @param publicGarden              A string of whether the garden should be public or not
+     * @param redirectAttributes        Add attributes to that are still there after the redirect
      * @return                          The edit garden page the user was already on
      * @throws NoSuchGardenException    If the garden can't be found by the given Id will throw this error
      */
     @PostMapping(MAKE_GARDEN_PUBLIC_STRING)
     public String makeGardenPublic(@PathVariable long gardenId, @RequestParam(required = false)
-                                    String publicGarden, RedirectAttributes redirectAttributes)
+                                    String publicGarden,
+                                    RedirectAttributes redirectAttributes)
     throws NoSuchGardenException {
+        logger.info("POST make public");
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
             throw new NoSuchGardenException(gardenId);
@@ -219,8 +226,7 @@ public class ViewGardenController extends GardensSidebar {
         boolean isGardenPublic = false;
         if (optionalGarden.get().getVerifiedDescription()) {
             isGardenPublic = publicGarden != null && (publicGarden.equals("true"));
-        }
-        if (!isGardenPublic) {
+        } else {
             redirectAttributes.addFlashAttribute("gardenDescriptionError",
                     "Garden description has not been checked against our langauge standards. " +
                             "You must edit your description before this garden can be made public");
@@ -233,9 +239,9 @@ public class ViewGardenController extends GardensSidebar {
     /**
      * Create new tag for a garden.
      *
-     * @param model    Model to add attributes to
-     * @param gardenId The garden's ID number
-     * @param tagName  User inputted tag name
+     * @param redirectAttributes    Add attributes to that are still there after the redirect
+     * @param gardenId              The garden's ID number
+     * @param tagName               User inputted tag name
      * @return Redirect to view garden page
      * @throws NoSuchGardenException If garden is not found, either by wrong/unauthorized owner
      *                               or does not exist.
@@ -246,13 +252,13 @@ public class ViewGardenController extends GardensSidebar {
             @RequestParam(required = false) String tagName,
             RedirectAttributes redirectAttributes
     ) throws NoSuchGardenException {
+        logger.info("POST tags");
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
         String errorMessages = errorChecker.tagNameErrors(tagName);
-
 
         if (!errorMessages.isEmpty())
             redirectAttributes.addFlashAttribute("tagErrors", errorMessages);
