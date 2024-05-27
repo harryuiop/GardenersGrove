@@ -87,8 +87,8 @@ class ViewGardenControllerTest {
         String tagName = "alkals@U)$(*%&(#*!$&@)";
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
                 .param("tagName", tagName))
-                .andExpect(status().isOk())
-                .andExpect(view().name("viewGarden"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/garden/"+gardenId));
         Tag tag = tagService.findByName(tagName);
         Assertions.assertNull(tag);
     }
@@ -98,8 +98,8 @@ class ViewGardenControllerTest {
         String tagName = "This is invalid tag name which will give you a lot of annoy";
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
                         .param("tagName", tagName))
-                .andExpect(status().isOk())
-                .andExpect(view().name("viewGarden"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/garden/"+gardenId));
         Tag tag = tagService.findByName(tagName);
 
         Assertions.assertNull(tag);
@@ -110,8 +110,8 @@ class ViewGardenControllerTest {
         String tagName = "Thi$ i$ inv@lid t@g name with inv@lid ch@r@cter which will give you @ lot of @nnoy";
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
                         .param("tagName", tagName))
-                .andExpect(status().isOk())
-                .andExpect(view().name("viewGarden"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/garden/"+gardenId));
 
         Tag tag = tagService.findByName(tagName);
         Assertions.assertNull(tag);
@@ -122,8 +122,8 @@ class ViewGardenControllerTest {
         String validTagName = "Invalid tag name";
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(1))
                         .param("tagName", validTagName))
-                .andExpect(status().isOk())
-                .andExpect(view().name("viewGarden"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/garden/"+gardenId));
         Tag tag = tagService.findByName(validTagName);
 
         Assertions.assertNotNull(tag);
