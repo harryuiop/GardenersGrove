@@ -1,45 +1,45 @@
-INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
-                   "sign-up_token", user_id)
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token, user_id)
 VALUES (TRUE, '2000-01-01', 'user1@gmail.com', 'Default', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 1);
 
-INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
-                   "sign-up_token", user_id)
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token, user_id)
 VALUES (TRUE, '2001-02-02', 'user2@gmail.com', 'Second', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 2);
 
-INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
-                   "sign-up_token", user_id)
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token, user_id)
 VALUES (TRUE, '2001-02-02', 'user3@gmail.com', 'Third', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 3);
 
-INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
-                   "sign-up_token", user_id)
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token, user_id)
 VALUES (TRUE, '2001-02-02', 'user4@gmail.com', 'Fourth', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 4);
 
-INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
-                   "sign-up_token", user_id)
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token, user_id)
 VALUES (TRUE, '2001-02-02', 'user5@gmail.com', 'Fifth', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 5);
 
-INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
-                   "sign-up_token", user_id)
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token, user_id)
 VALUES (TRUE, '2001-02-02', 'user6@gmail.com', 'Sixth', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 6);
 
-INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
-                   "sign-up_token", user_id)
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token, user_id)
 VALUES (TRUE, '2001-02-02', 'user7@gmail.com', 'Seventh', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 7);
 
-INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
-                   "sign-up_token", user_id)
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token, user_id)
 VALUES (TRUE, '2001-02-02', 'user8@gmail.com', 'Eighth', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 8);
 
-INSERT INTO users (confirmation, date_of_birth, email, first_name, last_name, password, profile_picture_file_name,
-                   "sign-up_token", user_id)
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token, user_id)
 VALUES (TRUE, '2001-02-02', 'user9@gmail.com', 'Ninth', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 9);
 
