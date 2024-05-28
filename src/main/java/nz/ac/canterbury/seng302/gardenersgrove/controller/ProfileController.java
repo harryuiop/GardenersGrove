@@ -225,7 +225,7 @@ public class ProfileController extends NavBar {
         User user = userService.getAuthenticatedUser();
         model.addAttribute(user);
 
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
 
         if (!errors.isEmpty()) {
             model.addAllAttributes(errors);
@@ -255,5 +255,4 @@ public class ProfileController extends NavBar {
         logger.info("POST {}", logoutUri());
         return "login";
     }
-
 }

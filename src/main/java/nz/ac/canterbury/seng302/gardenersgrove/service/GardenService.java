@@ -1,9 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import jakarta.annotation.PostConstruct;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,18 +22,17 @@ public class GardenService {
         this.userService = userService;
     }
 
-    @PostConstruct
-    public void addDefaults() {
-        User user1 = userService.getUserById(1);
-        User user2 = userService.getUserById(2);
-        this.saveGarden(new Garden(user1, "Garden 1", null, new Location("New Zealand", "Christchurch"), 1F));
-        this.saveGarden(new Garden(user2, "Garden 2", null, new Location("New Zealand", "Christchurch"), 2F));
-    }
-
     public List<Garden> getAllGardens(UserService userService) {
         return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
     }
 
+    public List<Garden> getAllFriendsGardens(long friendId, UserService userService) throws NoSuchFriendException {
+        if (userService.getAuthenticatedUser().getFriends().contains(userService.getUserById(friendId))) {
+            return gardenRepository.findAllByOwner(userService.getUserById(friendId));
+        } else {
+            throw new NoSuchFriendException(friendId);
+        }
+    }
     public Optional<Garden> getGardenById(Long id) {
         return gardenRepository.findById(id);
     }

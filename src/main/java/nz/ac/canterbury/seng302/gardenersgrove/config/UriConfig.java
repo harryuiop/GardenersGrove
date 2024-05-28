@@ -10,6 +10,8 @@ public class UriConfig {
     public static final String LOGOUT_URI_STRING = "/logout";
     public static final String REGISTER_URI_STRING = "/register";
     public static final String VERIFY_EMAIL_URI_STRING = "/register/verify";
+    public static final String RESET_PASSWORD_URI_STRING = "/login/reset-password/verify/{token}/{userId}";
+    public static final String RESET_PASSWORD_EMAIL_URI_STRING = "/login/reset-password/email";
     public static final String VIEW_PROFILE_URI_STRING = "/profile";
     public static final String EDIT_PROFILE_URI_STRING = "/profile/edit";
     public static final String EDIT_PASSWORD_URI_STRING = "/profile/edit/password";
@@ -22,10 +24,19 @@ public class UriConfig {
     public static final String EDIT_PLANT_URI_STRING = "/garden/{gardenId}/plant/{plantId}";
     public static final String UPLOAD_PLANT_IMAGE_URI_STRING = "/garden/{gardenId}/plant/{plantId}/image";
     public static final String VIEW_ALL_GARDENS_URI_STRING = "/gardens";
+    public static final String MANAGE_FRIENDS_URI_STRING = "/friends";
+    public static final String VIEW_ALL_FRIENDS_GARDENS_URI_STRING = "/friends/{friendId}/gardens";
+    public static final String VIEW_FRIENDS_GARDEN_URI_STRING = "/friends/{friendId}/garden/{gardenId}";
+
+    public static final String SEARCH_RESULTS_STRING = "/search/results";
+    public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
 
 
+    private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
     private static final UriTemplate NEW_GARDEN_TAG_URI = new UriTemplate(NEW_GARDEN_TAG_URI_STRING);
+    private static final UriTemplate VIEW_ALL_FRIENDS_GARDENS_URI = new UriTemplate(VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
+    private static final UriTemplate VIEW_FRIENDS_GARDEN_URI = new UriTemplate(VIEW_FRIENDS_GARDEN_URI_STRING);
     private static final UriTemplate EDIT_GARDEN_URI = new UriTemplate(EDIT_GARDEN_URI_STRING);
     private static final UriTemplate NEW_PLANT_URI = new UriTemplate(NEW_PLANT_URI_STRING);
     private static final UriTemplate EDIT_PLANT_URI = new UriTemplate(EDIT_PLANT_URI_STRING);
@@ -51,12 +62,20 @@ public class UriConfig {
         return URI.create(REGISTER_URI_STRING);
     }
 
+    public static URI resetPasswordEmailUri() {
+        return URI.create(RESET_PASSWORD_EMAIL_URI_STRING);
+    }
+
     public static URI verifyEmailUri() {
         return URI.create(VERIFY_EMAIL_URI_STRING);
     }
 
     public static URI viewProfileUri() {
         return URI.create(VIEW_PROFILE_URI_STRING);
+    }
+
+    public static URI viewFriendsUri() {
+        return URI.create(MANAGE_FRIENDS_URI_STRING);
     }
 
     public static URI editProfileUri() {
@@ -71,6 +90,9 @@ public class UriConfig {
         return URI.create(UPLOAD_PROFILE_IMAGE_URI_STRING);
     }
 
+    public static URI resetPasswordUri(String token, long userId) {
+        return RESET_PASSWORD_URI.expand(token, userId);
+    }
     public static URI newGardenUri() {
         return URI.create(NEW_GARDEN_URI_STRING);
     }
@@ -80,6 +102,14 @@ public class UriConfig {
     }
     public static URI newGardenTagUri(long gardenId) {
         return NEW_GARDEN_TAG_URI.expand(gardenId);
+    }
+
+    public static URI viewFriendsGardenUri(long friendId, long gardenId) {
+        return VIEW_FRIENDS_GARDEN_URI.expand(friendId, gardenId);
+    }
+
+    public static URI viewAllFriendsGardensUri(long friendId) {
+        return VIEW_ALL_FRIENDS_GARDENS_URI.expand(friendId);
     }
 
     public static URI editGardenUri(long gardenId) {
@@ -101,4 +131,7 @@ public class UriConfig {
     public static URI viewAllGardensUri() {
         return URI.create(VIEW_ALL_GARDENS_URI_STRING);
     }
+    public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
+    public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
+
 }
