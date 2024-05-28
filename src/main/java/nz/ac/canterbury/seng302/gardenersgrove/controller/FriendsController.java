@@ -70,14 +70,13 @@ public class FriendsController extends GardensSidebar {
 
     /**
      * Called when a friend request is accepted, declined, canceled or a friend is removed
-     * @param model to pass attributes to the html page
      * @param action states if there hase been a request accepted, declined or cancelled or otherwise a friend removed
      * @param request is the id of the friend or request being altered
      * @return a redirect to the manage friends page
      * @throws NoSuchFriendRequestException
      */
     @PostMapping(MANAGE_FRIENDS_URI_STRING)
-    public String submitFriendsPage(Model model, @RequestParam String action, @RequestParam Long request) throws NoSuchFriendRequestException {
+    public String submitFriendsPage(@RequestParam String action, @RequestParam Long request) throws NoSuchFriendRequestException {
         logger.info("POST {}", viewFriendsUri());
         logger.info(request.toString());
         Optional<FriendRequest> optionalFriendRequest = friendRequestService.findRequestById(request);
