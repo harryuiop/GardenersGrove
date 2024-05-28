@@ -41,7 +41,7 @@ streetAddressField.addEventListener('input', function() {
  */
 function updateAutocomplete(query, country) {
     const deployment = window.location.pathname.split('/')[1];
-    const baseUri = deployment !== undefined && deployment in possible_deployments ?`/${deployment}` : '';
+    const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
     fetch(`${baseUri}/maptiler/search-results?query=${query}&country=${country}`)
         .then(response => {
             if (!response.ok) {

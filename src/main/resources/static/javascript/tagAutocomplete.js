@@ -36,7 +36,7 @@ tagField.addEventListener('input', function() {
  */
 function updateAutocomplete(query) {
     const deployment = window.location.pathname.split('/')[1];
-    const baseUri = deployment !== undefined && deployment in possible_deployments ?`/${deployment}` : '';
+    const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
     fetch( `${baseUri}/tag/show-autocomplete?query=${query}`)
         .then(response => {
             if (!response.ok) {
