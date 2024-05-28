@@ -110,4 +110,7 @@
 </body>
 <script type="text/javascript" th:src="@{/javascript/characterCount.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/locationAutocomplete.js}"></script>
+<script type="text/javascript">
+    document.getElementById('gardenDescription').addEventListener('input', updateCharCount);
+</script>
 </html>

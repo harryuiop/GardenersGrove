@@ -5,7 +5,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecke
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ResetPasswordToken;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ResetPasswordTokenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
@@ -38,6 +37,8 @@ public class LogInController {
 
     private final ResetPasswordTokenService resetPasswordTokenService;
 
+    private final ErrorChecker errorChecker;
+
     /**
      * Constructor for LogInController.
      *
@@ -45,10 +46,11 @@ public class LogInController {
      * @param userService        the UserService responsible for user-related operations.
      */
     @Autowired
-    public LogInController(EmailSenderService emailSenderService, UserService userService, ResetPasswordTokenService resetPasswordTokenService) {
+    public LogInController(EmailSenderService emailSenderService, UserService userService, ResetPasswordTokenService resetPasswordTokenService, ErrorChecker errorChecker) {
         this.emailSenderService = emailSenderService;
         this.userService = userService;
         this.resetPasswordTokenService = resetPasswordTokenService;
+        this.errorChecker = errorChecker;
     }
 
     /**
@@ -133,7 +135,7 @@ public class LogInController {
             return "redirect:" + loginUri();
         }
 
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
 
         if (!errors.isEmpty()) {
             model.addAllAttributes(errors);
@@ -180,7 +182,7 @@ public class LogInController {
         logger.info("POST {}", resetPasswordEmailUri());
         User user = userService.getUserByEmail(userEmail);
 
-        Map<String, String> errors = ErrorChecker.emailErrorsResetPassword(userEmail);
+        Map<String, String> errors = errorChecker.emailErrorsResetPassword(userEmail);
         if (!errors.isEmpty()) {
             model.addAllAttributes(errors);
             model.addAttribute("confirmationMessage", false);
