@@ -1,9 +1,11 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendRequestException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.Status;
 import org.slf4j.Logger;
@@ -15,27 +17,34 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Optional;
+
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 /**
  * Controls the manage friends page which displays current friends and, incoming and outgoing friend requests.
  */
 @Controller
-public class FriendsController {
+public class FriendsController extends GardensSidebar {
 
     Logger logger = LoggerFactory.getLogger(FriendsController.class);
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 
+    private final FriendshipService friendshipService;
+
     /**
-     * Sets up services.
-     * @param userService           Allows access to users information
-     * @param friendRequestService  Allows access to current friend requests
+     * Constructor for controller of manage friends page
+     *
+     * @param userService          used to get users from ids
+     * @param friendRequestService used to change the status of friend requests
+     * @param friendshipService    used to adjust friendships between users
      */
     @Autowired
-    public FriendsController(UserService userService, FriendRequestService friendRequestService) {
+    public FriendsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService) {
         this.userService = userService;
         this.friendRequestService = friendRequestService;
+        this.friendshipService = friendshipService;
     }
 
     /**
@@ -51,38 +60,38 @@ public class FriendsController {
         model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
         model.addAttribute("requestService", friendRequestService);
+        model.addAttribute("friendshipService", friendshipService);
+        model.addAttribute("viewAllGardensUri", viewAllGardensUri());
+        model.addAttribute("newGardenUri", newGardenUri());
         model.addAttribute("searchResultsUri", searchResultsUri());
         model.addAttribute("search", "");
         return "manageFriends";
     }
 
     /**
-     * Used to accept and decline friend requests
-     * @param action                    determines whether to accept or decline the friend request
-     * @param request                   the Id of the friend requests source user
-     * @return                          redirects back to the manage friends page
-     * @throws NoSuchGardenException    If the user Id cannot find a corresponding user throws this error
+     * Called when a friend request is accepted, declined, canceled or a friend is removed
+     * @param action states if there hase been a request accepted, declined or cancelled or otherwise a friend removed
+     * @param request is the id of the friend or request being altered
+     * @return a redirect to the manage friends page
+     * @throws NoSuchFriendRequestException
      */
     @PostMapping(MANAGE_FRIENDS_URI_STRING)
-    public String submitFriendsPage(@RequestParam String action, @RequestParam Long request) throws NoSuchGardenException {
+    public String submitFriendsPage(@RequestParam String action, @RequestParam Long request) throws NoSuchFriendRequestException {
         logger.info("POST {}", viewFriendsUri());
         logger.info(request.toString());
-        FriendRequest friendRequest = friendRequestService.findRequestById(request).isPresent() ? friendRequestService.findRequestById(request).get() : null;
-        if (friendRequest == null) {
+        Optional<FriendRequest> optionalFriendRequest = friendRequestService.findRequestById(request);
+        if (optionalFriendRequest.isEmpty()) {
             logger.error("No such request id");
-            throw new NoSuchGardenException(request);
+            throw new NoSuchFriendRequestException();
         }
+        FriendRequest friendRequest = optionalFriendRequest.get();
         User receiver = friendRequest.getReceiver();
         User sender = friendRequest.getSender();
         switch (action) {
             case "Accept":
                 logger.info("Accepted Request");
-                receiver.addFriend(sender);
-                sender.addFriend(receiver);
-                userService.updateUser(receiver);
-                userService.updateUser(sender);
-                friendRequest.setStatus(Status.ACCEPTED);
-                friendRequestService.updateRequest(friendRequest);
+                friendshipService.addFriend(sender, receiver);
+                friendRequestService.removeAcceptedRequest(friendRequest);
                 break;
             case "Decline":
                 logger.info("Declined Request");
@@ -92,7 +101,6 @@ public class FriendsController {
             default:
                 logger.info("Default in switch statement");
         }
-
-        return "redirect:"+MANAGE_FRIENDS_URI_STRING;
+        return "redirect:" + viewFriendsUri();
     }
 }
