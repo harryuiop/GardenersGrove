@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body style="">
+<nav th:insert="~{fragments/navbar :: navbar}"></nav>
 <div class="container-fluid p-5 text-white text-center" style="background-color: #477641">
     <h1>Search Results</h1>
     <form th:action="@{${searchResultsUri}}" method="post">
@@ -36,6 +37,9 @@
         <div class="col-sm-12">
             <h3>Found users:</h3>
             <div style="max-height: 600px; overflow-y: auto;">
+                <div th:if="${usersFound.isEmpty()}">
+                    <h5>There is nobody with that name or email in Gardener’s Grove</h5>
+                </div>
                 <div th:each="friend, iterStat : ${usersFound}">
                     <div class="row mb-4" th:if="${iterStat.index % 2 == 0}">
                         <div class="col-md-6">

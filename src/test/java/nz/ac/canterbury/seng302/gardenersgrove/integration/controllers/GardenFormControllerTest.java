@@ -1,11 +1,12 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.LocationService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,13 +43,13 @@ class GardenFormControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private GardenService gardenService;
-
-    @Autowired
     private LocationService locationService;
 
     @SpyBean
     private UserService userService;
+
+    @SpyBean
+    private FormValuesValidator mockFormValuesValidator;
 
     private User user;
 
@@ -56,7 +57,7 @@ class GardenFormControllerTest {
     private MapTilerGeocoding mapTilerGeocoding;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ProfanityCheckingException, InterruptedException {
         Mockito.when(mapTilerGeocoding.getFirstSearchResult(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(null);
 
@@ -72,6 +73,7 @@ class GardenFormControllerTest {
         }
 
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
 
         gardenRepository.deleteAll();
         locationService.deleteAll();
@@ -164,6 +166,7 @@ class GardenFormControllerTest {
 
     @Test
     void submitForm_InappropriateDescription_gardenNotSaved() throws Exception {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(true);
         String gardenName = "TestGarden";
         float gardenSize = 4f;
         String gardenDescription = "Fucking Hell";

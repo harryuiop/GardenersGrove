@@ -31,11 +31,17 @@ public class Garden {
     @Column
     private Float size;
 
-    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Plant> plants;
 
     @ManyToMany(mappedBy = "gardens", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Tag> tags;
+
+    @Column
+    private boolean isGardenPublic;
+
+    @Column
+    private boolean verifiedDescription;
 
     /**
      * JPA required no-args constructor
@@ -46,11 +52,14 @@ public class Garden {
     /**
      * Creates a new Garden object
      *
-     * @param name     name of Garden
-     * @param location The details of the physical place where the garden is
-     * @param size     The physical size of the garden in square metres
+     * @param owner                 User who create and therefore owns the garden
+     * @param name                  name of Garden
+     * @param description           a note made about the garden by the creator
+     * @param location              The details of the physical place where the garden is
+     * @param size                  The physical size of the garden in square metres
+     * @param verifiedDescription   Whether the description is suitible for public consumption
      */
-    public Garden(User owner, String name, String description, Location location, Float size) {
+    public Garden(User owner, String name, String description, Location location, Float size, boolean verifiedDescription) {
         this.owner = owner;
         this.name = name;
         this.description = description;
@@ -58,6 +67,8 @@ public class Garden {
         this.size = size;
         this.plants = new ArrayList<>();
         this.tags = new ArrayList<>();
+        this.isGardenPublic = false;
+        this.verifiedDescription = verifiedDescription;
     }
 
 
@@ -121,6 +132,22 @@ public class Garden {
         return tags;
     }
 
+    public boolean isGardenPublic() {
+        return isGardenPublic;
+    }
+
+    public void setIsGardenPublic(boolean isGardenPublic) {
+        this.isGardenPublic = isGardenPublic;
+    }
+
+    public boolean getVerifiedDescription() {
+        return verifiedDescription;
+    }
+
+    public void setVerifiedDescription(boolean verifiedDescription) {
+        this.verifiedDescription = verifiedDescription;
+    }
+
     @Override
     public String toString() {
         return "Garden{" +
@@ -129,6 +156,8 @@ public class Garden {
                 ", location='" + location + '\'' +
                 ", size=" + size +
                 ", tags=" + tags +
+                ", isGardenPublic=" + isGardenPublic +
+                ", verifiedDescription=" + verifiedDescription +
                 '}';
     }
 }

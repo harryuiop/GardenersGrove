@@ -37,6 +37,7 @@ public class PlantController extends GardensSidebar {
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
+    private final ErrorChecker errorChecker;
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -47,10 +48,11 @@ public class PlantController extends GardensSidebar {
      * @param userService   The User database access object.
      */
     @Autowired
-    public PlantController(PlantService plantService, GardenService gardenService, UserService userService) {
+    public PlantController(PlantService plantService, GardenService gardenService, UserService userService, ErrorChecker errorChecker) {
         this.plantService = plantService;
         this.gardenService = gardenService;
         this.userService = userService;
+        this.errorChecker = errorChecker;
     }
 
     /**
@@ -251,7 +253,7 @@ public class PlantController extends GardensSidebar {
         }
         Garden garden = optionalGarden.get();
 
-        Map<String, String> errors = ErrorChecker.plantFormErrors(
+        Map<String, String> errors = errorChecker.plantFormErrors(
                         plantName,
                         plantCount,
                         plantDescription,
@@ -326,7 +328,7 @@ public class PlantController extends GardensSidebar {
         }
         Plant plant = optionalPlant.get();
 
-        Map<String, String> errors = ErrorChecker.plantFormErrors(
+        Map<String, String> errors = errorChecker.plantFormErrors(
                         plantName,
                         plantCount,
                         plantDescription,

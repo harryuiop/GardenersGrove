@@ -35,6 +35,7 @@ public class GardenController extends GardensSidebar {
     private final LocationService locationService;
     private final MapTilerGeocoding mapTilerGeocoding;
     private String refererUrl;
+    private final ErrorChecker errorChecker;
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -49,12 +50,14 @@ public class GardenController extends GardensSidebar {
             GardenService gardenService,
             UserService userService,
             LocationService locationService,
-            MapTilerGeocoding mapTilerGeocoding
+            MapTilerGeocoding mapTilerGeocoding,
+            ErrorChecker errorChecker
     ) {
         this.gardenService = gardenService;
         this.userService = userService;
         this.locationService = locationService;
         this.mapTilerGeocoding = mapTilerGeocoding;
+        this.errorChecker = errorChecker;
     }
 
     /**
@@ -163,7 +166,7 @@ public class GardenController extends GardensSidebar {
     ) {
         logger.info("POST {}", newGardenUri());
 
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+        Map<String, String> errors = errorChecker.gardenFormErrors(
                 gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode
         );
         if (errors.isEmpty() || (errors.containsKey("profanityCheckError") && errors.size() == 1)) {
@@ -177,7 +180,7 @@ public class GardenController extends GardensSidebar {
             locationEntity.setSuburb(suburb);
             locationEntity.setPostcode(postcode);
             locationEntity.setStreetAddress(streetAddress);
-            Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName, gardenDescription, locationEntity, gardenSize);
+            Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName, gardenDescription, locationEntity, gardenSize, profanityCheckWorked);
             gardenService.saveGarden(garden);
 
             if (locationFound && profanityCheckWorked) {
@@ -261,7 +264,7 @@ public class GardenController extends GardensSidebar {
         }
         Garden garden = optionalGarden.get();
 
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
+        Map<String, String> errors = errorChecker.gardenFormErrors(
                 gardenName, gardenSize, gardenDescription, country, city, streetAddress, suburb, postcode
         );
         if (errors.isEmpty() || (errors.containsKey("profanityCheckError") && errors.size() == 1)) {
@@ -286,6 +289,7 @@ public class GardenController extends GardensSidebar {
             garden.setSize(gardenSize);
             garden.setDescription(gardenDescription);
             garden.setLocation(locationEntity);
+            garden.setVerifiedDescription(profanityCheckWorked);
             gardenService.saveGarden(garden);
             if (locationFound && profanityCheckWorked) {
                 return "redirect:" + viewGardenUri(garden.getId());
