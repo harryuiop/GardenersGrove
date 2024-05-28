@@ -4,7 +4,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendRequestException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -32,7 +31,7 @@ public class FriendsController extends GardensSidebar {
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 
-    private FriendshipService friendshipService;
+    private final FriendshipService friendshipService;
 
     /**
      * Constructor for controller of manage friends page
