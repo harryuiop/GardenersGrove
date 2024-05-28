@@ -36,6 +36,9 @@
         <div class="col-sm-12">
             <h3>Found users:</h3>
             <div style="max-height: 600px; overflow-y: auto;">
+                <div th:if="${usersFound.isEmpty()}">
+                    <h5>There is nobody with that name or email in Gardener’s Grove</h5>
+                </div>
                 <div th:each="friend, iterStat : ${usersFound}">
                     <div class="row mb-4" th:if="${iterStat.index % 2 == 0}">
                         <div class="col-md-6">

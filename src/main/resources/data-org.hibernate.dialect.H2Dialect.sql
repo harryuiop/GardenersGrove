@@ -35,12 +35,12 @@ VALUES (TRUE, '2001-02-02', 'user7@gmail.com', 'Seventh', 'User',
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token, user_id)
-VALUES (TRUE, '2001-02-02', 'user8@gmail.com', 'Eighth', 'User',
+VALUES (TRUE, '2001-02-02', 'user8@gmail.com', 'Default', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 8);
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token, user_id)
-VALUES (TRUE, '2001-02-02', 'user9@gmail.com', 'Ninth', 'User',
+VALUES (TRUE, '2001-02-02', 'user9@gmail.com', 'Default', 'User',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL, 9);
 
 
