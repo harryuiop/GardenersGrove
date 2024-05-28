@@ -14,7 +14,7 @@ public class Authority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "authority_id")
+    @Column
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)

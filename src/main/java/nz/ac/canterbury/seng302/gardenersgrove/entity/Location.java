@@ -25,13 +25,13 @@ public class Location {
     @Column(columnDefinition = "TEXT")
     private String suburb;
 
-    @Column()
+    @Column
     private String postcode;
 
-    @Column()
+    @Column
     private double lat;
 
-    @Column()
+    @Column
     private double lng;
 
     private boolean isCoordinatesSet = false;

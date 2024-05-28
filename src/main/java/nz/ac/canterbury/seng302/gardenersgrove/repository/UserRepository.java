@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.repository;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -43,7 +44,7 @@ public interface UserRepository extends CrudRepository<User, String> {
      * @param id The ID of the user.
      * @return A User object if found, otherwise null.
      */
-    User findByUserId(int id);
+    User findByUserId(long id);
 
     /**
      * Retrieves a specific user By token

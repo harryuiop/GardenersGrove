@@ -15,12 +15,37 @@
 <body style="">
     <div class="container-fluid p-5 text-white text-center" style="background-color: #477641">
         <h1>Manage my friends</h1>
+        <form th:action="@{${searchResultsUri}}" method="post">
+            <div class="input-group rounded mx-auto" style="width: 20vw;">
+                    <input type="text" id="searchUsers"
+                           th:name="searchUser"
+                           th:value="*{search}"
+                           class="form-control rounded"
+                           placeholder="Search for new friends"
+                           aria-label="Search"
+                           aria-describedby="search-addon"
+                            autocomplete="off"/>
+                    <button class="input-group-text border-0" id="search-addon" type="submit" th:for="searchForm">
+                        <i class="bi bi-search"></i>
+                    </button>
+            </div>
+        </form>
+    </div>
 
-        <div class="input-group rounded mx-auto" style="width: 20vw;">
-            <input type="search" class="form-control rounded" placeholder="Search for friends" aria-label="Search" aria-describedby="search-addon" />
-            <span class="input-group-text border-0" id="search-addon">
-                <i class="bi bi-search"></i>
-            </span>
+    <div class="modal" tabindex="-1" role="dialog" id="confirm-send-request">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Request friend?</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="request-user"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="makeFriends()">Send Request</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">No Thanks</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -32,103 +57,26 @@
                 <div style="max-height: 600px; overflow-y: auto;">
                 <table class="table table-borderless">
                     <tbody>
-                        <tr>
+                    <tr th:each="friend : ${user.getFriends()}">
                             <td>
                                 <div class="card" style="width:25vw">
                                     <div class="card-body">
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
+                                                    <img th:src="@{${friend.getProfilePictureFilePath()}}"
+                                                         class="rounded-circle" style="width: 5vw" alt="Profile Image">
                                                 </div>
                                                 <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
+                                                    <a href="#"
+                                                       class="link-offset-2 link-underline link-underline-opacity-0"
+                                                       style="color: #142915; font-size: 30px"
+                                                       th:text="${friend.getName()}"></a>
                                                     <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card" style="width:25vw">
-                                    <div class="card-body">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
-                                                    <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card" style="width:25vw">
-                                    <div class="card-body">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
-                                                    <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card" style="width:25vw">
-                                    <div class="card-body">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
-                                                    <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="card" style="width:25vw">
-                                    <div class="card-body">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <img src="default_profile_photo.png" class="rounded-circle" style="width: 5vw" alt="Default Image">
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <a href="#" class="link-offset-2 link-underline link-underline-opacity-0" style="color: #142915; font-size: 30px">John Doe </a>
-                                                    <div>
-                                                        <a href="#" class="btn btn-primary" style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See Gardens</a>
+                                                        <a th:href="@{${viewFriendsGardensUriString}(friendId=${friend.getId()})}"
+                                                           class="btn btn-primary"
+                                                           style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">See
+                                                            Gardens</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -147,8 +95,62 @@
                     <h3>Incoming Requests</h3>
                     <table class="table table-borderless">
                         <tbody>
-                        <tr>
-                            <td>friend card</td>
+                        <tr th:if="${requestService.findRequestByReceiver(user).size() == 0}">
+                            <td>
+                                <div class="card" style="width:25vw">
+                                    <div class="card-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <p style="color: #142915; font-size: 20px"
+                                                       th:text="'No Pending Friend Requests'"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:each="request : ${requestService.findRequestByReceiver(user)}">
+                            <form th:action="@{${manageFriendsUri}}" method="post">
+                                <td>
+                                    <div class="card" style="width:25vw">
+                                        <div class="card-body">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <img th:src="@{${request.getSender().getProfilePictureFilePath()}}"
+                                                             class="rounded-circle" style="width: 5vw"
+                                                             alt="Profile Image">
+                                                    </div>
+                                                    <div class="col-sm-8">
+                                                        <a href="#"
+                                                           class="link-offset-2 link-underline link-underline-opacity-0"
+                                                           style="color: #142915; font-size: 30px"
+                                                           th:text="${request.getSender().getName()}"></a>
+                                                        <div>
+                                                            <button th:name="action" th:type="submit"
+                                                                    th:value="'Accept'"
+                                                                    class="btn btn-primary"
+                                                                    style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">
+                                                                Accept
+                                                            </button>
+                                                            <button th:name="action" th:type="submit"
+                                                                    th:value="'Decline'"
+                                                                    class="btn btn-primary"
+                                                                    style="border-color: #7c2f2f; width: 100px; font-size: 12px; background-color: #7c2f2f">
+                                                                Decline
+                                                            </button>
+                                                            <input type="hidden" th:name="request"
+                                                                   th:value="${request.getId()}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </form>
                         </tr>
                         </tbody>
                     </table>
@@ -157,8 +159,58 @@
                     <h3>Outgoing Requests</h3>
                     <table class="table table-borderless">
                         <tbody>
-                        <tr>
-                            <td>friend card</td>
+                        <tr th:if="${requestService.findRequestBySender(user).size() == 0}">
+                            <td>
+                                <div class="card" style="width:25vw">
+                                    <div class="card-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <p style="color: #142915; font-size: 20px"
+                                                       th:text="'No Sent Friend Requests'"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:each="request : ${requestService.findRequestBySender(user)}">
+                            <form th:action="@{${manageFriendsUri}}" method="post">
+                                <td>
+                                    <div class="card" style="width:25vw">
+                                        <div class="card-body">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <img th:src="@{${request.getReceiver().getProfilePictureFilePath()}}"
+                                                             class="rounded-circle" style="width: 5vw"
+                                                             alt="Profile Image">
+                                                    </div>
+                                                    <div class="col-sm-8">
+                                                        <a href="#"
+                                                           class="link-offset-2 link-underline link-underline-opacity-0"
+                                                           style="color: #142915; font-size: 30px"
+                                                           th:text="${request.getReceiver().getName()}"></a>
+                                                        <div>
+                                                            <p style="color: #142915; font-size: 20px"
+                                                               th:text="${request.getStatus().toString()}"></p>
+                                                            <button th:name="action" th:type="submit"
+                                                                    th:value="'Cancel'"
+                                                                    class="btn btn-primary"
+                                                                    style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">
+                                                                Cancel
+                                                            </button>
+                                                            <input type="hidden" th:name="request"
+                                                                   th:value="${request.getId()}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </form>
                         </tr>
                         </tbody>
                     </table>
