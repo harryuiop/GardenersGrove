@@ -86,8 +86,6 @@ public class ViewGardenController extends GardensSidebar {
                     boolean owner,
                     Model model,
                     String... errorMessages
-    ) {
-                    String...errorMessages
     ) throws InterruptedException {
         this.updateGardensSidebar(model, gardenService, userService);
 
@@ -220,6 +218,7 @@ public class ViewGardenController extends GardensSidebar {
         return "redirect:" + viewGardenUri(gardenId);
     }
 
+
     /**
      * Create new tag for a garden.
      *
@@ -231,18 +230,16 @@ public class ViewGardenController extends GardensSidebar {
      *                               or does not exist.
      */
     @PostMapping(NEW_GARDEN_TAG_URI_STRING)
-    public String submitGardenTag(
-            @PathVariable long gardenId,
-            @RequestParam(required = false) String tagName,
-            Model model
-    ) throws NoSuchGardenException {
     public String submitGardenTag(Model model,
-                                  @PathVariable long gardenId,
-                                  @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException, InterruptedException {
+        @PathVariable long gardenId,
+        @RequestParam(name = "tagName", required = false),
+        String tagName) throws NoSuchGardenException, InterruptedException {
+
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) {
             throw new NoSuchGardenException(gardenId);
         }
+
         Garden garden = optionalGarden.get();
         String errorMessages = ErrorChecker.tagNameErrors(tagName);
 
@@ -263,5 +260,6 @@ public class ViewGardenController extends GardensSidebar {
         );
     }
 
+    }
 
 }
