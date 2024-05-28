@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
@@ -1088,6 +1087,25 @@ class ErrorCheckerTest {
         );
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenDescriptionError", "The description does not match the language standards of the app");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void gardenFormErrors_ProfanityCheckerError_returnsDescriptionError() throws ProfanityCheckingException, InterruptedException {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenThrow(new ProfanityCheckingException("Failed to check for profanity"));
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String description = "Shithead";
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, description, country, city, streetAddress, suburb, postcode
+        );
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("profanityCheckError", "Garden cannot be made public");
         Assertions.assertEquals(correctErrors, errors);
     }
 
