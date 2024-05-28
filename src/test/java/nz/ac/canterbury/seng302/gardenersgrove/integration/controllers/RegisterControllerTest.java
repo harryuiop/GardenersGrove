@@ -1,6 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.FriendRequestRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
@@ -12,16 +14,15 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,25 +36,32 @@ class RegisterControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private PlantRepository plantRepository;
+
     @Autowired
     private GardenRepository gardenRepository;
+
     @Autowired
     private FriendRequestRepository friendRequestRepository;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    @SpyBean
+    private FormValuesValidator mockFormValuesValidator;
 
     @MockBean
     private EmailSenderService emailSenderService;
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws ProfanityCheckingException, InterruptedException {
         plantRepository.deleteAll();
         gardenRepository.deleteAll();
         friendRequestRepository.deleteAll();
         userRepository.deleteAll();
         Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
     }
 
     @Test
@@ -65,8 +73,6 @@ class RegisterControllerTest {
         String password = "Password100%";
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .param("email", email)
@@ -85,7 +91,7 @@ class RegisterControllerTest {
         assertEquals(firstName, user.getFirstName());
         assertEquals(lastName, user.getLastName());
         assertEquals(email, user.getEmail());
-        assertTrue(encoder.matches(password, user.getPassword()));
+        assertTrue(passwordEncoder.matches(password, user.getPassword()));
         assertEquals(dateOfBirth, user.getDob());
     }
 
@@ -99,8 +105,6 @@ class RegisterControllerTest {
         String passwordConfirm = "Password100%";
         String dateOfBirth = String.valueOf(LocalDate.now().minusYears(20));
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .param("email", email)
                         .param("firstName", firstName)
@@ -118,7 +122,7 @@ class RegisterControllerTest {
         assertEquals(firstName, user.getFirstName());
         assertEquals(lastName, user.getLastName());
         assertEquals(email, user.getEmail());
-        assertTrue(encoder.matches(password, user.getPassword()));
+        assertTrue(passwordEncoder.matches(password, user.getPassword()));
         assertEquals(dateOfBirth, user.getDob());
     }
 

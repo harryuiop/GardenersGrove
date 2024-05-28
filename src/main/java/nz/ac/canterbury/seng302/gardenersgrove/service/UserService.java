@@ -1,14 +1,17 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.friends.SearchedUserResult;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation.*;
@@ -33,38 +36,6 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        User user1 = new User
-                ("user1@gmail.com", "Default", "User", "Password1!", "2000-01-01");
-        user1.setConfirmation(true);
-        User user2 = new User
-                ("user2@gmail.com", "Jack", "Doe", "Password1!", "2000-01-01");
-        user2.setConfirmation(true);
-        User user3 = new User
-                ("user3@gmail.com", "John", "Doe", "Password1!", "2000-01-01");
-        user3.setConfirmation(true);
-        User user4 = new User
-                ("user4@gmail.com", "Jane", "Doe", "Password1!", "2000-01-01");
-        user4.setConfirmation(true);
-        User user5 = new User
-                ("user5@gmail.com", "Joe", "Doe", "Password1!", "2000-01-01");
-        user5.setConfirmation(true);
-        User user6 = new User
-                ("user6@gmail.com", "Josephine", "Doe", "Password1!", "2000-01-01");
-        user6.setConfirmation(true);
-        User user7 = new User
-                ("user7@gmail.com", "Justin", "Doe", "Password1!", "2000-01-01");
-        user7.setConfirmation(true);
-        User user8 = new User
-                ("user8@gmail.com", "Janet", "Doe", "Password1!", "2000-01-01");
-        user8.setConfirmation(true);
-        this.addUsers(user1);
-        this.addUsers(user2);
-        this.addUsers(user3);
-        this.addUsers(user4);
-        this.addUsers(user5);
-        this.addUsers(user6);
-        this.addUsers(user7);
-        this.addUsers(user8);
     }
 
     /**
@@ -197,4 +168,47 @@ public class UserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
         return encoder.encode(passwordInPlainText);
     }
+
+    /**
+     * Gets all the users in the repository and returns a list of them all.
+     * @return a list of all the users in the repository.
+     */
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * Checks if any of the users' names or emails contain the given string.
+     * @param searchString a string entered by the user in search of a user.
+     * @return a list of users whos' names or emails contain the string.
+     */
+    /**
+     * Checks if any of the users' names or emails contain the given string.
+     * @param searchString a string entered by the user in search of a user.
+     * @param loggedInUser User that is logged in
+     * @param friendRequestService Friend request service, used to find status in relation to logged-in user.
+     * @return a list of users whos' names or emails contain the string and their status in relation to the
+     * logged-in user.
+     */
+    public List<SearchedUserResult> getSearchedUserAndFriendStatus(String searchString, User loggedInUser, FriendRequestService friendRequestService, FriendshipService friendshipService) {
+        List<SearchedUserResult> searchResults = new ArrayList<>();
+        for (User user: getAllUsers()) {
+            if ((user.getEmail()).equalsIgnoreCase(searchString) ||
+                    (user.getName()).equalsIgnoreCase(searchString)) {
+
+                if ( user == loggedInUser) {
+                    searchResults.add(new SearchedUserResult(user, Status.SELF));
+                } else {
+                    Status status = friendshipService.getFriends(loggedInUser).contains(user) ? Status.FRIENDS : Status.SEND_REQUEST;
+                    List<FriendRequest> friendRequests = friendRequestService.findRequestBySenderAndReceiver(loggedInUser, user);
+                    if (!friendRequests.isEmpty()) {
+                        status =  friendRequests.getFirst().getStatus();
+                    }
+                    searchResults.add(new SearchedUserResult(user, status));
+                }
+            }
+        }
+        return searchResults;
+    }
+
 }

@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import jakarta.annotation.PostConstruct;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendRequestException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Friendship;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
@@ -28,17 +27,6 @@ public class FriendshipService {
     public FriendshipService(FriendshipRepository friendshipRepository, UserService userService) {
         this.friendshipRepository = friendshipRepository;
         this.userService = userService;
-    }
-
-    @PostConstruct
-    public void addDefaults() {
-        User user1 = userService.getUserById(1);
-        User user2 = userService.getUserById(2);
-        User user3 = userService.getUserById(3);
-        User user4 = userService.getUserById(4);
-        this.addFriend(user1, user2);
-        this.addFriend(user1, user3);
-        this.addFriend(user1, user4);
     }
 
     public void addFriend(User friend1, User friend2) {

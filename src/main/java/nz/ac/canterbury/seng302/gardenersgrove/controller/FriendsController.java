@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendRequestException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
@@ -23,17 +24,27 @@ import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
+/**
+ * Controls the manage friends page which displays current friends and, incoming and outgoing friend requests.
+ */
 @Controller
-public class FriendsController {
+public class FriendsController extends GardensSidebar {
 
-    Logger logger = LoggerFactory.getLogger(GardenController.class);
+    Logger logger = LoggerFactory.getLogger(FriendsController.class);
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 
     private List<String> requestActions = new ArrayList<String>(Arrays.asList("Accept", "Decline", "Cancel"));
 
-    private FriendshipService friendshipService;
+    private final FriendshipService friendshipService;
 
+    /**
+     * Constructor for controller of manage friends page
+     *
+     * @param userService          used to get users from ids
+     * @param friendRequestService used to change the status of friend requests
+     * @param friendshipService    used to adjust friendships between users
+     */
     @Autowired
     public FriendsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService) {
         this.userService = userService;
@@ -41,6 +52,11 @@ public class FriendsController {
         this.friendshipService = friendshipService;
     }
 
+    /**
+     * Fills out the manage friends template before displaying it to the user.
+     * @param   model Connects the template to the information
+     * @return  manage friends page displayed to user
+     */
     @GetMapping(MANAGE_FRIENDS_URI_STRING)
     public String getFriendsPage(Model model) {
         logger.info("GET {}", viewFriendsUri());
@@ -50,11 +66,22 @@ public class FriendsController {
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
         model.addAttribute("requestService", friendRequestService);
         model.addAttribute("friendshipService", friendshipService);
+        model.addAttribute("viewAllGardensUri", viewAllGardensUri());
+        model.addAttribute("newGardenUri", newGardenUri());
+        model.addAttribute("searchResultsUri", searchResultsUri());
+        model.addAttribute("search", "");
         return "manageFriends";
     }
 
+    /**
+     * Called when a friend request is accepted, declined, canceled or a friend is removed
+     * @param action states if there hase been a request accepted, declined or cancelled or otherwise a friend removed
+     * @param request is the id of the friend or request being altered
+     * @return a redirect to the manage friends page
+     * @throws NoSuchFriendRequestException
+     */
     @PostMapping(MANAGE_FRIENDS_URI_STRING)
-    public String submitFriendsPage(Model model, @RequestParam String action, @RequestParam Long request) throws NoSuchFriendRequestException {
+    public String submitFriendsPage(@RequestParam String action, @RequestParam Long request) throws NoSuchFriendRequestException {
         logger.info("POST {}", viewFriendsUri());
         if (requestActions.contains(action)) {
             Optional<FriendRequest> optionalFriendRequest = friendRequestService.findRequestById(request);

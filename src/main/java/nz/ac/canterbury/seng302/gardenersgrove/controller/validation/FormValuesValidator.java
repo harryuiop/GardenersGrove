@@ -1,26 +1,24 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
-import nz.ac.canterbury.seng302.gardenersgrove.controller.GardenController;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ProfanityChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.Objects;
 
 /**
  * This class is used to provide static methods for validation of fields.
  */
+@Component
 public class FormValuesValidator {
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
     static String namePattern = "^[a-zA-Z\\-' ]+$";
     static String tagPattern = "^[a-zA-Z0-9\\-'\"_ ]+$";
-    static Logger logger = LoggerFactory.getLogger(GardenController.class);
+    static Logger logger = LoggerFactory.getLogger(FormValuesValidator.class);
 
     /**
      * Checks if a given string contains inappropriate language
@@ -28,22 +26,8 @@ public class FormValuesValidator {
      * @param string is the test that needs checking
      * @return true if contains profanity, false otherwise
      */
-    public static boolean checkProfanity(String string) throws Exception {
-        string = string.replace(" ", "%20");
-        URL url = new URL("https://www.purgomalum.com/service/containsprofanity?text=" + string);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setConnectTimeout(1000);
-        con.setReadTimeout(1000);
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        return Objects.equals(String.valueOf(content), "true");
+    public boolean checkProfanity(String string) throws ProfanityCheckingException, InterruptedException {
+        return ProfanityChecker.checkProfanity(string);
     }
 
     /**
@@ -52,7 +36,7 @@ public class FormValuesValidator {
      * @param string represents the string being checked for correct characters
      * @return whether it is valid or not.
      */
-    public static boolean checkContainsText(String string) {
+    public boolean checkContainsText(String string) {
         return string == null || string.isEmpty() || string.chars().anyMatch(Character::isAlphabetic);
     }
 
@@ -62,7 +46,7 @@ public class FormValuesValidator {
      * @param string represents the string being checked for correct characters
      * @return whether it is valid or not.
      */
-    public static boolean checkCharacters(String string) {
+    public boolean checkCharacters(String string) {
         return string.matches("[a-zA-Z0-9 .,\\-']*");
     }
 
@@ -72,7 +56,7 @@ public class FormValuesValidator {
      * @param string represents the string being checked for correct characters
      * @return whether it is valid or not.
      */
-    public static boolean checkCharactersWithForwardSlash(String string) {
+    public boolean checkCharactersWithForwardSlash(String string) {
         return string.matches("[a-zA-Z0-9 .,\\-'/]*");
     }
 
@@ -82,7 +66,7 @@ public class FormValuesValidator {
      * @param string represents the string being checked
      * @return false to show there are no errors
      */
-    public static boolean checkBlank(String string) {
+    public boolean checkBlank(String string) {
         if (string != null) {
             return string.isBlank();
         }
@@ -95,7 +79,7 @@ public class FormValuesValidator {
      * @param size the size being checked
      * @return false if there is no error
      */
-    public static boolean checkSize(Float size) {
+    public boolean checkSize(Float size) {
         return size == null || size > 0;
     }
 
@@ -106,7 +90,7 @@ public class FormValuesValidator {
      * @param description the description of the plant added by the user in the plant form
      * @return true if the description is shorter than 512 characters otherwise returns false
      */
-    public static boolean checkDescription(String description) {
+    public boolean checkDescription(String description) {
         return description == null || description.length() <= 512;
     }
 
@@ -116,7 +100,7 @@ public class FormValuesValidator {
      * @param count the number entered by the user in the plant form as the number of these plants in said garden
      * @return true if the number is positive or there is no entry. If the plant is negative returns false
      */
-    public static boolean checkCount(Integer count) {
+    public boolean checkCount(Integer count) {
         return count == null || count > 0;
     }
 
@@ -127,7 +111,7 @@ public class FormValuesValidator {
      * @param value The string value to check, used in plant count.
      * @return  true if the number only contains digits and less than 1 billion and is not "0", otherwise false.
      */
-    public static boolean checkValidPlantCount(String value) {
+    public boolean checkValidPlantCount(String value) {
         return value == null || value.matches("^(?!0$)[0-9]{0,9}$");
     }
 
@@ -137,7 +121,7 @@ public class FormValuesValidator {
      * @param name the name entered in the user form that is to be checked
      * @return true if the name is less than or equal to 64, false if greater than
      */
-    public static boolean checkNameLength(String name) {
+    public boolean checkNameLength(String name) {
         return name.length() <= 64;
     }
 
@@ -147,7 +131,7 @@ public class FormValuesValidator {
      * @param name the name inputed by the user in the form
      * @return true if name only include letters and -, otherwise false
      */
-    public static boolean checkUserName(String name) {
+    public boolean checkUserName(String name) {
         return name.matches(namePattern);
     }
 
@@ -158,7 +142,7 @@ public class FormValuesValidator {
      * @param confirmer should be the password re-entered by the user
      * @return true if the password and confirmer are the same, otherwise false.
      */
-    public static boolean checkConfirmPasswords(String password, String confirmer) {
+    public boolean checkConfirmPasswords(String password, String confirmer) {
         return password.equals(confirmer);
     }
 
@@ -168,7 +152,7 @@ public class FormValuesValidator {
      * @param dob The inputted day the user was born in format YYYY/MM/DD in a string
      * @return true if the user is younger than 100, otherwise false
      */
-    public static boolean checkUnder120(String dob) {
+    public boolean checkUnder120(String dob) {
         try {
             LocalDate dobDate = LocalDate.parse(dob);
             LocalDate currentDate = LocalDate.now();
@@ -188,7 +172,7 @@ public class FormValuesValidator {
      *                    provided email.
      * @return bool: Whether the email is in use or not.
      */
-    public static boolean emailInUse(String email, UserService userService) {
+    public boolean emailInUse(String email, UserService userService) {
         return userService.getUserByEmail(email) == null;
     }
 
@@ -199,7 +183,7 @@ public class FormValuesValidator {
      * @param tag tag name inputted by user
      * @return true if tag name is valid, false otherwise
      */
-    public static boolean checkTagName(String tag) {
+    public boolean checkTagName(String tag) {
         return tag.matches(tagPattern);
     }
 
@@ -210,7 +194,7 @@ public class FormValuesValidator {
      * @param tag tag name inputted by user
      * @return true if string length is less than or equal to 25, false otherwise
      */
-    public static boolean checkTagNameLength(String tag) {
+    public boolean checkTagNameLength(String tag) {
         return tag.length() <= 25;
     }
 }

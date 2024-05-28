@@ -1,3 +1,6 @@
+// Used for sending rest requests to deployed application
+const possible_deployments = ['test', 'prod']
+
 const tagField = document.getElementById('tagName');
 const autocompleteList = document.getElementById('autocomplete-list');
 const tagSubmitBtn = document.getElementById('tag-submit');
@@ -32,7 +35,9 @@ tagField.addEventListener('input', function() {
  * @param query Input from tag name search box.
  */
 function updateAutocomplete(query) {
-    fetch(`/tag/show-autocomplete?query=${query}`)
+    const deployment = window.location.pathname.split('/')[1];
+    const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
+    fetch( `${baseUri}/tag/show-autocomplete?query=${query}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

@@ -1,12 +1,16 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchPlantException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchPlantException;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
@@ -41,6 +45,7 @@ public class ViewGardenController extends GardensSidebar {
     private final UserService userService;
     private final FriendshipService friendshipService;
     private final TagService tagService;
+    private final ErrorChecker errorChecker;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -50,14 +55,26 @@ public class ViewGardenController extends GardensSidebar {
      * @param userService   A User database access object.
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
         this.friendshipService = friendshipService;
         this.tagService = tagService;
+        this.errorChecker = errorChecker;
     }
 
+    /**
+     * Returns the view page for a specific garden
+     * @param garden        The garden being viewed
+     * @param editGardenUri The URI for edit garden
+     * @param newPlantUri   The URi for new plant form
+     * @param plants        The plants in the garden
+     * @param owner         Whether the viewer is the owner of the garden or not
+     * @param model         Puts the data into the template
+     * @param errorMessages Any plant image errors that occurred when re-loading
+     * @return              The view garden page is displayed to user
+     */
     private String loadGardenPage(
                     Garden garden,
                     URI editGardenUri,
@@ -65,7 +82,7 @@ public class ViewGardenController extends GardensSidebar {
                     List<Plant> plants,
                     boolean owner,
                     Model model,
-                    String...errorMessages
+                    String... errorMessages
     ) {
         this.updateGardensSidebar(model, gardenService, userService);
 
@@ -82,31 +99,36 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
+        model.addAttribute("makeGardenPublic", makeGardenPublicUri(garden.getId()));
         return "viewGarden";
     }
 
     /**
      * Set up view garden page and display attributes.
      *
+     * @param gardenId  The id of the garden being viewed
+     * @param model     Puts the data into the template to be viewed
      * @return Thyme leaf html template of the view garden page.
      */
     @GetMapping(VIEW_GARDEN_URI_STRING)
     public String displayGarden(
-                    @PathVariable long gardenId,
-                    Model model
+            @PathVariable long gardenId,
+            Model model
     ) throws NoSuchGardenException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
+        if (optionalGarden.isEmpty() || (optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) &&
+                !optionalGarden.get().isGardenPublic()){
             throw new NoSuchGardenException(gardenId);
         }
+        boolean owner = optionalGarden.get().getOwner() == userService.getAuthenticatedUser();
         return loadGardenPage(
                         optionalGarden.get(),
                         editGardenUri(gardenId),
                         newPlantUri(gardenId),
                         plantService.getAllPlantsInGarden(optionalGarden.get()),
-                        true,
+                        owner,
                         model
         );
     }
@@ -150,17 +172,17 @@ public class ViewGardenController extends GardensSidebar {
      */
     @PostMapping(UPLOAD_PLANT_IMAGE_URI_STRING)
     public String submitPlantImage(
-                    @PathVariable long gardenId,
-                    @PathVariable long plantId,
-                    @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
-                    RedirectAttributes redirectAttributes
+            @PathVariable long gardenId,
+            @PathVariable long plantId,
+            @RequestParam(name = "plantImage", required = false) MultipartFile imageFile,
+            RedirectAttributes redirectAttributes
     ) throws NoSuchPlantException {
         logger.info("POST {}", uploadPlantImageUri(gardenId, plantId));
 
         Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
         if (optionalPlant.isEmpty()) {
             throw new NoSuchPlantException(
-                            "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
+                    "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
             );
         }
         Plant plant = optionalPlant.get();
@@ -187,42 +209,66 @@ public class ViewGardenController extends GardensSidebar {
     }
 
     /**
+     * Changes the garden so that it is public (viewable by all)
+     * @param gardenId                  The Id of the garden being made public
+     * @param publicGarden              A string of whether the garden should be public or not
+     * @param redirectAttributes        Add attributes to that are still there after the redirect
+     * @return                          The edit garden page the user was already on
+     * @throws NoSuchGardenException    If the garden can't be found by the given Id will throw this error
+     */
+    @PostMapping(MAKE_GARDEN_PUBLIC_STRING)
+    public String makeGardenPublic(@PathVariable long gardenId, @RequestParam(required = false)
+                                    String publicGarden,
+                                    RedirectAttributes redirectAttributes)
+    throws NoSuchGardenException {
+        logger.info("POST make public");
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            throw new NoSuchGardenException(gardenId);
+        }
+        boolean isGardenPublic = false;
+        if (optionalGarden.get().getVerifiedDescription()) {
+            isGardenPublic = publicGarden != null && (publicGarden.equals("true"));
+        } else {
+            redirectAttributes.addFlashAttribute("gardenDescriptionError",
+                    "Garden description has not been checked against our langauge standards. " +
+                            "You must edit your description before this garden can be made public");
+        }
+        optionalGarden.get().setIsGardenPublic(isGardenPublic);
+        gardenService.saveGarden(optionalGarden.get());
+        return "redirect:" + viewGardenUri(gardenId);
+    }
+
+    /**
      * Create new tag for a garden.
      *
-     * @param model Model to add attributes to
-     * @param gardenId Id of garden
-     * @param tagName User inputted tag name
+     * @param redirectAttributes    Add attributes to that are still there after the redirect
+     * @param gardenId              The garden's ID number
+     * @param tagName               User inputted tag name
      * @return Redirect to view garden page
      * @throws NoSuchGardenException If garden is not found, either by wrong/unauthorized owner
-     * or does not exist.
+     *                               or does not exist.
      */
     @PostMapping(NEW_GARDEN_TAG_URI_STRING)
-    public String submitGardenTag(Model model,
-                                  @PathVariable long gardenId,
-                                  @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException {
+    public String submitGardenTag(
+            @PathVariable long gardenId,
+            @RequestParam(required = false) String tagName,
+            RedirectAttributes redirectAttributes
+    ) throws NoSuchGardenException {
+        logger.info("POST tags");
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
+        if (optionalGarden.isEmpty() || optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
-        String errorMessages = ErrorChecker.tagNameErrors(tagName);
-
+        String errorMessages = errorChecker.tagNameErrors(tagName);
 
         if (!errorMessages.isEmpty())
-            model.addAttribute("tagErrors", errorMessages);
+            redirectAttributes.addFlashAttribute("tagErrors", errorMessages);
         else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
             tagService.saveTag(tagName, garden);
 
-
-        return loadGardenPage(
-                optionalGarden.get(),
-                editGardenUri(gardenId),
-                newPlantUri(gardenId),
-                plantService.getAllPlantsInGarden(optionalGarden.get()),
-                true,
-                model,
-                errorMessages
-        );
+        return "redirect:" + viewGardenUri(gardenId);
     }
 
 
