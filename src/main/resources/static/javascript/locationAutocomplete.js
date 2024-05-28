@@ -1,3 +1,6 @@
+// Used for sending rest requests to deployed application
+const possible_deployments = ['test', 'prod']
+
 const streetAddressField = document.getElementById('streetAddress');
 const countryField = document.getElementById('country');
 const cityField = document.getElementById('city');
@@ -37,7 +40,9 @@ streetAddressField.addEventListener('input', function() {
  * @param country Input from country field, to find results only in specified country
  */
 function updateAutocomplete(query, country) {
-    fetch(`/maptiler/search-results?query=${query}&country=${country}`)
+    const deployment = window.location.pathname.split('/')[1];
+    const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
+    fetch(`${baseUri}/maptiler/search-results?query=${query}&country=${country}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
