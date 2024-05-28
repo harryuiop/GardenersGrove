@@ -6,16 +6,16 @@ import jakarta.persistence.*;
  * Entity class representing a password reset.
  * Includes the token, UUID and related user id.
  */
-@Entity(name = "resetPasswordToken")
+@Entity
 public class ResetPasswordToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "token")
+    @Column
     private String token;
 
-    @Column(name = "user-id")
+    @Column
     private long userId;
 
     /**
