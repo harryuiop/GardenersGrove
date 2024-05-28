@@ -12,7 +12,7 @@
         </div>
         <a
           class="navbar-brand"
-          th:href="@{/profile}"
+          th:href="@{/}"
           style="margin-left: 20px; margin-right: 40px"
           >Gardeners Grove</a
         >
@@ -48,7 +48,7 @@
                 <li>
                   <a class="dropdown-item" th:href="@{/profile}">My Profile</a>
                 </li>
-                <li><a class="dropdown-item" href="#">Friends</a></li>
+                <li><a class="dropdown-item" th:href="@{/friends}">Friends</a></li>
               </ul>
             </div>
 
@@ -90,6 +90,15 @@
               >
                 Create
               </button>
+              <ul
+                      class="dropdown-menu bg-dark-subtle"
+                      aria-labelledby="dropdownMenuButton1"
+                      style="background-color: #344e41"
+              >
+                <li>
+                  <a class="dropdown-item" th:href="@{${newGardenUri}}">Create Garden</a>
+                </li>
+              </ul>
             </div>
 
             <div class="dropdown">
@@ -105,13 +114,9 @@
               </button>
             </div>
           </ul>
-          <a
-            class="nav-link active"
-            aria-current="page"
-            href="#"
-            style="margin-right: 20px"
-            >Log Out</a
-          >
+          <form th:action="@{/logout}" method="post" name="registerForm">
+            <input type="submit" value="Logout" class="btn me-3 btn-link p-0 m-0 border-0 text-decoration-none text-black">
+          </form>
         </div>
       </div>
     </nav>
