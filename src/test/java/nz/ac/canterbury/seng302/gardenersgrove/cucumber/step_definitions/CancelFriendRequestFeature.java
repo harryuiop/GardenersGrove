@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 
-import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -14,6 +13,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +75,12 @@ public class CancelFriendRequestFeature {
             "Password1!", "01/01/2000"
     );
 
-    @BeforeAll
-    public void before_or_after_all() {
+    @BeforeEach
+    public void before() {
         if (!usersCreated) {
             userService.addUsers(user1);
             userService.addUsers(user2);
+            usersCreated = true;
         }
     }
 
