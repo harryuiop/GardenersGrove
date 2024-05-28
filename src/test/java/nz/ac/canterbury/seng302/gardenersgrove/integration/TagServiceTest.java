@@ -52,13 +52,13 @@ class TagServiceTest {
         }
         gardenRepository.deleteAll();
         tagRepositorySpy.deleteAll();
-        garden1 = new Garden(user, "Test Garden1", null, new Location("New Zealand", "Christchurch"), null);
+        garden1 = new Garden(user, "Test Garden1", null, new Location("New Zealand", "Christchurch"), null, true);
         gardenRepository.save(garden1);
     }
 
     @Test
     void saveExistingTag() {
-        Garden garden2 = new Garden(user, "Test Garden2", null, new Location("New Zealand", "Christchurch"), null);
+        Garden garden2 = new Garden(user, "Test Garden2", null, new Location("New Zealand", "Christchurch"), null, true);
         gardenRepository.save(garden2);
 
         tagService.saveTag("tag", garden1);
