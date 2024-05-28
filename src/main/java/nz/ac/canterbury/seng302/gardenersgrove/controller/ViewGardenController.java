@@ -124,9 +124,6 @@ public class ViewGardenController extends GardensSidebar {
                     @PathVariable long gardenId,
                     Model model
     ) throws NoSuchGardenException, InterruptedException {
-            @PathVariable long gardenId,
-            Model model
-    ) throws NoSuchGardenException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
@@ -153,7 +150,7 @@ public class ViewGardenController extends GardensSidebar {
             @PathVariable long gardenId,
             @PathVariable long friendId,
             Model model
-    ) throws NoSuchGardenException {
+    ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewFriendsGardenUri(friendId, gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
@@ -232,8 +229,7 @@ public class ViewGardenController extends GardensSidebar {
     @PostMapping(NEW_GARDEN_TAG_URI_STRING)
     public String submitGardenTag(Model model,
         @PathVariable long gardenId,
-        @RequestParam(name = "tagName", required = false),
-        String tagName) throws NoSuchGardenException, InterruptedException {
+        @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException, InterruptedException {
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) {
@@ -259,7 +255,5 @@ public class ViewGardenController extends GardensSidebar {
                 errorMessages
         );
     }
-
-    }
-
 }
+
