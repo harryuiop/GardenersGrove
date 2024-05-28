@@ -27,11 +27,12 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  */
 @Controller
 public class RegisterController {
-    Logger logger = LoggerFactory.getLogger(RegisterController.class);
+    private final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-    UserService userService;
+    private final UserService userService;
 
-    EmailSenderService emailSenderService;
+    private final EmailSenderService emailSenderService;
+    private final ErrorChecker errorChecker;
 
     /**
      * The RegisterController constructor need not be called ever.
@@ -41,9 +42,10 @@ public class RegisterController {
      * @param emailSenderService The email sender service.
      */
     @Autowired
-    public RegisterController(UserService userService, EmailSenderService emailSenderService) {
+    public RegisterController(UserService userService, EmailSenderService emailSenderService, ErrorChecker errorChecker) {
         this.userService = userService;
         this.emailSenderService = emailSenderService;
+        this.errorChecker = errorChecker;
     }
 
     /**
@@ -105,7 +107,7 @@ public class RegisterController {
             dateOfBirthValid = false;
         }
 
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(
+        Map<String, String> errors = errorChecker.registerUserFormErrors(
                 firstName,
                 lastName,
                 noSurname,

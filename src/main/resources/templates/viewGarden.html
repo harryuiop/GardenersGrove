@@ -20,7 +20,25 @@
     <article class="in-line"><p>Size: </p>
         <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
     </article>
-    <article class="in-line"><p>Description: </p>
+    <form th:if="${owner}" th:action="@{${makeGardenPublic}}" method="post">
+        <label for="publicGarden" class="publicGardenCheckbox">
+            <input
+                    type="checkbox"
+                    id="publicGarden"
+                    th:name="publicGarden"
+                    th:checked="${garden.isGardenPublic()}"
+                    th:value="${garden.isGardenPublic()}"
+                    autofocus
+                    autocomplete="off"
+                    onchange="submitPublic()"
+            />
+            Public Garden
+        </label>
+        <input type="hidden" th:name="gardenId" th:value="${garden.getId()}" />
+        <button class="form-button" type="submit" th:id="submitPublicGarden" style="display: none;">Submit</button>
+        </form>
+        <p class="errorMessage" th:text="${gardenDescriptionError}"></p>
+        <article class="in-line"><p>Description: </p>
         <p th:text="${garden.getDescription()}"></p></article>
 
     <!-- Garden tags -->
@@ -31,7 +49,7 @@
         </span>
     </div>
 
-    <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
+    <form th:action="@{${tagFormSubmissionUri}}" th:if="${owner}" method="post" id="tag-form" autocomplete="off">
         <label class="form-input" for="tagName"> Create new tag: </label>
         <div style="display: flex;">
             <div>
@@ -118,6 +136,15 @@
 
         // Currently clicks the first form only as getting by id.
         document.getElementById(id + 'submit').click()
+    }
+    function submitPublic() {
+        var checkbox = document.getElementById("publicGarden")
+        if (checkbox.checked) {
+            checkbox.value = "true";
+        } else {
+            checkbox.value = "false";
+        }
+        document.getElementById("submitPublicGarden").click()
     }
 </script>
 <script type="text/javascript"

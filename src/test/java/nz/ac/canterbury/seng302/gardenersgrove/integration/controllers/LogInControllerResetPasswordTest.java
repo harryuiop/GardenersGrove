@@ -1,6 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ResetPasswordTokenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -50,8 +53,11 @@ class LogInControllerResetPasswordTest {
     @MockBean
     private EmailSenderService emailSenderService;
 
+    @SpyBean
+    private FormValuesValidator mockFormValuesValidator;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws ProfanityCheckingException, InterruptedException {
         Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any()))
                 .thenReturn(true);
 
@@ -71,6 +77,9 @@ class LogInControllerResetPasswordTest {
         resetPasswordTokenService.addToken(correctTokenStr, user.getUserId());
         correctNewPassword = "Garden1!";
         currentPassword = user.getPassword();
+
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
+
     }
 
     @Test

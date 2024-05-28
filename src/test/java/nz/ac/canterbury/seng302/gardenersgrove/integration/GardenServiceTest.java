@@ -42,7 +42,7 @@ class GardenServiceTest {
         }
         GardenService gardenService = new GardenService(gardenRepository, userService);
         Location location = new Location("New Zealand", "Christchurch");
-        Garden garden = gardenService.saveGarden(new Garden(user, "Test Garden", null, location, 100f));
+        Garden garden = gardenService.saveGarden(new Garden(user, "Test Garden", null, location, 100f, true));
         List<Garden> gardens = gardenRepository.findAllByOwner(user);
         Garden outputGarden = gardens.get(0);
 

@@ -57,30 +57,31 @@ INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
 VALUES (1, 1, 8);
 
 
-INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb, id)
-VALUES ('Christchurch', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 1);
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Christchurch', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
 
-INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb, id)
-VALUES ('Tauranga', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 2);
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Tauranga', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
 
-INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb, id)
-VALUES ('Wellington', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 3);
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Wellington', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
 
-INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb, id)
-VALUES ('Auckland', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL, 4);
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Auckland', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
 
 
-INSERT INTO garden (location_id, name, owner_user_id, size, id)
-VALUES (1, 'Default User''s first Garden', 1, 2, 1);
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description)
+VALUES (1, 'Default User''s first Garden', 'The first garden created.', 1, 2, TRUE, TRUE);
 
-INSERT INTO garden (location_id, name, owner_user_id, size, id)
-VALUES (2, 'Default User''s Second Garden', 1, NULL, 2);
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description)
+VALUES (2, 'Default User''s Second Garden', NULL, 1, NULL, FALSE, TRUE);
 
-INSERT INTO garden (location_id, name, owner_user_id, size, id)
-VALUES (3, 'Second User''s First Garden', 2, 0.5, 3);
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description)
+VALUES (3, 'Second User''s First Garden', 'A demonstration garden.', 2, 0.5, FALSE, TRUE);
 
-INSERT INTO garden (location_id, name, owner_user_id, size, id)
-VALUES (4, 'Second User''s Second Garden', 2, 0.5, 4);
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description)
+VALUES (4, 'Second User''s Second Garden', 'This description needs to be edited first as it is not verified', 2, 0.5,
+        FALSE, FALSE);
 
 
 INSERT INTO plant (count, description, garden_id, image_file_name, name, planted_on, id)
