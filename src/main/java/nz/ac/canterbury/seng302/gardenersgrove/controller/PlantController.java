@@ -197,7 +197,7 @@ public class PlantController extends GardensSidebar {
                 date = LocalDate.parse(dateString);
             }
         } catch (DateTimeParseException exception) {
-            errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
+            errors.put("plantedDateError", "Planted date must be in the format dd-mm-yyyy");
         }
         return date;
     }
