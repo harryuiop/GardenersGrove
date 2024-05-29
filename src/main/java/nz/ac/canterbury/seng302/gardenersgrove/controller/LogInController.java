@@ -10,7 +10,9 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.UrlUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -189,8 +191,10 @@ public class LogInController {
             model.addAttribute("userEmail", userEmail);
         } else {
             model.addAttribute("confirmationMessage", true);
-            if (user != null) emailSenderService.sendEmail(user, "resetPasswordEmail",
-                    req.getRequestURL().toString().split("/login/reset-password/email")[0]);
+            if (user != null) {
+                String baseUrl = req.getHeader(HttpHeaders.ORIGIN);
+                emailSenderService.sendEmail(user, "resetPasswordEmail", baseUrl);
+            }
         }
         return "forgotPasswordForm";
 
