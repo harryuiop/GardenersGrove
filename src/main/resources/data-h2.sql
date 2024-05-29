@@ -115,4 +115,4 @@ INSERT INTO plant (count, description, garden_id, image_file_name, name, planted
 VALUES (10, 'Tenth plant of First User''s first Garden', 1, NULL, 'Plant Ten', NULL);
 
 INSERT INTO plant (count, description, garden_id, image_file_name, name, planted_on)
-VALUES (NULL, 'First plant of Second User''s first Garden', 2, NULL, 'Star Fruit', NULL, 11);
+VALUES (NULL, 'First plant of Second User''s first Garden', 2, NULL, 'Star Fruit', NULL);
