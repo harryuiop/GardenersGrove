@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.sendFriendRequestUri;
@@ -60,6 +62,12 @@ public class SearchResultsController {
         model.addAttribute("sendFriendRequestUri", sendFriendRequestUri());
         model.addAttribute("searchResultsUri", searchResultsUri());
         model.addAttribute("search", searchUser);
+        Map<Long, Long> incomingRequests = new HashMap<>();
+        for (FriendRequest request : friendRequestService.findRequestByReceiver(userService.getAuthenticatedUser())) {
+            incomingRequests.put(request.getSender().getId(), request.getId());
+        }
+        model.addAttribute("incomingRequests", incomingRequests);
+        model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
         return "searchResults";
     }
 
