@@ -1,11 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.components;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 
 import java.util.List;
@@ -29,12 +26,7 @@ public class NavBar {
         model.addAttribute("newGardenUri", newGardenUri());
         model.addAttribute("viewAllGardensUri", viewAllGardensUri());
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        int currentPrincipalName = Integer.parseInt(auth.getName());
-        User user = userService.getUserById(currentPrincipalName);
-
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getAuthenticatedUser());
     }
 
     private List<Garden> getTopNGardens(GardenService gardenService, UserService userService) {
