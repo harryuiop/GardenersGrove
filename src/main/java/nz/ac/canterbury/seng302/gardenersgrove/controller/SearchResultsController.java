@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.friends.SearchedUserResult;
 import org.slf4j.Logger;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.sendFriendRequestUri;
@@ -31,14 +34,17 @@ public class SearchResultsController {
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 
+    private final FriendshipService friendshipService;
+
     /**
      * This sets up the current user service so that the current users can be reached.
      * @param userService the current service being used to get information about the users
      */
     @Autowired
-    public SearchResultsController(UserService userService, FriendRequestService friendRequestService) {
+    public SearchResultsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService) {
         this.userService = userService;
         this.friendRequestService = friendRequestService;
+        this.friendshipService = friendshipService;
     }
 
     /**
@@ -51,11 +57,17 @@ public class SearchResultsController {
     public String getSearchResultsPage(@RequestParam String searchUser, Model model) {
         logger.info("Get /search/result/{}", searchUser);
         List<SearchedUserResult> usersFound = userService.getSearchedUserAndFriendStatus(searchUser,
-                userService.getAuthenticatedUser(), friendRequestService);
+                userService.getAuthenticatedUser(), friendRequestService, friendshipService);
         model.addAttribute("usersFound", usersFound);
         model.addAttribute("sendFriendRequestUri", sendFriendRequestUri());
         model.addAttribute("searchResultsUri", searchResultsUri());
         model.addAttribute("search", searchUser);
+        Map<Long, Long> incomingRequests = new HashMap<>();
+        for (FriendRequest request : friendRequestService.findRequestByReceiver(userService.getAuthenticatedUser())) {
+            incomingRequests.put(request.getSender().getId(), request.getId());
+        }
+        model.addAttribute("incomingRequests", incomingRequests);
+        model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
         return "searchResults";
     }
 

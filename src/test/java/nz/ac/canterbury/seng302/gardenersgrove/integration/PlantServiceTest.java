@@ -4,9 +4,11 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.FriendshipRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -19,7 +21,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 
 @DataJpaTest
-public class PlantServiceTest {
+class PlantServiceTest {
     @Autowired
     private PlantRepository plantRepository;
     private PlantService plantService;
@@ -27,6 +29,10 @@ public class PlantServiceTest {
     @Autowired
     private GardenRepository gardenRepository;
     private GardenService gardenService;
+
+    @Autowired
+    private FriendshipRepository friendshipRepository;
+    private FriendshipService friendshipService;
 
     @Autowired
     private UserRepository userRepository;
@@ -38,7 +44,8 @@ public class PlantServiceTest {
     @BeforeEach
     void setUp() {
         userService = new UserService(userRepository);
-        gardenService = new GardenService(gardenRepository, userService);
+        friendshipService = new FriendshipService(friendshipRepository);
+        gardenService = new GardenService(gardenRepository, userService, friendshipService);
         plantService = new PlantService(plantRepository, userService, gardenService);
         if (user == null) {
             user = new User(

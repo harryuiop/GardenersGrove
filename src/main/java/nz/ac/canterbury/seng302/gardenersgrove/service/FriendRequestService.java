@@ -21,7 +21,7 @@ public class FriendRequestService {
     private final FriendRequestRepository friendRequestRepository;
 
     /**
-     * Constructor for UserService.
+     * Constructor for Friendship Service.
      *
      * @param friendRequestRepository The FriendRequestRepository instance.
      */
@@ -53,4 +53,9 @@ public class FriendRequestService {
     public void updateRequest(FriendRequest request) {
         friendRequestRepository.save(request);
     }
+
+    public void removeRequest(FriendRequest request) {
+        friendRequestRepository.deleteById(request.getId());
+    }
+
 }

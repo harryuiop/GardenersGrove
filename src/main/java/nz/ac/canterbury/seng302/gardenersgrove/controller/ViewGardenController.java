@@ -11,6 +11,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public class ViewGardenController extends NavBar {
     private final GardenService gardenService;
     private final PlantService plantService;
     private final UserService userService;
+    private final FriendshipService friendshipService;
     private final TagService tagService;
     private final ErrorChecker errorChecker;
 
@@ -53,10 +55,11 @@ public class ViewGardenController extends NavBar {
      * @param userService   A User database access object.
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, ErrorChecker errorChecker) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
+        this.friendshipService = friendshipService;
         this.tagService = tagService;
         this.errorChecker = errorChecker;
     }
@@ -125,8 +128,8 @@ public class ViewGardenController extends NavBar {
                         editGardenUri(gardenId),
                         newPlantUri(gardenId),
                         plantService.getAllPlantsInGarden(optionalGarden.get()),
-                owner,
-                model
+                        owner,
+                        model
         );
     }
 
@@ -144,7 +147,7 @@ public class ViewGardenController extends NavBar {
         logger.info("GET {}", viewFriendsGardenUri(friendId, gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty() || !optionalGarden.get().getOwner().getFriends().contains(userService.getAuthenticatedUser())) {
+        if (optionalGarden.isEmpty() || !friendshipService.getFriends(optionalGarden.get().getOwner()).contains(userService.getAuthenticatedUser())) {
             throw new NoSuchGardenException(gardenId);
         }
         return loadGardenPage(
