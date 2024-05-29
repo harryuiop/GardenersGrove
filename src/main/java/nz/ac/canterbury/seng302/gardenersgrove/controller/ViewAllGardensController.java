@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -19,7 +19,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  * This controller defines endpoints as functions with specific HTTP mappings
  */
 @Controller
-public class ViewAllGardensController extends GardensSidebar {
+public class ViewAllGardensController extends NavBar {
     Logger logger = LoggerFactory.getLogger(ViewAllGardensController.class);
 
     private final GardenService gardenService;
@@ -45,24 +45,24 @@ public class ViewAllGardensController extends GardensSidebar {
     @GetMapping(VIEW_ALL_GARDENS_URI_STRING)
     public String viewAllGardens(Model model) {
         logger.info("GET {}", viewAllGardensUri());
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
         model.addAttribute("gardenList", gardenService.getAllGardens(userService));
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
-        model.addAttribute("owner", true);
         return "allGardens";
     }
 
     /**
      * Handles GET requests to the view all gardens endpoint from a friends account.
      *
-     * @param model     The object which passes data to the HTML.
-     * @param friendId  Contains the Id of the friends page that you are accessing.
-     * @return          The view all gardens HTML template.
+     * @param model    The object which passes data to the HTML.
+     * @param friendId Contains the Id of the friends page that you are accessing.
+     * @return The view all gardens HTML template.
      */
     @GetMapping(VIEW_ALL_FRIENDS_GARDENS_URI_STRING)
     public String viewAllFriendsGardens(@PathVariable long friendId, Model model) throws NoSuchFriendException {
         logger.info("GET {}", viewAllFriendsGardensUri(friendId));
-        this.updateGardensSidebar(model, gardenService, userService);
+
+        this.updateGardensNavBar(model, gardenService, userService);
         model.addAttribute("gardenList", gardenService.getAllFriendsGardens(friendId, userService));
         model.addAttribute("viewGardenUriString", VIEW_FRIENDS_GARDEN_URI_STRING);
         model.addAttribute("friendId", friendId);

@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  * depending on authentication status and permissions.
  */
 @Controller
-public class HomeController extends GardensSidebar {
+public class HomeController extends NavBar {
     Logger logger = LoggerFactory.getLogger(HomeController.class);
     private final GardenService gardenService;
     private final UserService userService;
@@ -56,7 +56,7 @@ public class HomeController extends GardensSidebar {
             model.addAttribute("registerUri", registerUri());
             return "landing";
         }
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
         return "home";
     }
 }
