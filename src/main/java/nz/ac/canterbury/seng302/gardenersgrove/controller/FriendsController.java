@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendRequestException;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +26,13 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  * Controls the manage friends page which displays current friends and, incoming and outgoing friend requests.
  */
 @Controller
-public class FriendsController extends GardensSidebar {
+public class FriendsController extends NavBar {
 
     Logger logger = LoggerFactory.getLogger(FriendsController.class);
     private final UserService userService;
     private final FriendRequestService friendRequestService;
 
-    private List<String> requestActions = new ArrayList<String>(Arrays.asList("Accept", "Decline", "Cancel"));
+    private final List<String> requestActions = List.of("Accept", "Decline", "Cancel");
 
     private final FriendshipService friendshipService;
 
