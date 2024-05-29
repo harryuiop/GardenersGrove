@@ -75,8 +75,6 @@ public class LogInController {
                 model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
             } else if (error.equals("Invalid_Email")) {
                 model.addAttribute("emailError", "Email address must be in the form ‘jane@doe.nz’");
-            } else if (error.equals("Token_Expired")) {
-                model.addAttribute("tokenExpiredError", "Reset password link has expired");
             }
         }
 
@@ -104,7 +102,7 @@ public class LogInController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (hashedTokenEntity == null || !encoder.matches(token, hashedTokenEntity.getToken())) {
             logger.info("Invalid token, redirecting to login page");
-            redirectAttributes.addAttribute("error", "Token_Expired");
+            redirectAttributes.addFlashAttribute("tokenExpiredError", "Reset password link has expired");
             return "redirect:" + loginUri();
         }
         model.addAttribute("resetPasswordUri", resetPasswordUri(token, userId));
