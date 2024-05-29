@@ -14,6 +14,10 @@
 <body>
 <div class="container-flex d-flex justify-content-center align-items-center vh-100 login-bg">
     <div>
+        <div class="bg-white py-3 rounded shadow" th:if="${accountActiveMessage} != null" style="margin-bottom: 25px">
+            <p th:text="${accountActiveMessage}"
+               style="font-size: small; font-style: italic; color: navy;"></p>
+        </div>
         <div class="g-col-md-4">
             <div class="bg-white p-5 rounded shadow ">
                 <form th:action="@{${loginUri}}" method="post" name="loginForm" class="">
