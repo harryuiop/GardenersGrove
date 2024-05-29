@@ -10,13 +10,10 @@
     <div class="content">
       <h2 th:text="${garden.getName()}"></h2>
 
-      <article class="in-line"><p>Name: </p>
-        <p th:text="${garden.getName()}"></p></article>
-      <article class="in-line"><p>Location: </p>
-        <p th:text="${garden.getLocationString()}"></p></article>
-      <article class="in-line"><p>Size: </p>
-        <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
-      </article>
+      <p th:text="${garden.getDescription()}"></p>
+      <p th:text="${garden.getLocationString()}"></p>
+      <p th:if="${garden.getSize() != null}" th:utext="${garden.getSize().toString()} + 'm<sup>2</sup>'"></p>
+      <p th:if="${garden.getSize() == null}">Unspecified size</p>
       <form th:if="${owner}" th:action="@{${makeGardenPublic}}" method="post">
         <label for="publicGarden" class="publicGardenCheckbox">
           <input
@@ -35,9 +32,6 @@
         <button class="form-button" type="submit" th:id="submitPublicGarden" style="display: none;">Submit</button>
       </form>
       <p class="errorMessage" th:text="${gardenDescriptionError}"></p>
-      <article class="in-line"><p>Description: </p>
-        <p th:text="${garden.getDescription()}"></p></article>
-
       <!-- Garden tags -->
       <div class="display-tags">
         <span th:each="tag, iterStat : ${tags}">
@@ -61,11 +55,31 @@
 
       <br>
 
-      <a th:href="@{${editGardenUri}}">
-        <button class="form-button" type="button">Edit Garden</button>
+      <a th:href="@{${editGardenUri}}" style="text-decoration: none">
+        <button class="btn btn-outline-primary"
+                type="button"
+                style="
+                border-color: #477641;
+                --bs-btn-color: #477641;
+                --bs-btn-hover-bg: #477641;
+                --bs-btn-hover-color: #fff;
+                --bs-btn-active-bg: #477641;
+              "
+        ><i class="bi bi-pencil"></i> Edit Garden
+        </button>
       </a>
       <a th:href="@{${newPlantUri}}">
-        <button class="form-button" type="button">Add Plant</button>
+        <button class="btn btn-outline-primary"
+                type="button"
+                style="
+                border-color: #477641;
+                --bs-btn-color: #477641;
+                --bs-btn-hover-bg: #477641;
+                --bs-btn-hover-color: #fff;
+                --bs-btn-active-bg: #477641;
+              "
+        ><i class="bi bi-plus-lg"></i> Add Plant
+        </button>
       </a>
 
 
@@ -98,8 +112,7 @@
 
                     <div class="add-image">
                       <label th:for="${plant.getId()}" class="plus-button">
-                        <!--                        <i class="bi bi-plus-circle-fill"></i>-->
-                        <i class="bi bi-plus-lg"></i>
+                        <i class="bi bi-plus-circle-fill"></i>
                       </label>
                       <input type="file"
                              class="form-control"
@@ -129,7 +142,18 @@
             <td><span th:text="${plant.getDateString()}"> Date Planted </span></td>
             <td>
               <a th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
-                <button type="button">Edit</button>
+                <button class="btn btn-outline-primary"
+                        type="button"
+                        style="
+                border-color: #477641;
+                --bs-btn-color: #477641;
+                --bs-btn-hover-bg: #477641;
+                --bs-btn-hover-color: #fff;
+                --bs-btn-active-bg: #477641;
+              "
+                >
+                  <i class="bi bi-pencil"></i> Edit
+                </button>
               </a></td>
           </tr>
           </tbody>
