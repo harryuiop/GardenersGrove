@@ -6,6 +6,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.Status;
 import org.slf4j.Logger;
@@ -36,6 +37,8 @@ public class FriendsController extends NavBar {
 
     private final FriendshipService friendshipService;
 
+    private final GardenService gardenService;
+
     /**
      * Constructor for controller of manage friends page
      *
@@ -44,10 +47,16 @@ public class FriendsController extends NavBar {
      * @param friendshipService    used to adjust friendships between users
      */
     @Autowired
-    public FriendsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService) {
+    public FriendsController(
+            UserService userService,
+            FriendRequestService friendRequestService,
+            FriendshipService friendshipService,
+            GardenService gardenService
+    ) {
         this.userService = userService;
         this.friendRequestService = friendRequestService;
         this.friendshipService = friendshipService;
+        this.gardenService = gardenService;
     }
 
     /**
@@ -59,6 +68,7 @@ public class FriendsController extends NavBar {
     public String getFriendsPage(Model model) {
         logger.info("GET {}", viewFriendsUri());
 
+        this.updateGardensNavBar(model, gardenService, userService);
         model.addAttribute("user", userService.getAuthenticatedUser());
         model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
@@ -77,7 +87,7 @@ public class FriendsController extends NavBar {
      * @param action states if there hase been a request accepted, declined or cancelled or otherwise a friend removed
      * @param request is the id of the friend or request being altered
      * @return a redirect to the manage friends page
-     * @throws NoSuchFriendRequestException
+     * @throws NoSuchFriendRequestException if the request id does not exist
      */
     @PostMapping(MANAGE_FRIENDS_URI_STRING)
     public String submitFriendsPage(@RequestParam String action, @RequestParam Long request) throws NoSuchFriendRequestException {
