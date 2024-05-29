@@ -8,6 +8,7 @@
     <div>
         <div class="g-col-md-4">
             <div class="bg-white p-5 rounded shadow ">
+                <p class="form-text text-danger" th:text="${tokenExpiredError}"></p>
                 <form th:action="@{${loginUri}}" method="post" name="loginForm" class="">
                     <h2 class="text-center display-3 title-heading mb-4">Login</h2>
                     <label for="email" class="form-label">Email Address</label>

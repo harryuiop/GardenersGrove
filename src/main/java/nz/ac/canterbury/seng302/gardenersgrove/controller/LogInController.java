@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
@@ -74,6 +75,8 @@ public class LogInController {
                 model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
             } else if (error.equals("Invalid_Email")) {
                 model.addAttribute("emailError", "Email address must be in the form ‘jane@doe.nz’");
+            } else if (error.equals("Token_Expired")) {
+                model.addAttribute("tokenExpiredError", "Reset password link has expired");
             }
         }
 
@@ -94,12 +97,14 @@ public class LogInController {
     @GetMapping(RESET_PASSWORD_URI_STRING)
     public String resetPassword(Model model,
                                 @PathVariable String token,
-                                @PathVariable long userId) {
+                                @PathVariable long userId,
+                                RedirectAttributes redirectAttributes) {
         logger.info("GET {}", resetPasswordUri(token, userId));
         ResetPasswordToken hashedTokenEntity = resetPasswordTokenService.getTokenByUserId(userId);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (hashedTokenEntity == null || !encoder.matches(token, hashedTokenEntity.getToken())) {
             logger.info("Invalid token, redirecting to login page");
+            redirectAttributes.addAttribute("error", "Token_Expired");
             return "redirect:" + loginUri();
         }
         model.addAttribute("resetPasswordUri", resetPasswordUri(token, userId));
