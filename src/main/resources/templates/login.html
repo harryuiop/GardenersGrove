@@ -1,48 +1,66 @@
 <!DOCTYPE html>
-<html
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.thymeleaf.org"
-        lang="us">
-  <head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="headerfiles">
     <meta charset="UTF-8">
-    <title>Home Page</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-  </head>
-  <body>
-    <div id="app_container">
-      <main>
-        <header th:insert="~{fragments/general.html :: header}"></header>
-        <div class="loginForm" th:if="${accountActiveMessage} != null" style="margin-bottom: 25px">
-          <p th:text="${accountActiveMessage}" style="font-size: small; font-style: italic;"></p>
-        </div>
-        <div class="loginForm">
-          <form th:action="@{login}" method="post" name="loginForm">
-            <label for="email">Email Address:</label>
-            <input
-                    class="inputStyle"
-                    type="text"
-                    id="email"
-                    name="email"
-                    th:name="username"
-                    autofocus
-            />
-            <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
+    <meta http-equiv="X-UA-Compatible" content="IE=Chrome">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/newstyle.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+</head>
 
-            <label for="password">Password:</label>
-            <input class="inputStyle"
-                   type="password"
-                   id="password"
-                   name="password"
-                   th:name="password"
-            >
-            <p class="errorMessage" id="invalidError" th:text="${invalidError}"></p>
 
-            <input class="inputStyle" id="sign_in_button" type="submit" value="Sign In">
-          </form>
-        <p class="registerLink">Don't have an account? <a th:href="@{/register}">Register here.</a></p>
-        <p class="registerLink">Don't want to login? <a th:href="@{/}">Cancel.</a></p>
+<body>
+<div class="container-flex d-flex justify-content-center align-items-center vh-100 login-bg">
+    <div>
+        <div class="bg-white py-3 rounded shadow" th:if="${accountActiveMessage} != null" style="margin-bottom: 25px">
+            <p th:text="${accountActiveMessage}"
+               style="font-size: small; font-style: italic; color: navy;"></p>
         </div>
-      </main>
+        <div class="g-col-md-4">
+            <div class="bg-white p-5 rounded shadow ">
+                <p class="form-text text-danger" th:text="${tokenExpiredError}"></p>
+                <form th:action="@{${loginUri}}" method="post" name="loginForm" class="">
+                    <h2 class="text-center display-3 title-heading mb-4">Login</h2>
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="mb-4">
+                        <input
+                                class="form-control"
+                                type="text"
+                                id="email"
+                                name="email"
+                                th:name="username"
+                                autofocus
+                        />
+                        <p class="form-text text-danger" id="emailError" th:text="${emailError}"></p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <input class="form-control"
+                               type="password"
+                               id="password"
+                               name="password"
+                               th:name="password"
+                        >
+                        <p class="form-text text-danger" id="invalidError" th:text="${invalidError}"></p>
+                    </div>
+
+                    <div class="col auto text-center mt-4 mb-4">
+                        <button type="submit"
+                                class="btn btn-lg text-white "
+                                style="background-color: var(--fern-green)">
+                            Sign In
+                        </button>
+                    </div>
+                    <p class="registerLink">Forgot your Password? <a th:href="@{${resetPasswordEmailUri}}">Forgot Password</a></p>
+                    <p class="text-center">Don't have an account? <a th:href="@{${registerUri}}">Register Here</a></p>
+                    <p class="text-center">Don't want to login? <a th:href="@{${homeUri}}">Cancel</a></p>
+                </form>
+            </div>
+        </div>
     </div>
-  </body>
+</div>
+</body>
 </html>

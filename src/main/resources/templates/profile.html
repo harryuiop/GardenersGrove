@@ -1,19 +1,14 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Profile Page</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-    <script type="text/javascript" src="/javascript/profilePictureUpload.js"></script>
-  </head>
+<head th:insert="~{fragments/importFragment :: headerfiles}"><title>Profile Page</title></head>
   <body>
-  <nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
-    <a th:href="@{/editProfile}" class="button">Edit Profile</a>
-    <div class="profileBody">
+  <div class="container-fluid p-0 m-0">
+    <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
+    <div class="profileBody" style="margin: 5vh">
       <div class="formContainer">
         <form
                 id="uploadProfileImage"
-                th:action="@{uploadProfileImage}"
+                th:action="@{${uploadProfileImageUri}}"
                 method="post"
                 name="profilePhoto"
                 enctype="multipart/form-data"
@@ -45,7 +40,9 @@
         <h2 th:text="${user.getFirstName() + ' ' + user.getLastName()}"></h2>
         <h3 id="profileDoB" th:text="${user.getDob()}"></h3>
         <h3 id="profileEmail" th:text="${user.getEmail()}"></h3>
+        <a th:href="@{${editProfileUri}}" class="button">Edit Profile</a>
       </div>
     </div>
+  </div>
   </body>
 </html>

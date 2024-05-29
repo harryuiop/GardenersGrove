@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,19 +17,19 @@ public class User {
     /**
      * User email this will be a user ID and has to be unique and exist
      */
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false)
     private String email;
 
     /**
      * User's First Name
      */
-    @Column(name = "First_name", nullable = false)
+    @Column(nullable = false)
     private String firstName;
 
     /**
      * User's Last Name This can be Null
      */
-    @Column(name = "Last_name")
+    @Column
     private String lastName;
 
     /**
@@ -43,27 +41,33 @@ public class User {
     /**
      * User's Date of Birth
      */
-    @Column(name = "Date_of_Birth", nullable = true)
+    @Column
     private String dob;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "User_ID", nullable = false)
-    private Integer userId;
+    @Column(nullable = false)
+    private long userId;
 
-    @Column(name = "profile_picture_file_name")
+    @Column
     private String profilePictureFileName;
 
     @Column
     private Boolean confirmation;
 
-    @Column(name = "sign-up_token")
+    @Column
     private String token;
 
     @Column
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     private List<Authority> userRoles;
+
+    @OneToMany(mappedBy = "friend1", cascade = CascadeType.REMOVE)
+    private List<Friendship> friends1;
+
+    @OneToMany(mappedBy = "friend2", cascade = CascadeType.REMOVE)
+    private List<Friendship> friends2;
 
     /**
      * JPA Empty Constructor
@@ -95,7 +99,7 @@ public class User {
         this.confirmation = false;
     }
 
-    public int getId() {
+    public long getId() {
         return userId;
     }
 
@@ -114,6 +118,15 @@ public class User {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /**
+     * Retrieves the user's full name.
+     *
+     * @return User's first and last name together.
+     */
+    public String getName() {
+        return lastName == null ? firstName : firstName + ' ' + lastName;
     }
 
     /**
@@ -172,7 +185,9 @@ public class User {
      *
      * @return User's ID.
      */
-    public int getUserId() { return userId; }
+    public long getUserId() {
+        return userId;
+    }
 
     /**
      * Retrieves the user's password.

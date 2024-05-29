@@ -1,18 +1,16 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -28,8 +26,15 @@ class ErrorCheckerTest {
     private boolean userCreated = false;
     User user;
 
+    FormValuesValidator mockFormValuesValidator;
+
+    ErrorChecker errorChecker;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws ProfanityCheckingException, InterruptedException {
+        mockFormValuesValidator = Mockito.spy(new FormValuesValidator());
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
+        errorChecker = new ErrorChecker(mockFormValuesValidator);
         if (!userCreated) {
             user = new User(
                     "test@domain.net",
@@ -52,9 +57,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -67,9 +73,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenSizeError", "Garden size must be a positive number");
         Assertions.assertEquals(correctErrors, errors);
@@ -84,9 +91,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         Assertions.assertEquals(correctErrors, errors);
@@ -100,9 +108,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(name, size,
+        Map<String, String> errors = errorChecker.gardenFormErrors(name, size, null,
                 country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("countryError", "Country is required");
         Assertions.assertEquals(correctErrors, errors);
@@ -117,9 +126,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("cityError", "City is required");
         Assertions.assertEquals(correctErrors, errors);
@@ -134,9 +144,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -150,9 +161,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         correctErrors.put("countryError", "Country is required");
@@ -168,9 +180,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "gardenNameError",
@@ -187,9 +200,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "countryError",
@@ -207,9 +221,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "cityError",
@@ -227,9 +242,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam% Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "streetAddressError",
@@ -247,9 +263,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam&";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "suburbError",
@@ -267,9 +284,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8&041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "postcodeError",
@@ -287,9 +305,10 @@ class ErrorCheckerTest {
         String streetAddress = "90 Ilam Road";
         String suburb = "Ilam";
         String postcode = "8041";
-        Map<String, String> errors = ErrorChecker.gardenFormErrors(
-                name, size, country, city, streetAddress, suburb, postcode
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, null, country, city, streetAddress, suburb, postcode
         );
+        errors.remove("profanityCheckError");
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("gardenNameError", "Garden name cannot by empty");
         correctErrors.put(
@@ -302,7 +321,7 @@ class ErrorCheckerTest {
     @Test
     void firstNameErrors_validFirstName_returnsNoErrors() {
         String firstName = "Jane-Mary's ";
-        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
+        Map<String, String> errors = errorChecker.firstNameErrors(firstName);
         HashMap<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -310,7 +329,7 @@ class ErrorCheckerTest {
     @Test
     void firstNameErrors_BlankFirstName_returnsBlankError() {
         String firstName = "  ";
-        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
+        Map<String, String> errors = errorChecker.firstNameErrors(firstName);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("firstNameError", "First name cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
@@ -319,7 +338,7 @@ class ErrorCheckerTest {
     @Test
     void firstNameErrors_InvalidLongFirstNameWithInvalidCharacters_returnsTooLongErrorPlusInvalidCharacters() {
         String firstName = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyza%$#bcdefghijklm";
-        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
+        Map<String, String> errors = errorChecker.firstNameErrors(firstName);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "firstNameError",
@@ -332,7 +351,7 @@ class ErrorCheckerTest {
     @Test
     void firstNameErrors_InvalidLongFirstName_returnsTooLongError() {
         String firstName = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm";
-        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
+        Map<String, String> errors = errorChecker.firstNameErrors(firstName);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("firstNameError", "First name cannot exceed length of 64 characters");
         Assertions.assertEquals(correctErrors, errors);
@@ -341,7 +360,7 @@ class ErrorCheckerTest {
     @Test
     void firstNameErrors_InvalidCharacter_returnsInvalidError() {
         String firstName = " JA$$";
-        Map<String, String> errors = ErrorChecker.firstNameErrors(firstName);
+        Map<String, String> errors = errorChecker.firstNameErrors(firstName);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("firstNameError", "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
         Assertions.assertEquals(correctErrors, errors);
@@ -351,7 +370,7 @@ class ErrorCheckerTest {
     void lastNameErrors_validLastName_returnsNoErrors() {
         String lastName = "Doe";
         boolean noSurname = false;
-        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        Map<String, String> errors = errorChecker.lastNameErrors(lastName, noSurname);
         HashMap<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -360,7 +379,7 @@ class ErrorCheckerTest {
     void lastNameErrors_validEmptyLastName_returnsNoErrors() {
         String lastName = null;
         boolean noSurname = true;
-        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        Map<String, String> errors = errorChecker.lastNameErrors(lastName, noSurname);
         HashMap<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -369,9 +388,9 @@ class ErrorCheckerTest {
     void lastNameErrors_emptyLastName_returnsBlankError() {
         String lastName = null;
         boolean noSurname = false;
-        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        Map<String, String> errors = errorChecker.lastNameErrors(lastName, noSurname);
         HashMap<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("lastNameError", "Last name cannot be empty unless box is ticked");
+        correctErrors.put("lastNameError", "Last name cannot be empty unless box labelled No Lastname is ticked");
         Assertions.assertEquals(correctErrors, errors);
     }
 
@@ -379,7 +398,7 @@ class ErrorCheckerTest {
     void lastNameErrors_InvalidLongLastNameWithInvalidCharacters_returnsTooLongErrorPlusInvalidCharacters() {
         String lastName = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyza%$#bcdefghijklm";
         boolean noSurname = false;
-        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        Map<String, String> errors = errorChecker.lastNameErrors(lastName, noSurname);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "lastNameError",
@@ -393,7 +412,7 @@ class ErrorCheckerTest {
     void lastNameErrors_InvalidLongLastName_returnsTooLongError() {
         String lastName = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm";
         boolean noSurname = false;
-        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        Map<String, String> errors = errorChecker.lastNameErrors(lastName, noSurname);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("lastNameError", "Last name cannot exceed length of 64 characters");
         Assertions.assertEquals(correctErrors, errors);
@@ -403,7 +422,7 @@ class ErrorCheckerTest {
     void lastNameErrors_InvalidCharacter_returnsInvalidError() {
         String lastName = "M<>()!@acojlc";
         boolean noSurname = false;
-        Map<String, String> errors = ErrorChecker.lastNameErrors(lastName, noSurname);
+        Map<String, String> errors = errorChecker.lastNameErrors(lastName, noSurname);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("lastNameError", "Last name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
         Assertions.assertEquals(correctErrors, errors);
@@ -413,7 +432,7 @@ class ErrorCheckerTest {
     void emailErrors_validEmail_returnsNoErrors() {
         String email = "jane@doe.com";
         boolean oldEmail = false;
-        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> errors = errorChecker.emailErrors(email,oldEmail, userService);
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -422,7 +441,7 @@ class ErrorCheckerTest {
     void emailErrors_blankEmail_returnsBlankError() {
         String email = null;
         boolean oldEmail = false;
-        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> errors = errorChecker.emailErrors(email,oldEmail, userService);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("emailError", "Email cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
@@ -432,7 +451,7 @@ class ErrorCheckerTest {
     void emailErrors_invalidEmailForm_returnsInvalidError() {
         String email = "notAnEmail.com";
         boolean oldEmail = false;
-        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> errors = errorChecker.emailErrors(email,oldEmail, userService);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("emailError", "Email address must be in the form ‘jane@doe.nz");
         Assertions.assertEquals(correctErrors, errors);
@@ -447,7 +466,7 @@ class ErrorCheckerTest {
         String dateOfBirth = LocalDate.now().minusYears(20).toString();
         boolean oldEmail = true;
         Mockito.when(userService.getUserByEmail(email)).thenReturn(new User(email,firstName,lastName,password, dateOfBirth));
-        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> errors = errorChecker.emailErrors(email,oldEmail, userService);
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -461,7 +480,7 @@ class ErrorCheckerTest {
         String dateOfBirth = LocalDate.now().minusYears(20).toString();
         boolean oldEmail = false;
         Mockito.when(userService.getUserByEmail(email)).thenReturn(new User(email,firstName,lastName,password, dateOfBirth));
-        Map<String, String> errors = ErrorChecker.emailErrors(email,oldEmail, userService);
+        Map<String, String> errors = errorChecker.emailErrors(email,oldEmail, userService);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("emailError", "This email address is already in use");
         Assertions.assertEquals(correctErrors, errors);
@@ -471,7 +490,7 @@ class ErrorCheckerTest {
     void dateOfBirthErrors_validDate_returnsNoErrors() {
         String dateOfBirth = LocalDate.now().minusYears(120).toString();
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
+        Map<String, String> errors = errorChecker.dateOfBirthErrors(dateOfBirth, validDate);
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -480,7 +499,7 @@ class ErrorCheckerTest {
     void dateOfBirthErrors_BlankDate_returnsNoErrors() {
         String dateOfBirth = "";
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
+        Map<String, String> errors = errorChecker.dateOfBirthErrors(dateOfBirth, validDate);
         Map<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -489,7 +508,7 @@ class ErrorCheckerTest {
     void dateOfBirthErrors_dobTooYoung_returnsUnder13() {
         String dateOfBirth = LocalDate.now().minusYears(10).toString();
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
+        Map<String, String> errors = errorChecker.dateOfBirthErrors(dateOfBirth, validDate);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "You must be 13 years or older to create an account");
         Assertions.assertEquals(correctErrors, errors);
@@ -499,7 +518,7 @@ class ErrorCheckerTest {
     void dateOfBirthErrors_dobTooOld_returnsOver120() {
         String dateOfBirth = LocalDate.now().minusYears(121).toString();
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
+        Map<String, String> errors = errorChecker.dateOfBirthErrors(dateOfBirth, validDate);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "The maximum age allowed is 120 years");
         Assertions.assertEquals(correctErrors, errors);
@@ -509,7 +528,7 @@ class ErrorCheckerTest {
     void dateOfBirthErrors_invalidDate_returnsInvalidFormat() {
         String dateOfBirth = "30/02/2000";
         boolean validDate = false;
-        Map<String, String> errors = ErrorChecker.dateOfBirthErrors(dateOfBirth, validDate);
+        Map<String, String> errors = errorChecker.dateOfBirthErrors(dateOfBirth, validDate);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "Date is not in valid format, DD/MM/YYYY");
         Assertions.assertEquals(correctErrors, errors);
@@ -518,7 +537,7 @@ class ErrorCheckerTest {
     @Test
     void passwordErrors_validPassword_returnsNoErrors() {
         String password = "Abe123#$";
-        Map<String, String> errors = ErrorChecker.passwordErrors(password, password);
+        Map<String, String> errors = errorChecker.passwordErrors(password, password);
         HashMap<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
     }
@@ -526,7 +545,7 @@ class ErrorCheckerTest {
     @Test
     void passwordErrors_blankPassword_returnsBlankError() {
         String password = null;
-        Map<String, String> errors = ErrorChecker.passwordErrors(password, password);
+        Map<String, String> errors = errorChecker.passwordErrors(password, password);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("passwordError", "Password cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
@@ -535,7 +554,7 @@ class ErrorCheckerTest {
     @Test
     void passwordErrors_doesNotMeetCharacterConditions_returnsInvalidCharacters() {
         String password = "a1b2de";
-        Map<String, String> errors = ErrorChecker.passwordErrors(password, password);
+        Map<String, String> errors = errorChecker.passwordErrors(password, password);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
                 "passwordError",
@@ -548,7 +567,7 @@ class ErrorCheckerTest {
     void passwordErrors_notEqualPasswords_returnsNotEqual() {
         String password = "a1B2c#de";
         String otherpass = "abcD32#";
-        Map<String, String> errors = ErrorChecker.passwordErrors(password, otherpass);
+        Map<String, String> errors = errorChecker.passwordErrors(password, otherpass);
         HashMap<String, String> correctErrors = new HashMap<>();
         correctErrors.put("passwordConfirmError", "Passwords do not match");
         Assertions.assertEquals(correctErrors, errors);
@@ -566,7 +585,7 @@ class ErrorCheckerTest {
         when(userRepositoryMock.findByEmail(email)).thenReturn(
                 new User(email, "fname", "lname", encoder.encode(password), "20/20/2003")
         );
-        Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
+        Map<String, String> errors = errorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         Assertions.assertEquals(expected, errors);
     }
@@ -579,7 +598,7 @@ class ErrorCheckerTest {
         String email = "";
         String password = "";
         when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(null);
-        Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
+        Map<String, String> errors = errorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         expected.put("emailError", "Email address must be in the form ‘jane@doe.nz'");
         expected.put("invalidError", "The email address is unknown, or the password is invalid");
@@ -594,7 +613,7 @@ class ErrorCheckerTest {
         String email = "user@gmail.com";
         String password = "iAmABadPassword";
         when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(null);
-        Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
+        Map<String, String> errors = errorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         expected.put("invalidError", "The email address is unknown, or the password is invalid");
         Assertions.assertEquals(expected, errors);
@@ -608,7 +627,7 @@ class ErrorCheckerTest {
         String email = "notAnEmail";
         String password = "Re4!Password";
         when(userRepositoryMock.findByEmailAndPassword(email, password)).thenReturn(null);
-        Map<String, String> errors = ErrorChecker.loginFormErrors(email, password, userService);
+        Map<String, String> errors = errorChecker.loginFormErrors(email, password, userService);
         HashMap<String, String> expected = new HashMap<>();
         expected.put("emailError", "Email address must be in the form ‘jane@doe.nz'");
         expected.put("invalidError", "The email address is unknown, or the password is invalid");
@@ -626,7 +645,7 @@ class ErrorCheckerTest {
         String dateOfBirth = LocalDate.now().minusYears(20).toString();
         boolean validDate = true;
         Mockito.when(userService.getUserByEmail(email)).thenReturn(new User(email,firstName,lastName,password, dateOfBirth));
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
+        Map<String, String> errors = errorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
                 password, password, validDate, dateOfBirth);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("emailError", "This email address is already in use");
@@ -643,7 +662,7 @@ class ErrorCheckerTest {
         String password = "a1B2c#de";
         String dateOfBirth = LocalDate.now().minusYears(10).toString();
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
+        Map<String, String> errors = errorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
                 password, password, validDate, dateOfBirth);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "You must be 13 years or older to create an account");
@@ -659,7 +678,7 @@ class ErrorCheckerTest {
         String password = "a1B2c#de";
         String dateOfBirth = LocalDate.now().minusYears(121).toString();
         boolean validDate = true;
-        Map<String, String> errors = ErrorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
+        Map<String, String> errors = errorChecker.registerUserFormErrors(firstName, lastName, noSurname, email, oldEmail, userService,
                 password, password, validDate, dateOfBirth);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("dateOfBirthError", "The maximum age allowed is 120 years");
@@ -671,7 +690,7 @@ class ErrorCheckerTest {
         String oldPassword = "";
         String newPassword = "Password1!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("oldPasswordError", "Password cannot be empty");
         Assertions.assertEquals(correctErrors, errors);
@@ -682,7 +701,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password!1valid";
         String newPassword = "Password1!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("oldPasswordError", "Your old password is incorrect");
         Assertions.assertEquals(correctErrors, errors);
@@ -692,7 +711,7 @@ class ErrorCheckerTest {
          String oldPassword = "Password1!";
          String newPassword = "short";
          String retypeNewPassword = "Password1!";
-         Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+         Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
          Map<String, String> correctErrors = new HashMap<>();
          correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
          Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -703,7 +722,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiop";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -714,7 +733,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "password1!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -725,7 +744,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "PASSWORD1!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -736,7 +755,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
         Assertions.assertTrue(errors.containsValue("Password cannot be empty"));
     }
@@ -745,9 +764,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
-        Map<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
         Assertions.assertTrue(errors.containsValue("Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"));
 
@@ -757,7 +774,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password!";
         String retypeNewPassword = "Password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("newPasswordError"));
@@ -768,7 +785,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "short";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
         Assertions.assertTrue(errors.containsValue("Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"));
 
@@ -778,7 +795,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiop";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -789,7 +806,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "password1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -800,7 +817,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "PASSWORD1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -811,7 +828,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Password cannot be empty");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -822,7 +839,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "Password1";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -833,7 +850,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "Password1!";
         String retypeNewPassword = "Password!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
         Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
@@ -844,7 +861,7 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "NewPassword1!";
         String retypeNewPassword = "NewPassword1!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Assertions.assertTrue(errors.isEmpty());
     }
     @Test
@@ -852,10 +869,308 @@ class ErrorCheckerTest {
         String oldPassword = "Password1!";
         String newPassword = "NewPassword1!";
         String retypeNewPassword = "BadPassword!";
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("passwordConfirmError", "The new passwords do not match");
         Assertions.assertTrue(errors.containsKey("passwordConfirmError"));
         Assertions.assertEquals(correctErrors.get("passwordConfirmError"), errors.get("passwordConfirmError"));
+    }
+
+    /**
+     * Reset Password Tests.
+     */
+    @Test
+    void resetPasswordFormErrors_tooShortNewPassword_returnsInvalidNewPasswordError() {
+        String newPassword = "short";
+        String retypeNewPassword = "Password1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("newPasswordError"));
+        Assertions.assertEquals(correctErrors.get("newPasswordError"), errors.get("newPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_tooLongNewPassword_returnsInvalidNewPasswordError() {
+        String newPassword = "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiop";
+        String retypeNewPassword = "Password1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("newPasswordError"));
+        Assertions.assertEquals(correctErrors.get("newPasswordError"), errors.get("newPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_noUpperCaseLetterInNewPassword_returnsInvalidNewPasswordError() {
+        String newPassword = "password1!";
+        String retypeNewPassword = "Password1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("newPasswordError"));
+        Assertions.assertEquals(correctErrors.get("newPasswordError"), errors.get("newPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_noLowerCaseLetterInNewPassword_returnsInvalidNewPasswordError() {
+        String newPassword = "PASSWORD1!";
+        String retypeNewPassword = "Password1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("newPasswordError"));
+        Assertions.assertEquals(correctErrors.get("newPasswordError"), errors.get("newPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_EmptyNewPassword_returnsInvalidNewPasswordError() {
+        String newPassword = "";
+        String retypeNewPassword = "Password1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("newPasswordError"));
+        Assertions.assertTrue(errors.containsValue("Password cannot be empty"));
+    }
+    @Test
+    void resetPasswordFormErrors_noSpecialCaseInNewPassword_returnsInvalidNewPasswordError() {
+        String newPassword = "Password1";
+        String retypeNewPassword = "Password1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("newPasswordError"));
+        Assertions.assertTrue(errors.containsValue("Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"));
+
+    }
+    @Test
+    void resetPasswordFormErrors_noDigitCaseInNewPassword_returnsInvalidNewPasswordError() {
+        String newPassword = "Password!";
+        String retypeNewPassword = "Password1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("newPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("newPasswordError"));
+        Assertions.assertEquals(correctErrors.get("newPasswordError"), errors.get("newPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_tooShortRetypeNewPassword_returnsInvalidRetypeNewPasswordError() {
+        String newPassword = "Password1!";
+        String retypeNewPassword = "short";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
+        Assertions.assertTrue(errors.containsValue("Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"));
+
+    }
+    @Test
+    void resetPasswordFormErrors_tooLongRetypeNewPassword_returnsInvalidRetypeNewPasswordError() {
+        String newPassword = "Password1!";
+        String retypeNewPassword = "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqwertyuiop";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
+        Assertions.assertEquals(correctErrors.get("retypeNewPasswordError"), errors.get("retypeNewPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_noUpperCaseLetterInRetypeNewPassword_returnsInvalidRetypeNewPasswordError() {
+        String newPassword = "Password1!";
+        String retypeNewPassword = "password1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
+        Assertions.assertEquals(correctErrors.get("retypeNewPasswordError"), errors.get("retypeNewPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_EmptyRetypeNewPassword_returnsInvalidRetypeNewPasswordError() {
+        String newPassword = "Password1!";
+        String retypeNewPassword = "";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("retypeNewPasswordError", "Password cannot be empty");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
+        Assertions.assertEquals(correctErrors.get("retypeNewPasswordError"), errors.get("retypeNewPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_noLowerCaseLetterInRetypeNewPassword_returnsInvalidRetypeNewPasswordError() {
+        String newPassword = "Password1!";
+        String retypeNewPassword = "PASSWORD1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
+        Assertions.assertEquals(correctErrors.get("retypeNewPasswordError"), errors.get("retypeNewPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_noSpecialCaseInRetypeNewPassword_returnsInvalidRetypeNewPasswordError() {
+        String newPassword = "Password1!";
+        String retypeNewPassword = "Password1";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
+        Assertions.assertEquals(correctErrors.get("retypeNewPasswordError"), errors.get("retypeNewPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_noDigitCaseInRetypeNewPassword_returnsInvalidRetypeNewPasswordError() {
+        String newPassword = "Password1!";
+        String retypeNewPassword = "Password!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("retypeNewPasswordError", "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("retypeNewPasswordError"));
+        Assertions.assertEquals(correctErrors.get("retypeNewPasswordError"), errors.get("retypeNewPasswordError"));
+    }
+    @Test
+    void resetPasswordFormErrors_checkNewAndRetypePasswordMatches_returnTrue() {
+        String newPassword = "NewPassword1!";
+        String retypeNewPassword = "NewPassword1!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Assertions.assertTrue(errors.isEmpty());
+    }
+    @Test
+    void resetPasswordFormErrors_checkNewAndRetypePasswordMatches_returnFalse() {
+        String newPassword = "NewPassword1!";
+        String retypeNewPassword = "BadPassword!";
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("passwordConfirmError", "The new passwords do not match");
+        Assertions.assertFalse(errors.containsKey("oldPasswordError"));
+        Assertions.assertTrue(errors.containsKey("passwordConfirmError"));
+        Assertions.assertEquals(correctErrors.get("passwordConfirmError"), errors.get("passwordConfirmError"));
+    }
+
+    @Test
+    void resetPasswordEmailErrors_incorrectFormat_showError() {
+        String email = "jane@doe";
+        Map<String, String> errors = errorChecker.emailErrorsResetPassword(email);
+        Assertions.assertTrue(errors.containsKey("emailError"));
+        Assertions.assertEquals(1, errors.size());
+    }
+
+    @Test
+    void resetPasswordEmailErrors_emptyEmail_showError() {
+        String email = "";
+        Map<String, String> errors = errorChecker.emailErrorsResetPassword(email);
+        Assertions.assertTrue(errors.containsKey("emailError"));
+        Assertions.assertEquals(1, errors.size());
+    }
+
+    @Test
+    void resetPasswordEmailErrors_validEmail_showError() {
+        String email = "jane@doe.com";
+        Map<String, String> errors = errorChecker.emailErrorsResetPassword(email);
+        Assertions.assertEquals(0, errors.size());
+    }
+
+    @Test
+    void gardenFormErrors_Inappropriate_returnsDescriptionError() throws ProfanityCheckingException, InterruptedException {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(true);
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String description = "Shithead";
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, description, country, city, streetAddress, suburb, postcode
+        );
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("gardenDescriptionError", "The description does not match the language standards of the app");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void gardenFormErrors_ProfanityCheckerError_returnsDescriptionError() throws ProfanityCheckingException, InterruptedException {
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenThrow(new ProfanityCheckingException("Failed to check for profanity"));
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String description = "Shithead";
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, description, country, city, streetAddress, suburb, postcode
+        );
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("profanityCheckError", "Garden cannot be made public");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void gardenFormErrors_NoTextDescription_returnsDescriptionError() {
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String description = "$%^&*(";
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, description, country, city, streetAddress, suburb, postcode
+        );
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("gardenDescriptionError", "Description must be 512 characters or less and contain some text");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+    @Test
+    void gardenFormErrors_LongDescription_returnsDescriptionError() {
+        String name = "Garden 1";
+        Float size = 1.5f;
+        String description = "vikbyyigjgnxbfpofwuziotuihtetvqubddfoicvrdxgtgflixdgoqkgwfwvlxxoqrmqbithgjxizgpyali" +
+                "hbbopjkuvwedepvvdlzflotpsgdffexfrdhrenbvmyinlvmdrrlymywwhszlzijdbvbktzbpqcbusuaowzwvozbaeswdjbgmaswhwb" +
+                "rbkqccmetbwgdnymvtcksubenexrltbpvwziscmvacmanceytclzghurliqaumlttukelwdpdlageimoviqtlezbciyksfufnxocrh" +
+                "blmtmtijopubgkpujmagotgdfinwtpmxrjhdevqrlzpmnofkypuisfkbovqfdwmznbjeasfwfbyhhfizjxjzntihbzgrmgkudkdtjr" +
+                "ranlhzohychbxshgniecquyviibvuqozlwhhiziskuungizxznbfezhvuilrvgafmnfhuowibbqppsjbcmklvfzneesaohqbrjkxkr" +
+                "gggdbozsruiapzizkpfhvv";
+        String country = "New Zealand";
+        String city = "Christchurch";
+        String streetAddress = "90 Ilam Road";
+        String suburb = "Ilam";
+        String postcode = "8041";
+        Map<String, String> errors = errorChecker.gardenFormErrors(
+                name, size, description, country, city, streetAddress, suburb, postcode
+        );
+        Map<String, String> correctErrors = new HashMap<>();
+        correctErrors.put("gardenDescriptionError", "Description must be 512 characters or less and contain some text");
+        Assertions.assertEquals(correctErrors, errors);
+    }
+
+
+    @Test
+    void viewGardenFromErrors_checkNewTagNameIsInvalid_returnsErrorMessage() {
+        String tagName = "ajlkf$%(Q*@&(*";
+        String error = errorChecker.tagNameErrors(tagName);
+        Assertions.assertEquals("The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" "
+                                , error);
+    }
+
+    @Test
+    void viewGardenFromErrors_checkNewTagNameExceed25Characters_returnsErrorMessage() {
+        String tagName = "slakdjghlakghdjsffhalikjghsdlkafjhldsakugajhsdkrjfhalkjdsfhlakjgh";
+        String error = errorChecker.tagNameErrors(tagName);
+        Assertions.assertEquals("A tag cannot exceed 25 characters", error);
+    }
+
+    @Test
+    void viewGardenFormErrors_checkNewTagNameIsInvalid_andTagNameExceed25Character_returnsErrorMessage() {
+        String tagName = "slakjdfLOKJ%$(*&Q#($*%&*)##*&$ldkfjgwklasjdhfglakhsfkajdhgsd;klfjhlkasdjfhalkdjfhslkadfjhdskfj";
+        String error = errorChecker.tagNameErrors(tagName);
+        Assertions.assertTrue(error.contains("The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" "));
+        Assertions.assertTrue(error.contains("A tag cannot exceed 25 characters"));
     }
 }

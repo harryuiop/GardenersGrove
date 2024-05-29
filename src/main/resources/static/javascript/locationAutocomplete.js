@@ -1,3 +1,6 @@
+// Used for sending rest requests to deployed application
+const possible_deployments = ['test', 'prod']
+
 const streetAddressField = document.getElementById('streetAddress');
 const countryField = document.getElementById('country');
 const cityField = document.getElementById('city');
@@ -8,6 +11,12 @@ const debounceTimeMs = 500;
 
 let timer;
 let previousInput = "";
+
+/**
+ * Update autocomplete when users input for street address field is changed.
+ * Set debouncing time is used to avoid API overuse.
+ * Also contains backend rate limiting in case of malicious users altering JS.
+ */
 streetAddressField.addEventListener('input', function() {
     clearTimeout(timer);
     timer = setTimeout(function() {
@@ -31,7 +40,9 @@ streetAddressField.addEventListener('input', function() {
  * @param country Input from country field, to find results only in specified country
  */
 function updateAutocomplete(query, country) {
-    fetch(`/maptiler/search-results?query=${query}&country=${country}`)
+    const deployment = window.location.pathname.split('/')[1];
+    const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
+    fetch(`${baseUri}/maptiler/search-results?query=${query}&country=${country}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

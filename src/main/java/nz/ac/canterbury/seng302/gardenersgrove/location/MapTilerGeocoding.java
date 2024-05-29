@@ -22,7 +22,6 @@ import java.util.Map;
  * Update autocomplete suggestions through user input.
  */
 @RestController
-@RequestMapping("/maptiler")
 public class MapTilerGeocoding {
 
     @Value("${maptiler.api.key}")
@@ -138,7 +137,7 @@ public class MapTilerGeocoding {
      * @return Autocomplete suggestions or empty map if request is rejected.
      * JSON like output to be handled in JavaScript.
      */
-    @GetMapping("/search-results")
+    @GetMapping("/maptiler/search-results")
     public Map<String, List<Map<String, String>>> getSearchResults(@RequestParam String query,
                                                                    @RequestParam String country) {
         if (rateLimiter.allowRequest()) {

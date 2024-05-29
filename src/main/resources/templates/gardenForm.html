@@ -1,96 +1,116 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Create Garden</title>
-    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
-</head>
-<body>
-<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
-<div class="content">
-    <div th:insert="~{fragments/fragments :: title}">Header</div>
-    <div>
-        <div class="forumContentsDiv">
-            <form th:action="@{${formSubmissionUri}}" method="post" id="garden-form">
-                <div class="form-field">
-                    <label class="form-input" for="gardenName"> Garden Name: </label>
-                    <input type="text" class="form-control" id="gardenName" th:name="gardenName"
-                           th:value="*{gardenName}" data-cy="gardenName" autofocus>
-                    <p class="errorMessage" th:text="${gardenNameError}"></p>
-                </div>
-                <br/>
-                <div class="form-field">
-                    <label class="form-input" for="gardenSize"> Size of your garden in square metres: </label>
-                    <input type="number" step="0.0001" min="0.0001" max="80000000" class="form-control" id="gardenSize"
-                           th:name="gardenSize"
-                           th:value="*{gardenSize}" data-cy="gardenSize" autofocus>
-                    <p class="errorMessage" th:text="${gardenSizeError}"></p>
-                </div>
-                <br/>
-                <h2>Location</h2>
-                <div class="form-field">
-                    <label class="form-input" for="streetAddress"> Street Address: </label>
-                    <p class="info-message">Start typing location to see suggestions.</p>
-                    <input type="text" class="form-control" id="streetAddress" th:name="streetAddress"
-                           th:value="*{streetAddress}" data-cy="streetAddress" autofocus>
-                    <p class="errorMessage" th:text="${streetAddressError}"></p>
-                    <div id="autocomplete-list" class="inputStyle"></div>
-                </div>
-                <br/>
-                <div class="form-field">
-                    <label class="form-input" for="country"> Country: </label>
-                    <input type="text" class="form-control" id="country" th:name="country"
-                           th:value="*{country}" data-cy="country" autofocus>
-                    <p class="errorMessage" th:text="${countryError}"></p>
-                </div>
-                <br/>
-                <div class="form-field">
-                    <label class="form-input" for="city"> City: </label>
-                    <input type="text" class="form-control" id="city" th:name="city"
-                           th:value="*{city}" data-cy="city" autofocus>
-                    <p class="errorMessage" th:text="${cityError}"></p>
-                </div>
-                <br/>
-                <div class="form-field">
-                    <label class="form-input" for="suburb"> Suburb: </label>
-                    <input type="text" class="form-control" id="suburb" th:name="suburb"
-                           th:value="*{suburb}" data-cy="suburb" autofocus>
-                    <p class="errorMessage" th:text="${suburbError}"></p>
-                </div>
-                <br/>
-                <div class="form-field">
-                    <label class="form-input" for="postcode"> Postcode: </label>
-                    <input type="text" class="form-control" id="postcode" th:name="postcode"
-                           th:value="*{postcode}" data-cy="postcode" autofocus>
-                    <p class="errorMessage" th:text="${postcodeError}"></p>
-                </div>
-                <br>
-                <button class="hrefButtons" type="submit">Submit</button>
-                <a th:href="@{${previousPage}}">
-                    <button class="hrefButtons" type="button">Cancel</button>
-                </a>
-            </form>
-        </div>
-    </div>
-</div>
+<head th:insert="~{fragments/importFragment :: headerfiles}"><title>Create Garden</title></head>
 
-<!-- No location message modal -->
-<div th:if="${editGardenUri != null}">
-    <div id="noLocationFoundModal" class="modal">
-        <div class="modal-content">
-            <p>
-                Your garden has been saved.
-                However, no matching location was found.
-                Location-based services will not work for this garden.
-            </p>
-            <div class="modal-buttons">
-                <a th:href="@{${editGardenUri}}" id="backToFormBtn">Edit garden</a>
-                <a th:href="@{${viewGardenUri}}" id="useLocationBtn">Continue</a>
+<body>
+<div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
+    <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
+
+    <div class="d-flex justify-content-center mt-5 w-100">
+        <div class="content">
+            <div>
+                <div class="forumContentsDiv">
+                    <form th:action="@{${formSubmissionUri}}" method="post" id="garden-form">
+                        <div class="form-field">
+                            <label class="form-input" for="gardenName"> Garden Name: </label>
+                            <input type="text" class="form-control" id="gardenName" th:name="gardenName"
+                                   th:value="*{gardenName}" data-cy="gardenName" autofocus>
+                            <p class="errorMessage" th:text="${gardenNameError}"></p>
+                        </div>
+                        <br/>
+                        <div class="form-field">
+                            <label class="form-input" for="gardenSize"> Size of your garden in square metres: </label>
+                            <input type="number" step="0.0001" min="0.0001" max="80000000" class="form-control"
+                                   id="gardenSize"
+                                   th:name="gardenSize"
+                                   th:value="*{gardenSize}" data-cy="gardenSize" autofocus>
+                            <p class="errorMessage" th:text="${gardenSizeError}"></p>
+                        </div>
+                        <br/>
+                        <div class="form-field">
+                            <label class="form-input" for="gardenDescription"> Garden Description: </label>
+                            <input type="text" class="form-control" id="gardenDescription" th:name="gardenDescription"
+                                   th:value="*{gardenDescription}" data-cy="gardenDescription" autofocus>
+                            <p>Description Length: <span id="counter-display" class="tag is-success"
+                                                         th:text="${gardenDescription == null ? 0 : gardenDescription.length()}"></span>/512
+                            </p>
+                            <p class="errorMessage" th:text="${gardenDescriptionError}"></p>
+                        </div>
+                        <br/>
+                        <h2>Location</h2>
+                        <div class="form-field">
+                            <label class="form-input" for="streetAddress"> Street Address: </label>
+                            <p class="info-message">Start typing location to see suggestions.</p>
+                            <input type="text" class="form-control" id="streetAddress" th:name="streetAddress"
+                                   th:value="*{streetAddress}" data-cy="streetAddress" autocomplete="off">
+                            <p class="errorMessage" th:text="${streetAddressError}"></p>
+                            <div id="autocomplete-list" class="inputStyle"></div>
+                        </div>
+                        <br/>
+                        <div class="form-field">
+                            <label class="form-input" for="country"> Country: </label>
+                            <input type="text" class="form-control" id="country" th:name="country"
+                                   th:value="*{country}" data-cy="country" autofocus>
+                            <p class="errorMessage" th:text="${countryError}"></p>
+                        </div>
+                        <br/>
+                        <div class="form-field">
+                            <label class="form-input" for="city"> City: </label>
+                            <input type="text" class="form-control" id="city" th:name="city"
+                                   th:value="*{city}" data-cy="city" autofocus>
+                            <p class="errorMessage" th:text="${cityError}"></p>
+                        </div>
+                        <br/>
+                        <div class="form-field">
+                            <label class="form-input" for="suburb"> Suburb: </label>
+                            <input type="text" class="form-control" id="suburb" th:name="suburb"
+                                   th:value="*{suburb}" data-cy="suburb" autofocus>
+                            <p class="errorMessage" th:text="${suburbError}"></p>
+                        </div>
+                        <br/>
+                        <div class="form-field">
+                            <label class="form-input" for="postcode"> Postcode: </label>
+                            <input type="text" class="form-control" id="postcode" th:name="postcode"
+                                   th:value="*{postcode}" data-cy="postcode" autofocus>
+                            <p class="errorMessage" th:text="${postcodeError}"></p>
+                        </div>
+                        <br>
+                        <button class="hrefButtons" type="submit">Submit</button>
+                        <a th:href="@{${previousPage}}">
+                            <button class="hrefButtons" type="button">Cancel</button>
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- No location message modal -->
+        <div th:if="${editGardenUri != null}">
+            <div id="noLocationFoundModal" class="modal">
+                <div class="modal-content">
+                    <p th:if="!${locationFound}">
+                        Your garden has been saved.
+                        However, no matching location was found.
+                        Location-based services will not work for this garden.
+                    </p>
+                    <p th:if="!${profanityCheckWorked}">
+                        There was an issue checking the description for inappropriate language.
+                        This garden cannot be made public until the description is edited and language checks are
+                        completed.
+                    </p>
+                    <div class="modal-buttons">
+                        <a th:href="@{${editGardenUri}}" id="backToFormBtn">Edit garden</a>
+                        <a th:href="@{${viewGardenUri}}" id="useLocationBtn">Continue</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<script th:src="@{/javascript/locationAutocomplete.js}"></script>
 </body>
+<script type="text/javascript" th:src="@{/javascript/characterCount.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/locationAutocomplete.js}"></script>
+<script type="text/javascript">
+    document.getElementById('gardenDescription').addEventListener('input', updateCharCount);
+</script>
 </html>

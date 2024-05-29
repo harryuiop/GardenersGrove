@@ -23,22 +23,9 @@ body {
     /*justify-content: space-around;*/
 }
 
-.button {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-    font-size: 1rem;
-    position: fixed;
-    padding: 10px 20px;
-    top: 30px;
-    right: 30px;
-    background-color: var(--neutral);
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
 
 .button:hover {
-  background-color: var(--light-neutral);
+    background-color: var(--light-neutral);
 }
 
 .hrefDiv {
@@ -69,11 +56,11 @@ body {
 /* -------------------- Register page specific -------------------- */
 
 .forumContentsDiv {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 400px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
 }
 
 label {
@@ -128,18 +115,18 @@ label {
 /* -------------------- Profile page specific -------------------- */
 
 .formContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
 }
 
 .formControlFile {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 .uploadButton {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 #profilePictureInput {
@@ -197,7 +184,7 @@ label {
 }
 
 #editProfileCancelButton {
-  right: 185px;
+    right: 185px;
     font-weight: lighter;
 }
 
@@ -281,150 +268,7 @@ input[type=text], input[type=password] {
 }
 
 /* navigation side bar */
-nav {
-    width: 190px;
-    height: 100vh;
-    padding: 1px 5px;
-    position: fixed;
-    left: 0;
-    top: 0;
-    background-color: var(--dark-neutral);
-}
 
-nav button {
-    background-color: rgba(0, 255, 0, 25%);
-    margin: 0 auto;
-    width: 90%;
-}
-
-.content {
-    justify-items: center;
-    justify-content: center;
-    display: block;
-    margin-top: 60px;
-    margin-left:275px;
-    color: var(--dark-neutral);
-    width: 100%;
-}
-
-.viewGardensLink {
-    font-size: large;
-}
-
-.gardens-list a {
-    text-decoration: none;
-    color: var(--light-color);
-}
-
-.gardens-list a:hover {
-    text-decoration: none;
-    color: var(--neutral);
-}
-
-.in-line p {
-    display: inline;
-    line-height: 30px;
-    margin-top: 20px;
-}
-
-.content a {
-    text-decoration: none;
-    color: var(--dark-neutral);
-}
-
-.content a:hover {
-    text-decoration: underline;
-    color: var(--dark-color);
-}
-
-.garden-item {
-    display: flex;
-    background-color: var(--light-color);
-    border: 3px solid #000000;
-    border-radius: 10px;
-    padding: 10px;
-    cursor: pointer;
-    color: var(--dark-color);
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.garden-item:hover {
-    background-color: var(--light-neutral);
-}
-
-
-.plant-image-container {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border: 1px solid #ccc;
-    overflow: hidden;
-    justify-content: center;
-    align-items: center;
-    display: inline-block;
-}
-
-.plant-image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.add-image {
-    position: absolute;
-    top: 1px;
-    right: 1px;
-    font-size: 15px;
-    color: var(--dark-color);
-    cursor: pointer;
-}
-
-.add-image .plus-button {
-    opacity: 0.75;
-}
-
-.add-image .fa-plus-circle {
-    cursor: pointer;
-}
-
-.add-image input {
-    display: none;
-}
-
-.no-icon {
-    content: none;
-}
-
-.plant-entry {
-    min-height: 50px;
-}
-
-.plant-entries {
-    max-height: 550px;
-    overflow-y: scroll;
-}
-
-textarea {
-    width: 250px;
-}
-
-.userProfile {
-    display: flex;
-    align-items: center;
-}
-
-.userProfileImage {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    margin: 1rem;
-}
-
-.userProfileName {
-    color: var(--light-color);
-}
 
 /* location autocomplete */
 #autocomplete-list {
@@ -498,6 +342,31 @@ textarea {
 
 .modal-buttons #backToFormBtn:hover {
     background-color: var(--dark-neutral);
+}
+
+.display-tags {
+    padding: 0.5rem;
+}
+
+.display-tags .tag-text:hover {
+    font-weight: bold;
+    color: var(--dark-color);
+    cursor: pointer;
+}
+
+#tag-form button {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 1rem;
+    background-color: var(--neutral);
+    color: #fff;
+    text-decoration: none;
+    width: 3rem;
+}
+
+#tag-form button:hover {
+    background-color: var(--dark-neutral);
+    cursor: pointer;
 }
 
 

@@ -1,8 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchGardenException;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchPlantException;
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchPlantException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
@@ -31,12 +31,13 @@ import java.util.Optional;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 @Controller
-public class PlantController extends GardensSidebar {
+public class PlantController extends NavBar {
     Logger logger = LoggerFactory.getLogger(PlantController.class);
 
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
+    private final ErrorChecker errorChecker;
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -47,10 +48,11 @@ public class PlantController extends GardensSidebar {
      * @param userService   The User database access object.
      */
     @Autowired
-    public PlantController(PlantService plantService, GardenService gardenService, UserService userService) {
+    public PlantController(PlantService plantService, GardenService gardenService, UserService userService, ErrorChecker errorChecker) {
         this.plantService = plantService;
         this.gardenService = gardenService;
         this.userService = userService;
+        this.errorChecker = errorChecker;
     }
 
     /**
@@ -83,7 +85,7 @@ public class PlantController extends GardensSidebar {
                     String imageSizeError,
                     String plantImageUploadError,
                     String plantName,
-                    Integer plantCount,
+                    String plantCount,
                     String plantDescription,
                     LocalDate plantedDate,
                     String plantImagePath,
@@ -92,7 +94,7 @@ public class PlantController extends GardensSidebar {
                     URI cancelButtonUri,
                     Model model
     ) {
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
 
         model.addAttribute("plantNameError", plantNameError);
         model.addAttribute("plantCountError", plantCountError);
@@ -170,7 +172,7 @@ public class PlantController extends GardensSidebar {
         return loadPlantForm(
                         "", "", "", "", "", "", "",
                         plant.getName(),
-                        plant.getCount(),
+                        plant.getCount().toString(),
                         plant.getDescription(),
                         plant.getPlantedOn(),
                         plant.getImageFilePath(),
@@ -195,7 +197,7 @@ public class PlantController extends GardensSidebar {
                 date = LocalDate.parse(dateString);
             }
         } catch (DateTimeParseException exception) {
-            errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
+            errors.put("plantedDateError", "Planted date must be in the format dd-mm-yyyy");
         }
         return date;
     }
@@ -237,7 +239,7 @@ public class PlantController extends GardensSidebar {
     public String submitNewPlant(
                     @PathVariable long gardenId,
                     @RequestParam String plantName,
-                    @RequestParam(required = false) Integer plantCount,
+                    @RequestParam(required = false) String plantCount,
                     @RequestParam(required = false) String plantDescription,
                     @RequestParam(required = false) String plantedDate,
                     @RequestParam(required = false) MultipartFile plantImage,
@@ -251,7 +253,7 @@ public class PlantController extends GardensSidebar {
         }
         Garden garden = optionalGarden.get();
 
-        Map<String, String> errors = ErrorChecker.plantFormErrors(
+        Map<String, String> errors = errorChecker.plantFormErrors(
                         plantName,
                         plantCount,
                         plantDescription,
@@ -272,7 +274,7 @@ public class PlantController extends GardensSidebar {
                             errors.getOrDefault("plantImageUploadError", ""),
                             plantName,
                             plantCount,
-                            plantDescription,
+                    plantDescription,
                             date,
                             "/images/default-plant.jpg",
                             garden.getName(),
@@ -281,7 +283,12 @@ public class PlantController extends GardensSidebar {
                             model
             );
         }
-        Plant plant = new Plant(plantName, plantCount, plantDescription, date, imageFileName, garden);
+        Integer intPlantCount = null;
+        if (plantCount != null) {
+            intPlantCount = Integer.parseInt(plantCount, 10);
+        }
+
+        Plant plant = new Plant(plantName, intPlantCount, plantDescription, date, imageFileName, garden);
         plantService.savePlant(plant);
         return "redirect:" + viewGardenUri(garden.getId());
     }
@@ -305,7 +312,7 @@ public class PlantController extends GardensSidebar {
                     @PathVariable long plantId,
                     @PathVariable long gardenId,
                     @RequestParam String plantName,
-                    @RequestParam(required = false) Integer plantCount,
+                    @RequestParam(required = false) String plantCount,
                     @RequestParam(required = false) String plantDescription,
                     @RequestParam(required = false) String plantedDate,
                     @RequestParam(required = false) MultipartFile plantImage,
@@ -321,7 +328,7 @@ public class PlantController extends GardensSidebar {
         }
         Plant plant = optionalPlant.get();
 
-        Map<String, String> errors = ErrorChecker.plantFormErrors(
+        Map<String, String> errors = errorChecker.plantFormErrors(
                         plantName,
                         plantCount,
                         plantDescription,
@@ -352,8 +359,12 @@ public class PlantController extends GardensSidebar {
             );
         }
 
+        Integer intPlantCount = null;
+        if (plantCount != null) {
+            intPlantCount = Integer.parseInt(plantCount, 10);
+        }
         plant.setName(plantName);
-        plant.setCount(plantCount);
+        plant.setCount(intPlantCount);
         plant.setDescription(plantDescription);
         plant.setPlantedOn(date);
         if (imageFileName != null) {

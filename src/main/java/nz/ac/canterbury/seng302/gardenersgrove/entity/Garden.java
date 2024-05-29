@@ -21,15 +21,27 @@ public class Garden {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 
+    @Column(length = 512)
+    private String description;
+
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
-    @Column()
+    @Column
     private Float size;
 
-    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "garden", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Plant> plants;
+
+    @ManyToMany(mappedBy = "gardens", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Tag> tags;
+
+    @Column
+    private boolean isGardenPublic;
+
+    @Column
+    private boolean verifiedDescription;
 
     /**
      * JPA required no-args constructor
@@ -40,16 +52,23 @@ public class Garden {
     /**
      * Creates a new Garden object
      *
-     * @param name     name of Garden
-     * @param location The details of the physical place where the garden is
-     * @param size     The physical size of the garden in square metres
+     * @param owner                 User who create and therefore owns the garden
+     * @param name                  name of Garden
+     * @param description           a note made about the garden by the creator
+     * @param location              The details of the physical place where the garden is
+     * @param size                  The physical size of the garden in square metres
+     * @param verifiedDescription   Whether the description is suitible for public consumption
      */
-    public Garden(User owner, String name, Location location, Float size) {
+    public Garden(User owner, String name, String description, Location location, Float size, boolean verifiedDescription) {
         this.owner = owner;
         this.name = name;
+        this.description = description;
         this.location = location;
         this.size = size;
         this.plants = new ArrayList<>();
+        this.tags = new ArrayList<>();
+        this.isGardenPublic = false;
+        this.verifiedDescription = verifiedDescription;
     }
 
 
@@ -65,12 +84,20 @@ public class Garden {
         this.size = newSize;
     }
 
+    public void setDescription(String newDescription) {
+        this.description = newDescription;
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Location getLocation() {
@@ -101,6 +128,26 @@ public class Garden {
         this.plants.add(plant);
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public boolean isGardenPublic() {
+        return isGardenPublic;
+    }
+
+    public void setIsGardenPublic(boolean isGardenPublic) {
+        this.isGardenPublic = isGardenPublic;
+    }
+
+    public boolean getVerifiedDescription() {
+        return verifiedDescription;
+    }
+
+    public void setVerifiedDescription(boolean verifiedDescription) {
+        this.verifiedDescription = verifiedDescription;
+    }
+
     @Override
     public String toString() {
         return "Garden{" +
@@ -108,6 +155,9 @@ public class Garden {
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
                 ", size=" + size +
+                ", tags=" + tags +
+                ", isGardenPublic=" + isGardenPublic +
+                ", verifiedDescription=" + verifiedDescription +
                 '}';
     }
 }
