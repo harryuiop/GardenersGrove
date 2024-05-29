@@ -116,6 +116,7 @@ public class FriendsController extends NavBar {
                 case "Cancel":
                     logger.info("Canceled Request");
                     friendRequestService.removeRequest(friendRequest);
+                    break;
                 default:
                     logger.info("Default in switch statement");
             }

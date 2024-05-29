@@ -9,7 +9,8 @@
         <div>
             <h2>My Gardens</h2>
             <div class="list-container">
-                <a th:each="garden: ${gardens}" th:href="@{${viewGardenUriString}(gardenId=${garden.id})}">
+                <a th:each="garden: ${gardenList}"
+                   th:href="@{${viewGardenUriString}(gardenId=${garden.id}, friendId=${friendId})}">
                     <div class="garden-item"><span th:text="${garden.name}">Name</span></div>
                 </a>
             </div>
