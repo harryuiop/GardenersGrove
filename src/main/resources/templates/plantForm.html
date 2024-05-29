@@ -55,12 +55,14 @@
                                 <img class="selectedImage" th:src="@{${plantImagePath}}" style="width: 7vw" alt="Plant Image">
                                 <p id="image-selected-message"></p>
                                 <div class="add-image">
-                                    <label for="plantImage">
-                                        <i class="fas fa-plus-circle"></i>
-                                    </label>
-                                    <input type="file" class="form-control" id="plantImage" th:name="plantImage"
+                                    <input type="file"
+                                           class="form-control"
+                                           id="plantImage"
+                                           th:name="plantImage"
                                            accept="image/jpeg, image/png, image/svg+xml"
-                                           data-cy="plantImage" onchange="displayImage()" autofocus>
+                                           data-cy="plantImage"
+                                           onchange="displayImage()"
+                                    >
                                 </div>
                             </div>
                             <h5 th:text="${imageTypeError}"></h5>
@@ -80,7 +82,5 @@
     </div>
 </div>
 </body>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script type="text/javascript" th:src="@{/javascript/image.js}"></script>
 </html>
