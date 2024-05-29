@@ -12,7 +12,15 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	cucumberRuntime {
+		extendsFrom testImplementation
+	}
+}
+
 dependencies {
+
+	// Spring dependencies
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -28,6 +36,7 @@ dependencies {
 	testImplementation 'junit:junit:4.13.1'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
@@ -49,5 +58,19 @@ tasks.register("cucumber", Test) {
 	}
 	testLogging {
 		events "passed", "skipped", "failed", "standardOut", "standardError"
+	}
+}
+tasks.register('cucumberCli') {
+	dependsOn assemble, testClasses
+	doLast {
+		javaexec {
+			main = "io.cucumber.core.cli.Main"
+			classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+			args = [
+					'--plugin', 'pretty',
+					'--plugin', 'html:target/cucumber-report.html',
+					'--glue', 'com.baeldung.cucumber',
+					'src/test/resources']
+		}
 	}
 }

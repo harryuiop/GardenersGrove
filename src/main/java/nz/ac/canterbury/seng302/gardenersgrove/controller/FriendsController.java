@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
@@ -30,6 +33,8 @@ public class FriendsController extends GardensSidebar {
     Logger logger = LoggerFactory.getLogger(FriendsController.class);
     private final UserService userService;
     private final FriendRequestService friendRequestService;
+
+    private List<String> requestActions = new ArrayList<String>(Arrays.asList("Accept", "Decline", "Cancel"));
 
     private final FriendshipService friendshipService;
 
@@ -79,28 +84,37 @@ public class FriendsController extends GardensSidebar {
     @PostMapping(MANAGE_FRIENDS_URI_STRING)
     public String submitFriendsPage(@RequestParam String action, @RequestParam Long request) throws NoSuchFriendRequestException {
         logger.info("POST {}", viewFriendsUri());
-        logger.info(request.toString());
-        Optional<FriendRequest> optionalFriendRequest = friendRequestService.findRequestById(request);
-        if (optionalFriendRequest.isEmpty()) {
-            logger.error("No such request id");
-            throw new NoSuchFriendRequestException();
-        }
-        FriendRequest friendRequest = optionalFriendRequest.get();
-        User receiver = friendRequest.getReceiver();
-        User sender = friendRequest.getSender();
-        switch (action) {
-            case "Accept":
-                logger.info("Accepted Request");
-                friendshipService.addFriend(sender, receiver);
-                friendRequestService.removeAcceptedRequest(friendRequest);
-                break;
-            case "Decline":
-                logger.info("Declined Request");
-                friendRequest.setStatus(Status.DECLINED);
-                friendRequestService.updateRequest(friendRequest);
-                break;
-            default:
-                logger.info("Default in switch statement");
+        if (requestActions.contains(action)) {
+            Optional<FriendRequest> optionalFriendRequest = friendRequestService.findRequestById(request);
+            if (optionalFriendRequest.isEmpty() && requestActions.contains(action)) {
+                logger.error("No such request id");
+                throw new NoSuchFriendRequestException();
+            }
+            FriendRequest friendRequest = optionalFriendRequest.get();
+            User receiver = friendRequest.getReceiver();
+            User sender = friendRequest.getSender();
+
+            switch (action) {
+                case "Accept":
+                    logger.info("Accepted Request");
+                    friendshipService.addFriend(sender, receiver);
+                    friendRequestService.removeRequest(friendRequest);
+                    break;
+                case "Decline":
+                    logger.info("Declined Request");
+                    friendRequest.setStatus(Status.DECLINED);
+                    friendRequestService.updateRequest(friendRequest);
+                    break;
+                case "Cancel":
+                    logger.info("Canceled Request");
+                    friendRequestService.removeRequest(friendRequest);
+                default:
+                    logger.info("Default in switch statement");
+            }
+        } else {
+            logger.info("Remove Friend");
+            User userFriend = userService.getUserById(request);
+            friendshipService.removeFriendship(friendshipService.getFriendship(userService.getAuthenticatedUser(), userFriend));
         }
         return "redirect:" + viewFriendsUri();
     }
