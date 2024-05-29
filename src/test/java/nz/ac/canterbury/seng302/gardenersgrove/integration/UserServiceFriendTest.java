@@ -17,7 +17,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -47,7 +46,7 @@ class UserServiceFriendTest {
         userRepositoryMock = Mockito.mock(UserRepository.class);
         friendRequestRepositoryMock = Mockito.mock(FriendRequestRepository.class);
         friendshipRepository = Mockito.mock(FriendshipRepository.class);
-        friendshipService = new FriendshipService(friendshipRepository, userService);
+        friendshipService = new FriendshipService(friendshipRepository);
         userService = new UserService(userRepositoryMock);
         friendRequestService = new FriendRequestService(friendRequestRepositoryMock);
 
@@ -79,7 +78,7 @@ class UserServiceFriendTest {
     @Test
     void searchUser_searchPendingFriendByEmail_returnSearchedUser() {
         when(friendRequestRepositoryMock.findFriendRequestBySenderAndReceiver(any(), any()))
-                .thenReturn(Arrays.asList(new FriendRequest(loggedInUser, pendingRequestUser)));
+                .thenReturn(List.of(new FriendRequest(loggedInUser, pendingRequestUser)));
 
 
         List<SearchedUserResult> actualSearchedResults = userService.getSearchedUserAndFriendStatus(
@@ -95,7 +94,7 @@ class UserServiceFriendTest {
         FriendRequest mockedRequest = new FriendRequest(loggedInUser, friendUser);
         mockedRequest.setStatus(Status.FRIENDS);
         when(friendRequestRepositoryMock.findFriendRequestBySenderAndReceiver(any(), any()))
-                .thenReturn(Arrays.asList(mockedRequest));
+                .thenReturn(List.of(mockedRequest));
 
         List<SearchedUserResult> actualSearchedResults = userService.getSearchedUserAndFriendStatus(
                 friendUser.getEmail(), loggedInUser, friendRequestService, friendshipService);
@@ -110,7 +109,7 @@ class UserServiceFriendTest {
         FriendRequest mockedRequest = new FriendRequest(loggedInUser, declinedRequestUser);
         mockedRequest.setStatus(Status.DECLINED);
         when(friendRequestRepositoryMock.findFriendRequestBySenderAndReceiver(any(), any()))
-                .thenReturn(Arrays.asList(mockedRequest));
+                .thenReturn(List.of(mockedRequest));
 
         List<SearchedUserResult> actualSearchedResults = userService.getSearchedUserAndFriendStatus(
                 declinedRequestUser.getEmail(), loggedInUser, friendRequestService, friendshipService);
@@ -123,7 +122,7 @@ class UserServiceFriendTest {
     @Test
     void searchUser_searchByName_singleResult_returnSearchedUser() {
         when(friendRequestRepositoryMock.findFriendRequestBySenderAndReceiver(any(), any()))
-                .thenReturn(Arrays.asList(new FriendRequest(loggedInUser, pendingRequestUser)));
+                .thenReturn(List.of(new FriendRequest(loggedInUser, pendingRequestUser)));
 
 
         List<SearchedUserResult> actualSearchedResults = userService.getSearchedUserAndFriendStatus(
@@ -136,7 +135,7 @@ class UserServiceFriendTest {
     @Test
     void searchUser_searchByNameUser_multipleResults_returnSearchedUsers() {
         when(friendRequestRepositoryMock.findFriendRequestBySenderAndReceiver(any(), any()))
-                .thenReturn(Arrays.asList(new FriendRequest(loggedInUser, userSameName1)));
+                .thenReturn(List.of(new FriendRequest(loggedInUser, userSameName1)));
 
 
         List<SearchedUserResult> actualSearchedResults = userService.getSearchedUserAndFriendStatus(
@@ -150,7 +149,7 @@ class UserServiceFriendTest {
     @Test
     void searchUser_searchByPartialName_returnNoSearchedUsers() {
         when(friendRequestRepositoryMock.findFriendRequestBySenderAndReceiver(any(), any()))
-                .thenReturn(Arrays.asList(new FriendRequest(loggedInUser, pendingRequestUser)));
+                .thenReturn(List.of(new FriendRequest(loggedInUser, pendingRequestUser)));
 
 
         List<SearchedUserResult> actualSearchedResults = userService.getSearchedUserAndFriendStatus(
@@ -162,7 +161,7 @@ class UserServiceFriendTest {
     @Test
     void searchUser_searchByPartialEmail_returnNoSearchedUsers() {
         when(friendRequestRepositoryMock.findFriendRequestBySenderAndReceiver(any(), any()))
-                .thenReturn(Arrays.asList(new FriendRequest(loggedInUser, pendingRequestUser)));
+                .thenReturn(List.of(new FriendRequest(loggedInUser, pendingRequestUser)));
 
 
         List<SearchedUserResult> actualSearchedResults = userService.getSearchedUserAndFriendStatus(

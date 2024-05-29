@@ -21,7 +21,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 
 @DataJpaTest
-public class PlantServiceTest {
+class PlantServiceTest {
     @Autowired
     private PlantRepository plantRepository;
     private PlantService plantService;
@@ -44,7 +44,7 @@ public class PlantServiceTest {
     @BeforeEach
     void setUp() {
         userService = new UserService(userRepository);
-        friendshipService = new FriendshipService(friendshipRepository, userService);
+        friendshipService = new FriendshipService(friendshipRepository);
         gardenService = new GardenService(gardenRepository, userService, friendshipService);
         plantService = new PlantService(plantRepository, userService, gardenService);
         if (user == null) {

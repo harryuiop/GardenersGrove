@@ -34,7 +34,7 @@ class GardenServiceTest {
     @Test
     void gardenRepositoryGardenCreation() {
         userService = new UserService(userRepository);
-        friendshipService = new FriendshipService(friendshipRepository, userService);
+        friendshipService = new FriendshipService(friendshipRepository);
         if (user == null) {
             user = new User(
                     "test@domain.net",
