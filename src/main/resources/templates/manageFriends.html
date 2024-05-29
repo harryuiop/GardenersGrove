@@ -5,41 +5,42 @@
 </head>
 <body style="">
 <nav th:insert="~{fragments/navbar :: navbar}"></nav>
-    <div class="container-fluid p-5 text-white text-center" style="background-color: #477641">
-        <h1>Manage my friends</h1>
-        <form th:action="@{${searchResultsUri}}" method="post">
-            <div class="input-group rounded mx-auto" style="width: 20vw;">
-                    <input type="text" id="searchUsers"
-                           th:name="searchUser"
-                           th:value="*{search}"
-                           class="form-control rounded"
-                           placeholder="Search for new friends"
-                           aria-label="Search"
-                           aria-describedby="search-addon"
-                            autocomplete="off"/>
-                    <button class="input-group-text border-0" id="search-addon" type="submit" th:for="searchForm">
-                        <i class="bi bi-search"></i>
-                    </button>
-            </div>
-        </form>
-    </div>
+<div class="container-fluid p-5 text-white text-center" style="background-color: #477641">
+    <h1>Manage my friends</h1>
+    <form th:action="@{${searchResultsUri}}" method="post">
+        <div class="input-group rounded mx-auto" style="width: 20vw;">
+            <input type="text" id="searchUsers"
+                   th:name="searchUser"
+                   th:value="*{search}"
+                   class="form-control rounded"
+                   placeholder="Search for new friends"
+                   aria-label="Search"
+                   aria-describedby="search-addon"
+                   autocomplete="off"/>
+            <button class="input-group-text border-0" id="search-addon" type="submit" th:for="searchForm">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
+</div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="confirm-send-request">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Request friend?</h5>
-                </div>
-                <div class="modal-body">
-                    <p id="request-user"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="makeFriends()">Send Request</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">No Thanks</button>
-                </div>
+<div class="modal" tabindex="-1" role="dialog" id="confirm-send-request">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Request friend?</h5>
+            </div>
+            <div class="modal-body">
+                <p id="request-user"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="makeFriends()">Send Request</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">No Thanks
+                </button>
             </div>
         </div>
     </div>
+</div>
 
 <div class="container mt-5">
     <div class="row">
@@ -65,16 +66,19 @@
                                                        class="link-offset-2 link-underline link-underline-opacity-0"
                                                        style="color: #142915; font-size: 30px"
                                                        th:text="${friend.getName()}"></a>
-                                                    <div>
+                                                    <div class="d-flex justify-content-lg-around">
                                                         <a th:href="@{${viewFriendsGardensUriString}(friendId=${friend.getId()})}"
-                                                           class="btn btn-primary"
+                                                           class="btn btn-primary d-flex align-items-center"
                                                            style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">
                                                             See Gardens
                                                         </a>
                                                         <div>
                                                             <button class="btn btn-primary"
                                                                     type="button"
-                                                                    style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641"
+                                                                    style="border-color: #477641;
+                                                                           width: 100px;
+                                                                           font-size: 12px;
+                                                                           background-color: #477641;"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#removeFriendModal"
                                                                     th:data-form-id="'remove-' + ${friend.getId()}">
