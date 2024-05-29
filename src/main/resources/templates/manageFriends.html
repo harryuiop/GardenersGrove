@@ -58,7 +58,7 @@
                 <div style="max-height: 600px; overflow-y: auto;">
                 <table class="table table-borderless">
                     <tbody>
-                    <tr th:each="friend : ${friendshipService.getFriends(user)}">
+                    <tr th:each="friend : ${friends}">
                             <td>
                                 <div class="card" style="width:25vw">
                                     <div class="card-body">
@@ -96,7 +96,7 @@
                     <h3>Incoming Requests</h3>
                     <table class="table table-borderless">
                         <tbody>
-                        <tr th:if="${requestService.findRequestByReceiver(user).size() == 0}">
+                        <tr th:if="${incoming.size() == 0}">
                             <td>
                                 <div class="card" style="width:25vw">
                                     <div class="card-body">
@@ -112,7 +112,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr th:each="request : ${requestService.findRequestByReceiver(user)}">
+                        <tr th:each="request : ${incoming}">
                             <form th:action="@{${manageFriendsUri}}" method="post">
                                 <td>
                                     <div class="card" style="width:25vw">
@@ -160,7 +160,7 @@
                     <h3>Outgoing Requests</h3>
                     <table class="table table-borderless">
                         <tbody>
-                        <tr th:if="${requestService.findRequestBySender(user).size() == 0}">
+                        <tr th:if="${outgoing.size() == 0}">
                             <td>
                                 <div class="card" style="width:25vw">
                                     <div class="card-body">
@@ -176,7 +176,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr th:each="request : ${requestService.findRequestBySender(user)}">
+                        <tr th:each="request : ${outgoing}">
                             <form th:action="@{${manageFriendsUri}}" method="post">
                                 <td>
                                     <div class="card" style="width:25vw">
