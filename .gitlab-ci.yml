@@ -47,6 +47,7 @@ deploy-staging:
     - echo "export DB_USERNAME=${DB_USERNAME}" > /home/gitlab-runner/staging/.env
     - echo "export DB_PASSWORD=${DB_PASSWORD}" >> /home/gitlab-runner/staging/.env
     - echo "export DB_URL=${DB_URL_TEST}" >> /home/gitlab-runner/staging/.env
+    - echo "export BASE_URL=${TEST_ORIGIN_URL}" >> /home/gitlab-runner/staging/.env
     - echo "export MAPTILER_API_KEY=${MAPTILER_API_KEY}" >> /home/gitlab-runner/staging/.env
     - echo "export SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}" >> /home/gitlab-runner/staging/.env
     - echo "export SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}" >> /home/gitlab-runner/staging/.env
@@ -69,6 +70,7 @@ deploy-production:
     - echo "export DB_USERNAME=${DB_USERNAME}" > /home/gitlab-runner/production/.env
     - echo "export DB_PASSWORD=${DB_PASSWORD}" >> /home/gitlab-runner/production/.env
     - echo "export DB_URL=${DB_URL_PROD}" >> /home/gitlab-runner/production/.env
+    - echo "export BASE_URL=${PROD_ORIGIN_URL}" >> /home/gitlab-runner/production/.env
     - echo "export MAPTILER_API_KEY=${MAPTILER_API_KEY}" >> /home/gitlab-runner/production/.env
     - echo "export SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}" >> /home/gitlab-runner/production/.env
     - echo "export SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}" >> /home/gitlab-runner/production/.env
