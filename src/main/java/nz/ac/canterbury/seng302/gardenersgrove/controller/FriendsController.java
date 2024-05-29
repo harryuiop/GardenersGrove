@@ -59,8 +59,9 @@ public class FriendsController extends GardensSidebar {
         model.addAttribute("user", userService.getAuthenticatedUser());
         model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
-        model.addAttribute("requestService", friendRequestService);
-        model.addAttribute("friendshipService", friendshipService);
+        model.addAttribute("friends", friendshipService.getFriends(userService.getAuthenticatedUser()));
+        model.addAttribute("incoming", friendRequestService.findRequestByReceiver(userService.getAuthenticatedUser()));
+        model.addAttribute("outgoing", friendRequestService.findRequestBySender(userService.getAuthenticatedUser()));
         model.addAttribute("viewAllGardensUri", viewAllGardensUri());
         model.addAttribute("newGardenUri", newGardenUri());
         model.addAttribute("searchResultsUri", searchResultsUri());
