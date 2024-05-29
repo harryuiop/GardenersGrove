@@ -172,7 +172,7 @@ public class PlantController extends NavBar {
         return loadPlantForm(
                 "", "", "", "", "", "", "",
                 plant.getName(),
-                plant.getCount() != null ? plant.getCount().toString() : "",
+                plant.getCount() != null ? plant.getCount().toString() : null,
                 plant.getDescription(),
                 plant.getPlantedOn(),
                 plant.getImageFilePath(),
