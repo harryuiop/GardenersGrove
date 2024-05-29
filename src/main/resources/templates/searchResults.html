@@ -55,21 +55,40 @@
                                                            th:text="${friend.getUser().getName()}"></a>
                                                         <p th:text="${friend.getUser().getEmail()}"></p>
                                                         <div>
-                                                            <form method="post"
-                                                                  th:action="@{${sendFriendRequestUri}}" th:if="${friend.isRequestEnabled()}">
-                                                                <input th:name="userId" th:value="${friend.getUser().getId()}"
-                                                                       type="hidden">
-                                                                <button
-                                                                        class="btn btn-primary"
-                                                                        style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641"
-                                                                        th:text="${friend.getStatusText()}">
-                                                                </button>
-                                                            </form>
+
+                                                            <div th:if="${friend.isRequestEnabled()}">
+                                                                <form th:if="${incomingRequests.keySet().contains(friend.getUser().getId())}" th:action="@{${manageFriendsUri}}" method="post">
+                                                                    <input type="hidden" th:name="userId" th:value="${friend.getUser().getId()}">
+                                                                    <button th:name="action" th:type="submit"
+                                                                            th:value="'Accept'"
+                                                                            class="btn btn-primary"
+                                                                            style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">
+                                                                        Accept
+                                                                    </button>
+                                                                    <button th:name="action" th:type="submit"
+                                                                            th:value="'Decline'"
+                                                                            class="btn btn-primary"
+                                                                            style="border-color: #7c2f2f; width: 100px; font-size: 12px; background-color: #7c2f2f">
+                                                                        Decline
+                                                                    </button>
+                                                                    <input type="hidden" th:name="request"
+                                                                           th:value="${incomingRequests.get(friend.getUser().getId())}">
+                                                                </form>
+                                                                <form th:unless="${incomingRequests.keySet().contains(friend.getUser().getId())}" th:action="@{${sendFriendRequestUri}}" method="post">
+                                                                    <input type="hidden" th:name="userId" th:value="${friend.getUser().getId()}">
+                                                                    <button
+                                                                            class="btn btn-primary"
+                                                                            style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641"
+                                                                            th:text="${friend.getStatusText()}">
+                                                                    </button>
+                                                                </form>
+
+                                                            </div>
                                                             <div th:unless="${friend.isRequestEnabled()}">
                                                                 <button
                                                                         class="btn btn-primary"
                                                                         style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641"
-                                                                        th:text="${friend.getStatusText()}"
+                                                                        th:text="${usersFound[iterStat.index + 1].getStatusText()}"
                                                                         th:unless="${friend.isUserSelf()}">
                                                                 </button>
                                                             </div>
@@ -98,22 +117,42 @@
                                                            th:text="${usersFound[iterStat.index + 1].getUser().getName()}"></a>
                                                         <p th:text="${usersFound[iterStat.index + 1].getUser().getEmail()}"></p>
                                                         <div>
-                                                            <form method="post"
-                                                                  th:action="@{${sendFriendRequestUri}}" th:if="${friend.isRequestEnabled()}">
-                                                                <input th:name="userId" th:value="${usersFound[iterStat.index + 1].getUser().getId()}"
-                                                                       type="hidden">
-                                                                <button
-                                                                        class="btn btn-primary"
-                                                                        style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641"
-                                                                        th:text="${usersFound[iterStat.index + 1].getStatusText()}">
-                                                                </button>
-                                                            </form>
-                                                            <div th:unless="${friend.isRequestEnabled()}">
+
+                                                            <div th:if="${usersFound[iterStat.index + 1].isRequestEnabled()}">
+                                                                <form th:if="${incomingRequests.keySet().contains(usersFound[iterStat.index + 1].getUser().getId())}" th:action="@{${manageFriendsUri}}" method="post">
+                                                                    <input type="hidden" th:name="userId" th:value="${usersFound[iterStat.index + 1].getUser().getId()}">
+                                                                    <button th:name="action" th:type="submit"
+                                                                            th:value="'Accept'"
+                                                                            class="btn btn-primary"
+                                                                            style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641">
+                                                                        Accept
+                                                                    </button>
+                                                                    <button th:name="action" th:type="submit"
+                                                                            th:value="'Decline'"
+                                                                            class="btn btn-primary"
+                                                                            style="border-color: #7c2f2f; width: 100px; font-size: 12px; background-color: #7c2f2f">
+                                                                        Decline
+                                                                    </button>
+                                                                    <input type="hidden" th:name="request"
+                                                                           th:value="${incomingRequests.get(usersFound[iterStat.index + 1].getUser().getId())}">
+                                                                </form>
+                                                                <form th:unless="${incomingRequests.keySet().contains(usersFound[iterStat.index + 1].getUser().getId())}" th:action="@{${sendFriendRequestUri}}" method="post">
+                                                                    <input type="hidden" th:name="userId" th:value="${usersFound[iterStat.index + 1].getUser().getId()}">
+                                                                    <button
+                                                                            class="btn btn-primary"
+                                                                            style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641"
+                                                                            th:text="${usersFound[iterStat.index + 1].getStatusText()}">
+                                                                    </button>
+                                                                </form>
+
+                                                            </div>
+
+                                                            <div th:unless="${usersFound[iterStat.index + 1].isRequestEnabled()}">
                                                                 <button
                                                                         class="btn btn-primary"
                                                                         style="border-color: #477641; width: 100px; font-size: 12px; background-color: #477641"
                                                                         th:text="${usersFound[iterStat.index + 1].getStatusText()}"
-                                                                        th:unless="${friend.isUserSelf()}">
+                                                                        th:unless="${usersFound[iterStat.index + 1].isUserSelf()}">
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -127,8 +166,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
+    </div>
+</div>
 </body>
 </html>
