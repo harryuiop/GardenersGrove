@@ -9,6 +9,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -1150,13 +1152,14 @@ class ErrorCheckerTest {
         Assertions.assertEquals(correctErrors, errors);
     }
 
-
-    @Test
-    void viewGardenFromErrors_checkNewTagNameIsInvalid_returnsErrorMessage() {
-        String tagName = "ajlkf$%(Q*@&(*";
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "a!b", "c@d", "e#f", "g$h", "i%j", "k^l", "m&n", "o*p", "q(r", "s)t", "u+v", "w=x", "y:z", "a", "b-", "_c"
+    })
+    void viewGardenFormErrors_checkNewTagNameIsInvalid_returnsErrorMessage(String tagName) {
         String error = errorChecker.tagNameErrors(tagName);
-        Assertions.assertEquals("The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" "
-                                , error);
+        Assertions.assertTrue(error.contains("The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" "));
+        Assertions.assertTrue(error.contains("A tag cannot exceed 25 characters"));
     }
 
     @Test
@@ -1164,13 +1167,5 @@ class ErrorCheckerTest {
         String tagName = "slakdjghlakghdjsffhalikjghsdlkafjhldsakugajhsdkrjfhalkjdsfhlakjgh";
         String error = errorChecker.tagNameErrors(tagName);
         Assertions.assertEquals("A tag cannot exceed 25 characters", error);
-    }
-
-    @Test
-    void viewGardenFormErrors_checkNewTagNameIsInvalid_andTagNameExceed25Character_returnsErrorMessage() {
-        String tagName = "slakjdfLOKJ%$(*&Q#($*%&*)##*&$ldkfjgwklasjdhfglakhsfkajdhgsd;klfjhlkasdjfhalkdjfhslkadfjhdskfj";
-        String error = errorChecker.tagNameErrors(tagName);
-        Assertions.assertTrue(error.contains("The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" "));
-        Assertions.assertTrue(error.contains("A tag cannot exceed 25 characters"));
     }
 }
