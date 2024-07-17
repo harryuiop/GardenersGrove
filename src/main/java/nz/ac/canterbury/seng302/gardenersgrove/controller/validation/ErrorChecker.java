@@ -488,7 +488,7 @@ public class ErrorChecker {
     String errors = "";
 
     if (!formValuesValidator.checkTagName(tag))
-      errors += "A valid tag name must:\n- Contain only letters, numbers, spaces, -, _, ' and \".\n- Must start with a letter.\n- Must end with a letter.";
+      errors += "A valid tag name must:\n- Contain only letters, numbers, spaces, -, _, ', and \".\n- Must start with a letter.\n- Must end with a letter.";
 
     if (!formValuesValidator.checkTagNameLength(tag))
       errors += (!errors.isEmpty() ? "\n" : "") + "A tag cannot exceed 25 characters";
