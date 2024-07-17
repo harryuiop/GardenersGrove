@@ -85,7 +85,7 @@ public class PlantController extends NavBar {
             String imageSizeError,
             String plantImageUploadError,
             String plantName,
-            Integer plantCount,
+            String plantCount,
             String plantDescription,
             LocalDate plantedDate,
             String plantImagePath,
@@ -172,7 +172,7 @@ public class PlantController extends NavBar {
         return loadPlantForm(
                 "", "", "", "", "", "", "",
                 plant.getName(),
-                plant.getCount(),
+                plant.getCount() == null ? "" : plant.getCount().toString(),
                 plant.getDescription(),
                 plant.getPlantedOn(),
                 plant.getImageFilePath(),
@@ -263,8 +263,6 @@ public class PlantController extends NavBar {
         LocalDate date = parseDate(plantedDate, errors);
         String imageFileName = saveImage(plantImage, errors);
 
-        Integer intPlantCount = parseStringToInt(plantCount);
-
         if (!errors.isEmpty()) {
             return loadPlantForm(
                     errors.getOrDefault("plantNameError", ""),
@@ -275,7 +273,7 @@ public class PlantController extends NavBar {
                     errors.getOrDefault("imageSizeError", ""),
                     errors.getOrDefault("plantImageUploadError", ""),
                     plantName,
-                    intPlantCount,
+                    plantCount,
                     plantDescription,
                     date,
                     "/images/default-plant.jpg",
@@ -286,7 +284,7 @@ public class PlantController extends NavBar {
             );
         }
 
-        Plant plant = new Plant(plantName, intPlantCount, plantDescription, date, imageFileName, garden);
+        Plant plant = new Plant(plantName, parseStringToInt(plantCount), plantDescription, date, imageFileName, garden);
         plantService.savePlant(plant);
         return "redirect:" + viewGardenUri(garden.getId());
     }
@@ -336,8 +334,6 @@ public class PlantController extends NavBar {
         LocalDate date = parseDate(plantedDate, errors);
         String imageFileName = saveImage(plantImage, errors);
 
-        Integer intPlantCount = parseStringToInt(plantCount);
-
         if (!errors.isEmpty()) {
             return loadPlantForm(
                     errors.getOrDefault("plantNameError", ""),
@@ -348,7 +344,7 @@ public class PlantController extends NavBar {
                     errors.getOrDefault("imageSizeError", ""),
                     errors.getOrDefault("plantImageUploadError", ""),
                     plantName,
-                    intPlantCount,
+                    plantCount,
                     plantDescription,
                     date,
                     plant.getImageFilePath(),
@@ -360,7 +356,7 @@ public class PlantController extends NavBar {
         }
 
         plant.setName(plantName);
-        plant.setCount(intPlantCount);
+        plant.setCount(parseStringToInt(plantCount));
         plant.setDescription(plantDescription);
         plant.setPlantedOn(date);
         if (imageFileName != null) {
