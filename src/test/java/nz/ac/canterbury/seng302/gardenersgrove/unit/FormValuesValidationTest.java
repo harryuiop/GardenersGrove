@@ -164,7 +164,7 @@ public class FormValuesValidationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"1.0", "abc", "#!12", "9999999999", "0", "-1"})
+    @ValueSource(strings = {"1.0", "abc", "#!12", "9999999999", "0", "-1", "    ", "1  ", "  1", "1 2"})
     void checkValidPlantCount_returnFalse(String value) {
         Assertions.assertFalse(formValuesValidator.checkValidPlantCount(value));
     }
