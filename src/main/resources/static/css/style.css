@@ -101,6 +101,7 @@ label {
 }
 
 .errorMessage {
+    white-space: pre-wrap;
     font-size: 0.8rem;
     color: red;
     font-style: italic;
