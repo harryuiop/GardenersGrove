@@ -158,13 +158,13 @@ public class FormValuesValidationTest {
         Assertions.assertFalse(formValuesValidator.emailInUse(email, userService));
     }
     @ParameterizedTest
-    @ValueSource(strings = {"1", "100", "9923", "999999999", "01"})
+    @ValueSource(strings = {"1", "100", "9923", "999999999", "01", ""})
     void checkValidPlantCount_returnTrue(String value) {
        Assertions.assertTrue(formValuesValidator.checkValidPlantCount(value));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"1.0", "abc", "#!12", "9999999999", "0", "-1"})
+    @ValueSource(strings = {"1.0", "abc", "#!12", "9999999999", "0", "-1", "    ", "1  ", "  1", "1 2"})
     void checkValidPlantCount_returnFalse(String value) {
         Assertions.assertFalse(formValuesValidator.checkValidPlantCount(value));
     }
