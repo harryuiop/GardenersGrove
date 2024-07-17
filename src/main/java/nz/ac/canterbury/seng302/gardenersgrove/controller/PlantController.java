@@ -366,6 +366,11 @@ public class PlantController extends NavBar {
         return "redirect:" + viewGardenUri(plant.getGarden().getId());
     }
 
+    /**
+     * Helper method to turn string into integer
+     * @param plantCount String
+     * @return null or Integer
+     */
     private Integer parseStringToInt(String plantCount) {
         return ( plantCount == null || plantCount.isEmpty() ) ? null : Integer.parseInt(plantCount);
     }
