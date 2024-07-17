@@ -367,6 +367,6 @@ public class PlantController extends NavBar {
     }
 
     private Integer parseStringToInt(String plantCount) {
-        return plantCount.isEmpty() ? null : Integer.parseInt(plantCount);
+        return ( plantCount == null || plantCount.isEmpty() ) ? null : Integer.parseInt(plantCount);
     }
 }
