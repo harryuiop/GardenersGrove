@@ -1158,13 +1158,21 @@ class ErrorCheckerTest {
     })
     void viewGardenFormErrors_checkNewTagNameIsInvalid_returnsErrorMessage(String tagName) {
         String error = errorChecker.tagNameErrors(tagName);
-        Assertions.assertTrue(error.contains("The tag name must only contain alphanumeric characters, spaces, -, _, ', or \" "));
-        Assertions.assertTrue(error.contains("A tag cannot exceed 25 characters"));
+        Assertions.assertTrue(error.contains("A valid tag name must:\n- Contain only letters, numbers, spaces, -, _, ', and \".\n- Must start with a letter.\n- Must end with a letter."));
     }
 
-    @Test
-    void viewGardenFromErrors_checkNewTagNameExceed25Characters_returnsErrorMessage() {
-        String tagName = "slakdjghlakghdjsffhalikjghsdlkafjhldsakugajhsdkrjfhalkjdsfhlakjgh";
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "abcdefghijklmnopqrtsuvwxy", "johns-tag", "johns_tag", "johns tag", "john's tag", "john\"s-tag", "it"
+    })
+    void viewGardenFormErrors_checkNewTagNameIsValid_returnsNoErrorMessage(String tagName) {
+        String error = errorChecker.tagNameErrors(tagName);
+        Assertions.assertEquals("", error);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"abcedfghijklmnopqrstuvwxyz", "abc------'''''''''''kjdshfjdskahflk765417653321764a"})
+    void viewGardenFromErrors_checkNewTagNameExceed25Characters_returnsErrorMessage(String tagName) {
         String error = errorChecker.tagNameErrors(tagName);
         Assertions.assertEquals("A tag cannot exceed 25 characters", error);
     }
