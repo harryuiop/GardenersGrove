@@ -1158,7 +1158,7 @@ class ErrorCheckerTest {
     })
     void viewGardenFormErrors_checkNewTagNameIsInvalid_returnsErrorMessage(String tagName) {
         String error = errorChecker.tagNameErrors(tagName);
-        Assertions.assertTrue(error.contains("A valid tag name must:\n- Contain only letters, numbers, spaces, -, _, ', and \".\n- Must start with a letter.\n- Must end with a letter.\n- Must be at least two characters long."));
+        Assertions.assertTrue(error.contains("A valid tag name must:\n- Contain only letters, numbers, spaces, -, _, ', and \"\n- Start with a letter\n- End with a letter\n- Be at least two characters long"));
     }
 
     @ParameterizedTest
