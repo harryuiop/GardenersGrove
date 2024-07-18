@@ -12,6 +12,7 @@
 
 .form-bg {
   background-color: #efefec;
+  color: var(--dark-green)
 }
 
 .nav-bg {
