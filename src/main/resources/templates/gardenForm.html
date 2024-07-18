@@ -76,12 +76,13 @@
                     >
                       Garden Description
                     </label>
+                    <!--The ternary below will need to be properly fixed-->
                     <p>
                       Description Length
                       <span
                         id="counter-display"
                         class="tag is-success"
-                        th:text="${gardenDescription == '' ? 0 : gardenDescription.length()}"
+                        th:text="${gardenDescription == '' || gardenDescription.length() == 25 ? 0 : gardenDescription.length()}"
                       ></span
                       >/512
                     </p>
