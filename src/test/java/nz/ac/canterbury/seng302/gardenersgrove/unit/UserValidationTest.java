@@ -16,7 +16,7 @@ public class UserValidationTest {
     // Tests for email validation
     @ParameterizedTest
     @ValueSource(strings = {"abc-d@mail.com", "abc.def@mail.com", "abc@mail.com", "abc_def@mail.com",
-            "abc.def@mail.cc", "abc.def@mail-archive.com", "abc.def@mail.org", "abc.def@mail.com"})
+            "abc.def@mail.cc", "abc.def@mail-archive.com", "abc.def@mail.org", "abc.def@mail.com", "john@smith.co.nz"})
     void checkEmail_allValid_returnTrue(String email) {
         Assertions.assertTrue(emailIsValid(email));
     }
@@ -24,7 +24,7 @@ public class UserValidationTest {
     @ParameterizedTest
     @ValueSource(strings = {"", "##@a.com", "aa@$$.com", "aa@aa.##", "onetwogmail.com", "onetwo@gmailcom",
             "abc-@mail.com", "abc..def@mail.com", ".abc@mail.com", "abc#def@mail.com", "abc.def@mail.c",
-            "abc.def@mail#archive.com", "abc.def@mail..com"})
+            "abc.def@mail#archive.com", "abc.def@mail..com", "john@smith.co.nz.ab", "john@smith.co-nz"})
     void checkEmail_invalid_returnFalse(String email) {
         Assertions.assertFalse(emailIsValid(email));
     }
