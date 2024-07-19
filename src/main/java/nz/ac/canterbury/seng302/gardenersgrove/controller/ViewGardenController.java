@@ -90,7 +90,7 @@ public class ViewGardenController extends NavBar {
                     boolean owner,
                     Model model,
                     String... errorMessages
-    ) {
+    ) throws InterruptedException {
         this.updateGardensNavBar(model, gardenService, userService);
 
         if (errorMessages.length > 0) {
@@ -128,7 +128,7 @@ public class ViewGardenController extends NavBar {
     public String displayGarden(
             @PathVariable long gardenId,
             Model model
-    ) throws NoSuchGardenException {
+    ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
@@ -157,7 +157,7 @@ public class ViewGardenController extends NavBar {
             @PathVariable long gardenId,
             @PathVariable long friendId,
             Model model
-    ) throws NoSuchGardenException {
+    ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewFriendsGardenUri(friendId, gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
