@@ -14,6 +14,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo.OpenMeteoWeather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,14 +43,13 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 @Controller
 public class ViewGardenController extends NavBar {
     Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
-
     private final GardenService gardenService;
     private final PlantService plantService;
     private final UserService userService;
     private final FriendshipService friendshipService;
     private final TagService tagService;
     private final ErrorChecker errorChecker;
-    private final OpenMeteoWeather weatherService;
+    private final WeatherService weatherService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -58,6 +58,7 @@ public class ViewGardenController extends NavBar {
      * @param plantService  A Plant database access object.
      * @param userService   A User database access object.
      * @param tagService    A Tag database access object.
+     * @param weatherService Object for main interactions with Open-Meteo API
      */
     @Autowired
     public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker, OpenMeteoWeather weatherService) {

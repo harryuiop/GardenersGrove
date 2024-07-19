@@ -155,7 +155,6 @@ public class OpenMeteoWeather implements WeatherService {
      * @param weatherData List of weather data from the Open Meteo API
      */
     public static String getWeatherAdvice(List<WeatherData> weatherData) {
-        System.out.println(weatherData);
         List<String> weatherDescriptions = new ArrayList<>();
         weatherDescriptions.add(weatherData.get(0).getWeatherDescription());
         weatherDescriptions.add(weatherData.get(1).getWeatherDescription());
