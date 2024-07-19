@@ -190,7 +190,7 @@ public class UserService {
      * @return a list of users whos' names or emails contain the string and their status in relation to the
      * logged-in user.
      */
-    public List<SearchedUserResult> getSearchedUserAndFriendStatus(String searchString, User loggedInUser, FriendRequestService friendRequestService) {
+    public List<SearchedUserResult> getSearchedUserAndFriendStatus(String searchString, User loggedInUser, FriendRequestService friendRequestService, FriendshipService friendshipService) {
         List<SearchedUserResult> searchResults = new ArrayList<>();
         for (User user: getAllUsers()) {
             if ((user.getEmail()).equalsIgnoreCase(searchString) ||
@@ -199,7 +199,7 @@ public class UserService {
                 if ( user == loggedInUser) {
                     searchResults.add(new SearchedUserResult(user, Status.SELF));
                 } else {
-                    Status status = loggedInUser.getFriends().contains(user) ? Status.FRIENDS : Status.SEND_REQUEST;
+                    Status status = friendshipService.getFriends(loggedInUser).contains(user) ? Status.FRIENDS : Status.SEND_REQUEST;
                     List<FriendRequest> friendRequests = friendRequestService.findRequestBySenderAndReceiver(loggedInUser, user);
                     if (!friendRequests.isEmpty()) {
                         status =  friendRequests.getFirst().getStatus();

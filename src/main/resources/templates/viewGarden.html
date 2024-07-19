@@ -1,136 +1,169 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="~{fragments/importFragment :: headerfiles}"></head>
+<head th:insert="~{fragments/importFragment :: headerfiles}"><title>Gardeners' Grove</title></head>
+
 <body>
-<div th:insert="~{fragments/fragments :: title}">Header</div>
-<nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
+<div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
+  <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
 
-<p th:text="${advice}"></p>
+  <div class="d-flex justify-content-center mt-5 w-100">
+    <div class="content">
+      <h2 th:text="${garden.getName()}"></h2>
 
-<div class="content" >
-    <h2 th:text="${garden.getName()}"></h2>
-
-    <article class="in-line"><p>Name: </p>
-        <p th:text="${garden.getName()}"></p></article>
-    <article class="in-line"><p>Location: </p>
-        <p th:text="${garden.getLocationString()}"></p></article>
-    <article class="in-line"><p>Size: </p>
-        <p th:text="${garden.getSize() != null ? garden.getSize() : 'unspecified'}"></p>
-    </article>
-    <article class="in-line"><p>Description: </p>
-        <p th:text="${garden.getDescription()}"></p></article>
-
-    <div class="container">
-    <div class="row">
-        <div id="weatherCard">
-            <div th:each="data : ${weatherData}" class="d-inline-grid">
-                <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
-                     th:with="dayOfWeek=${data.date.dayOfWeek},
-                     date=${data.date.format(dateFormatter)},
-                     temperature=${data.temperature},
-                     description=${data.weatherDescription},
-                     iconName=${data.weatherIconName}">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>
-    </div>
-
-    <div>
-        <i class="bi bi-0-circle"></i>
-    </div>
-
-    <!-- Garden tags -->
-    <div class="display-tags">
+      <p th:text="${garden.getDescription()}"></p>
+      <p th:text="${garden.getLocationString()}"></p>
+      <p th:if="${garden.getSize() != null}" th:utext="${garden.getSize().toString()} + 'm<sup>2</sup>'"></p>
+      <p th:if="${garden.getSize() == null}">Unspecified size</p>
+      <form th:if="${owner}" th:action="@{${makeGardenPublic}}" method="post">
+        <label for="publicGarden" class="publicGardenCheckbox">
+          <input
+                  type="checkbox"
+                  id="publicGarden"
+                  th:name="publicGarden"
+                  th:checked="${garden.isGardenPublic()}"
+                  th:value="${garden.isGardenPublic()}"
+                  autofocus
+                  autocomplete="off"
+                  onchange="submitPublic()"
+          />
+          Public Garden
+        </label>
+        <input type="hidden" th:name="gardenId" th:value="${garden.getId()}"/>
+        <button class="form-button" type="submit" th:id="submitPublicGarden" style="display: none;">Submit</button>
+      </form>
+      <p class="errorMessage" th:text="${gardenDescriptionError}"></p>
+      <!-- Garden tags -->
+      <div class="display-tags">
         <span th:each="tag, iterStat : ${tags}">
             <span class="tag-text" th:text="'#' + ${tag.getName()}"></span>
             <span th:if="${!iterStat.last}">&nbsp;&nbsp;&nbsp;</span>
         </span>
-    </div>
+      </div>
 
-    <form th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
+      <form th:if="${owner}" th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
         <label class="form-input" for="tagName"> Create new tag: </label>
         <div style="display: flex;">
-            <div>
-                <input type="text" class="form-control" id="tagName" th:name="tagName"
-                       data-cy="tagName" autofocus>
-                <div id="autocomplete-list" class="inputStyle"></div>
-            </div>
-            <button id="tag-submit" type="submit">+</button>
+          <div>
+            <input type="text" class="form-control" id="tagName" th:name="tagName"
+                   data-cy="tagName" autofocus>
+            <div id="autocomplete-list" class="inputStyle"></div>
+          </div>
+          <button id="tag-submit" type="submit">+</button>
         </div>
-    </form>
-    <p class="errorMessage" th:text="${tagErrors}"></p>
+      </form>
+      <p class="errorMessage" th:text="${tagErrors}"></p>
 
-    <br>
+      <br>
 
-    <a th:if="${owner}" th:href="@{${editGardenUri}}">
-        <button class="form-button" type="button">Edit Garden</button>
-    </a>
-    <a th:if="${owner}" th:href="@{${newPlantUri}}">
-        <button class="form-button" type="button">Add Plant</button>
-    </a>
+      <a th:href="@{${editGardenUri}}" style="text-decoration: none">
+        <button th:if="${owner}"
+                class="btn btn-outline-primary"
+                type="button"
+                style="
+                border-color: #477641;
+                --bs-btn-color: #477641;
+                --bs-btn-hover-bg: #477641;
+                --bs-btn-hover-color: #fff;
+                --bs-btn-active-bg: #477641;
+              "
+        ><i class="bi bi-pencil"></i> Edit Garden
+        </button>
+      </a>
+      <a th:href="@{${newPlantUri}}">
+        <button th:if="${owner}"
+                class="btn btn-outline-primary"
+                type="button"
+                style="
+                border-color: #477641;
+                --bs-btn-color: #477641;
+                --bs-btn-hover-bg: #477641;
+                --bs-btn-hover-color: #fff;
+                --bs-btn-active-bg: #477641;
+              "
+        ><i class="bi bi-plus-lg"></i> Add Plant
+        </button>
+      </a>
 
 
-    <h2>My Plants</h2>
-    <div id="plant-entries" class="plant-entries">
-        <table>
-            <thead>
-            <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Count</th>
-                <th>Date Planted</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:if="${plants.isEmpty()}">
-                <td colspan="5"> No plants have been added yet</td>
-            </tr>
-            <tr th:each="plant : ${plants}" class="plant-entry">
-                <td>
-                    <p th:value="${plant.getId()}"></p>
-                    <form th:action="@{${uploadPlantImageUriString}(gardenId=${garden.getId()},plantId=${plant.getId()})}"
-                          method="post" enctype="multipart/form-data">
-                        <div class="form-field">
-                            <div class="plant-image-container">
-                                <img th:src="@{${plant.getImageFilePath()}}" alt="Image of plant"/>
+      <h2>My Plants</h2>
+      <div id="plant-entries" class="plant-entries">
+        <table class="plant-table">
+          <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Count</th>
+            <th>Date Planted</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:if="${plants.isEmpty()}">
+            <td colspan="5"> No plants have been added yet</td>
+          </tr>
+          <tr th:each="plant : ${plants}" class="plant-entry">
+            <td>
+              <p th:value="${plant.getId()}"></p>
+              <form th:action="@{${uploadPlantImageUriString}(gardenId=${garden.getId()},plantId=${plant.getId()})}"
+                    method="post" enctype="multipart/form-data">
+                <div class="form-field">
+                  <div class="plant-image-container">
+                    <img th:src="@{${plant.getImageFilePath()}}" style="width: 5vw"
+                         alt="Image of plant"/>
+                    <input type="hidden" th:name="plantId" th:value="${plant.getId()}"/>
 
-                                <input type="hidden" th:name="plantId" th:value="${plant.getId()}" />
+                    <div class="add-image">
+                      <label th:for="${plant.getId()}" class="plus-button">
+                        <i class="bi bi-plus-circle-fill"></i>
+                      </label>
+                      <input type="file"
+                             class="form-control"
+                             th:id="${plant.getId()}"
+                             th:name="plantImage"
+                             accept="image/jpeg, image/png, image/svg+xml"
+                             data-cy="plantImage"
+                             onchange="submitForm(id)"
+                             style="display: none;"
+                      >
+                    </div>
+                  </div>
 
-                                <div th:if="${owner}" class="add-image">
-                                    <label th:for="${plant.getId()}" class="plus-button">
-                                        <i class="fas fa-plus-circle"></i>
-                                    </label>
-                                    <input type="file" class="form-control" th:id="${plant.getId()}"
-                                           th:name="plantImage" accept="image/jpeg, image/png, image/svg+xml"
-                                           data-cy="plantImage" onchange="submitForm(id)" autofocus>
-                                </div>
-                            </div>
-
-                            <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${imageTypeError}"></h5>
-                            <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${imageSizeError}"></h5>
-                            <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${plantImageUploadError}"></h5>
-                        </div>
-                        <button class="form-button" type="submit" th:id="${plant.getId()} + submit" style="display: none;">Submit</button>
-                    </form>
-                </td>
-                <td><span th:text="${plant.getName()}"> Name </span></td>
-                <td><span th:text="${plant.getDescription()}"> Description </span></td>
-                <td><span th:text="${plant.getCount()}"> Count </span></td>
-                <td><span th:text="${plant.getDateString()}"> Date Planted </span></td>
-                <td><a th:if="${owner}"
-                       th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
-                    <button type="button">Edit</button>
-                </a></td>
-            </tr>
-            </tbody>
+                  <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${imageTypeError}"></h5>
+                  <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${imageSizeError}"></h5>
+                  <h5 th:if="${plant.getId()} == ${selectedPlantId}"
+                      th:text="${plantImageUploadError}"></h5>
+                </div>
+                <button class="form-button" type="submit" th:id="${plant.getId()} + submit"
+                        style="display: none;">Submit
+                </button>
+              </form>
+            </td>
+            <td><span th:text="${plant.getName()}"> Name </span></td>
+            <td><span th:text="${plant.getDescription()}"> Description </span></td>
+            <td><span th:text="${plant.getCount()}"> Count </span></td>
+            <td><span th:text="${plant.getDateString()}"> Date Planted </span></td>
+            <td>
+              <a th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
+                <button th:if="${owner}"
+                        class="btn btn-outline-primary"
+                        type="button"
+                        style="
+                border-color: #477641;
+                --bs-btn-color: #477641;
+                --bs-btn-hover-bg: #477641;
+                --bs-btn-hover-color: #fff;
+                --bs-btn-active-bg: #477641;
+              "
+                >
+                  <i class="bi bi-pencil"></i> Edit
+                </button>
+              </a></td>
+          </tr>
+          </tbody>
         </table>
+      </div>
     </div>
-</div>
+  </div>
 </div>
 </body>
 <script>
@@ -140,8 +173,16 @@
         // Currently clicks the first form only as getting by id.
         document.getElementById(id + 'submit').click()
     }
+
+    function submitPublic() {
+        var checkbox = document.getElementById("publicGarden")
+        if (checkbox.checked) {
+            checkbox.value = "true";
+        } else {
+            checkbox.value = "false";
+        }
+        document.getElementById("submitPublicGarden").click()
+    }
 </script>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
 </html>

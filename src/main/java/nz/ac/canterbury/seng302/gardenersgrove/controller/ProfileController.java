@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
@@ -32,11 +32,12 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  * Responsible for displaying user profile pages, editing profiles, and uploading profile photos.
  */
 @Controller
-public class ProfileController extends GardensSidebar {
+public class ProfileController extends NavBar {
     Logger logger = LoggerFactory.getLogger(ProfileController.class);
     private final UserService userService;
     private final GardenService gardenService;
     private final EmailSenderService emailSenderService;
+    private final ErrorChecker errorChecker;
 
     /**
      * Constructor for ProfileController.
@@ -46,10 +47,11 @@ public class ProfileController extends GardensSidebar {
      * @param emailSenderService the EmailSenderService responsible for email-sending-related operations
      */
     @Autowired
-    public ProfileController(UserService userService, GardenService gardenService, EmailSenderService emailSenderService) {
+    public ProfileController(UserService userService, GardenService gardenService, EmailSenderService emailSenderService, ErrorChecker errorChecker) {
         this.userService = userService;
         this.gardenService = gardenService;
         this.emailSenderService = emailSenderService;
+        this.errorChecker = errorChecker;
     }
 
     /**
@@ -63,7 +65,7 @@ public class ProfileController extends GardensSidebar {
 
         model.addAttribute("editProfileUri", editProfileUri());
         model.addAttribute("uploadProfileImageUri", uploadProfileImageUri());
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
         return "profile";
     }
 
@@ -84,7 +86,7 @@ public class ProfileController extends GardensSidebar {
         model.addAttribute("uploadProfileImageUri", uploadProfileImageUri());
         model.addAttribute("editProfileUri", editProfileUri());
         model.addAttribute("profileUri", viewProfileUri());
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
         return "editProfile";
     }
 
@@ -101,7 +103,7 @@ public class ProfileController extends GardensSidebar {
 
         model.addAttribute("editPasswordUri", editPasswordUri());
         model.addAttribute("editProfileUri", editProfileUri());
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
         return "editPassword";
     }
 
@@ -177,7 +179,7 @@ public class ProfileController extends GardensSidebar {
             dateOfBirthValid = false;
         }
 
-        Map<String, String> errors = ErrorChecker.profileFormErrors(
+        Map<String, String> errors = errorChecker.profileFormErrors(
                 firstName, lastName, noSurname,
                 email, newEmail, userService,
                 dateOfBirthValid, dateOfBirth
@@ -225,7 +227,7 @@ public class ProfileController extends GardensSidebar {
         User user = userService.getAuthenticatedUser();
         model.addAttribute(user);
 
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
 
         if (!errors.isEmpty()) {
             model.addAllAttributes(errors);

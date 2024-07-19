@@ -1,18 +1,24 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.LocationRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -50,10 +56,11 @@ class PlantControllerCreateTest {
     @Autowired
     private LocationRepository locationRepository;
 
-    private boolean userCreated = false;
+    @SpyBean
+    private FormValuesValidator mockFormValuesValidator;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ProfanityCheckingException, InterruptedException {
         if (user == null) {
             user = new User(
                             "test@domain.net",
@@ -72,8 +79,10 @@ class PlantControllerCreateTest {
         gardenLocation.setSuburb("Ilam");
         gardenLocation.setPostcode("8041");
 
-        gardenRepository.save(new Garden(user, "Test Garden", null, gardenLocation, null));
+        gardenRepository.save(new Garden(user, "Test Garden", null, gardenLocation, null, true));
         plantRepository.deleteAll();
+
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
     }
 
     @Test
@@ -207,10 +216,10 @@ class PlantControllerCreateTest {
         assertTrue(allPlants.isEmpty());
     }
 
-    @Test
-    void submitForm_invalidCount_plantNotSaved() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"-1", "text"})
+    void submitForm_invalidCount_plantNotSaved(String plantCount) throws Exception {
         String plantName = "Test Plant";
-        Integer plantCount = -1;
         String plantDescription = "Test Description";
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[10];
@@ -221,7 +230,7 @@ class PlantControllerCreateTest {
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                                         .param("plantName", plantName)
-                                        .param("plantCount", String.valueOf(plantCount))
+                                        .param("plantCount", plantCount)
                                         .param("plantDescription", plantDescription)
                                         .param("plantedDate", plantedDate))
                         .andExpect(MockMvcResultMatchers.status().isOk())

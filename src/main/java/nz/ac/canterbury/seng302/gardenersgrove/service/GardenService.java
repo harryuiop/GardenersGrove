@@ -15,11 +15,13 @@ public class GardenService {
     private final GardenRepository gardenRepository;
 
     private final UserService userService;
+    private final FriendshipService friendshipService;
 
     @Autowired
-    public GardenService(GardenRepository gardenRepository, UserService userService) {
+    public GardenService(GardenRepository gardenRepository, UserService userService, FriendshipService friendshipService) {
         this.gardenRepository = gardenRepository;
         this.userService = userService;
+        this.friendshipService = friendshipService;
     }
 
     public List<Garden> getAllGardens(UserService userService) {
@@ -27,7 +29,7 @@ public class GardenService {
     }
 
     public List<Garden> getAllFriendsGardens(long friendId, UserService userService) throws NoSuchFriendException {
-        if (userService.getAuthenticatedUser().getFriends().contains(userService.getUserById(friendId))) {
+        if (friendshipService.getFriends(userService.getAuthenticatedUser()).contains(userService.getUserById(friendId))) {
             return gardenRepository.findAllByOwner(userService.getUserById(friendId));
         } else {
             throw new NoSuchFriendException(friendId);

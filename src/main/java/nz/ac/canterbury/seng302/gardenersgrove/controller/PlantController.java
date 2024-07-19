@@ -1,6 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.GardensSidebar;
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
@@ -31,12 +31,13 @@ import java.util.Optional;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 @Controller
-public class PlantController extends GardensSidebar {
+public class PlantController extends NavBar {
     Logger logger = LoggerFactory.getLogger(PlantController.class);
 
     private final PlantService plantService;
     private final GardenService gardenService;
     private final UserService userService;
+    private final ErrorChecker errorChecker;
 
     /**
      * The PlantFormController constructor need not be called ever.
@@ -47,10 +48,11 @@ public class PlantController extends GardensSidebar {
      * @param userService   The User database access object.
      */
     @Autowired
-    public PlantController(PlantService plantService, GardenService gardenService, UserService userService) {
+    public PlantController(PlantService plantService, GardenService gardenService, UserService userService, ErrorChecker errorChecker) {
         this.plantService = plantService;
         this.gardenService = gardenService;
         this.userService = userService;
+        this.errorChecker = errorChecker;
     }
 
     /**
@@ -60,8 +62,8 @@ public class PlantController extends GardensSidebar {
      * @param plantCountError       The error message for the plant count form field.
      * @param plantDescriptionError The error message for the plant description form field.
      * @param plantedDateError      The error message for the planted date form field.
-     * @param imageTypeError   The error message for the plant image type.
-     * @param imageSizeError   The error message for the plant image size.
+     * @param imageTypeError        The error message for the plant image type.
+     * @param imageSizeError        The error message for the plant image size.
      * @param plantImageUploadError The error message for the plant image upload.
      * @param plantName             The name to pre-fill the form with.
      * @param plantCount            The count to pre-fill the form with.
@@ -75,24 +77,24 @@ public class PlantController extends GardensSidebar {
      * @return The name of the HTML template to render.
      */
     private String loadPlantForm(
-                    String plantNameError,
-                    String plantCountError,
-                    String plantDescriptionError,
-                    String plantedDateError,
-                    String imageTypeError,
-                    String imageSizeError,
-                    String plantImageUploadError,
-                    String plantName,
-                    String plantCount,
-                    String plantDescription,
-                    LocalDate plantedDate,
-                    String plantImagePath,
-                    String gardenName,
-                    URI formSubmissionUri,
-                    URI cancelButtonUri,
-                    Model model
+            String plantNameError,
+            String plantCountError,
+            String plantDescriptionError,
+            String plantedDateError,
+            String imageTypeError,
+            String imageSizeError,
+            String plantImageUploadError,
+            String plantName,
+            String plantCount,
+            String plantDescription,
+            LocalDate plantedDate,
+            String plantImagePath,
+            String gardenName,
+            URI formSubmissionUri,
+            URI cancelButtonUri,
+            Model model
     ) {
-        this.updateGardensSidebar(model, gardenService, userService);
+        this.updateGardensNavBar(model, gardenService, userService);
 
         model.addAttribute("plantNameError", plantNameError);
         model.addAttribute("plantCountError", plantCountError);
@@ -123,8 +125,8 @@ public class PlantController extends GardensSidebar {
      */
     @GetMapping(NEW_PLANT_URI_STRING)
     public String createPlant(
-                    @PathVariable long gardenId,
-                    Model model
+            @PathVariable long gardenId,
+            Model model
     ) throws NoSuchGardenException {
         logger.info("GET {}", newPlantUri(gardenId));
 
@@ -134,11 +136,11 @@ public class PlantController extends GardensSidebar {
         }
         Garden garden = optionalGarden.get();
         return loadPlantForm(
-                        "", "", "", "", "", "", "",
-                        null, null, null, null, "/images/default-plant.jpg",
-                        garden.getName(),
-                        newPlantUri(gardenId), viewGardenUri(gardenId),
-                        model
+                "", "", "", "", "", "", "",
+                null, null, null, null, "/images/default-plant.jpg",
+                garden.getName(),
+                newPlantUri(gardenId), viewGardenUri(gardenId),
+                model
         );
     }
 
@@ -152,9 +154,9 @@ public class PlantController extends GardensSidebar {
      */
     @GetMapping(EDIT_PLANT_URI_STRING)
     public String editPlant(
-                    @PathVariable long gardenId,
-                    @PathVariable long plantId,
-                    Model model
+            @PathVariable long gardenId,
+            @PathVariable long plantId,
+            Model model
     ) throws NoSuchPlantException {
         logger.info("GET {}", editPlantUri(gardenId, plantId));
 
@@ -162,22 +164,22 @@ public class PlantController extends GardensSidebar {
         Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
         if (optionalPlant.isEmpty() || optionalGarden.isEmpty() || optionalGarden.get().getOwner() != userService.getAuthenticatedUser()) {
             throw new NoSuchPlantException(
-                            "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
+                    "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
             );
         }
         Plant plant = optionalPlant.get();
 
         return loadPlantForm(
-                        "", "", "", "", "", "", "",
-                        plant.getName(),
-                        plant.getCount().toString(),
-                        plant.getDescription(),
-                        plant.getPlantedOn(),
-                        plant.getImageFilePath(),
-                        plant.getGarden().getName(),
-                        editPlantUri(gardenId, plantId),
-                        viewGardenUri(gardenId),
-                        model
+                "", "", "", "", "", "", "",
+                plant.getName(),
+                plant.getCount() == null ? "" : plant.getCount().toString(),
+                plant.getDescription(),
+                plant.getPlantedOn(),
+                plant.getImageFilePath(),
+                plant.getGarden().getName(),
+                editPlantUri(gardenId, plantId),
+                viewGardenUri(gardenId),
+                model
         );
     }
 
@@ -195,7 +197,7 @@ public class PlantController extends GardensSidebar {
                 date = LocalDate.parse(dateString);
             }
         } catch (DateTimeParseException exception) {
-            errors.put("plantedDateError", "Planted date must be in the format yyyy-MM-dd");
+            errors.put("plantedDateError", "Planted date must be in the format dd-mm-yyyy");
         }
         return date;
     }
@@ -235,13 +237,13 @@ public class PlantController extends GardensSidebar {
      */
     @PostMapping(NEW_PLANT_URI_STRING)
     public String submitNewPlant(
-                    @PathVariable long gardenId,
-                    @RequestParam String plantName,
-                    @RequestParam(required = false) String plantCount,
-                    @RequestParam(required = false) String plantDescription,
-                    @RequestParam(required = false) String plantedDate,
-                    @RequestParam(required = false) MultipartFile plantImage,
-                    Model model
+            @PathVariable long gardenId,
+            @RequestParam String plantName,
+            @RequestParam(required = false) String plantCount,
+            @RequestParam(required = false) String plantDescription,
+            @RequestParam(required = false) String plantedDate,
+            @RequestParam(required = false) MultipartFile plantImage,
+            Model model
     ) throws NoSuchGardenException {
         logger.info("POST {}", newPlantUri(gardenId));
 
@@ -251,11 +253,11 @@ public class PlantController extends GardensSidebar {
         }
         Garden garden = optionalGarden.get();
 
-        Map<String, String> errors = ErrorChecker.plantFormErrors(
-                        plantName,
-                        plantCount,
-                        plantDescription,
-                        plantImage
+        Map<String, String> errors = errorChecker.plantFormErrors(
+                plantName,
+                plantCount,
+                plantDescription,
+                plantImage
         );
 
         LocalDate date = parseDate(plantedDate, errors);
@@ -263,30 +265,26 @@ public class PlantController extends GardensSidebar {
 
         if (!errors.isEmpty()) {
             return loadPlantForm(
-                            errors.getOrDefault("plantNameError", ""),
-                            errors.getOrDefault("plantCountError", ""),
-                            errors.getOrDefault("plantDescriptionError", ""),
-                            errors.getOrDefault("plantedDateError", ""),
-                            errors.getOrDefault("imageTypeError", ""),
-                            errors.getOrDefault("imageSizeError", ""),
-                            errors.getOrDefault("plantImageUploadError", ""),
-                            plantName,
-                            plantCount,
+                    errors.getOrDefault("plantNameError", ""),
+                    errors.getOrDefault("plantCountError", ""),
+                    errors.getOrDefault("plantDescriptionError", ""),
+                    errors.getOrDefault("plantedDateError", ""),
+                    errors.getOrDefault("imageTypeError", ""),
+                    errors.getOrDefault("imageSizeError", ""),
+                    errors.getOrDefault("plantImageUploadError", ""),
+                    plantName,
+                    plantCount,
                     plantDescription,
-                            date,
-                            "/images/default-plant.jpg",
-                            garden.getName(),
-                            newPlantUri(gardenId),
-                            viewGardenUri(gardenId),
-                            model
+                    date,
+                    "/images/default-plant.jpg",
+                    garden.getName(),
+                    newPlantUri(gardenId),
+                    viewGardenUri(gardenId),
+                    model
             );
         }
-        Integer intPlantCount = null;
-        if (plantCount != null) {
-            intPlantCount = Integer.parseInt(plantCount, 10);
-        }
 
-        Plant plant = new Plant(plantName, intPlantCount, plantDescription, date, imageFileName, garden);
+        Plant plant = new Plant(plantName, parseStringToInt(plantCount), plantDescription, date, imageFileName, garden);
         plantService.savePlant(plant);
         return "redirect:" + viewGardenUri(garden.getId());
     }
@@ -307,30 +305,30 @@ public class PlantController extends GardensSidebar {
      */
     @PostMapping(EDIT_PLANT_URI_STRING)
     public String submitPlantEdits(
-                    @PathVariable long plantId,
-                    @PathVariable long gardenId,
-                    @RequestParam String plantName,
-                    @RequestParam(required = false) String plantCount,
-                    @RequestParam(required = false) String plantDescription,
-                    @RequestParam(required = false) String plantedDate,
-                    @RequestParam(required = false) MultipartFile plantImage,
-                    Model model
+            @PathVariable long plantId,
+            @PathVariable long gardenId,
+            @RequestParam String plantName,
+            @RequestParam(required = false) String plantCount,
+            @RequestParam(required = false) String plantDescription,
+            @RequestParam(required = false) String plantedDate,
+            @RequestParam(required = false) MultipartFile plantImage,
+            Model model
     ) throws NoSuchPlantException {
         logger.info("POST {}", editPlantUri(gardenId, plantId));
 
         Optional<Plant> optionalPlant = plantService.getPlantByGardenIdAndPlantId(gardenId, plantId);
         if (optionalPlant.isEmpty()) {
             throw new NoSuchPlantException(
-                            "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
+                    "Unable to find plant with id " + plantId + " in garden with id " + gardenId + "."
             );
         }
         Plant plant = optionalPlant.get();
 
-        Map<String, String> errors = ErrorChecker.plantFormErrors(
-                        plantName,
-                        plantCount,
-                        plantDescription,
-                        plantImage
+        Map<String, String> errors = errorChecker.plantFormErrors(
+                plantName,
+                plantCount,
+                plantDescription,
+                plantImage
         );
 
         LocalDate date = parseDate(plantedDate, errors);
@@ -338,31 +336,27 @@ public class PlantController extends GardensSidebar {
 
         if (!errors.isEmpty()) {
             return loadPlantForm(
-                            errors.getOrDefault("plantNameError", ""),
-                            errors.getOrDefault("plantCountError", ""),
-                            errors.getOrDefault("plantDescriptionError", ""),
-                            errors.getOrDefault("plantedDateError", ""),
-                            errors.getOrDefault("imageTypeError", ""),
-                            errors.getOrDefault("imageSizeError", ""),
-                            errors.getOrDefault("plantImageUploadError", ""),
-                            plantName,
-                            plantCount,
-                            plantDescription,
-                            date,
-                            plant.getImageFilePath(),
-                            plant.getGarden().getName(),
-                            editPlantUri(gardenId, plantId),
-                            viewGardenUri(gardenId),
-                            model
+                    errors.getOrDefault("plantNameError", ""),
+                    errors.getOrDefault("plantCountError", ""),
+                    errors.getOrDefault("plantDescriptionError", ""),
+                    errors.getOrDefault("plantedDateError", ""),
+                    errors.getOrDefault("imageTypeError", ""),
+                    errors.getOrDefault("imageSizeError", ""),
+                    errors.getOrDefault("plantImageUploadError", ""),
+                    plantName,
+                    plantCount,
+                    plantDescription,
+                    date,
+                    plant.getImageFilePath(),
+                    plant.getGarden().getName(),
+                    editPlantUri(gardenId, plantId),
+                    viewGardenUri(gardenId),
+                    model
             );
         }
 
-        Integer intPlantCount = null;
-        if (plantCount != null) {
-            intPlantCount = Integer.parseInt(plantCount, 10);
-        }
         plant.setName(plantName);
-        plant.setCount(intPlantCount);
+        plant.setCount(parseStringToInt(plantCount));
         plant.setDescription(plantDescription);
         plant.setPlantedOn(date);
         if (imageFileName != null) {
@@ -370,5 +364,14 @@ public class PlantController extends GardensSidebar {
         }
         plantService.savePlant(plant);
         return "redirect:" + viewGardenUri(plant.getGarden().getId());
+    }
+
+    /**
+     * Helper method to turn string into integer
+     * @param plantCount String
+     * @return null or Integer
+     */
+    private Integer parseStringToInt(String plantCount) {
+        return ( plantCount == null || plantCount.isEmpty() ) ? null : Integer.parseInt(plantCount);
     }
 }

@@ -65,6 +65,7 @@ public class EmailSenderService {
      *
      * @param user User Entity
      * @param template html file containing the template for the email to be sent
+     * @param url Optional base url if email contains a link
      */
     public boolean sendEmail(User user, String template, String...url) {
         String emailTitle;

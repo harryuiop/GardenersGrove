@@ -3,8 +3,10 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.FriendshipRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -24,12 +26,15 @@ class GardenServiceTest {
     private UserRepository userRepository;
 
     private UserService userService;
-
+    @Autowired
+    private FriendshipRepository friendshipRepository;
+    private FriendshipService friendshipService;
     private User user;
 
     @Test
     void gardenRepositoryGardenCreation() {
         userService = new UserService(userRepository);
+        friendshipService = new FriendshipService(friendshipRepository);
         if (user == null) {
             user = new User(
                     "test@domain.net",
@@ -40,9 +45,9 @@ class GardenServiceTest {
             );
             userService.addUsers(user);
         }
-        GardenService gardenService = new GardenService(gardenRepository, userService);
+        GardenService gardenService = new GardenService(gardenRepository, userService, friendshipService);
         Location location = new Location("New Zealand", "Christchurch");
-        Garden garden = gardenService.saveGarden(new Garden(user, "Test Garden", null, location, 100f));
+        Garden garden = gardenService.saveGarden(new Garden(user, "Test Garden", null, location, 100f, true));
         List<Garden> gardens = gardenRepository.findAllByOwner(user);
         Garden outputGarden = gardens.get(0);
 

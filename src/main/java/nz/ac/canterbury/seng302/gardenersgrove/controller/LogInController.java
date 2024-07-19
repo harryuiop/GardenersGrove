@@ -5,12 +5,13 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecke
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ResetPasswordToken;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ResetPasswordTokenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
@@ -30,6 +32,8 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 @Controller
 public class LogInController {
 
+    @Value("${base.url:#{null}}")
+    private String hostOriginUrl;
     private static final Logger logger = LoggerFactory.getLogger(LogInController.class);
 
     private final EmailSenderService emailSenderService;
@@ -38,6 +42,8 @@ public class LogInController {
 
     private final ResetPasswordTokenService resetPasswordTokenService;
 
+    private final ErrorChecker errorChecker;
+
     /**
      * Constructor for LogInController.
      *
@@ -45,10 +51,11 @@ public class LogInController {
      * @param userService        the UserService responsible for user-related operations.
      */
     @Autowired
-    public LogInController(EmailSenderService emailSenderService, UserService userService, ResetPasswordTokenService resetPasswordTokenService) {
+    public LogInController(EmailSenderService emailSenderService, UserService userService, ResetPasswordTokenService resetPasswordTokenService, ErrorChecker errorChecker) {
         this.emailSenderService = emailSenderService;
         this.userService = userService;
         this.resetPasswordTokenService = resetPasswordTokenService;
+        this.errorChecker = errorChecker;
     }
 
     /**
@@ -88,12 +95,14 @@ public class LogInController {
     @GetMapping(RESET_PASSWORD_URI_STRING)
     public String resetPassword(Model model,
                                 @PathVariable String token,
-                                @PathVariable long userId) {
+                                @PathVariable long userId,
+                                RedirectAttributes redirectAttributes) {
         logger.info("GET {}", resetPasswordUri(token, userId));
         ResetPasswordToken hashedTokenEntity = resetPasswordTokenService.getTokenByUserId(userId);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (hashedTokenEntity == null || !encoder.matches(token, hashedTokenEntity.getToken())) {
             logger.info("Invalid token, redirecting to login page");
+            redirectAttributes.addFlashAttribute("tokenExpiredError", "Reset password link has expired");
             return "redirect:" + loginUri();
         }
         model.addAttribute("resetPasswordUri", resetPasswordUri(token, userId));
@@ -133,7 +142,7 @@ public class LogInController {
             return "redirect:" + loginUri();
         }
 
-        Map<String, String> errors = ErrorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
+        Map<String, String> errors = errorChecker.editPasswordFormErrors("", newPassword, retypeNewPassword, user, false);
 
         if (!errors.isEmpty()) {
             model.addAllAttributes(errors);
@@ -180,15 +189,17 @@ public class LogInController {
         logger.info("POST {}", resetPasswordEmailUri());
         User user = userService.getUserByEmail(userEmail);
 
-        Map<String, String> errors = ErrorChecker.emailErrorsResetPassword(userEmail);
+        Map<String, String> errors = errorChecker.emailErrorsResetPassword(userEmail);
         if (!errors.isEmpty()) {
             model.addAllAttributes(errors);
             model.addAttribute("confirmationMessage", false);
             model.addAttribute("userEmail", userEmail);
         } else {
             model.addAttribute("confirmationMessage", true);
-            if (user != null) emailSenderService.sendEmail(user, "resetPasswordEmail",
-                    req.getRequestURL().toString().split("/login/reset-password/email")[0]);
+            if (user != null) {
+                String baseUrl = hostOriginUrl.isEmpty() ? req.getHeader(HttpHeaders.ORIGIN) : hostOriginUrl;
+                emailSenderService.sendEmail(user, "resetPasswordEmail", baseUrl);
+            }
         }
         return "forgotPasswordForm";
 

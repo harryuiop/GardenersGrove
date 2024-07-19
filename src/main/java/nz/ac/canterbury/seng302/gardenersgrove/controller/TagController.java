@@ -12,7 +12,6 @@ import java.util.List;
  * Called through javascript for showing autocomplete suggestions for tags.
  */
 @RestController
-@RequestMapping("/tag")
 public class TagController {
 
     Logger logger = LoggerFactory.getLogger(TagController.class);
@@ -37,7 +36,7 @@ public class TagController {
      * @return Autocomplete suggestions based on user input.
      * A set max amount of suggestions shown, given by MAX_SUGGESTIONS variable.
      */
-    @GetMapping("/show-autocomplete")
+    @GetMapping("/tag/show-autocomplete")
     public List<String> getSearchResults(@RequestParam String query) {
         logger.info("GET /show-autocomplete");
         return tagService.findAutocompleteSuggestions(query, MAX_SUGGESTIONS);
