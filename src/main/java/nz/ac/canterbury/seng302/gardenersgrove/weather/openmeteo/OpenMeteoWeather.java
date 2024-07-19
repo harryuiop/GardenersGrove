@@ -7,6 +7,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherExcep
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
@@ -16,9 +17,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo.WeatherResponse.weatherCodes;
 
 /**
  * This is a class that implements the WeatherService interface
@@ -27,6 +29,8 @@ import java.util.List;
  */
 @Component
 public class OpenMeteoWeather implements WeatherService {
+    WeatherResponse weatherResponse = new WeatherResponse();
+
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -144,5 +148,21 @@ public class OpenMeteoWeather implements WeatherService {
             dailyHumidity.add(humidityAvg);
         }
         return dailyHumidity;
+    }
+
+    /**
+     * This method takes the description from the last two days of weather for a specific garden
+     * and adds the correct watering advice into the model
+     *
+     * @param weatherData List of weather data from the Open Meteo API
+     * @param model       Model puts the data into the template
+     */
+    public void getLastTwoDays(List<WeatherData> weatherData, Model model) {
+        List<String> weatherDescriptions = new ArrayList<>();
+        weatherDescriptions.add(weatherData.get(0).getWeatherDescription());
+        weatherDescriptions.add(weatherData.get(1).getWeatherDescription());
+
+        if (weatherDescriptions.get(0).contains("clear"))
+            System.out.println(weatherDescriptions);
     }
 }

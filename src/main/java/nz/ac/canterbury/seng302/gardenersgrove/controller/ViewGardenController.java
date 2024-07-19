@@ -41,6 +41,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  */
 @Controller
 public class ViewGardenController extends GardensSidebar {
+    private final OpenMeteoWeather openMeteoWeather;
     Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
 
     private final GardenService gardenService;
@@ -59,16 +60,18 @@ public class ViewGardenController extends GardensSidebar {
      */
     @Autowired
     public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService,
-                                TagService tagService, OpenMeteoWeather weatherService) {
+                                TagService tagService, OpenMeteoWeather weatherService, OpenMeteoWeather openMeteoWeather) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
         this.tagService = tagService;
         this.weatherService = weatherService;
+        this.openMeteoWeather = openMeteoWeather;
     }
 
     /**
      * Returns the view page for a specific garden
+     *
      * @param garden        The garden being viewed
      * @param editGardenUri The URI for edit garden
      * @param newPlantUri   The URi for new plant form
@@ -76,16 +79,16 @@ public class ViewGardenController extends GardensSidebar {
      * @param owner         Whether the viewer is the owner of the garden or not
      * @param model         Puts the data into the template
      * @param errorMessages Any plant image errors that occurred when re-loading
-     * @return              The view garden page is displayed to user
+     * @return The view garden page is displayed to user
      */
     private String loadGardenPage(
-                    Garden garden,
-                    URI editGardenUri,
-                    URI newPlantUri,
-                    List<Plant> plants,
-                    boolean owner,
-                    Model model,
-                    String... errorMessages
+            Garden garden,
+            URI editGardenUri,
+            URI newPlantUri,
+            List<Plant> plants,
+            boolean owner,
+            Model model,
+            String... errorMessages
     ) throws InterruptedException {
         this.updateGardensSidebar(model, gardenService, userService);
 
@@ -94,6 +97,7 @@ public class ViewGardenController extends GardensSidebar {
         }
 
         List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng());
+        openMeteoWeather.getLastTwoDays(weatherData, model);
 
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
@@ -105,7 +109,7 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
         model.addAttribute("weatherData", weatherData);
-        model.addAttribute("dateFormatter",  DateTimeFormatter.ofPattern("d MMM yyyy"));
+        model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("d MMM yyyy"));
 
 
         return "viewGarden";
@@ -114,15 +118,15 @@ public class ViewGardenController extends GardensSidebar {
     /**
      * Set up view garden page and display attributes.
      *
+     * @param gardenId The id of the garden being viewed
+     * @param model    Puts the data into the template to be viewed
      * @return Thymeleaf html template of the view garden page.
-     * @param gardenId  The id of the garden being viewed
-     * @param model     Puts the data into the template to be viewed
      * @return Thyme leaf html template of the view garden page.
      */
     @GetMapping(VIEW_GARDEN_URI_STRING)
     public String displayGarden(
-                    @PathVariable long gardenId,
-                    Model model
+            @PathVariable long gardenId,
+            Model model
     ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
@@ -131,10 +135,10 @@ public class ViewGardenController extends GardensSidebar {
             throw new NoSuchGardenException(gardenId);
         }
         return loadGardenPage(
-                        optionalGarden.get(),
-                        editGardenUri(gardenId),
-                        newPlantUri(gardenId),
-                        plantService.getAllPlantsInGarden(optionalGarden.get()),
+                optionalGarden.get(),
+                editGardenUri(gardenId),
+                newPlantUri(gardenId),
+                plantService.getAllPlantsInGarden(optionalGarden.get()),
                 true,
                 model
         );
@@ -228,8 +232,8 @@ public class ViewGardenController extends GardensSidebar {
      */
     @PostMapping(NEW_GARDEN_TAG_URI_STRING)
     public String submitGardenTag(Model model,
-        @PathVariable long gardenId,
-        @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException, InterruptedException {
+                                  @PathVariable long gardenId,
+                                  @RequestParam(name = "tagName", required = false) String tagName) throws NoSuchGardenException, InterruptedException {
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) {

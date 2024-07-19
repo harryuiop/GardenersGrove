@@ -123,6 +123,7 @@ public class WeatherResponse {
     }
 
     protected static final HashMap<Integer, String[]> weatherCodes = new HashMap<>();
+
     static {
         weatherCodes.put(0, new String[]{"Clear sky", "bi bi-brightness-high"});
         weatherCodes.put(1, new String[]{"Mainly clear", "bi bi-brightness-low"});
