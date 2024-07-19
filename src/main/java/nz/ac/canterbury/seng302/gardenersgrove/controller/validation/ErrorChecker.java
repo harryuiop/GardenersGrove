@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
@@ -135,11 +136,15 @@ public class ErrorChecker {
     ) {
         HashMap<String, String> errors = new HashMap<>();
 
-        if (formValuesValidator.checkBlank(plantName) || !formValuesValidator.checkCharacters(plantName)) {
+        if (formValuesValidator.checkBlank(plantName)
+                || !formValuesValidator.checkCharacters(plantName)
+                || !formValuesValidator.checkPlantNameLength(plantName)) {
             errors.put(
                             "plantNameError",
-                            "Plant name cannot be empty and must only include " +
-                                            "letters, numbers, spaces, dots, hyphens, or apostrophes"
+                            "A plant name must\n-Cannot be empty\n" +
+                                    "-Only includes letters, numbers, spaces, dots, hyphens, or apostrophes\n" +
+                                    "-Name cannot exceed " + Plant.NAME_CHARACTER_LIMIT + " characters"
+
             );
         }
 
