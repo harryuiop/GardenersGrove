@@ -5,6 +5,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 **/resources/application-*.properties
+target/cucumber-report/
+target/cucumber-report.html
 
 
 ### User uploaded images ###
