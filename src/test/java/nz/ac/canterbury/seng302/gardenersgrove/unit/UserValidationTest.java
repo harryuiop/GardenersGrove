@@ -3,6 +3,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.unit;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.UserValidation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
@@ -12,39 +14,18 @@ import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.User
 @Import(UserValidation.class)
 public class UserValidationTest {
     // Tests for email validation
-    @Test
-    void checkEmail_allValid_returnTrue() {
-        String email = "onetwo@gmail.com";
+    @ParameterizedTest
+    @ValueSource(strings = {"abc-d@mail.com", "abc.def@mail.com", "abc@mail.com", "abc_def@mail.com",
+            "abc.def@mail.cc", "abc.def@mail-archive.com", "abc.def@mail.org", "abc.def@mail.com", "john@smith.co.nz"})
+    void checkEmail_allValid_returnTrue(String email) {
         Assertions.assertTrue(emailIsValid(email));
     }
 
-    @Test
-    void checkEmail_emptyInput_returnFalse() {
-        String email = "";
-        Assertions.assertFalse(emailIsValid(email));
-    }
-
-    @Test
-    void checkEmail_onlyWhiteSpace_returnFalse() {
-        String email = "     ";
-        Assertions.assertFalse(emailIsValid(email));
-    }
-
-    @Test
-    void checkEmail_invalidChars_returnFalse() {
-        String email = "one!@#$%^&*()+='';|?><,/two@gmail.com";
-        Assertions.assertFalse(emailIsValid(email));
-    }
-
-    @Test
-    void checkEmail_noAt_returnFalse() {
-        String email = "onetwogmail.com";
-        Assertions.assertFalse(emailIsValid(email));
-    }
-
-    @Test
-    void checkEmail_noDotAfterAt_returnFalse() {
-        String email = "onetwo@gmailcom";
+    @ParameterizedTest
+    @ValueSource(strings = {"", "##@a.com", "aa@$$.com", "aa@aa.##", "onetwogmail.com", "onetwo@gmailcom",
+            "abc-@mail.com", "abc..def@mail.com", ".abc@mail.com", "abc#def@mail.com", "abc.def@mail.c",
+            "abc.def@mail#archive.com", "abc.def@mail..com", "john@smith.co.nz.ab", "john@smith.co-nz"})
+    void checkEmail_invalid_returnFalse(String email) {
         Assertions.assertFalse(emailIsValid(email));
     }
 

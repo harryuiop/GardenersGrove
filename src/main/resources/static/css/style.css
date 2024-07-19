@@ -382,3 +382,24 @@ input[type=text], input[type=password] {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 500px;
 }
+
+/* -------------------- View garden page specific -------------------- */
+.content {
+    max-width: 100em;
+}
+
+.plant-table td {
+    max-width: 10em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 1em;
+}
+
+.plant-image-container {
+    padding-left: 0;
+}
+
+.plant-table th {
+    padding: 1em;
+}
