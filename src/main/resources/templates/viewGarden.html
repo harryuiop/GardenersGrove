@@ -5,6 +5,8 @@
 <div th:insert="~{fragments/fragments :: title}">Header</div>
 <nav th:insert="~{fragments/fragments :: gardens}">Gardens</nav>
 
+<p th:text="${advice}"></p>
+
 <div class="content" >
     <h2 th:text="${garden.getName()}"></h2>
 
@@ -128,6 +130,7 @@
             </tbody>
         </table>
     </div>
+</div>
 </div>
 </body>
 <script>

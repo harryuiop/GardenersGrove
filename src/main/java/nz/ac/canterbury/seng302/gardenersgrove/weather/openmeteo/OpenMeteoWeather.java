@@ -7,8 +7,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherExcep
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-import org.springframework.web.util.DefaultUriBuilderFactory;
+\import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,10 +17,10 @@ import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo.WeatherResponse.weatherCodes;
-
+\
 /**
  * This is a class that implements the WeatherService interface
  * and provides the methods specific to the Open-Meteo API that
@@ -29,7 +28,6 @@ import static nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo.WeatherR
  */
 @Component
 public class OpenMeteoWeather implements WeatherService {
-    WeatherResponse weatherResponse = new WeatherResponse();
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -155,14 +153,24 @@ public class OpenMeteoWeather implements WeatherService {
      * and adds the correct watering advice into the model
      *
      * @param weatherData List of weather data from the Open Meteo API
-     * @param model       Model puts the data into the template
      */
-    public void getLastTwoDays(List<WeatherData> weatherData, Model model) {
+    public static String getWeatherAdvice(List<WeatherData> weatherData) {
+        System.out.println(weatherData);
         List<String> weatherDescriptions = new ArrayList<>();
         weatherDescriptions.add(weatherData.get(0).getWeatherDescription());
         weatherDescriptions.add(weatherData.get(1).getWeatherDescription());
 
-        if (weatherDescriptions.get(0).contains("clear"))
-            System.out.println(weatherDescriptions);
+        List<String> sunnyDescription = Arrays.asList("Clear sky", "Mainly clear", "Partly cloudy");
+        List<String> otherDescription = Arrays.asList("Overcast", "Fog", "Depositing rine fog");
+
+        // Check to see if past two consecutive days match sunny or rainy weather descriptions
+        if (sunnyDescription.contains(weatherDescriptions.get(0)) && sunnyDescription.contains(weatherDescriptions.get(1))) {
+            return "There hasn’t been any rain recently, make sure to water your plants if they need it";
+        } else if ((!sunnyDescription.contains(weatherDescriptions.get(0)) && !otherDescription.contains(weatherDescriptions.get(0))) &&
+                (!sunnyDescription.contains(weatherDescriptions.get(1)) && !otherDescription.contains(weatherDescriptions.get(1)))) {
+            return "Outdoor plants don’t need any water today";
+        } else {
+            return "Have you checked on your garden today?";
+        }
     }
 }

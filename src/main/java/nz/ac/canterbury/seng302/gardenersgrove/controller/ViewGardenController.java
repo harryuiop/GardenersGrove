@@ -28,7 +28,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,6 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  */
 @Controller
 public class ViewGardenController extends GardensSidebar {
-    private final OpenMeteoWeather openMeteoWeather;
     Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
 
     private final GardenService gardenService;
@@ -97,7 +95,6 @@ public class ViewGardenController extends GardensSidebar {
         }
 
         List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng());
-        openMeteoWeather.getLastTwoDays(weatherData, model);
 
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
@@ -109,7 +106,8 @@ public class ViewGardenController extends GardensSidebar {
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
         model.addAttribute("weatherData", weatherData);
-        model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("d MMM yyyy"));
+        model.addAttribute("advice", OpenMeteoWeather.getWeatherAdvice(weatherData));
+        model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MM yyyy"));
 
 
         return "viewGarden";
@@ -121,7 +119,6 @@ public class ViewGardenController extends GardensSidebar {
      * @param gardenId The id of the garden being viewed
      * @param model    Puts the data into the template to be viewed
      * @return Thymeleaf html template of the view garden page.
-     * @return Thyme leaf html template of the view garden page.
      */
     @GetMapping(VIEW_GARDEN_URI_STRING)
     public String displayGarden(
