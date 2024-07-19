@@ -12,6 +12,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -224,17 +226,17 @@ class PlantControllerEditTest {
         assertNull(updatedPlant.getImageFileName());
     }
 
-    @Test
-    void submitForm_invalidCount_plantNotUpdated() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"-1", "text"})
+    void submitForm_invalidCount_plantNotUpdated(String plantCount) throws Exception {
         Plant plant = plantRepository.findAll().get(0);
-        int plantCount = -1;
         byte[] emptyImageBytes = new byte[0];
 
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(plant.getGarden().getId(), plant.getId()))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
                                         .param("plantName", plant.getName())
-                                        .param("plantCount", String.valueOf(plantCount))
+                                        .param("plantCount", plantCount)
                                         .param("plantDescription", plant.getDescription())
                                         .param("plantedDate", plant.getPlantedOn().toString()))
                         .andExpect(MockMvcResultMatchers.status().isOk())
