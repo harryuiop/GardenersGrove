@@ -4,7 +4,7 @@
     <title>Create Garden</title>
   </head>
 
-  <body class="form-bg">
+  <body class="bg">
     <div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
       <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
       <div
@@ -64,7 +64,7 @@
                       id="gardenDescription"
                       th:name="gardenDescription"
                       placeholder="e.g. My rose garden"
-                      th:value="*{gardenDescription}"
+                      th:text="*{gardenDescription}"
                       data-cy="gardenDescription"
                       autofocus
                       style="min-height: 132px"
@@ -82,7 +82,7 @@
                       <span
                         id="counter-display"
                         class="tag is-success"
-                        th:text="${gardenDescription == '' || gardenDescription.length() == 25 ? 0 : gardenDescription.length()}"
+                        th:text="${gardenDescription == null || gardenDescription == ''? 0 : gardenDescription.length()}"
                       ></span
                       >/512
                     </p>

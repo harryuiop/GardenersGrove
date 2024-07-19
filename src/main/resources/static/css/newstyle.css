@@ -10,11 +10,7 @@
   background-image: linear-gradient(to bottom right, var(--dark-green), var(--fern-green));
 }
 
-.form-bg {
+.bg {
   background-color: #efefec;
   color: var(--dark-green)
-}
-
-.nav-bg {
-  background-color: #efefec;
 }
