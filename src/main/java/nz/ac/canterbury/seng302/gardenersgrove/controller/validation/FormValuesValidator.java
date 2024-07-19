@@ -17,7 +17,7 @@ import java.time.format.DateTimeParseException;
 public class FormValuesValidator {
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
     static String namePattern = "^[a-zA-Z\\-' ]+$";
-    static String tagPattern = "^\\p{L}\\p{M}*+[\\p{L}\\p{M}*+0-9 _\\-\"']*\\p{L}\\p{M}*+$";
+    static String tagPattern = "^\\p{L}[\\p{L}0-9 _\\-\"']*\\p{L}$";
     static Logger logger = LoggerFactory.getLogger(FormValuesValidator.class);
 
     /**
