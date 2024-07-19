@@ -8,8 +8,7 @@
     <div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
       <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
       <div
-        class="container-flex d-flex justify-content-center mt-5 w-100 align-items-center"
-      >
+        class="container-flex d-flex justify-content-center mt-5 w-100 align-items-center">
         <div class="content">
           <div>
             <div class="forumContentsDiv">
@@ -17,10 +16,11 @@
                 th:action="@{${formSubmissionUri}}"
                 method="post"
                 id="garden-form"
+                style="max-width: 750px"
               >
                 <h4>Garden Details</h4>
                 <div class="row" style="margin-left: 3px">
-                  <div class="col">
+                  <div class="col-md-6">
                     <div class="row form-floating">
                       <input
                         type="text"
@@ -33,9 +33,9 @@
                         autofocus
                       />
                       <label class="form-input" for="gardenName">
-                        Garden Name
+                        Garden Name *
                       </label>
-                      <p class="errorMessage" th:text="${gardenNameError}"></p>
+                      <p class="error message" th:text="${gardenNameError}"></p>
                     </div>
                     <div class="row form-floating">
                       <input
@@ -54,10 +54,10 @@
                       <label class="form-input" for="gardenSize">
                         Garden size (m<sup>2</sup>)
                       </label>
-                      <p class="errorMessage" th:text="${gardenSizeError}"></p>
+                      <p class="error message" th:text="${gardenSizeError}"></p>
                     </div>
                   </div>
-                  <div class="col form-floating">
+                  <div class="col-md-6 form-floating">
                     <textarea
                       type="text"
                       class="form-control"
@@ -87,7 +87,7 @@
                       >/512
                     </p>
                     <p
-                      class="errorMessage"
+                      class="error message"
                       th:text="${gardenDescriptionError}"
                     ></p>
                   </div>
@@ -107,11 +107,11 @@
                   <label class="form-input" for="streetAddress">
                     Street Address
                   </label>
-                  <p class="errorMessage" th:text="${streetAddressError}"></p>
+                  <p class="error message" th:text="${streetAddressError}"></p>
                   <div id="autocomplete-list" class="inputStyle"></div>
                 </div>
                 <div class="row">
-                  <div class="col">
+                  <div class="col-md-6">
                     <div class="form-field form-floating">
                       <input
                         type="text"
@@ -123,11 +123,11 @@
                         data-cy="country"
                         autofocus
                       />
-                      <label class="form-input" for="country"> Country </label>
-                      <p class="errorMessage" th:text="${countryError}"></p>
+                      <label class="form-input" for="country"> Country * </label>
+                      <p class="error message" th:text="${countryError}"></p>
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-md-6">
                     <div class="form-field form-floating">
                       <input
                         type="text"
@@ -139,13 +139,13 @@
                         data-cy="city"
                         autofocus
                       />
-                      <label class="form-input" for="city"> City </label>
-                      <p class="errorMessage" th:text="${cityError}"></p>
+                      <label class="form-input" for="city"> City * </label>
+                      <p class="error message" th:text="${cityError}"></p>
                     </div>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col">
+                  <div class="col-md-6">
                     <div class="form-field form-floating">
                       <input
                         type="text"
@@ -158,10 +158,10 @@
                         autofocus
                       />
                       <label class="form-input" for="suburb"> Suburb </label>
-                      <p class="errorMessage" th:text="${suburbError}"></p>
+                      <p class="error message" th:text="${suburbError}"></p>
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-md-6">
                     <div class="form-field form-floating">
                       <input
                         type="text"
@@ -176,35 +176,37 @@
                       <label class="form-input" for="postcode">
                         Postcode
                       </label>
-                      <p class="errorMessage" th:text="${postcodeError}"></p>
+                      <p class="error message" th:text="${postcodeError}"></p>
                     </div>
                   </div>
                 </div>
-
+                <div class="message">
+                  <p>Required fields are marked by a *</p>
+                </div>
                 <button
-                  class="btn btn-outline-primary"
-                  type="submit"
-                  style="
-                    border-color: #477641;
-                    --bs-btn-color: #477641;
-                    --bs-btn-hover-bg: #477641;
-                    --bs-btn-hover-color: #fff;
-                    --bs-btn-active-bg: #477641;
-                  "
+                        class="btn btn-outline-primary"
+                        type="submit"
+                        style="
+                border-color: #477641;
+                --bs-btn-color: #477641;
+                --bs-btn-hover-bg: #477641;
+                --bs-btn-hover-color: #fff;
+                --bs-btn-active-bg: #477641;
+              "
                 >
                   Confirm <i class="bi bi-check"></i>
                 </button>
                 <a th:href="@{${previousPage}}">
                   <button
-                    class="btn btn-outline-primary"
-                    type="button"
-                    style="
-                      border-color: #6f0c0c;
-                      --bs-btn-color: #6f0c0c;
-                      --bs-btn-hover-bg: #6f0c0c;
-                      --bs-btn-hover-color: #fff;
-                      --bs-btn-active-bg: #6f0c0c;
-                    "
+                          class="btn btn-outline-primary"
+                          type="button"
+                          style="
+                          border-color: #6f0c0c;
+                          --bs-btn-color: #6f0c0c;
+                          --bs-btn-hover-bg: #6f0c0c;
+                          --bs-btn-hover-color: #fff;
+                          --bs-btn-active-bg: #6f0c0c;
+                        "
                   >
                     Cancel <i class="bi bi-x"></i>
                   </button>

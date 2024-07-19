@@ -14,3 +14,13 @@
   background-color: #efefec;
   color: var(--dark-green)
 }
+
+.message {
+  font-size: 0.8rem;
+  font-style: italic;
+  margin-top: 0;
+}
+
+.error {
+  color: #6F0C0C
+}
