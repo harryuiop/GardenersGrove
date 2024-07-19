@@ -56,7 +56,8 @@
       <br>
 
       <a th:href="@{${editGardenUri}}" style="text-decoration: none">
-        <button class="btn btn-outline-primary"
+        <button th:if="${owner}"
+                class="btn btn-outline-primary"
                 type="button"
                 style="
                 border-color: #477641;
@@ -69,7 +70,8 @@
         </button>
       </a>
       <a th:href="@{${newPlantUri}}">
-        <button class="btn btn-outline-primary"
+        <button th:if="${owner}"
+                class="btn btn-outline-primary"
                 type="button"
                 style="
                 border-color: #477641;
