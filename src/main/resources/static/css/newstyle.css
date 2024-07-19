@@ -10,3 +10,7 @@
   background-image: linear-gradient(to bottom right, var(--dark-green), var(--fern-green));
 }
 
+.bg {
+  background-color: #efefec;
+  color: var(--dark-green)
+}
