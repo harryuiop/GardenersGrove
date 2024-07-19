@@ -12,6 +12,7 @@
 
       <p th:text="${garden.getDescription()}"></p>
       <p th:text="${garden.getLocationString()}"></p>
+      <p th:text="${advice}"></p>
       <p th:if="${garden.getSize() != null}" th:utext="${garden.getSize().toString()} + 'm<sup>2</sup>'"></p>
       <p th:if="${garden.getSize() == null}">Unspecified size</p>
       <form th:if="${owner}" th:action="@{${makeGardenPublic}}" method="post">
