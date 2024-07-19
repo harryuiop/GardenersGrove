@@ -144,7 +144,8 @@
             <td><span th:text="${plant.getDateString()}"> Date Planted </span></td>
             <td>
               <a th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
-                <button class="btn btn-outline-primary"
+                <button th:if="${owner}"
+                        class="btn btn-outline-primary"
                         type="button"
                         style="
                 border-color: #477641;
