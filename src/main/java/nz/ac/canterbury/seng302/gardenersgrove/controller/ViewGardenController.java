@@ -64,7 +64,6 @@ public class ViewGardenController extends GardensSidebar {
         this.userService = userService;
         this.tagService = tagService;
         this.weatherService = weatherService;
-        this.openMeteoWeather = openMeteoWeather;
     }
 
     /**

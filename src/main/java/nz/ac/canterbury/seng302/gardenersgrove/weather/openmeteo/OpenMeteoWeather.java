@@ -7,7 +7,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherExcep
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.springframework.stereotype.Component;
-\import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-\
+
 /**
  * This is a class that implements the WeatherService interface
  * and provides the methods specific to the Open-Meteo API that
