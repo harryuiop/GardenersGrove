@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.unit;
 
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo.OpenMeteoWeather;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,6 +15,8 @@ import java.util.stream.Stream;
 
 @Import(OpenMeteoWeather.class)
 public class WeatherTest {
+
+    public WeatherService weatherService = new OpenMeteoWeather();
 
     static WeatherData sunny1 = new WeatherData(LocalDate.now(), 24.1, "Clear sky", 83.0, "bi bi-brightness-high");
     static WeatherData sunny2 = new WeatherData(LocalDate.now(), 24.1, "Mainly clear", 83.0, "bi bi-brightness-high");
@@ -86,18 +89,18 @@ public class WeatherTest {
     @ParameterizedTest
     @MethodSource("weatherDataProviderSunny")
     void weatherAdviceSunny(List<WeatherData> weatherData) {
-        Assertions.assertEquals(OpenMeteoWeather.getWeatherAdvice(weatherData), "There hasn’t been any rain recently, make sure to water your plants if they need it");
+        Assertions.assertEquals(weatherService.getWeatherAdvice(weatherData), "There hasn’t been any rain recently, make sure to water your plants if they need it");
     }
 
     @ParameterizedTest
     @MethodSource("weatherDataProviderRainy")
     void weatherAdviceRainy(List<WeatherData> weatherData) {
-        Assertions.assertEquals(OpenMeteoWeather.getWeatherAdvice(weatherData), "Outdoor plants don’t need any water today");
+        Assertions.assertEquals(weatherService.getWeatherAdvice(weatherData), "Outdoor plants don’t need any water today");
     }
 
     @ParameterizedTest
     @MethodSource("weatherDataProviderOther")
     void weatherAdviceOther(List<WeatherData> weatherData) {
-        Assertions.assertEquals(OpenMeteoWeather.getWeatherAdvice(weatherData), "Have you checked on your garden today?");
+        Assertions.assertEquals(weatherService.getWeatherAdvice(weatherData), "Have you checked on your garden today?");
     }
 }

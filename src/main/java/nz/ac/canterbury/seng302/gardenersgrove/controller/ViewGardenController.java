@@ -15,7 +15,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
-import nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo.OpenMeteoWeather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,7 @@ public class ViewGardenController extends NavBar {
      * @param weatherService Object for main interactions with Open-Meteo API
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker, OpenMeteoWeather weatherService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker, WeatherService weatherService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
@@ -111,7 +110,7 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
         model.addAttribute("makeGardenPublic", makeGardenPublicUri(garden.getId()));
         model.addAttribute("weatherData", weatherData);
-        model.addAttribute("advice", OpenMeteoWeather.getWeatherAdvice(weatherData));
+        model.addAttribute("advice", weatherService.getWeatherAdvice(weatherData));
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MM yyyy"));
 
 

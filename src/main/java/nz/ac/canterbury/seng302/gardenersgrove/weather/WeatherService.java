@@ -18,4 +18,5 @@ public interface WeatherService {
      * @throws UnableToFetchWeatherException if the server request fails or JSON parsing fails
      */
     List<WeatherData> getWeatherData(double latitude, double longitude) throws InterruptedException;
+    String getWeatherAdvice(List<WeatherData> weatherData);
 }
