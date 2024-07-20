@@ -108,7 +108,7 @@ public class GardenController extends NavBar {
 
         model.addAttribute("formSubmissionUri", formSubmissionUri);
         model.addAttribute("previousPage", this.refererUrl);
-
+        
         return "gardenForm";
     }
 
