@@ -3,8 +3,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 import jakarta.persistence.*;
 /**
  * Entity class representing an Authority.
- * Represents an Authority in which defines the authority level of a specific user defining which endpoints are accessable
- * to a user depeneding on their role.
+ * Represents an Authority in which defines the authority level of a specific user defining which endpoints are accessible
+ * to a user depending on their role.
  *
  * The definition of which roles can access what endpoints is defined in authentication/SecurityConfiguration in the
  * function SecurityFilterChain

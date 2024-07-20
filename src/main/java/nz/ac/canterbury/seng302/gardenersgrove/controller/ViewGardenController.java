@@ -13,6 +13,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,13 +42,13 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 @Controller
 public class ViewGardenController extends NavBar {
     Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
-
     private final GardenService gardenService;
     private final PlantService plantService;
     private final UserService userService;
     private final FriendshipService friendshipService;
     private final TagService tagService;
     private final ErrorChecker errorChecker;
+    private final WeatherService weatherService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -53,19 +56,23 @@ public class ViewGardenController extends NavBar {
      * @param gardenService A Garden database access object.
      * @param plantService  A Plant database access object.
      * @param userService   A User database access object.
+     * @param tagService    A Tag database access object.
+     * @param weatherService Object for main interactions with Open-Meteo API
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker, WeatherService weatherService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
         this.friendshipService = friendshipService;
         this.tagService = tagService;
+        this.weatherService = weatherService;
         this.errorChecker = errorChecker;
     }
 
     /**
      * Returns the view page for a specific garden
+     *
      * @param garden        The garden being viewed
      * @param editGardenUri The URI for edit garden
      * @param newPlantUri   The URi for new plant form
@@ -73,7 +80,7 @@ public class ViewGardenController extends NavBar {
      * @param owner         Whether the viewer is the owner of the garden or not
      * @param model         Puts the data into the template
      * @param errorMessages Any plant image errors that occurred when re-loading
-     * @return              The view garden page is displayed to user
+     * @return The view garden page is displayed to user
      */
     private String loadGardenPage(
                     Garden garden,
@@ -83,12 +90,14 @@ public class ViewGardenController extends NavBar {
                     boolean owner,
                     Model model,
                     String... errorMessages
-    ) {
+    ) throws InterruptedException {
         this.updateGardensNavBar(model, gardenService, userService);
 
         if (errorMessages.length > 0) {
             model.addAttribute("tagErrors", errorMessages[0]);
         }
+
+        List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng());
 
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
@@ -100,21 +109,26 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
         model.addAttribute("makeGardenPublic", makeGardenPublicUri(garden.getId()));
+        model.addAttribute("weatherData", weatherData);
+        model.addAttribute("advice", weatherService.getWeatherAdvice(weatherData));
+        model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MM yyyy"));
+
+
         return "viewGarden";
     }
 
     /**
      * Set up view garden page and display attributes.
      *
-     * @param gardenId  The id of the garden being viewed
-     * @param model     Puts the data into the template to be viewed
-     * @return Thyme leaf html template of the view garden page.
+     * @param gardenId The id of the garden being viewed
+     * @param model    Puts the data into the template to be viewed
+     * @return Thymeleaf html template of the view garden page.
      */
     @GetMapping(VIEW_GARDEN_URI_STRING)
     public String displayGarden(
             @PathVariable long gardenId,
             Model model
-    ) throws NoSuchGardenException {
+    ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
@@ -143,7 +157,7 @@ public class ViewGardenController extends NavBar {
             @PathVariable long gardenId,
             @PathVariable long friendId,
             Model model
-    ) throws NoSuchGardenException {
+    ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewFriendsGardenUri(friendId, gardenId));
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
@@ -208,6 +222,7 @@ public class ViewGardenController extends NavBar {
         return "redirect:" + viewGardenUri(gardenId);
     }
 
+
     /**
      * Changes the garden so that it is public (viewable by all)
      * @param gardenId                  The Id of the garden being made public
@@ -260,6 +275,7 @@ public class ViewGardenController extends NavBar {
         if (optionalGarden.isEmpty() || optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) {
             throw new NoSuchGardenException(gardenId);
         }
+
         Garden garden = optionalGarden.get();
         String errorMessages = errorChecker.tagNameErrors(tagName);
 
@@ -270,6 +286,6 @@ public class ViewGardenController extends NavBar {
 
         return "redirect:" + viewGardenUri(gardenId);
     }
-
-
 }
+
+
