@@ -1,21 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
+<head th:fragment="headerfiles">
     <meta charset="UTF-8">
-    <title>Gardener's Grove</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <meta http-equiv="X-UA-Compatible" content="IE=Chrome">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/newstyle.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
 <div id="landingPage">
-    <h1>Gardener's Grove</h1>
-    <p>Welcome to Gardener's Grove!</p>
-    <div>
-        <button>
-            <a th:href="@{${loginUri}}">Sign In</a>
-        </button>
-        <button>
-            <a th:href="@{${registerUri}}">Register</a>
-        </button>
+    <div class="landing-bg container-fluid align-items-center justify-content-center d-flex">
+        <h1 class="display-1 text-white fw-bold ">Welcome to Gardeners Grove.</h1>
+    </div>
+    <div class="bg vh-100 d-flex container-fluid justify-content-center">
+        <div>
+            <div>
+                <a th:href="@{${loginUri}}">
+                    <button class="btn btn-outline-primary"
+                            type="button"
+                            style="
+                    border-color: #477641;
+                    --bs-btn-color: #477641;
+                    --bs-btn-hover-bg: #477641;
+                    --bs-btn-hover-color: #fff;
+                    --bs-btn-active-bg: #477641;
+                    "
+                    >Sign In</button>
+                </a>
+            </div>
+            <div>
+                <a th:href="@{${registerUri}}">
+                    <button class="btn btn-outline-primary"
+                            type="button"
+                            style="
+                    border-color: #477641;
+                    --bs-btn-color: #477641;
+                    --bs-btn-hover-bg: #477641;
+                    --bs-btn-hover-color: #fff;
+                    --bs-btn-active-bg: #477641;
+                    "
+                    >Register</button>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 </body>
