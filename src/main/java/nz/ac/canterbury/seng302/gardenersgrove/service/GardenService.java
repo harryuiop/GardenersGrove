@@ -46,4 +46,8 @@ public class GardenService {
     public void deleteGarden(Long id) {
         gardenRepository.deleteById(id);
     }
+
+    public List<Garden> getAllPublicGardens() {
+        return gardenRepository.findAllByIsGardenPublicTrue();
+    }
 }
