@@ -25,6 +25,7 @@ public class UriConfig {
     public static final String UPLOAD_PLANT_IMAGE_URI_STRING = "/garden/{gardenId}/plant/{plantId}/image";
     public static final String VIEW_ALL_GARDENS_URI_STRING = "/gardens";
     public static final String MAKE_GARDEN_PUBLIC_STRING = "/public/{gardenId}";
+    public static final String BROWSE_PUBLIC_GARDENS_URI_STRING = "/browse";
     public static final String MANAGE_FRIENDS_URI_STRING = "/friends";
     public static final String VIEW_ALL_FRIENDS_GARDENS_URI_STRING = "/friends/{friendId}/gardens";
     public static final String VIEW_FRIENDS_GARDEN_URI_STRING = "/friends/{friendId}/garden/{gardenId}";
@@ -137,6 +138,9 @@ public class UriConfig {
         return MAKE_GARDEN_PUBLIC_URI.expand(gardenId);
     }
 
+    public static URI browsePublicGardensUri() {
+        return URI.create(BROWSE_PUBLIC_GARDENS_URI_STRING);
+    }
     public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
     public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
 
