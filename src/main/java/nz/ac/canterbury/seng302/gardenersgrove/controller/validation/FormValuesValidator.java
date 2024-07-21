@@ -173,7 +173,7 @@ public class FormValuesValidator {
      * @return bool: Whether the email is in use or not.
      */
     public boolean emailInUse(String email, UserService userService) {
-        return userService.getUserByEmail(email) == null;
+        return userService.getUserByEmail(email.toLowerCase()) == null;
     }
 
 
