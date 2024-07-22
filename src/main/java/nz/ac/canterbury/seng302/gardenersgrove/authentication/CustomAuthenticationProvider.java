@@ -37,7 +37,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) {
         // Extract email and password from the authentication object
-        String email = String.valueOf(authentication.getName());
+        String email = String.valueOf(authentication.getName()).toLowerCase();
         String password = String.valueOf(authentication.getCredentials());
 
         // Check if either email or password is null or empty

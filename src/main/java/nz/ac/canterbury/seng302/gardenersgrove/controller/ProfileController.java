@@ -168,7 +168,8 @@ public class ProfileController extends NavBar {
 
         User prevUpdateUser = userService.getAuthenticatedUser();
 
-        boolean newEmail = email.equals(prevUpdateUser.getEmail());
+        email = email.toLowerCase();
+        boolean newEmail = email.equals(prevUpdateUser.getEmail().toLowerCase());
 
         boolean dateOfBirthValid = true;
         try {
