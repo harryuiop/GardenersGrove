@@ -4,6 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.friends.SearchedUserResult;
 import org.slf4j.Logger;
@@ -33,25 +34,29 @@ public class SearchResultsController {
     Logger logger = LoggerFactory.getLogger(SearchResultsController.class);
     private final UserService userService;
     private final FriendRequestService friendRequestService;
-
     private final FriendshipService friendshipService;
+    private final GardenService gardenService;
 
     /**
      * This sets up the current user service so that the current users can be reached.
+     *
      * @param userService the current service being used to get information about the users
      */
     @Autowired
-    public SearchResultsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService) {
+    public SearchResultsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService,
+                                   GardenService gardenService) {
         this.userService = userService;
         this.friendRequestService = friendRequestService;
         this.friendshipService = friendshipService;
+        this.gardenService = gardenService;
     }
 
     /**
      * Gets the results from the user search. Returns the display of the search results.
+     *
      * @param searchUser The String that the user inputs to look for friends
      * @param model      The Model object used for adding attributes to the view.
-     * @return           The searchResults page is viewable to the users
+     * @return The searchResults page is viewable to the users
      */
     @GetMapping(SEARCH_RESULTS_STRING)
     public String getSearchResultsPage(@RequestParam String searchUser, Model model) {
@@ -73,22 +78,24 @@ public class SearchResultsController {
 
     /**
      * Passes the search string through to the search results page
-     * @param searchUser            The string sent by the user containing the possible email or full name of the user of interest
-     * @param redirectAttributes    Allows attributes to be sent through to get as params
-     * @return  a redirect to the get page.
+     *
+     * @param searchUser         The string sent by the user containing the possible email or full name of the user of interest
+     * @param redirectAttributes Allows attributes to be sent through to get as params
+     * @return a redirect to the get page.
      */
     @PostMapping(SEARCH_RESULTS_STRING)
     public String getSearchResults(@RequestParam String searchUser,
                                    RedirectAttributes redirectAttributes) {
         logger.info("POST /search/result/{}", searchUser);
         redirectAttributes.addAttribute("searchUser", searchUser);
-        return "redirect:"+SEARCH_RESULTS_STRING;
+        return "redirect:" + SEARCH_RESULTS_STRING;
     }
-
+    
     /**
-     * Incomplete send friend request function.
-     * @param userId    The id of the user the friend request is being sent to.
-     * @return      Redirection to friends page.
+     * ToDo: Incomplete send friend request function.
+     *
+     * @param userId The id of the user the friend request is being sent to.
+     * @return Redirection to friends page.
      */
     @PostMapping(SEND_FREIND_REQUEST_STRING)
     public String sendFriendRequest(@RequestParam long userId) {

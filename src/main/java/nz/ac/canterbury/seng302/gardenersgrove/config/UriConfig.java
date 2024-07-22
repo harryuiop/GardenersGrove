@@ -28,10 +28,9 @@ public class UriConfig {
     public static final String MANAGE_FRIENDS_URI_STRING = "/friends";
     public static final String VIEW_ALL_FRIENDS_GARDENS_URI_STRING = "/friends/{friendId}/gardens";
     public static final String VIEW_FRIENDS_GARDEN_URI_STRING = "/friends/{friendId}/garden/{gardenId}";
-
+    public static final String VIEW_PUBLIC_GARDENS_URI_STRING = "/browse/gardens";
     public static final String SEARCH_RESULTS_STRING = "/search/results";
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
-
 
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
@@ -88,6 +87,10 @@ public class UriConfig {
         return URI.create(EDIT_PASSWORD_URI_STRING);
     }
 
+    public static URI viewPublicGardens() {
+        return URI.create(VIEW_PUBLIC_GARDENS_URI_STRING);
+    }
+
     public static URI uploadProfileImageUri() {
         return URI.create(UPLOAD_PROFILE_IMAGE_URI_STRING);
     }
@@ -95,6 +98,7 @@ public class UriConfig {
     public static URI resetPasswordUri(String token, long userId) {
         return RESET_PASSWORD_URI.expand(token, userId);
     }
+
     public static URI newGardenUri() {
         return URI.create(NEW_GARDEN_URI_STRING);
     }
@@ -102,6 +106,7 @@ public class UriConfig {
     public static URI viewGardenUri(long gardenId) {
         return VIEW_GARDEN_URI.expand(gardenId);
     }
+
     public static URI newGardenTagUri(long gardenId) {
         return NEW_GARDEN_TAG_URI.expand(gardenId);
     }
@@ -133,11 +138,17 @@ public class UriConfig {
     public static URI viewAllGardensUri() {
         return URI.create(VIEW_ALL_GARDENS_URI_STRING);
     }
+
     public static URI makeGardenPublicUri(long gardenId) {
         return MAKE_GARDEN_PUBLIC_URI.expand(gardenId);
     }
 
-    public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
-    public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
+    public static URI searchResultsUri() {
+        return URI.create(SEARCH_RESULTS_STRING);
+    }
+
+    public static URI sendFriendRequestUri() {
+        return URI.create(SEND_FREIND_REQUEST_STRING);
+    }
 
 }
