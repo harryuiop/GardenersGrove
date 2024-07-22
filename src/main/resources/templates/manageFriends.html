@@ -2,10 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Friends</title>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
   </head>
   <body>
     <div class="container-fluid p-0 m-0">
@@ -56,7 +52,7 @@
                 type="text"
               />
               <button
-                class="input-group-text border-0"
+                class="input-group-text border-0 btn-sm"
                 id="search-addon"
                 th:for="searchForm"
                 type="submit"
@@ -105,20 +101,19 @@
                                       ></a>
                                       <div class="mt-2">
                                         <a
-                                          class="btn btn-outline-primary"
+                                          class="btn btn-outline-primary btn-sm"
                                           style="
                                             border-color: #477641;
                                             --bs-btn-color: #477641;
                                             --bs-btn-hover-bg: #477641;
                                             --bs-btn-hover-color: #fff;
                                             --bs-btn-active-bg: #477641;
-                                            margin-bottom: 3px;
                                           "
                                           th:href="@{${viewFriendsGardensUriString}(friendId=${friend.getId()})}"
                                           >View Gardens</a
                                         >
                                         <button
-                                          class="btn btn-outline-primary"
+                                          class="btn btn-outline-primary btn-sm"
                                           type="button"
                                           style="
                                             border-color: #6f0c0c;
@@ -205,7 +200,7 @@
                                     ></a>
                                     <div class="mt-2">
                                       <button
-                                        class="btn btn-outline-primary"
+                                        class="btn btn-outline-primary btn-sm"
                                         type="submit"
                                         style="
                                           border-color: #477641;
@@ -220,7 +215,7 @@
                                         Accept <i class="bi bi-check"></i>
                                       </button>
                                       <button
-                                        class="btn btn-outline-primary"
+                                        class="btn btn-outline-primary btn-sm"
                                         type="button"
                                         style="
                                           border-color: #6f0c0c;
@@ -302,7 +297,7 @@
                                         th:text="${request.getStatus().toString()}"
                                       ></p>
                                       <button
-                                        class="btn btn-primary"
+                                        class="btn btn-primary btn-sm"
                                         type="submit"
                                         style="
                                           width: 100px;
@@ -383,10 +378,15 @@
       "#removeFriendModal .btn-primary",
     );
     let formId;
+
     removeFriendModal.addEventListener("show.bs.modal", (event) => {
+      // Button that triggered the modal
       const button = event.relatedTarget;
+
+      // Extract form id from data-form-id attribute
       formId = button.getAttribute("data-form-id");
     });
+
     removeFriendButton.addEventListener("click", () =>
       document.getElementById(formId).submit(),
     );
