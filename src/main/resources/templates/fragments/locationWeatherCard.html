@@ -1,16 +1,28 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-  <head th:insert="~{fragments/importFragment :: headerfiles}">
-  </head>
-  <body>
-    <div th:fragment="weatherCard" >
-      <div class="container-sm shadow rounded-4 text-center p-5">
-        <h2 class="display-5" th:text="${dayOfWeek}"></h2>
-        <p th:text="${date}"></p>
-        <i th:class="${image}"></i>
-        <p th:text="${description}"></p>
-        <p th:text="${temperature}"></p>
-      </div>
+
+<head th:insert="~{fragments/importFragment :: headerfiles}"> </head>
+
+<body>
+  <div th:fragment="weatherCard">
+    <style>
+      .card {
+        width: 15rem;
+        height: 20rem;
+
+      }
+      .image {
+        font-size: 5rem;
+      }
+    </style>
+    <div class="container shadow rounded-3 text-center p-3 card">
+      <p class="h2" th:text="${dayOfWeek}"></p>
+      <p class="p-0" th:text="${date}"></p>
+      <i class="bi bi-cloud-drizzle image"></i>
+      <p th:text="${description}"></p>
+      <p th:text="${temperature}"></p>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
