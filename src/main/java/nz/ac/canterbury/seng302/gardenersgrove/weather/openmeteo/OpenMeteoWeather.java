@@ -28,6 +28,8 @@ import java.util.List;
  */
 @Component
 public class OpenMeteoWeather implements WeatherService {
+    private final Integer PAST_DAYS = 2;
+    private final Integer FORECAST_DAYS = 4;
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -52,8 +54,8 @@ public class OpenMeteoWeather implements WeatherService {
                 .queryParam("current", "temperature_2m,relative_humidity_2m,weather_code")
                 .queryParam("daily", "weather_code,temperature_2m_max")
                 .queryParam("timezone", "auto")
-                .queryParam("past_days", 2)
-                .queryParam("forecast_days", 4)
+                .queryParam("past_days", PAST_DAYS)
+                .queryParam("forecast_days", FORECAST_DAYS)
                 .build();
 
         HttpRequest request = HttpRequest.newBuilder()

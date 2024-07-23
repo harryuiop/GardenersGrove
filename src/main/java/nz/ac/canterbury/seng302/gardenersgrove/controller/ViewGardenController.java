@@ -109,7 +109,7 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
         model.addAttribute("makeGardenPublic", makeGardenPublicUri(garden.getId()));
-        model.addAttribute("weatherData", weatherData);
+        model.addAttribute("weatherData", weatherData.subList(2, 5));
         model.addAttribute("advice", weatherService.getWeatherAdvice(weatherData));
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MM yyyy"));
 
