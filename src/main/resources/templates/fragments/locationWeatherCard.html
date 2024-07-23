@@ -7,20 +7,23 @@
   <div th:fragment="weatherCard">
     <style>
       .card {
-        width: 15rem;
-        height: 20rem;
-
+        width: 13rem;
+        height: 16rem;
       }
+
       .image {
-        font-size: 5rem;
+        font-size: 3rem;
+        margin: 0;
+        padding: 0;
       }
     </style>
-    <div class="container shadow rounded-3 text-center p-3 card">
-      <p class="h2" th:text="${dayOfWeek}"></p>
-      <p class="p-0" th:text="${date}"></p>
-      <i class="bi bi-cloud-drizzle image"></i>
+    <div class="container shadow rounded-3 text-center p-2 card">
+      <p class="h3" th:text="${dayOfWeek}"></p>
+      <p class="m-0" th:text="${date}"></p>
+      <i class="image" th:classappend="${image}"></i>
       <p th:text="${description}"></p>
-      <p th:text="${temperature}"></p>
+      <p class="m-0"><span th:text="${temperature}"></span>&deg;C</p>
+      <p class="m-0"><span th:text="${humidity}"></span>% Humidity</p>
     </div>
   </div>
 </body>
