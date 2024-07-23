@@ -99,6 +99,7 @@ public class RegisterController {
         }
 
         boolean dateOfBirthValid = true;
+        email = email.toLowerCase();
         try {
             if (dateOfBirth != null && !dateOfBirth.isBlank()) {
                 LocalDate.parse(dateOfBirth);
