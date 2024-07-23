@@ -27,6 +27,7 @@ public class NavBar {
         model.addAttribute("viewAllGardensUri", viewAllGardensUri());
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         model.addAttribute("user", userService.getAuthenticatedUser());
+        model.addAttribute("browsePublicGardensUri", browsePublicGardensUri());
     }
 
     private List<Garden> getTopNGardens(GardenService gardenService, UserService userService) {
