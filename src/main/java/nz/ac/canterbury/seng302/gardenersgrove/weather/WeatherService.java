@@ -23,10 +23,10 @@ public interface WeatherService {
     /**
      * @return The number of forecasted days.
      */
-    Integer getPastDaysCount();
+    int getPastDaysCount();
 
     /**
      * @return The number of previous days.
      */
-    Integer getForecastDayCount();
+    int getForecastDayCount();
 }
