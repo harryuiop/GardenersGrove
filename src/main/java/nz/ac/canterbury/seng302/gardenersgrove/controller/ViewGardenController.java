@@ -98,8 +98,8 @@ public class ViewGardenController extends NavBar {
         }
 
         List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng());
-        Integer pastDays = weatherService.getPastDaysCount();
-        Integer forecastedDays = weatherService.getForecastDayCount();
+        int pastDays = weatherService.getPastDaysCount();
+        int forecastedDays = weatherService.getForecastDayCount();
         List<WeatherData> shownWeatherData = weatherData.subList(pastDays, pastDays + forecastedDays);
 
 

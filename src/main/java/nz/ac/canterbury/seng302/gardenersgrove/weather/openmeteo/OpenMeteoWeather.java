@@ -3,7 +3,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
@@ -31,8 +30,8 @@ import java.util.List;
 public class OpenMeteoWeather implements WeatherService {
 
     private final int NUM_HOURS_IN_DAY = 24;
-    private final Integer PAST_DAYS = 2;
-    private final Integer FORECAST_DAYS = 3;
+    private final int PAST_DAYS = 2;
+    private final int FORECAST_DAYS = 3;
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -76,14 +75,14 @@ public class OpenMeteoWeather implements WeatherService {
     /**
      * @return The number of forecasted days.
      */
-    public Integer getForecastDayCount() {
+    public int getForecastDayCount() {
         return FORECAST_DAYS;
     }
 
     /**
      * @return The number of previous days.
      */
-    public Integer getPastDaysCount() {
+    public int getPastDaysCount() {
         return PAST_DAYS;
     }
 
