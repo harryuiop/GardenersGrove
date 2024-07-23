@@ -16,7 +16,8 @@
 
 .bg {
   background-color: #efefec;
-  color: var(--dark-green)
+  color: var(--dark-green);
+  font-family: "Gill Sans MT", sans-serif;
 }
 
 .message {
