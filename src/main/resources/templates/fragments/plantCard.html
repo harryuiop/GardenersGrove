@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:insert="~{fragments/importFragment :: headerfiles}">
+</head>
+<body>
+<div th:fragment="plantCard" >
+    <div class="container-sm shadow rounded-4 text-center p-5">
+        <h2 class="display-5" th:text="${plantName}"></h2>
+        <p th:text="${plantDescription}"></p>
+        <i th:text="${plantCount}"></i>
+        <p th:text="${plantDate}"></p>
+    </div>
+</div>
+</body>
+</html>

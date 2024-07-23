@@ -149,12 +149,12 @@
                         style="display: none;">Submit
                 </button>
               </form>
-            </td>
-            <td><span th:text="${plant.getName()}"> Name </span></td>
-            <td><span th:text="${plant.getDescription()}"> Description </span></td>
-            <td><span th:text="${plant.getCount()}"> Count </span></td>
-            <td><span th:text="${plant.getDateString()}"> Date Planted </span></td>
-            <td>
+<!--            </td>-->
+<!--            <td><span th:text=plantName=${plant.getName()}"> Name </span></td>-->
+<!--            <td><span th:text="plantDescription=${plant.getDescription()}"> Description </span></td>-->
+<!--            <td><span th:text="plantCount=${plant.getCount()}"> Count </span></td>-->
+<!--            <td><span th:text="plantDate=${plant.getDateString()}"> Date Planted </span></td>-->
+<!--            <td>-->
               <a th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
                 <button th:if="${owner}"
                         class="btn btn-outline-primary"
@@ -173,6 +173,16 @@
           </tr>
           </tbody>
         </table>
+      </div>
+      <div id="plantCard">
+        <div th:each="plant : ${plants}" class="d-inline-grid">
+          <div th:insert="~{fragments/plantCard :: plantCard}"
+               th:with="plantName=${plant.getName()},
+               plantDescription=${plant.getDescription()},
+               plantCount=${plant.getCount()},
+               plantDate=${plant.getDateString()}">
+          </div>
+        </div>
       </div>
     </div>
   </div>
