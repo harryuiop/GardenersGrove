@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.weather.openmeteo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
@@ -28,8 +29,10 @@ import java.util.List;
  */
 @Component
 public class OpenMeteoWeather implements WeatherService {
+
+    private final int NUM_HOURS_IN_DAY = 24;
     private final Integer PAST_DAYS = 2;
-    private final Integer FORECAST_DAYS = 4;
+    private final Integer FORECAST_DAYS = 3;
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -68,6 +71,20 @@ public class OpenMeteoWeather implements WeatherService {
         } catch (IOException exception) {
             throw new UnableToFetchWeatherException("IOException occurred while getting weather data from API", exception);
         }
+    }
+
+    /**
+     * @return The number of forecasted days.
+     */
+    public Integer getForecastDayCount() {
+        return FORECAST_DAYS;
+    }
+
+    /**
+     * @return The number of previous days.
+     */
+    public Integer getPastDaysCount() {
+        return PAST_DAYS;
     }
 
     /**
@@ -135,15 +152,13 @@ public class OpenMeteoWeather implements WeatherService {
     private List<Integer> getDailyHumidity(WeatherResponse response) {
         List<Integer> dailyHumidity = new ArrayList<>();
         List<Integer> hourlyHumidity = response.getHourlyWeather().getRelativeHumidity();
-        final int NUM_DAYS = 6; // number of days of data to be fetched according to the AC's
-        final int NUM_HOURS = 24; // number of hours in a day
         int humiditySum = 0;
-        for (int i = 0; i < NUM_DAYS; i++) {
+        for (int i = 0; i < PAST_DAYS + FORECAST_DAYS; i++) {
             int humidityAvg;
-            for (int j = 0; j < NUM_HOURS; j++) {
-                humiditySum += hourlyHumidity.get(i * NUM_HOURS + j);
+            for (int j = 0; j < NUM_HOURS_IN_DAY; j++) {
+                humiditySum += hourlyHumidity.get(i * NUM_HOURS_IN_DAY + j);
             }
-            humidityAvg = humiditySum / NUM_HOURS;
+            humidityAvg = humiditySum / NUM_HOURS_IN_DAY;
             humiditySum = 0;
             dailyHumidity.add(humidityAvg);
         }

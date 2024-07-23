@@ -98,6 +98,10 @@ public class ViewGardenController extends NavBar {
         }
 
         List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng());
+        Integer pastDays = weatherService.getPastDaysCount();
+        Integer forecastedDays = weatherService.getForecastDayCount();
+        List<WeatherData> shownWeatherData = weatherData.subList(pastDays, pastDays + forecastedDays);
+
 
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
@@ -109,7 +113,7 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
         model.addAttribute("makeGardenPublic", makeGardenPublicUri(garden.getId()));
-        model.addAttribute("weatherData", weatherData.subList(2, 5));
+        model.addAttribute("weatherData", shownWeatherData);
         model.addAttribute("advice", weatherService.getWeatherAdvice(weatherData));
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MM yyyy"));
 
