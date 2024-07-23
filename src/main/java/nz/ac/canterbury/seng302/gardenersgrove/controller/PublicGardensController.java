@@ -8,8 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.BROWSE_PUBLIC_GARDENS_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.browsePublicGardensUri;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 @Controller
 public class PublicGardensController {
@@ -25,6 +24,7 @@ public class PublicGardensController {
     String browseGardens(Model model) {
         logger.info("GET {}", browsePublicGardensUri());
         model.addAttribute("gardens", gardenService.getAllPublicGardens());
+        model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         return "publicGardens";
     }
 }

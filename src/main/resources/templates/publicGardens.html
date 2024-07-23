@@ -7,7 +7,7 @@
 <body>
 <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
 <div th:each="garden : ${gardens}">
-    <p th:text="${garden.getName()}"></p>
+    <a th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"><p th:text="${garden.getName()}"></p></a>
 </div>
 </body>
 </html>
