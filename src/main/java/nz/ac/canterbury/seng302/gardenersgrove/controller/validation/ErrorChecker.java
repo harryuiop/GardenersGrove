@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
@@ -133,12 +134,17 @@ public class ErrorChecker {
       MultipartFile imageFile) {
     HashMap<String, String> errors = new HashMap<>();
 
-    if (formValuesValidator.checkBlank(plantName) || !formValuesValidator.checkCharacters(plantName)) {
-      errors.put(
-          "plantNameError",
-          "Plant name cannot be empty and must only include " +
-              "letters, numbers, spaces, dots, hyphens, or apostrophes");
-    }
+        if (formValuesValidator.checkBlank(plantName)
+                || !formValuesValidator.checkCharacters(plantName)
+                || !formValuesValidator.checkPlantNameLength(plantName)) {
+            errors.put(
+                            "plantNameError",
+                            "A plant name must\n-Cannot be empty\n" +
+                                    "-Only includes letters, numbers, spaces, dots, hyphens, or apostrophes\n" +
+                                    "-Name cannot exceed " + Plant.NAME_CHARACTER_LIMIT + " characters"
+
+            );
+        }
 
     if (!formValuesValidator.checkValidPlantCount(plantCount)) {
       errors.put("plantCountError", "Plant count must be positive number, and only contain the digits 0-9");
@@ -162,7 +168,7 @@ public class ErrorChecker {
    * it does not\contain characters other than letters, spaces, hyphens or
    * apostrophes. Returns these error messages
    * in a form to place into the model.
-   * 
+   *
    * @param firstName The first name string.
    * @return A Map<String, String> of errors containing <error model name, error
    *         message>.
@@ -194,7 +200,7 @@ public class ErrorChecker {
    * only includes letters, spaces, hyphens, or apostrophes. Returns these error
    * messages in a form to place into
    * the model.
-   * 
+   *
    * @param lastName  last name string.
    * @param noSurname a boolean value of whether the lastName should be null or
    *                  not.
@@ -229,7 +235,7 @@ public class ErrorChecker {
    * (if the given email is a new email)
    * not already in use. Returns these error messages in a form to place into the
    * model.
-   * 
+   *
    * @param email       The email string.
    * @param oldEmail    A boolean value of whether the email is the old email or a
    *                    new one.
@@ -252,7 +258,7 @@ public class ErrorChecker {
 
   /**
    * Check email errors for the reset password form.
-   * 
+   *
    * @param email The email string.
    * @return A Map<String, String> of errors containing <error model name, error
    *         message>.
@@ -269,7 +275,7 @@ public class ErrorChecker {
    * format, and the user is older than 13 but
    * younger than 120. Returns these error messages in a form to place into the
    * model.
-   * 
+   *
    * @param dateOfBirth A string the birthdate
    * @param validDate   A boolean value of whether the date is a valid date or
    *                    not.
@@ -296,7 +302,7 @@ public class ErrorChecker {
    * Checks that the given password was input twice, that it contains at least 8
    * characters, at least one uppercase
    * letter, at least one lower letter, one number, and a special character.
-   * 
+   *
    * @param password        A string of the password.
    * @param passwordConfirm A string of the attempted password copy .
    * @return A Map<String, String> of errors containing <error model name, error
@@ -322,7 +328,7 @@ public class ErrorChecker {
    * register below),
    * then creates a map of the fields that have errors and the descriptions of
    * those errors, used to inform the user
-   * 
+   *
    * @param firstName   The first name string.
    * @param lastName    The last name string.
    * @param noSurname   Whether the noLastName box was ticked.

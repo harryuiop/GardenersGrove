@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ProfanityChecker;
@@ -123,6 +124,11 @@ public class FormValuesValidator {
      */
     public boolean checkNameLength(String name) {
         return name.length() <= 64;
+    }
+
+
+    public boolean checkPlantNameLength(String name) {
+        return name.length() <= Plant.NAME_CHARACTER_LIMIT;
     }
 
     /**

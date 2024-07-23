@@ -114,6 +114,18 @@ public class FormValuesValidationTest {
     }
 
     @Test
+    void checkInvalidPlantNameLength_returnFalse() {
+        String name = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        Assertions.assertFalse(formValuesValidator.checkPlantNameLength(name));
+    }
+
+    @Test
+    void checkValidPlantNameLength_returnTrue() {
+        String name ="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        Assertions.assertTrue(formValuesValidator.checkPlantNameLength(name));
+    }
+
+    @Test
     void checkSamePassword_returnTrue() {
         String password = "abE123!!";
         Assertions.assertTrue(formValuesValidator.checkConfirmPasswords(password, password));
