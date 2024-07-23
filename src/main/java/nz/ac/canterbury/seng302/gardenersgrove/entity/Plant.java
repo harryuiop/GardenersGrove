@@ -10,11 +10,12 @@ import java.time.format.DateTimeFormatter;
  */
 @Entity
 public class Plant {
+    public static final int NAME_CHARACTER_LIMIT = 100;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = NAME_CHARACTER_LIMIT)
     private String name;
 
     @Column

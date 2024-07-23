@@ -23,8 +23,8 @@ public class UserValidationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", "##@a.com", "aa@$$.com", "aa@aa.##", "onetwogmail.com", "onetwo@gmailcom",
-            "abc-@mail.com", "abc..def@mail.com", ".abc@mail.com", "abc#def@mail.com", "abc.def@mail.c",
-            "abc.def@mail#archive.com", "abc.def@mail..com", "john@smith.co.nz.ab", "john@smith.co-nz"})
+            "abc-@mail.com", "abc..def@mail.com", ".Abc@mail.com", "abc#def@mail.com", "abc.def@mail.c",
+            "abc.def@mail#archive.com", "abc.def@mail..com", "JOHN@smith.co.nz.ab", "john@smith.co-nz"})
     void checkEmail_invalid_returnFalse(String email) {
         Assertions.assertFalse(emailIsValid(email));
     }

@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ProfanityChecker;
@@ -125,6 +126,11 @@ public class FormValuesValidator {
         return name.length() <= 64;
     }
 
+
+    public boolean checkPlantNameLength(String name) {
+        return name.length() <= Plant.NAME_CHARACTER_LIMIT;
+    }
+
     /**
      * Checks the users' name contains only valid characters.
      *
@@ -173,7 +179,7 @@ public class FormValuesValidator {
      * @return bool: Whether the email is in use or not.
      */
     public boolean emailInUse(String email, UserService userService) {
-        return userService.getUserByEmail(email) == null;
+        return userService.getUserByEmail(email.toLowerCase()) == null;
     }
 
 

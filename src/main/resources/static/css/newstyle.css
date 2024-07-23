@@ -28,3 +28,10 @@
 .error {
   color: #6F0C0C
 }
+
+.landing-bg {
+  background-image: url("../images/landing_plant.jpeg");
+  background-size: cover;
+  background-position: center;
+  height: 40em;
+}

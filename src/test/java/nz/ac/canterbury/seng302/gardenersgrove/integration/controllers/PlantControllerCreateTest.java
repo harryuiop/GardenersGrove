@@ -85,9 +85,9 @@ class PlantControllerCreateTest {
         Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
     }
 
-    @Test
-    void submitForm_allValid_plantSaved() throws Exception {
-        String plantName = "Test Plant";
+    @ParameterizedTest
+    @ValueSource(strings = {"Test Plant", "a", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"})
+    void submitForm_allValid_plantSaved(String plantName) throws Exception {
         Integer plantCount = 4;
         String plantDescription = "Test Description";
         String plantedDate = "2024-01-01";
@@ -192,9 +192,10 @@ class PlantControllerCreateTest {
         assertNotNull(plant.getImageFileName());
     }
 
-    @Test
-    void submitForm_invalidName_plantNotSaved() throws Exception {
-        String plantName = "Test&Plant";
+    @ParameterizedTest
+    @ValueSource(strings = {"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+                            "@(#&%$(*&(@*", ""})
+    void submitForm_invalidName_plantNotSaved(String plantName) throws Exception {
         Integer plantCount = 4;
         String plantDescription = "Test Description";
         String plantedDate = "2024-01-01";

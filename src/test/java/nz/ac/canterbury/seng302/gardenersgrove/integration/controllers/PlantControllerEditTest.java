@@ -199,10 +199,11 @@ class PlantControllerEditTest {
         assertNull(updatedPlant.getImageFileName());
     }
 
-    @Test
-    void submitForm_invalidName_plantNotUpdated() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+            "@(#&%$(*&(@*", ""})
+    void submitForm_invalidName_plantNotUpdated(String invalidPlantName) throws Exception {
         Plant plant = plantRepository.findAll().get(0);
-        String invalidPlantName = "Test&Plant";
         byte[] emptyImageBytes = new byte[0];
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(plant.getGarden().getId(), plant.getId()))
