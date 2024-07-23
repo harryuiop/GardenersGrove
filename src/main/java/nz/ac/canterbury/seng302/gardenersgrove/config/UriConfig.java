@@ -28,7 +28,6 @@ public class UriConfig {
     public static final String BROWSE_PUBLIC_GARDENS_URI_STRING = "/browse";
     public static final String MANAGE_FRIENDS_URI_STRING = "/friends";
     public static final String VIEW_ALL_FRIENDS_GARDENS_URI_STRING = "/friends/{friendId}/gardens";
-    public static final String VIEW_FRIENDS_GARDEN_URI_STRING = "/friends/{friendId}/garden/{gardenId}";
 
     public static final String SEARCH_RESULTS_STRING = "/search/results";
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
@@ -38,7 +37,6 @@ public class UriConfig {
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
     private static final UriTemplate NEW_GARDEN_TAG_URI = new UriTemplate(NEW_GARDEN_TAG_URI_STRING);
     private static final UriTemplate VIEW_ALL_FRIENDS_GARDENS_URI = new UriTemplate(VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
-    private static final UriTemplate VIEW_FRIENDS_GARDEN_URI = new UriTemplate(VIEW_FRIENDS_GARDEN_URI_STRING);
     private static final UriTemplate EDIT_GARDEN_URI = new UriTemplate(EDIT_GARDEN_URI_STRING);
     private static final UriTemplate NEW_PLANT_URI = new UriTemplate(NEW_PLANT_URI_STRING);
     private static final UriTemplate EDIT_PLANT_URI = new UriTemplate(EDIT_PLANT_URI_STRING);
@@ -105,10 +103,6 @@ public class UriConfig {
     }
     public static URI newGardenTagUri(long gardenId) {
         return NEW_GARDEN_TAG_URI.expand(gardenId);
-    }
-
-    public static URI viewFriendsGardenUri(long friendId, long gardenId) {
-        return VIEW_FRIENDS_GARDEN_URI.expand(friendId, gardenId);
     }
 
     public static URI viewAllFriendsGardensUri(long friendId) {
