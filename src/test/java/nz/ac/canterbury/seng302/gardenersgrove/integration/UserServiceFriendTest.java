@@ -63,7 +63,7 @@ class UserServiceFriendTest {
                 ("user6@gmail.com", "Jimmy", "Doe", "Password1!", "2000-01-01");
 
         userSameName1 = new User
-                ("user7@gmail.com", "friendUserNoLastNameJeffery", "Doe", "Password1!", "2000-01-01");
+                ("user7@gmail.com", "Jeffery", "Doe", "Password1!", "2000-01-01");
 
         userSameName2 = new User
                 ("user8@gmail.com", "Jeffery", "Doe", "Password1!", "2000-01-01");
@@ -104,7 +104,7 @@ class UserServiceFriendTest {
                 friendUser.getEmail(), loggedInUser, friendRequestService, friendshipService);
 
         Assertions.assertEquals(1, actualSearchedResults.size());
-        Assertions.assertEquals(friendUserNoLastName.getName(), actualSearchedResults.getFirst().getUser());
+        Assertions.assertEquals(friendUser.getName(), actualSearchedResults.getFirst().getUser());
         Assertions.assertEquals(Status.FRIENDS.toString(), actualSearchedResults.getFirst().getStatusText());
     }
 
