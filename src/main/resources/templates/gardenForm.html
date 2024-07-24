@@ -218,18 +218,20 @@
 
         <!-- No location message modal -->
         <div th:if="${editGardenUri != null}">
-          <div id="noLocationFoundModal" class="modal" style="display: block; padding: 20px;">
+        <div id="noLocationFoundModal" class="modal" style="display: block; background-color: rgba(0,0,0,0.4);">
             <div class="modal-dialog">
               <div class="modal-content shadow">
-                <p th:if="!${locationFound}">
-                  Your garden has been saved. However, no matching location was
-                  found. Location-based services will not work for this garden.
-                </p>
-                <p th:if="!${profanityCheckWorked}">
-                  There was an issue checking the description for inappropriate
-                  language. This garden cannot be made public until the
-                  description is edited and language checks are completed.
-                </p>
+                <div class="modal-body">
+                  <p th:if="!${locationFound}">
+                    Your garden has been saved. However, no matching location was
+                    found. Location-based services will not work for this garden.
+                  </p>
+                  <p th:if="!${profanityCheckWorked}">
+                    There was an issue checking the description for inappropriate
+                    language. This garden cannot be made public until the
+                    description is edited and language checks are completed.
+                  </p>
+                </div>
                 <div class="modal-footer">
                   <a th:href="@{${editGardenUri}}" id="backToFormBtn">
                     <button class="btn btn-outline-primary"
