@@ -8,15 +8,43 @@
     <meta charset="utf-8" />
     <title>register</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/newstyle.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
     <script type="text/javascript" th:src="@{/javascript/disableLastName.js}"></script>
+<!--    <style>-->
+<!--      .registerBody {-->
+<!--          margin-top: 5rem;-->
+<!--      }-->
+
+<!--      .titleDiv {-->
+<!--          display: flex;-->
+<!--      }-->
+
+<!--      #moron {-->
+<!--          align-items: flex-start;-->
+<!--      }-->
+
+<!--      #title {-->
+<!--          display: flex;-->
+<!--          justify-content: center;-->
+<!--      }-->
+
+
+<!--    </style>-->
   </head>
   <body onload="loadingPage()">
 
+
     <div class="registerBody">
-        <h1 id="registerH1">Register</h1>
-      <a th:href="@{${homeUri}}" class="button">Cancel</a>
-      <div class="forumContentsDiv">
-        <h1>Register</h1>
+      <div class="forumContentsDiv" style="margin-top: 5rem; border: solid #477641 0.2rem">
+        <div class="row align-items-center">
+          <a th:href="@{${homeUri}}" class="col-3">Cancel</a>
+          <h1 id="title" class="col-4 align-content-center">Register</h1>
+          <div class="col-4"></div>
+        </div>
+
         <form
                 th:action="@{${registerUri}}"
           method="post"
