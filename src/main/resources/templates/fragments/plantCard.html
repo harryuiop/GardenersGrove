@@ -4,7 +4,13 @@
 </head>
 <body>
 <div th:fragment="plantCard" >
-    <div class="container-sm shadow rounded-4 text-center p-5">
+<!--    <style>-->
+<!--        #plantCard {-->
+<!--            width: 13rem;-->
+<!--            height: 16rem;-->
+<!--        }-->
+<!--    </style>-->
+    <div id="plantCard" class="container-sm shadow rounded-4 text-center p-5">
         <h2 class="display-5" th:text="${plantName}"></h2>
         <p th:text="${plantDescription}"></p>
         <i th:text="${plantCount}"></i>
