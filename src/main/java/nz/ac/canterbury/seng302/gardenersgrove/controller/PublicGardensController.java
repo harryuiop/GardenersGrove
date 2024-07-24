@@ -27,7 +27,7 @@ public class PublicGardensController extends NavBar {
     @GetMapping(BROWSE_PUBLIC_GARDENS_URI_STRING)
     String browseGardens(Model model) {
         logger.info("GET {}", browsePublicGardensUri());
-        model.addAttribute("gardens", gardenService.getAllPublicGardens());
+        model.addAttribute("gardenList", gardenService.getAllPublicGardens());
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         this.updateGardensNavBar(model, gardenService, userService);
         return "publicGardens";
