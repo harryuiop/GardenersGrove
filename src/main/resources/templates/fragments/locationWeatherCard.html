@@ -22,8 +22,8 @@
       <p class="m-0" th:text="${date}"></p>
       <i class="image" th:classappend="${image}"></i>
       <p th:text="${description}"></p>
-      <p class="m-0"><span th:text="${temperature}"></span>&deg;C</p>
-      <p class="m-0"><span th:text="${humidity}"></span>% Humidity</p>
+        <p class="m-0"><i class="bi bi-thermometer-half"></i><span th:text="${temperature}"></span>&deg;C</p>
+        <p class="m-0"><i class="bi bi-droplet-half"></i><span th:text="${humidity}"></span>% Humidity</p>
     </div>
   </div>
 </body>
