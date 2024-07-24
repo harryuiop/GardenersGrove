@@ -85,19 +85,6 @@
         </button>
       </a>
 
-        <div id="weatherCard">
-            <div th:each="data : ${weatherData}" class="d-inline-grid">
-                <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
-                     th:with="dayOfWeek=${data.date.dayOfWeek},
-                     date=${data.date.format(dateFormatter)},
-                     temperature=${data.temperature},
-                     description=${data.weatherDescription},
-                     image=${data.weatherIconName},
-                     humidity=${data.humidity}">
-                </div>
-            </div>
-        </div>
-
       <h2>My Plants</h2>
       <div id="plant-entries" class="plant-entries">
         <table class="plant-table">
