@@ -181,8 +181,7 @@ public class ErrorChecker {
       if (!formValuesValidator.checkNameLength(firstName) && !formValuesValidator.checkUserName(firstName)) {
         errors.put(
             "firstNameError",
-            "First name cannot exceed length of 64 characters and " +
-                "first name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+            "A valid name must:\n- Contain only letters, numbers, spaces, -, _, ', and \"\n- Start with a letter\n- End with a letter\n- Be at least two characters long");
       } else if (!formValuesValidator.checkNameLength(firstName)) {
         errors.put("firstNameError", "First name cannot exceed length of 64 characters");
       } else if (!formValuesValidator.checkUserName(firstName)) {
