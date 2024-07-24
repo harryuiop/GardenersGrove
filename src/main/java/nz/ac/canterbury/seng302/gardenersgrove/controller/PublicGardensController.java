@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
@@ -29,14 +30,18 @@ public class PublicGardensController extends NavBar {
     }
 
     @GetMapping(BROWSE_PUBLIC_GARDENS_URI_STRING)
-    String browseGardens(Model model) {
+    String browseGardens(HttpServletRequest request, Model model) {
         logger.info("GET {}", browsePublicGardensUri());
 
         List<Garden> gardenList = gardenService.getAllPublicGardens();
         model.addAttribute("gardenList", gardenList);
 
-        int numberOfPages = (int) Math.min(5, Math.ceil((double) gardenList.size() / 10));
+        // Current page number is passed through the url anchor
+        String[] urlParts = request.getRequestURL().toString().split("#");
+        int currentPage = urlParts.length > 1 ? Integer.parseInt(urlParts[1]) : 1;
+        model.addAttribute("currentPage", currentPage);
 
+        int numberOfPages = (int) Math.min(5, Math.ceil((double) gardenList.size() / 10));
         model.addAttribute("pageNumbers", IntStream.range(1, numberOfPages + 1).toArray());
 
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
