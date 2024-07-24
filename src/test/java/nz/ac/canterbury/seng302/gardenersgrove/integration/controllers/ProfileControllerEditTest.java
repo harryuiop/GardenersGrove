@@ -35,6 +35,7 @@ class ProfileControllerEditTest {
     private UserService userService;
 
     private User user;
+
     @BeforeEach
     void setUp() {
         if (user == null) {
@@ -143,6 +144,5 @@ class ProfileControllerEditTest {
         Assertions.assertEquals(newFirstName, user.getFirstName());
         Assertions.assertEquals(newLastName, user.getLastName());
         Assertions.assertEquals(newDateOfBirth, user.getDob());
-
     }
 }

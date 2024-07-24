@@ -231,6 +231,7 @@ public class ProfileController extends NavBar {
         Map<String, String> errors = errorChecker.editPasswordFormErrors(oldPassword, newPassword, retypeNewPassword, user, true);
 
         if (!errors.isEmpty()) {
+            logger.info(errors.toString());
             model.addAllAttributes(errors);
             model.addAttribute("oldPassword", oldPassword);
             model.addAttribute("newPassword", newPassword);
