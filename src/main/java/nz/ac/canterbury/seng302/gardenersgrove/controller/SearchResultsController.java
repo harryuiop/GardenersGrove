@@ -87,7 +87,7 @@ public class SearchResultsController {
     }
 
     /**
-     * Incomplete send friend request function.
+     * Send friend request to user id.
      * @param userId    The id of the user the friend request is being sent to.
      * @return      Redirection to friends page.
      */
