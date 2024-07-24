@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,9 @@ public class Garden {
     private boolean isGardenPublic;
 
     @Column
+    private LocalDateTime timeCreated;
+
+    @Column
     private boolean verifiedDescription;
 
     /**
@@ -69,6 +73,7 @@ public class Garden {
         this.tags = new ArrayList<>();
         this.isGardenPublic = false;
         this.verifiedDescription = verifiedDescription;
+        this.timeCreated = LocalDateTime.now();
     }
 
 
@@ -146,6 +151,10 @@ public class Garden {
 
     public void setVerifiedDescription(boolean verifiedDescription) {
         this.verifiedDescription = verifiedDescription;
+    }
+
+    public LocalDateTime getTimeCreated() {
+        return timeCreated;
     }
 
     @Override
