@@ -98,11 +98,11 @@
             </a>
           </div>
 
-          <div class="col">
+          <div class="col-auto">
             <div id="weatherCard">
               <div th:each="data : ${weatherData}" class="d-inline-grid">
-                <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
-                     th:with="dayOfWeek=${data.date.dayOfWeek},
+                  <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
+                       th:with="dayOfWeek=${data.date.dayOfWeek},
                            date=${data.date.format(dateFormatter)},
                            temperature=${data.temperature},
                            description=${data.weatherDescription},
@@ -116,106 +116,32 @@
 
         <div class="row">
           <h2>My Plants</h2>
-          <div id="plant-entries" class="plant-entries">
-            <table class="plant-table">
-              <thead>
-              <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Count</th>
-                <th>Date Planted</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr th:if="${plants.isEmpty()}">
-                <td colspan="5"> No plants have been added yet</td>
-              </tr>
-              <tr th:each="plant : ${plants}" class="plant-entry">
-                <td>
-                  <p th:value="${plant.getId()}"></p>
-                  <form th:action="@{${uploadPlantImageUriString}(gardenId=${garden.getId()},plantId=${plant.getId()})}"
-                        method="post" enctype="multipart/form-data">
-                    <div class="form-field">
-                      <div class="plant-image-container">
-                        <img th:src="@{${plant.getImageFilePath()}}" style="width: 5vw"
-                             alt="Image of plant"/>
-                        <input type="hidden" th:name="plantId" th:value="${plant.getId()}"/>
-
-                        <div class="add-image">
-                          <label th:for="${plant.getId()}" class="plus-button">
-                            <i class="bi bi-plus-circle-fill"></i>
-                          </label>
-                          <input type="file"
-                                 class="form-control"
-                                 th:id="${plant.getId()}"
-                                 th:name="plantImage"
-                                 accept="image/jpeg, image/png, image/svg+xml"
-                                 data-cy="plantImage"
-                                 onchange="submitForm(id)"
-                                 style="display: none;"
-                          >
-                        </div>
-                      </div>
-
-                      <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${imageTypeError}"></h5>
-                      <h5 th:if="${plant.getId()} == ${selectedPlantId}" th:text="${imageSizeError}"></h5>
-                      <h5 th:if="${plant.getId()} == ${selectedPlantId}"
-                          th:text="${plantImageUploadError}"></h5>
-                    </div>
-                    <button class="form-button" type="submit" th:id="${plant.getId()} + submit"
-                            style="display: none;">Submit
-                    </button>
-                  </form>
-                  <!--            </td>-->
-                  <!--            <td><span th:text=plantName=${plant.getName()}"> Name </span></td>-->
-                  <!--            <td><span th:text="plantDescription=${plant.getDescription()}"> Description </span></td>-->
-                  <!--            <td><span th:text="plantCount=${plant.getCount()}"> Count </span></td>-->
-                  <!--            <td><span th:text="plantDate=${plant.getDateString()}"> Date Planted </span></td>-->
-                  <!--            <td>-->
-                  <a th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
-                    <button th:if="${owner}"
-                            class="btn btn-outline-primary"
-                            type="button"
-                            style="
-                  border-color: #477641;
-                  --bs-btn-color: #477641;
-                  --bs-btn-hover-bg: #477641;
-                  --bs-btn-hover-color: #fff;
-                  --bs-btn-active-bg: #477641;
-                "
-                    >
-                      <i class="bi bi-pencil"></i> Edit
-                    </button>
-                  </a></td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-
-<!--          <div class="container">-->
-<!--            <div id="plantCard">-->
-<!--              <div th:each="plant : ${plants}" class="col">-->
-<!--                <div th:insert="~{fragments/plantCard :: plantCard}"-->
-<!--                     th:with="plantName=${plant.getName()},-->
-<!--                 plantDescription=${plant.getDescription()},-->
-<!--                 plantCount=${plant.getCount()},-->
-<!--                 plantDate=${plant.getDateString()}">-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-
           <div class="container">
             <div id="plantCard" class="row col col col g-2">
               <div th:each="plant : ${plants}" class="col">
-                <div class="card h-100">
-                  <div th:insert="~{fragments/plantCard :: plantCard}"
-                       th:with="plantName=${plant.getName()},
-                       plantDescription=${plant.getDescription()},
-                       plantCount=${plant.getCount()},
-                       plantDate=${plant.getDateString()}">
+                <div class="card  shadow rounded-4">
+                  <img th:src="@{${plantImg}}">
+                  <div class="card-body">
+                    <div th:insert="~{fragments/plantCard :: plantCard}"
+                         th:with="plantName=${plant.getName()},
+                         plantDescription=${plant.getDescription()},
+                         plantCount=${plant.getCount()},
+                         plantDate=${plant.getDateString()}">
+                    </div>
                   </div>
+                    <a th:if="${owner}" th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
+                      <button class="btn btn-outline-primary"
+                              type="button"
+                              style="
+                              border-color: #000;
+                              --bs-btn-color: #000;
+                              --bs-btn-hover-bg: #000;
+                              --bs-btn-hover-color: #fff;
+                              --bs-btn-active-bg: #000;
+                              "
+                      >Edit Plant <i class="bi bi-pencil"></i>
+                      </button>
+                    </a>
                 </div>
               </div>
             </div>
