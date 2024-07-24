@@ -104,7 +104,7 @@ class UserServiceFriendTest {
                 friendUser.getEmail(), loggedInUser, friendRequestService, friendshipService);
 
         Assertions.assertEquals(1, actualSearchedResults.size());
-        Assertions.assertEquals(friendUser.getName(), actualSearchedResults.getFirst().getUser());
+        Assertions.assertEquals(friendUser, actualSearchedResults.getFirst().getUser());
         Assertions.assertEquals(Status.FRIENDS.toString(), actualSearchedResults.getFirst().getStatusText());
     }
 
