@@ -12,5 +12,5 @@ public interface GardenRepository extends CrudRepository<Garden, Long> {
 
     List<Garden> findAllByOwner(User owner);
 
-    List<Garden> findAllByIsGardenPublicTrue();
+    List<Garden> findAllByIsGardenPublicTrueOrderByTimeCreatedDesc();
 }

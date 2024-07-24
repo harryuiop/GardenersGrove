@@ -48,6 +48,6 @@ public class GardenService {
     }
 
     public List<Garden> getAllPublicGardens() {
-        return gardenRepository.findAllByIsGardenPublicTrue();
+        return gardenRepository.findAllByIsGardenPublicTrueOrderByTimeCreatedDesc();
     }
 }
