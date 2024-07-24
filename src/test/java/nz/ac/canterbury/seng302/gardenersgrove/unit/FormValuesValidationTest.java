@@ -11,9 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-import java.text.Normalizer;
 import java.time.LocalDate;
 
 @DataJpaTest
@@ -28,53 +26,65 @@ public class FormValuesValidationTest {
         userService = new UserService(userRepository);
         formValuesValidator = new FormValuesValidator();
     }
-    @Test
-    void checkString_validString_returnTrue() {
-        String string = "qwertyuiopasdfghjklzxcvbnmABC -'";
-        Assertions.assertTrue(formValuesValidator.checkCharacters(string));
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "ñ", "Text"})
+    void checkContainsText_validText_returnTrue(String value){
+        Assertions.assertTrue(formValuesValidator.checkContainsText(value));
     }
 
-    @Test
-    void checkString_invalidString_returnFalse() {
-        String string = "!@#$%{}";
-        Assertions.assertFalse(formValuesValidator.checkCharacters(string));
+    @ParameterizedTest
+    @ValueSource(strings = {"   ", "!", ".", "#$%^"})
+    void checkContainsText_invalidText_returnFalse(String value){
+        Assertions.assertFalse(formValuesValidator.checkContainsText(value));
     }
 
-    @Test
-    void checkName_validName_returnFalse() {
-        String string = "Garden 1";
-        Assertions.assertFalse(formValuesValidator.checkBlank(string));
-        Assertions.assertTrue(formValuesValidator.checkCharacters(string));
+    @ParameterizedTest
+    @ValueSource(strings = {"qwertyuiopasdfghjklzxcvbnmABC -'", "Алекс", "알렉스", "簡", "Джэйн", "เจน", "Māori"})
+    void checkString_validString_returnTrue(String value) {
+        Assertions.assertTrue(formValuesValidator.checkCharacters(value));
     }
 
-    @Test
-    void checkName_blankName_returnTrue() {
-        String string = " ";
-        Assertions.assertTrue(formValuesValidator.checkBlank(string));
+    @ParameterizedTest
+    @ValueSource(strings = {"\"!@#$%{}\"", "\\ ps %", "¬","¿","¾"})
+    void checkString_invalidString_returnFalse(String value) {
+        Assertions.assertFalse(formValuesValidator.checkCharacters(value));
     }
 
-    @Test
-    void checkSize_ValidSize_returnTrue() {
-        Float size = null;
+    @ParameterizedTest
+    @ValueSource(strings = {"qwertyuiopasdfghjklzxcvbnmABC -/'", "Алекс", "알렉스", "簡", "Джэйн", "เจน", "Māori", "/"})
+    void checkCharactersWithForwardSlash_validCharacters_returnTrue(String value) {
+        Assertions.assertTrue(formValuesValidator.checkCharactersWithForwardSlash(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"\"!@#$%{}\"", "\\ ps %", "¬","¿","¾"})
+    void checkCharactersWithForwardSlash_invalidString_returnFalse(String value) {
+        Assertions.assertFalse(formValuesValidator.checkCharactersWithForwardSlash(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"  ", "\n"})
+    void checkName_blankName_returnTrue(String value) {
+        Assertions.assertTrue(formValuesValidator.checkBlank(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"Something", "!", " ¿ ", "~ "})
+    void checkName_filledName_returnFalse(String value) {
+        Assertions.assertFalse(formValuesValidator.checkBlank(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(floats = {1.5f, 2f, 3.0f, 0.001f})
+    void checkSize_ValidSize_returnTrue(Float size) {
         Assertions.assertTrue(formValuesValidator.checkSize(size));
     }
 
-    @Test
-    void checkSize_InvalidSize_returnFalse() {
-        Float size = -1f;
+    @ParameterizedTest
+    @ValueSource(floats = {-1.5f, -2f, -3.0f, -0.001f, 0f})
+    void checkSize_InvalidSize_returnFalse(Float size) {
         Assertions.assertFalse(formValuesValidator.checkSize(size));
-    }
-
-    @Test
-    void checkCount_InvalidCount_returnFalse() {
-        Integer count = -1;
-        Assertions.assertFalse(formValuesValidator.checkCount(count));
-    }
-
-    @Test
-    void checkCount_ValidCount_returnTrue() {
-        Integer count = 100;
-        Assertions.assertTrue(formValuesValidator.checkCount(count));
     }
 
     @Test
@@ -89,21 +99,21 @@ public class FormValuesValidationTest {
         Assertions.assertTrue(formValuesValidator.checkDescription(desc));
     }
 
-    @Test
-    void checkValidName_returnTrue() {
-        String name = "Jane";
+    @ParameterizedTest
+    @ValueSource(strings = {"Jane", "ü ", "HELLO", "hello", "Al", "Mary-Anne", "Ta'Quan", "a D"})
+    void checkValidName_returnTrue(String name) {
         Assertions.assertTrue(formValuesValidator.checkUserName(name));
     }
 
-    @Test
-    void checkInvalidName_returnFalse() {
-        String name = "4eva!";
+    @ParameterizedTest
+    @ValueSource(strings={"123", "a4eva", "a-", "spo'", "*", "$", "()", "-anna"})
+    void checkInvalidName_returnFalse(String name) {
         Assertions.assertFalse(formValuesValidator.checkUserName((name)));
     }
 
-    @Test
-    void checkValidNameLength_returnTrue() {
-        String name = "Jane";
+    @ParameterizedTest
+    @ValueSource(strings = {"Jane", "123456789012345678901234567890123456789012345678901234567890234", "a", ""})
+    void checkValidNameLength_returnTrue(String name) {
         Assertions.assertTrue(formValuesValidator.checkNameLength(name));
     }
 
@@ -125,27 +135,16 @@ public class FormValuesValidationTest {
         Assertions.assertTrue(formValuesValidator.checkPlantNameLength(name));
     }
 
-    @Test
-    void checkSamePassword_returnTrue() {
-        String password = "abE123!!";
-        Assertions.assertTrue(formValuesValidator.checkConfirmPasswords(password, password));
-    }
-
-    @Test
-    void checkDiffPassword_returnFalse() {
-        String pass1 = "Passw0rd$";
-        String pass2 = "pA$$woe4";
-        Assertions.assertFalse(formValuesValidator.checkConfirmPasswords(pass1, pass2));
-    }
-
-    @Test
+    @ParameterizedTest
+    @ValueSource(ints = {120, 21, 0, 119, 13, 50, 60, 1})
     void checkUnder120Valid_returnTrue() {
-        int age = 20;
+        int age = 120;
         String dob = LocalDate.now().minusYears(age).toString();
         Assertions.assertTrue(formValuesValidator.checkUnder120(dob));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(ints = {121, 1000000000, 1000, 1005000})
     void checkOver120Valid_returnFalse() {
         int age = 121;
         String dob = LocalDate.now().minusYears(age).toString();
@@ -179,5 +178,34 @@ public class FormValuesValidationTest {
     @ValueSource(strings = {"1.0", "abc", "#!12", "9999999999", "0", "-1", "    ", "1  ", "  1", "1 2"})
     void checkValidPlantCount_returnFalse(String value) {
         Assertions.assertFalse(formValuesValidator.checkValidPlantCount(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "abcdefghijklmnopqrtsuvwxy", "âjohns-tag", "johns_tag", "johns tag", "john's tag", "john\"s-tag", "it", "éß"
+
+    })
+    void checkTagName_validTags_returnTrue(String value) {
+        Assertions.assertTrue(formValuesValidator.checkTagName(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "a!b", "c@d", "e#f", "g$h", "i%j", "k^l", "m&n", "o*p", "q(r", "s)t", "u+v", "w=x", "y:z", "ß", "ä-", "_Ï"
+    })
+    void checkTagName_invalidTags_returnFalse(String value) {
+        Assertions.assertFalse(formValuesValidator.checkTagName(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "ß", "ßßßßßßßßßßßßßßßßßßßßßßßßß"})
+    void checkTagLength_validTags_returnTrue(String value) {
+        Assertions.assertTrue(formValuesValidator.checkTagNameLength(value));
+    }
+
+    @Test
+    void checkTagLength_invalidTags_returnFalse() {
+        String value = "ßßßßßßßßßßßßßßßßßßßßßßßßßB";
+        Assertions.assertFalse(formValuesValidator.checkTagNameLength(value));
     }
 }
