@@ -47,7 +47,11 @@ public class GardenService {
         gardenRepository.deleteById(id);
     }
 
-    public List<Garden> getAllPublicGardens() {
-        return gardenRepository.findAllByIsGardenPublicTrueOrderByTimeCreatedDesc();
+    public List<Garden> getPageOfPublicGardens(int pageNumber) {
+        return gardenRepository.findByGardenPublicTrue((pageNumber - 1) * 10);
+    }
+
+    public long countPublicGardens() {
+        return gardenRepository.countByIsGardenPublicTrue();
     }
 }
