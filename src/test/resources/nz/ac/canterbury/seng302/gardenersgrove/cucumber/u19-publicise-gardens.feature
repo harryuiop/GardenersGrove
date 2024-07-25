@@ -1,7 +1,9 @@
 Feature: As Inaya, I want to be able to make my garden public so that others can see what I’m growing.
 
   Scenario: AC1 - A garden can be made public by checking a tick-box
-    Given I am on the garden details page for a garden I own
+    Given I have a user account that has logged in
+    And I have a garden
+    And I am on the garden details page for a garden I own
     When I mark a checkbox labelled “Make my garden public
     Then my garden will be visible in search results
 

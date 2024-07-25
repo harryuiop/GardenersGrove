@@ -12,6 +12,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +41,12 @@ public class PubliciseGardens {
     private GardenRepository gardenRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
-    @SpyBean
+    @Autowired
+    private GardenService gardenService;
+
+    @Autowired
     private FormValuesValidator mockFormValuesValidator;
 
     private Garden garden;
@@ -58,35 +63,21 @@ public class PubliciseGardens {
 
     private URI formType;
 
-    @Before
-    public void setup() throws Exception {
-        gardenRepository.deleteAll();
-        userRepository.deleteAll();
+    @Given("I have a garden")
+    public void haveAGarden() {
+        Location location = new Location("New Zealand", "Christchurch");
+        gardenService.saveGarden(new Garden(userService.getUserByEmail("jane.doe@gmail.com"), "Garden", "",
+                location, null, true));
+    }
 
-        User user1 = new User("test@user.com", "Test", "User", "Password1!", "");
-        User user2 = new User("other.test@user.com", "Test", "User", "Password1!", "");
-        userRepository.save(user1);
-        userRepository.save(user2);
-        user1Id = "" + user1.getId();
-        user2Id = "" + user2.getId();
-
-        garden = new Garden (user1, "Garden 1", "Valid", new Location("NZ", "CHCH"), null, true);
-        gardenRepository.save(garden);
-        gardenId=garden.getId();
-        latestGardenId = gardenId;
-
-        name = "Garden";
-        country = "NZ";
-        city = "ChCh";
-        description = "";
-        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
+    @Given("I have a user account that has logged in")
+    public void iHaveAUserAccountThatHasLoggedIn() {
+        userService.addUsers(new User("jane.doe@gmail.com", "Jane", "Doe", "Password1!", "20/02/200"));
     }
 
     @Given("I am on the garden details page for a garden I own")
     public void iAmOnTheGardenDetailsPageForAGardenIOwn() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/garden/" + gardenId)
-                        .with(user(user1Id))
-                        .with(csrf()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/garden/" + gardenId))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
