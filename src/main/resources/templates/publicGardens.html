@@ -11,10 +11,10 @@
 </div>
 <nav aria-label="Page navigation example">
     <ul class="pagination">
-        <li th:if="${gardenList.size() == 1}" class="page-item disabled">
+        <li th:if="${currentPage == 1}" class="page-item disabled">
             <a class="page-link"><span aria-hidden="true">&laquo;</span></a>
         </li>
-        <li th:if="${gardenList.size() != 1}" class="page-item">
+        <li th:if="${currentPage != 1}" class="page-item">
             <a th:href="@{'#' + ${currentPage - 1}}" class="page-link"><span aria-hidden="true">&laquo;</span></a>
         </li>
 
@@ -22,10 +22,10 @@
             <a class="page-link" th:href="@{'#' + ${page}}" th:text="${page}" href="#"></a>
         </li>
 
-        <li th:if="${gardenList.size() == 1}" class="page-item disabled">
+        <li th:if="${currentPage == numberOfPages}" class="page-item disabled">
             <a class="page-link"><span aria-hidden="true">&raquo;</span></a>
         </li>
-        <li th:if="${gardenList.size() != 1}" class="page-item">
+        <li th:if="${currentPage != numberOfPages}" class="page-item">
             <a class="page-link" th:href="@{'#' + ${currentPage + 1}}"><span aria-hidden="true">&raquo;</span></a>
         </li>
     </ul>
