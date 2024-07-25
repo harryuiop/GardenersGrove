@@ -4,8 +4,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ProfanityChecker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -37,7 +35,6 @@ public class FormValuesValidator {
      * @return whether it is valid or not.
      */
     public boolean checkContainsText(String string) {
-        System.out.println("Any Match results: "+ string.chars().anyMatch(Character::isAlphabetic));
         return string == null || string.isEmpty() || string.chars().anyMatch(Character::isAlphabetic);
     }
 
