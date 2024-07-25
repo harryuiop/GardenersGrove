@@ -4,8 +4,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ProfanityChecker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -17,9 +15,8 @@ import java.time.format.DateTimeParseException;
 @Component
 public class FormValuesValidator {
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
-    static String namePattern = "^\\p{L}[\\p{L}0-9 _\\-\"']*\\p{L}$";
+    static String namePattern = "^\\p{L}[\\p{L} \\-']*(\\p{L}| )$";
     static String tagPattern = "^\\p{L}[\\p{L}0-9 _\\-\"']*\\p{L}$";
-    static Logger logger = LoggerFactory.getLogger(FormValuesValidator.class);
 
     /**
      * Checks if a given string contains inappropriate language
@@ -48,7 +45,7 @@ public class FormValuesValidator {
      * @return whether it is valid or not.
      */
     public boolean checkCharacters(String string) {
-        return string.matches("[a-zA-Z0-9 .,\\-']*");
+        return string.matches("^[\\p{L}0-9 .,\\-']*");
     }
 
     /**
@@ -58,7 +55,7 @@ public class FormValuesValidator {
      * @return whether it is valid or not.
      */
     public boolean checkCharactersWithForwardSlash(String string) {
-        return string.matches("[a-zA-Z0-9 .,\\-'/]*");
+        return string.matches("[\\p{L}0-9 .,\\-'/]*");
     }
 
     /**
@@ -93,16 +90,6 @@ public class FormValuesValidator {
      */
     public boolean checkDescription(String description) {
         return description == null || description.length() <= 512;
-    }
-
-    /**
-     * Checks that the number of plants if entered is a positive number.
-     *
-     * @param count the number entered by the user in the plant form as the number of these plants in said garden
-     * @return true if the number is positive or there is no entry. If the plant is negative returns false
-     */
-    public boolean checkCount(Integer count) {
-        return count == null || count > 0;
     }
 
     /**

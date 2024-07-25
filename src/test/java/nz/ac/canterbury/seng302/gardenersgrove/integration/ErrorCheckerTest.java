@@ -322,7 +322,7 @@ class ErrorCheckerTest {
 
     @Test
     void firstNameErrors_validFirstName_returnsNoErrors() {
-        String firstName = "Jane-Mary's ";
+        String firstName = "Jane-Mary's";
         Map<String, String> errors = errorChecker.firstNameErrors(firstName);
         HashMap<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
