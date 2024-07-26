@@ -18,16 +18,15 @@
                 </div>
                 <div class="col-md-3">
                   <a th:href="@{${editGardenUri}}" style="text-decoration: none">
-                    <button th:if="${owner}"
-                            class="btn btn-outline-primary"
+                    <button class="btn btn-outline-primary"
                             type="button"
                             style="
-                    border-color: #477641;
-                    --bs-btn-color: #477641;
-                    --bs-btn-hover-bg: #477641;
-                    --bs-btn-hover-color: #fff;
-                    --bs-btn-active-bg: #477641;
-                  "
+                            border-color: #000;
+                            --bs-btn-color: #000;
+                            --bs-btn-hover-bg: #000;
+                            --bs-btn-hover-color: #fff;
+                            --bs-btn-active-bg: #000;
+                          "
                     ><i class="bi bi-pencil"></i> Edit Garden
                     </button>
                   </a>
@@ -119,8 +118,10 @@
           <div class="container">
             <div id="plantCard" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
               <div th:each="plant : ${plants}" class="col">
-                <div class="card shadow rounded-4 h-100">
+                <div class="card shadow rounded-4 h-100 w-100">
                   <img th:src="@{${plantImg}}" class="card-img-top">
+                  <img th:src="@{${plant.getImageFilePath()}}" class="card-img-top rounded-top-4"
+                       alt="Image of plant"/>
                   <div class="card-body">
                     <div th:insert="~{fragments/plantCard :: plantCard}"
                          th:with="plantName=${plant.getName()},
@@ -134,12 +135,12 @@
                       <button class="btn btn-outline-primary w-100"
                               type="button"
                               style="
-                      border-color: #000;
-                      --bs-btn-color: #000;
-                      --bs-btn-hover-bg: #000;
-                      --bs-btn-hover-color: #fff;
-                      --bs-btn-active-bg: #000;
-                      "
+                              border-color: #000;
+                              --bs-btn-color: #000;
+                              --bs-btn-hover-bg: #000;
+                              --bs-btn-hover-color: #fff;
+                              --bs-btn-active-bg: #000;
+                            "
                       >Edit Plant <i class="bi bi-pencil"></i>
                       </button>
                     </a>
