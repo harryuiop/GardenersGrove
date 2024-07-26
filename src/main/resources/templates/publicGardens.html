@@ -6,6 +6,29 @@
 </head>
 <body>
 <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
+<form>
+    <div class="input-group rounded mx-auto" style="width: 20vw">
+        <input
+                aria-describedby="search-public-gardens"
+                aria-label="Search for public gardens"
+                autocomplete="off"
+                class="form-control rounded"
+                id="gardenSearch"
+                placeholder="Search for gardens"
+                th:name="gardenSearch"
+                type="text"
+        />
+        <button
+                class="input-group-text border-0"
+                id="search-addon"
+                th:for="gardenSearch"
+                type="submit"
+        >
+            <i class="bi bi-search" style="color: black"></i>
+        </button>
+    </div>
+</form>
+
 <div th:each="garden : ${gardenList}">
     <a th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"><p th:text="${garden.getName()}"></p></a>
 </div>
