@@ -15,9 +15,14 @@
             <p th:text="${accountActiveMessage}"
                style="font-size: small; font-style: italic; color: navy; text-align: center; margin: 0"></p>
         </div>
+
+        <div class="bg-white py-3 rounded shadow" th:if="${tokenExpiredError} != null" style="margin-bottom: 1rem">
+            <p th:text="${tokenExpiredError}"
+               style="font-size: small; font-style: italic; color: #6F0C0C; text-align: center; margin: 0"></p>
+        </div>
+
         <div class="g-col-md-4">
             <div class="bg-white p-5 rounded shadow ">
-                <p class="form-text text-danger" th:text="${tokenExpiredError}"></p>
                 <form th:action="@{${loginUri}}" method="post" name="loginForm" class="">
                     <h2 class="text-center display-3 title-heading mb-4">Login</h2>
 
@@ -60,7 +65,7 @@
                                  --bs-btn-hover-color: #fff;
                                  --bs-btn-active-bg: #477641;
                                  "
-                        >Login <i class="bi bi-box-arrow-in-right"></i>
+                        >Sign In <i class="bi bi-box-arrow-in-right"></i>
                         </button>
                     </div>
 
