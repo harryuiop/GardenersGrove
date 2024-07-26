@@ -117,37 +117,39 @@
         <div class="row">
           <h2>My Plants</h2>
           <div class="container">
-            <div id="plantCard" class="row col col col g-2">
+            <div id="plantCard" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
               <div th:each="plant : ${plants}" class="col">
-                <div class="card  shadow rounded-4">
-                  <img th:src="@{${plantImg}}">
+                <div class="card shadow rounded-4 h-100">
+                  <img th:src="@{${plantImg}}" class="card-img-top">
                   <div class="card-body">
                     <div th:insert="~{fragments/plantCard :: plantCard}"
                          th:with="plantName=${plant.getName()},
-                         plantDescription=${plant.getDescription()},
-                         plantCount=${plant.getCount()},
-                         plantDate=${plant.getDateString()}">
+                 plantDescription=${plant.getDescription()},
+                 plantCount=${plant.getCount()},
+                 plantDate=${plant.getDateString()}">
                     </div>
                   </div>
+                  <div class="card-footer">
                     <a th:if="${owner}" th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
-                      <button class="btn btn-outline-primary"
+                      <button class="btn btn-outline-primary w-100"
                               type="button"
                               style="
-                              border-color: #000;
-                              --bs-btn-color: #000;
-                              --bs-btn-hover-bg: #000;
-                              --bs-btn-hover-color: #fff;
-                              --bs-btn-active-bg: #000;
-                              "
+                      border-color: #000;
+                      --bs-btn-color: #000;
+                      --bs-btn-hover-bg: #000;
+                      --bs-btn-hover-color: #fff;
+                      --bs-btn-active-bg: #000;
+                      "
                       >Edit Plant <i class="bi bi-pencil"></i>
                       </button>
                     </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
+
       </div>
     </div>
   </div>
