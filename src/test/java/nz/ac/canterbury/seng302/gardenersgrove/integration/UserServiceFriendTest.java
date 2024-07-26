@@ -34,6 +34,7 @@ class UserServiceFriendTest {
 
     private User loggedInUser;
     private User friendUser;
+    private User friendUserNoLastName;
     private User pendingRequestUser;
     private User declinedRequestUser;
     private User userSameName1;
@@ -56,18 +57,21 @@ class UserServiceFriendTest {
                 ("user2@gmail.com", "Jane", "Doe", "Password1!", "2000-01-01");
         friendUser = new User
                 ("user3@gmail.com", "James", "Doe", "Password1!", "2000-01-01");
+        friendUserNoLastName = new User
+                ("user5@gmail.com", "Frank", "", "Password1!", "2000-01-01");
         declinedRequestUser = new User
-                ("user4@gmail.com", "Jimmy", "Doe", "Password1!", "2000-01-01");
+                ("user6@gmail.com", "Jimmy", "Doe", "Password1!", "2000-01-01");
 
         userSameName1 = new User
-                ("user5@gmail.com", "Jeffery", "Doe", "Password1!", "2000-01-01");
+                ("user7@gmail.com", "Jeffery", "Doe", "Password1!", "2000-01-01");
 
         userSameName2 = new User
-                ("user6@gmail.com", "Jeffery", "Doe", "Password1!", "2000-01-01");
+                ("user8@gmail.com", "Jeffery", "Doe", "Password1!", "2000-01-01");
 
         mockRepositoryUsers = new ArrayList<>();
         mockRepositoryUsers.add(loggedInUser);
         mockRepositoryUsers.add(friendUser);
+        mockRepositoryUsers.add(friendUserNoLastName);
         mockRepositoryUsers.add(pendingRequestUser);
         mockRepositoryUsers.add(declinedRequestUser);
         mockRepositoryUsers.add(userSameName1);
@@ -101,6 +105,21 @@ class UserServiceFriendTest {
 
         Assertions.assertEquals(1, actualSearchedResults.size());
         Assertions.assertEquals(friendUser, actualSearchedResults.getFirst().getUser());
+        Assertions.assertEquals(Status.FRIENDS.toString(), actualSearchedResults.getFirst().getStatusText());
+    }
+
+    @Test
+    void searchUser_searchUserWithoutLastname_returnSearchedUser() {
+        FriendRequest mockedRequest = new FriendRequest(loggedInUser, friendUserNoLastName);
+        mockedRequest.setStatus(Status.FRIENDS);
+        when(friendRequestRepositoryMock.findFriendRequestBySenderAndReceiver(any(), any()))
+                .thenReturn(List.of(mockedRequest));
+
+        List<SearchedUserResult> actualSearchedResults = userService.getSearchedUserAndFriendStatus(
+                friendUserNoLastName.getName(), loggedInUser, friendRequestService, friendshipService);
+
+        Assertions.assertEquals(1, actualSearchedResults.size());
+        Assertions.assertEquals(friendUserNoLastName, actualSearchedResults.getFirst().getUser());
         Assertions.assertEquals(Status.FRIENDS.toString(), actualSearchedResults.getFirst().getStatusText());
     }
 
