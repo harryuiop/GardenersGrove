@@ -4,6 +4,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import nz.ac.canterbury.seng302.gardenersgrove.authentication.CustomAuthenticationProvider;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
@@ -15,6 +16,10 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -44,6 +49,8 @@ public class PubliciseGardensFeature {
 
     @Autowired
     private FormValuesValidator mockFormValuesValidator;
+    @Autowired
+    CustomAuthenticationProvider customAuthenticationProvider;
 
     private Garden garden;
     private Long gardenId;
@@ -68,9 +75,14 @@ public class PubliciseGardensFeature {
     @Given("I have a user account that has logged in")
     public void iHaveAUserAccountThatHasLoggedIn() throws Exception {
         User user = new User("jane.doe@gmail.com", "Jane", "Doe", "Password1!", "20/02/200");
+
         userService.addUsers(user);
-        mockMvc.perform(formLogin().user("jane.doe@gmail.com").password("Password1!"))
-                .andExpect(status().is3xxRedirection());
+        UsernamePasswordAuthenticationToken authReq
+                = new UsernamePasswordAuthenticationToken(user, "Password1!");
+        Authentication auth = customAuthenticationProvider.authenticate(authReq);
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(auth);
+
         Assertions.assertEquals(userService.getAuthenticatedUser().getUserId(), user.getUserId());
     }
 
