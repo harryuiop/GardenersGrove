@@ -1,19 +1,45 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8" />
-  <title>Error</title>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-</head>
-<body>
-  <div class=errorBox>
-    <h1>Uh Oh.. 😕</h1>
-    <p>Looks like something went wrong.</p>
-    <h3>Status: [[${status}]]</h3>
-    <h3>Error: [[${error}]]</h3>
-    <h3>Path: [[${path}]]</h3>
-    <h3>Exception: [[${exception}]]</h3>
-    <h3>Message: [[${message}]]</h3>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:insert="~{fragments/importFragment :: headerfiles}"> </head>
+<style>
+  * {
+    background: #efefec;
+    font-family:
+      gill sans,
+      sans-serif;
+  }
+
+  a {
+    color: #477641;
+    text-decoration: none;
+  }
+
+  p {
+    margin: 0.5rem;
+  }
+</style>
+
+<body class="page">
+  <div class="container-fluid d-flex flex-column p-0 m-0">
+    <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
+    <div class="row justify-content-center">
+      <div class="col-lg-4 col-sm-6 col-12 align-items-center">
+        </br>
+        <p class="display-1">Oops!</p>
+        <p class="display-4">It looks like we've encountered an error.</p>
+        <p>Error code: [[${status}]]</p>
+        <p>Message: [[${message}]]</p>
+        <p>Here are some helpful links instead:</p>
+        <p>
+          <a th:href="@{/}"><i class="bi bi-house-fill"></i> Home</a>
+        </p>
+        <p>
+          <a th:href="@{/gardens}"><i class="bi bi-tree-fill"></i> My Gardens</a>
+        </p>
+      </div>
+    </div>
   </div>
 </body>
+
+</html>
