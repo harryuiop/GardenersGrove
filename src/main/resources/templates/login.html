@@ -36,6 +36,7 @@
                                 placeholder="username"
                                 data-cy="username"
                                 autofocus
+                                th:classappend="${emailError} ? 'is-invalid'"
                         />
                         <label for="username">Email Address</label>
                         <p class="error message" id="emailError" th:text="${emailError}"></p>
