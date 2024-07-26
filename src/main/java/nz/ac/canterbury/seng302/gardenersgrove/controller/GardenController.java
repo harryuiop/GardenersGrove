@@ -138,7 +138,7 @@ public class GardenController extends NavBar {
     ) {
         logger.info("GET {}", newGardenUri());
 
-        if (referer == null) {
+        if (referer == null || referer.contains(NEW_GARDEN_URI_STRING))  {
             referer = VIEW_ALL_GARDENS_URI_STRING;
         }
         this.refererUrl = referer;
@@ -225,7 +225,8 @@ public class GardenController extends NavBar {
         }
         Garden garden = optionalGarden.get();
 
-        if (referer == null) {
+        if (referer == null || referer.contains(NEW_GARDEN_URI_STRING)
+                || referer.contains(viewGardenUri(gardenId).toString())) {
             referer = viewGardenUri(gardenId).toString();
         }
         this.refererUrl = referer;
