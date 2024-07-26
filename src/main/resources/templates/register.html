@@ -7,12 +7,12 @@
   <head>
     <meta charset="utf-8" />
     <title>register</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Chrome">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/css/newstyle.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
     <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
-    <script type="text/javascript" th:src="@{/javascript/disableLastName.js}"></script>
 <!--    <style>-->
 <!--      .registerBody {-->
 <!--          margin-top: 5rem;-->
@@ -35,114 +35,119 @@
 <!--    </style>-->
   </head>
   <body onload="loadingPage()">
-
-
-    <div class="registerBody">
-      <div class="forumContentsDiv" style="margin-top: 5rem; border: solid #477641 0.2rem">
-        <div class="row align-items-center">
+  <div class="container-flex d-flex justify-content-center align-items-center vh-100 login-bg p-3">
+    <div class="g-col-md-4">
+      <div class="bg-white p-5 rounded shadow">
+        <div class="row align-content-center">
           <a th:href="@{${homeUri}}" class="col-3">Cancel</a>
-          <h1 id="title" class="col-4 align-content-center">Register</h1>
-          <div class="col-4"></div>
+          <h1 id="title" class="col-6 text-center display-3 title-heading mb-4">Register</h1>
+          <div class="col-3"></div>
         </div>
 
         <form
                 th:action="@{${registerUri}}"
-          method="post"
-          name="registerForm"
+                method="post"
+                name="registerForm"
         >
-          <label for="firstName">First name:</label>
-          <input
-            class="inputStyle"
-            type="text"
-            id="firstName"
-            name="firstName"
-            th:name="firstName"
-            th:value="${firstName}"
-            autofocus
-            autocomplete="off"
-          />
-          <p class="errorMessage" id="firstNameError" th:text="${firstNameError}"></p>
-
-
-          <label for="lastName">Last name:</label>
-          <input
-            class="inputStyle"
-            type="text"
-            id="lastName"
-            name="lastName"
-            th:name="lastName"
-            th:value="${lastName}"
-            autofocus
-            autocomplete="off"
-          />
-
-          <div class="noSurname">
-            <label for="noSurname" class="noSurnameCheckbox">
+          <div class="row align-content-around align-items-center">
+            <div class="col-6">
+              <label for="firstName" class="form-label">First name:</label>
               <input
-                type="checkbox"
-                id="noSurname"
-                value="checked"
-                th:name="noSurname"
-                th:checked="${noSurname}"
-                th:value="${noSurname}"
-                autofocus
-                autocomplete="off"
-                onchange="updateCheckboxValue()"
+                      class="form-control"
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      th:name="firstName"
+                      th:value="${firstName}"
+                      autofocus
+                      autocomplete="off"
               />
-              I have no surname
-            </label>
+              <p class="errorMessage" id="firstNameError" th:text="${firstNameError}"></p>
+            </div>
+            <div class="col-6">
+              <label for="lastName" class="form-label">Last name:</label>
+              <input
+                      class="form-control"
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      th:name="lastName"
+                      th:value="${lastName}"
+                      autofocus
+                      autocomplete="off"
+              />
+
+              <!--              <div class="noSurname">-->
+              <!--                <label for="noSurname" class="noSurnameCheckbox">-->
+              <!--                  <input-->
+              <!--                          type="checkbox"-->
+              <!--                          id="noSurname"-->
+              <!--                          value="checked"-->
+              <!--                          th:name="noSurname"-->
+              <!--                          th:checked="${noSurname}"-->
+              <!--                          th:value="${noSurname}"-->
+              <!--                          autofocus-->
+              <!--                          autocomplete="off"-->
+              <!--                          onchange="updateCheckboxValue()"-->
+              <!--                  />-->
+              <!--                  I have no surname-->
+              <!--                </label>-->
+              <!--              </div>-->
+
+              <p class="errorMessage form-label" id="lastNameError" th:text="${lastNameError}"></p>
+            </div>
+
           </div>
 
-          <p class="errorMessage" id="lastNameError" th:text="${lastNameError}"></p>
 
           <label for="email">Email:</label>
           <input
-            class="inputStyle"
-            type="text"
-            id="email"
-            name="email"
-            th:name="email"
-            th:value="${email}"
-            autofocus
-            autocomplete="off"
+                  class="form-control"
+                  type="text"
+                  id="email"
+                  name="email"
+                  th:name="email"
+                  th:value="${email}"
+                  autofocus
+                  autocomplete="off"
           />
           <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
 
-          <label for="password">Password:</label>
+          <label for="dateOfBirth" class="form-label">Date of Birth:</label>
           <input
-            class="inputStyle"
-            type="password"
-            id="password"
-            name="password"
-            th:name="password"
-            autofocus
-            autocomplete="off"
+                  class="inputStyle"
+                  type="date"
+                  id="dateOfBirth"
+                  name="dateOfBirth"
+                  th:name="dateOfBirth"
+                  th:value="${dateOfBirth}"
+                  autofocus
+                  autocomplete="off"
+          />
+          <p class="errorMessage" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
+
+          <label for="password" class="form-label">Password:</label>
+          <input
+                  class="form-control"
+                  type="password"
+                  id="password"
+                  name="password"
+                  th:name="password"
+                  autofocus
+                  autocomplete="off"
           />
           <p class="errorMessage" id="passwordError" th:text="${passwordError}"></p>
 
-          <label for="passwordConfirm">Confirm Password:</label>
+          <label for="passwordConfirm" class="form-label">Confirm Password:</label>
           <input
-            class="inputStyle"
-            type="password"
-            id="passwordConfirm"
-            name="passwordConfirm"
-            th:name="passwordConfirm"
-            autofocus
+                  class="form-control"
+                  type="password"
+                  id="passwordConfirm"
+                  name="passwordConfirm"
+                  th:name="passwordConfirm"
+                  autofocus
           />
           <p class="errorMessage" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
-
-          <label for="dateOfBirth">Date of Birth:</label>
-          <input
-            class="inputStyle"
-            type="date"
-            id="dateOfBirth"
-            name="dateOfBirth"
-            th:name="dateOfBirth"
-            th:value="${dateOfBirth}"
-            autofocus
-            autocomplete="off"
-          />
-          <p class="errorMessage" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
 
           <input class="inputStyle" id="submit" type="submit" value="Submit"/>
         </form>
@@ -150,5 +155,6 @@
           Here.</a></p>
       </div>
     </div>
+  </div>
   </body>
 </html>
