@@ -226,7 +226,7 @@ public class GardenController extends NavBar {
         Garden garden = optionalGarden.get();
 
         if (referer == null || referer.contains(NEW_GARDEN_URI_STRING)
-                || referer.contains(viewGardenUri(gardenId).toString())) {
+                || referer.contains(editGardenUri(gardenId).toString())) {
             referer = viewGardenUri(gardenId).toString();
         }
         this.refererUrl = referer;
