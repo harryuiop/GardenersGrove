@@ -9,7 +9,7 @@
 <div th:each="garden : ${gardenList}">
     <a th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"><p th:text="${garden.getName()}"></p></a>
 </div>
-<nav aria-label="Page navigation example">
+<nav>
     <ul class="pagination">
         <li class="page-item" th:classappend="${currentPage == 1 } ? disabled">
             <a th:href="@{${browsePublicGardensUriString}(page=${currentPage - 1})}" class="page-link">
