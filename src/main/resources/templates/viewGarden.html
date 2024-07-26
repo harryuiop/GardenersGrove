@@ -67,17 +67,25 @@
 
               <form th:if="${owner}" th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
                 <label class="form-input" for="tagName"> Create new tag: </label>
-                <div style="display: flex;">
-                  <div>
-                    <input type="text" class="form-control" id="tagName" th:name="tagName"
-                           data-cy="tagName" autofocus>
-                    <div id="autocomplete-list" class="inputStyle"></div>
+                <div class="input-group mb-3 w-50">
+                  <input type="text" class="form-control" placeholder="#CoolGarden" id="tagName" th:name="tagName"
+                         data-cy="tagName" autofocus>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary"
+                            type="button"
+                            style="
+                           border-color: #477641;
+                           --bs-btn-color: #477641;
+                           --bs-btn-hover-bg: #477641;
+                           --bs-btn-hover-color: #fff;
+                           --bs-btn-active-bg: #477641;
+                           "
+                    >+
+                    </button>
                   </div>
-                  <button id="tag-submit" type="submit">+</button>
                 </div>
               </form>
               <p class="errorMessage" th:text="${tagErrors}"></p>
-
               <br>
             </div>
 
