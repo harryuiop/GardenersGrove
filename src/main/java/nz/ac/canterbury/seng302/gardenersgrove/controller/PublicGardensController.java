@@ -23,12 +23,26 @@ public class PublicGardensController extends NavBar {
     private final GardenService gardenService;
     private final UserService userService;
 
+    /**
+     * Constructor automatically called by Spring at runtime
+     *
+     * @param gardenService The garden database access object.
+     * @param userService   The user database access object.
+     */
     @Autowired
     PublicGardensController(GardenService gardenService, UserService userService) {
         this.gardenService = gardenService;
         this.userService = userService;
     }
 
+    /**
+     * Serve the browse public gardens page to the user,
+     * with gardens paginated to 10 per page.
+     *
+     * @param page The page number to display, used for database query.
+     * @param model The object used to pass data through to Thymeleaf.
+     * @return Thymeleaf HTML browse public gardens.
+     */
     @GetMapping(BROWSE_PUBLIC_GARDENS_URI_STRING)
     String browseGardens(@RequestParam(required = false) Integer page, Model model) {
         logger.info("GET {}", browsePublicGardensUri());
