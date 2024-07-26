@@ -100,6 +100,17 @@
                 </li>
               </ul>
             </div>
+            <a th:href="@{${browsePublicGardensUri}}">
+              <button
+                      class="btn btn-secondary bg-transparent border-0"
+                      type="button"
+                      id="menuButton4"
+                      aria-expanded="false"
+                      style="color: #142915"
+              >
+                Browse
+              </button>
+            </a>
           </ul>
           <form th:action="@{/logout}" method="post" name="registerForm">
             <input type="submit" value="Logout" class="btn me-3 btn-link p-0 m-0 border-0 text-decoration-none" style="color: #142915">
