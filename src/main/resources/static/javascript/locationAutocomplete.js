@@ -73,6 +73,8 @@ function renderAutocomplete(data) {
     showAutocompleteBox()
     dataList.forEach(item => {
         let suggestionElement = document.createElement("div");
+        suggestionElement.classList.add("dropdown-item");
+        suggestionElement.style.cursor="pointer";
         let primaryTextElement = document.createElement("div");
         let secondaryTextElement = document.createElement("div", );
         primaryTextElement.classList.add("primary-text");
