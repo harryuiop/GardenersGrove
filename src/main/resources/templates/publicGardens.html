@@ -18,7 +18,10 @@
         </li>
 
         <li th:each="page : ${pageNumbers}" class="page-item">
-            <a class="page-link" th:href="@{${browsePublicGardensUriString}(page=${page})}" th:text="${page}"></a>
+            <a class="page-link"
+               th:classappend="${page == currentPage} ? active"
+               th:href="@{${browsePublicGardensUriString}(page=${page})}"
+               th:text="${page}"></a>
         </li>
 
         <li class="page-item" th:classappend="${currentPage == numberOfPages}? disabled">
