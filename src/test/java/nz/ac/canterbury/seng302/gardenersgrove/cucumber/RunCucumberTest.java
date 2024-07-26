@@ -5,16 +5,16 @@ import io.cucumber.junit.platform.engine.Constants;
 import io.cucumber.spring.CucumberContextConfiguration;
 import nz.ac.canterbury.seng302.gardenersgrove.GardenersGroveApplication;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
 import org.junit.platform.suite.api.*;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 
 @Suite
 @IncludeEngines("cucumber")
@@ -29,12 +29,17 @@ import org.springframework.test.context.ContextConfiguration;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
+@TestPropertySource(properties = {"maptiler.api.key=test", "spring.mail.username=test"})
 public class RunCucumberTest {
     @SpyBean
     private FormValuesValidator spyFormValuesValidator;
 
+    @MockBean
+    private MapTilerGeocoding mapTilerGeocoding;
+
     @Before
     public void setup() throws Exception {
         Mockito.when(spyFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
+
     }
 }
