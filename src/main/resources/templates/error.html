@@ -23,10 +23,10 @@
 <body class="page">
   <div class="container-fluid d-flex flex-column p-0 m-0">
     <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
-    <div class="row justify-content-center vh-100 align-items-center">
+    <div class="row justify-content-center vh-100">
       <div class="col-lg-4 col-sm-6 col-10">
         <br>
-        <p class="display-1">Oops!</p>
+        <p class="display-1 pt-sm-5">Oops!</p>
         <p class="display-4">It looks like we've encountered an error.</p>
         <p>Error code: [[${status}]]</p>
         <p>Message: [[${message}]]</p>
