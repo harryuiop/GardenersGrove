@@ -6,25 +6,41 @@
 </head>
 <style>
   body {
-    background: #EFEFEC;
-    font-family: gill sans, sans-serif;
+    background: #efefec;
+    font-family:
+      gill sans,
+      sans-serif;
     margin: 0;
   }
 
-  .profile-card {
-    background: white;
+  .profile-img {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    object-fit: cover;
   }
 </style>
 
 <body>
   <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
-  <div class="row">
-    <div class="col-12">
-      <div class="container-fluid m-3 rounded bg-white">
-        <p>hello</p>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col m-4 rounded bg-white">
+        <div class="row">
+          <div class="col-sm-4 col-md-3 col-12">
+            <img class="rounded-circle profile-img p-4" th:src="@{${user.getProfilePictureFilePath()}}"
+              alt="User Profile Picture" />
+          </div>
+          <div class="col-sm-8 col-md-9 col-12 my-4">
+            <p class="display-2" th:text="${user.getFirstName() + ' ' + user.getLastName()}"></p>
+            <p th:text="${user.getDob()}"></p>
+            <p th:text="${user.getEmail()}"></p>
+          </div>
+        </div>
 
       </div>
     </div>
+  </div>
+  </div>
 </body>
 
 </html>
