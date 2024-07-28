@@ -1,46 +1,102 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head th:insert="~{fragments/importFragment :: headerfiles}">
+    <title>Profile Page</title>
+  </head>
+  <style>
+    body {
+      background: #efefec;
+      font-family:
+        gill sans,
+        sans-serif;
+      margin: 0;
+    }
 
-<head th:insert="~{fragments/importFragment :: headerfiles}">
-  <title>Profile Page</title>
-</head>
-<style>
-  body {
-    background: #efefec;
-    font-family:
-      gill sans,
-      sans-serif;
-    margin: 0;
-  }
+    .profile-img {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      object-fit: cover;
+    }
 
-  .profile-img {
-    aspect-ratio: 1 / 1;
-    width: 100%;
-    object-fit: cover;
-  }
-</style>
+    .btn-edit {
+      border-color: #000;
+      --bs-btn-color: #000;
+      --bs-btn-hover-bg: #000;
+      --bs-btn-hover-color: #fff;
+      --bs-btn-active-bg: #000;
+    }
 
-<body>
-  <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col m-4 rounded bg-white">
-        <div class="row">
-          <div class="col-sm-4 col-md-3 col-12">
-            <img class="rounded-circle profile-img p-4" th:src="@{${user.getProfilePictureFilePath()}}"
-              alt="User Profile Picture" />
-          </div>
-          <div class="col-sm-8 col-md-9 col-12 my-4">
-            <p class="display-2" th:text="${user.getFirstName() + ' ' + user.getLastName()}"></p>
-            <p th:text="${user.getDob()}"></p>
-            <p th:text="${user.getEmail()}"></p>
+    .btn-confirm {
+      border-color: #477641;
+      --bs-btn-color: #477641;
+      --bs-btn-hover-bg: #477641;
+      --bs-btn-hover-color: #fff;
+      --bs-btn-active-bg: #477641;
+    }
+
+    .err-text {
+      color: #6f0c0c;
+    }
+  </style>
+
+  <body>
+    <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col mx-4 rounded bg-white shadow-sm p-2">
+          <div class="row">
+            <div class="col-sm-4 col-md-3 col-12 text-center my-4">
+              <img
+                class="rounded-circle profile-img p-4"
+                th:src="@{${user.getProfilePictureFilePath()}}"
+                alt="User Profile Picture"
+              />
+              <form
+                class="text-center"
+                th:action="@{${uploadProfileImageUri}}"
+                method="post"
+                name="profilePhoto"
+                enctype="multipart/form-data"
+              >
+                <div class="w-100">
+                  <input
+                    class="form-control-file w-auto mw-100"
+                    type="file"
+                    name="image"
+                    accept="image/jpeg, image/png, image/svg+xml"
+                    alt="Upload Profile Picture"
+                  />
+                </div>
+                <p class="err-text text-wrap" th:text="${imageTypeError}"></p>
+                <p class="err-text text-wrap" th:text="${imageSizeError}"></p>
+                <button
+                  class="btn btn-confirm btn-outline-primary"
+                  type="submit"
+                >
+                  Update Picture <i class="bi bi-check"></i>
+                </button>
+              </form>
+            </div>
+            <div
+              class="col-sm-8 col-md-9 col-12 my-4 text-sm-start text-center d-flex flex-column justify-content-between"
+            >
+              <div class="flex-grow-1">
+                <p
+                  class="display-2"
+                  th:text="${user.getFirstName() + ' ' + user.getLastName()}"
+                ></p>
+                <p>Date of Birth: <span th:text="${user.getDob()}"></span></p>
+                <p>Email Address: <span th:text="${user.getEmail()}"></span></p>
+              </div>
+              <a
+                th:href="@{${editProfileUri}}"
+                class="btn btn-edit btn-outline-primary mt-auto w-auto align-self-center align-self-sm-start"
+                >Edit Profile <i class="bi bi-pencil"></i
+              ></a>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
-  </div>
-  </div>
-</body>
-
+  </body>
 </html>
