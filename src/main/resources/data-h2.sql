@@ -158,6 +158,38 @@ VALUES (14, 'Second User''s Second Garden', 'This description needs to be edited
         FALSE, FALSE, NOW());
 
 
+INSERT INTO tag (name)
+VALUES ('first_tag');
+
+INSERT INTO tag (name)
+VALUES ('second_tag');
+
+INSERT INTO tag (name)
+VALUES ('third_tag');
+
+INSERT INTO tag (name)
+VALUES ('fourth_tag');
+
+INSERT INTO tag (name)
+VALUES ('fifth_tag');
+
+
+INSERT INTO tag_gardens (tags_id, gardens_id)
+VALUES (1, 1);
+
+INSERT INTO tag_gardens (tags_id, gardens_id)
+VALUES (2, 1);
+
+INSERT INTO tag_gardens (tags_id, gardens_id)
+VALUES (3, 1);
+
+INSERT INTO tag_gardens (tags_id, gardens_id)
+VALUES (4, 1);
+
+INSERT INTO tag_gardens (tags_id, gardens_id)
+VALUES (5, 2);
+
+
 INSERT INTO plant (count, description, garden_id, image_file_name, name, planted_on)
 VALUES (1, 'First plant of Default User''s first Garden', 1, NULL, 'Plant One', '2024-01-01');
 
