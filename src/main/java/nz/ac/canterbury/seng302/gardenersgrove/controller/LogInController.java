@@ -107,6 +107,7 @@ public class LogInController {
         }
         model.addAttribute("resetPasswordUri", resetPasswordUri(token, userId));
         model.addAttribute("userId", userId);
+        model.addAttribute("loginUri", loginUri());
         return "resetPassword";
     }
 
@@ -161,7 +162,7 @@ public class LogInController {
     }
 
     /**
-     * return reset password form when user click forgot password
+     * Forgot Password form
      *
      * @param model The Model object used for adding attributes to the view.
      * @return The name of the template
@@ -171,6 +172,7 @@ public class LogInController {
         logger.info("GET {}", resetPasswordEmailUri());
 
         model.addAttribute("resetPasswordEmailUri", resetPasswordEmailUri());
+        model.addAttribute("loginUri", loginUri());
         return "forgotPasswordForm";
     }
 
