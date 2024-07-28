@@ -17,5 +17,13 @@ public interface GardenRepository extends CrudRepository<Garden, Long> {
             nativeQuery = true)
     List<Garden> findByGardenPublicTrue(int paginationOffset);
 
+    @Query(value = "SELECT * FROM garden WHERE is_garden_public = TRUE AND name LIKE CONCAT('%', ?2, '%') " +
+            "ORDER BY time_created DESC LIMIT 10 OFFSET ?1", nativeQuery = true)
+    List<Garden> findByGardenPublicTrueWithSearchName(int paginationOffset, String searchGardenName);
+
+
     long countByIsGardenPublicTrue();
+
+    @Query(value = "SELECT COUNT(*) FROM garden WHERE is_garden_public = TRUE AND name LIKE CONCAT('%', ?1, '%')", nativeQuery = true)
+    long countByIsGardenPublicTrueWithGardenNameSearch(String searchGardenName);
 }

@@ -35,6 +35,7 @@ public class GardenService {
             throw new NoSuchFriendException(friendId);
         }
     }
+
     public Optional<Garden> getGardenById(Long id) {
         return gardenRepository.findById(id);
     }
@@ -47,11 +48,18 @@ public class GardenService {
         gardenRepository.deleteById(id);
     }
 
-    public List<Garden> getPageOfPublicGardens(int pageNumber) {
+    public List<Garden> getPageOfPublicGardens(int pageNumber, String gardenName) {
+        if (gardenName != null && !gardenName.isEmpty()) {
+            return gardenRepository.findByGardenPublicTrueWithSearchName(((pageNumber - 1) * 10), gardenName);
+        }
         return gardenRepository.findByGardenPublicTrue((pageNumber - 1) * 10);
     }
 
     public long countPublicGardens() {
         return gardenRepository.countByIsGardenPublicTrue();
+    }
+
+    public long countPublicGardens(String gardenName) {
+        return gardenRepository.countByIsGardenPublicTrueWithGardenNameSearch(gardenName);
     }
 }
