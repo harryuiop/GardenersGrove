@@ -8,7 +8,7 @@
     <div class="d-flex flex-column align-items-center mt-5 w-100">
         <h2 class="text-center">My Gardens</h2>
         <div th:each="garden: ${gardenList}"
-             class="garden-item row rounded border p-5 my-3 w-75 position-relative bg-white shadow">
+             class="garden-item row rounded border p-5 my-3 w-75 position-relative bg-white shadow-sm">
             <a class="stretched-link" th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"></a>
             <div class="col-4 align-items-center">
                 <h5 th:text="${garden.name}"></h5>
