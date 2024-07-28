@@ -35,3 +35,12 @@
   background-position: center;
   height: 40em;
 }
+
+.garden-item {
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+}
+
+.garden-item:hover {
+  background-color: #d0dfd0 !important;
+}
