@@ -10,17 +10,17 @@
         <div th:each="garden: ${gardenList}"
              class="garden-item row rounded border p-5 my-3 w-75 position-relative bg-white shadow-sm">
             <a class="stretched-link" th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"></a>
-            <div class="col-4 align-items-center">
+            <div class="col-12 col-md-8 col-lg-9 col-xl-4 align-items-center">
                 <h5 th:text="${garden.name}"></h5>
                 <div th:text="${garden.getLocationString()}"></div>
             </div>
-            <div class="col-2 d-flex align-items-center"
-                 th:utext="${garden.getSize() != null} ? (${garden.getSize()} + ' m<sup>2</sup>')"></div>
-            <div class="col-2 d-flex align-items-center">
+            <div class="col-3 col-sm-2 col-lg-1 d-flex align-items-center">
                 <div th:text="${garden.getPlants().size()}"></div>
                 <i class="bi bi-tree-fill"></i>
             </div>
-            <div class="col-3 d-flex align-items-center">
+            <div class="col-5 col-sm-3 col-md-2 col-xl-1 d-flex align-items-center"
+                 th:utext="${garden.getSize() != null} ? (${garden.getSize()} + ' m<sup>2</sup>')"></div>
+            <div class="col-12 col-xl-6 d-flex align-items-center flex-wrap">
                 <div th:each="tag : ${garden.getTags()}" class="m-3" th:text="'#' + ${tag.getName()}">Hello</div>
             </div>
         </div>
