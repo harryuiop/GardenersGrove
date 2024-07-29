@@ -33,6 +33,26 @@ streetAddressField.addEventListener('input', function() {
 });
 
 /**
+ * When the input field is clicked in, if there is already text in there it will ask for autocomplete
+ */
+streetAddressField.addEventListener('focus', () => {
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+        const inputValue = streetAddressField.value;
+        if (inputValue) {
+            updateAutocomplete(inputValue, countryField.value);
+        }
+    }, debounceTimeMs);
+});
+
+/**
+ * When user clicks outside the street address input the autocomplete box disappears
+ */
+streetAddressField.addEventListener('blur', function() {
+    setTimeout(removeAutocompleteBox, 100)
+})
+
+/**
  * Call Java function to get the API response,
  * only if maximum number of requests in given rate limit timeframe has not yet been reached.
  *
