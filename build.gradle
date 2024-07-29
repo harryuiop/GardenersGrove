@@ -57,8 +57,8 @@ sonar {
 		property "sonar.projectKey", "seng302-2024-team400"
 			property "sonar.projectName", "seng302-2024-team400"
 			property "sonar.sourceEncoding", "UTF-8"
-		property "sonar.host.url", "https://sonarqube.csse.canterbury.ac.nz"
-			property "sonar.login", "$System.env.SONARQUBE_TOKEN"
+		property "sonar.host.url", "$System.env.SONAR_HOST_URL"
+			property "sonar.login", "$System.env.SONAR_TOKEN"
 	}
 }
 
