@@ -86,7 +86,6 @@ class LogInControllerResetPasswordTest {
     void goToResetPasswordPage_incorrectToken_redirectToLogin() throws Exception {
         String tokenStr = "abcd";
         long userId = user.getUserId();
-        System.out.println(LOGIN_URI_STRING);
         mockMvc.perform(MockMvcRequestBuilders.get(resetPasswordUri(tokenStr, userId)))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl(LOGIN_URI_STRING));
