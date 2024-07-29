@@ -49,7 +49,7 @@
                 method="post"
                 name="registerForm"
         >
-          <div class="row align-content-around align-items-center">
+          <div class="row d-flex align-content-around align-items-start">
             <div class="col-6">
               <label for="firstName" class="form-label">First name:</label>
               <input
@@ -76,23 +76,24 @@
                       autofocus
                       autocomplete="off"
               />
-
-              <!--              <div class="noSurname">-->
-              <!--                <label for="noSurname" class="noSurnameCheckbox">-->
-              <!--                  <input-->
-              <!--                          type="checkbox"-->
-              <!--                          id="noSurname"-->
-              <!--                          value="checked"-->
-              <!--                          th:name="noSurname"-->
-              <!--                          th:checked="${noSurname}"-->
-              <!--                          th:value="${noSurname}"-->
-              <!--                          autofocus-->
-              <!--                          autocomplete="off"-->
-              <!--                          onchange="updateCheckboxValue()"-->
-              <!--                  />-->
-              <!--                  I have no surname-->
-              <!--                </label>-->
-              <!--              </div>-->
+              <div class="row">
+                              <div class="noSurname">
+                                <label for="noSurname" class="noSurnameCheckbox">
+                                  <input
+                                          type="checkbox"
+                                          id="noSurname"
+                                          value="checked"
+                                          th:name="noSurname"
+                                          th:checked="${noSurname}"
+                                          th:value="${noSurname}"
+                                          autofocus
+                                          autocomplete="off"
+                                          onchange="updateCheckboxValue()"
+                                  />
+                                  No surname
+                                </label>
+                              </div>
+              </div>
 
               <p class="errorMessage form-label" id="lastNameError" th:text="${lastNameError}"></p>
             </div>
@@ -149,7 +150,18 @@
           />
           <p class="errorMessage" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
 
-          <input class="inputStyle" id="submit" type="submit" value="Submit"/>
+          <button class="btn btn-outline-primary d-flex align-items-center"
+                   type="button"
+                   style="
+                           border-color: #477641;
+                           --bs-btn-color: #477641;
+                           --bs-btn-hover-bg: #477641;
+                           --bs-btn-hover-color: #fff;
+                           --bs-btn-active-bg: #477641;
+                           "
+        >Register <i class="bi bi-check"></i>
+        </button>
+
         </form>
         <p class="registerLink"> Already have an account?<a id="registerLink" th:href="@{${loginUri}}"> Login
           Here.</a></p>
