@@ -68,7 +68,7 @@
 
               <form th:if="${owner}" th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
                 <label class="form-input" for="tagName"> Create new tag: </label>
-                <div class="input-group mb-3 w-50">
+                <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <div class="input-group-text"
                          style="
@@ -104,8 +104,9 @@
           </div>
 
           <div class="col-auto">
-            <div id="weatherCard">
-              <div th:each="data : ${weatherData}" class="d-inline-grid">
+            <div class="container">
+              <div id="weatherCard">
+                <div th:each="data : ${weatherData}" class="d-inline-grid">
                   <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
                        th:with="dayOfWeek=${data.date.dayOfWeek},
                            date=${data.date.format(dateFormatter)},
@@ -113,11 +114,13 @@
                            description=${data.weatherDescription},
                            image=${data.weatherIconName},
                            humidity=${data.humidity}">
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <br>
 
         <div class="row">
           <div class="container">
@@ -142,6 +145,7 @@
                 </a>
               </div>
             </div>
+            <br>
 
             <div class="row-auto">
               <div id="plantCard" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
