@@ -13,10 +13,10 @@
           <div class="col">
             <div class="container">
               <div class="row">
-                <div class="col-md-auto">
+                <div class="col-auto">
                   <h2 th:text="${garden.getName()}"></h2>
                 </div>
-                <div class="col-md-3">
+                <div class="col-sm-2 col-md-3 col-lg-4">
                   <a th:href="@{${editGardenUri}}" style="text-decoration: none">
                     <button class="btn btn-outline-primary"
                             type="button"
@@ -57,6 +57,7 @@
                 <button class="form-button" type="submit" th:id="submitPublicGarden" style="display: none;">Submit</button>
               </form>
               <p class="errorMessage" th:text="${gardenDescriptionError}"></p>
+
               <!-- Garden tags -->
               <div class="display-tags">
                 <span th:each="tag, iterStat : ${tags}">
@@ -68,9 +69,18 @@
               <form th:if="${owner}" th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
                 <label class="form-input" for="tagName"> Create new tag: </label>
                 <div class="input-group mb-3 w-50">
-                  <input type="text" class="form-control" placeholder="#CoolGarden" id="tagName" th:name="tagName"
-                         data-cy="tagName" autofocus>
-                  <div id="autocomplete-list" class="inputStyle"></div>
+                  <div class="input-group-prepend">
+                    <div class="input-group-text"
+                         style="
+                        border-top-right-radius: 0;
+                        border-bottom-right-radius: 0;
+                        ">#</div>
+                  </div>
+                  <div>
+                    <input type="text" class="form-control" placeholder="CoolGarden" id="tagName" th:name="tagName"
+                           data-cy="tagName" style="border-radius: 0" autofocus>
+                    <div id="autocomplete-list" class="inputStyle"></div>
+                  </div>
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary"
                             type="submit"
@@ -80,6 +90,8 @@
                            --bs-btn-hover-bg: #477641;
                            --bs-btn-hover-color: #fff;
                            --bs-btn-active-bg: #477641;
+                           border-top-left-radius: 0;
+                           border-bottom-left-radius: 0;
                            "
                     >+
                     </button>
@@ -89,21 +101,6 @@
               <p class="errorMessage" th:text="${tagErrors}"></p>
               <br>
             </div>
-
-            <a th:href="@{${newPlantUri}}">
-              <button th:if="${owner}"
-                      class="btn btn-outline-primary"
-                      type="button"
-                      style="
-                    border-color: #477641;
-                    --bs-btn-color: #477641;
-                    --bs-btn-hover-bg: #477641;
-                    --bs-btn-hover-color: #fff;
-                    --bs-btn-active-bg: #477641;
-                  "
-              ><i class="bi bi-plus-lg"></i> Add Plant
-              </button>
-            </a>
           </div>
 
           <div class="col-auto">
@@ -123,36 +120,58 @@
         </div>
 
         <div class="row">
-          <h2>My Plants</h2>
           <div class="container">
-            <div id="plantCard" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
-              <div th:each="plant : ${plants}" class="col">
-                <div class="card shadow rounded-4 h-100 w-100">
-                  <img th:src="@{${plantImg}}" class="card-img-top">
-                  <img th:src="@{${plant.getImageFilePath()}}" class="card-img-top rounded-top-4"
-                       alt="Image of plant"/>
-                  <div class="card-body">
-                    <div th:insert="~{fragments/plantCard :: plantCard}"
-                         th:with="plantName=${plant.getName()},
-                 plantDescription=${plant.getDescription()},
-                 plantCount=${plant.getCount()},
-                 plantDate=${plant.getDateString()}">
+            <div class="row">
+              <div class="col-auto">
+                <h2>My Plants</h2>
+              </div>
+              <div class="col-auto">
+                <a th:href="@{${newPlantUri}}">
+                  <button th:if="${owner}"
+                          class="btn btn-outline-primary"
+                          type="button"
+                          style="
+                    border-color: #477641;
+                    --bs-btn-color: #477641;
+                    --bs-btn-hover-bg: #477641;
+                    --bs-btn-hover-color: #fff;
+                    --bs-btn-active-bg: #477641;
+                  "
+                  ><i class="bi bi-plus-lg"></i> Add Plant
+                  </button>
+                </a>
+              </div>
+            </div>
+
+            <div class="row-auto">
+              <div id="plantCard" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
+                <div th:each="plant : ${plants}" class="col">
+                  <div class="card shadow rounded-4 h-100 w-100">
+                    <img th:src="@{${plant.getImageFilePath()}}" class="card-img-top rounded-top-4"
+                         alt="Image of plant"/>
+                    <div class="card-body">
+                      <div th:insert="~{fragments/plantCard :: plantCard}"
+                           th:with="plantName=${plant.getName()},
+                           plantDescription=${plant.getDescription()},
+                           plantCount=${plant.getCount()},
+                           plantDate=${plant.getDateString()}">
+                      </div>
                     </div>
-                  </div>
-                  <div class="card-footer">
-                    <a th:if="${owner}" th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
-                      <button class="btn btn-outline-primary w-100"
-                              type="button"
-                              style="
+                    <div class="card-footer">
+                      <a th:if="${owner}" th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
+                        <button class="btn btn-outline-primary w-100"
+                                type="button"
+                                style="
                               border-color: #000;
                               --bs-btn-color: #000;
                               --bs-btn-hover-bg: #000;
                               --bs-btn-hover-color: #fff;
                               --bs-btn-active-bg: #000;
                             "
-                      >Edit Plant <i class="bi bi-pencil"></i>
-                      </button>
-                    </a>
+                        >Edit Plant <i class="bi bi-pencil"></i>
+                        </button>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -166,16 +185,9 @@
 </div>
 </body>
 <script>
-    function submitForm(id) {
-        console.log("Image Uploaded on form: " + id);
-
-        // Currently clicks the first form only as getting by id.
-        document.getElementById(id + 'submit').click()
-    }
-
     function submitPublic() {
-        var checkbox = document.getElementById("publicGarden")
-        if (checkbox.checked) {
+      const checkbox = document.getElementById("publicGarden");
+      if (checkbox.checked) {
             checkbox.value = "true";
         } else {
             checkbox.value = "false";
