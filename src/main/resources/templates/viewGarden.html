@@ -59,10 +59,10 @@
               <p class="errorMessage" th:text="${gardenDescriptionError}"></p>
               <!-- Garden tags -->
               <div class="display-tags">
-            <span th:each="tag, iterStat : ${tags}">
-                <span class="tag-text" th:text="'#' + ${tag.getName()}"></span>
-                <span th:if="${!iterStat.last}">&nbsp;&nbsp;&nbsp;</span>
-            </span>
+                <span th:each="tag, iterStat : ${tags}">
+                    <span class="tag-text" th:text="'#' + ${tag.getName()}"></span>
+                    <span th:if="${!iterStat.last}">&nbsp;&nbsp;&nbsp;</span>
+                </span>
               </div>
 
               <form th:if="${owner}" th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
@@ -89,19 +89,6 @@
               <p class="errorMessage" th:text="${tagErrors}"></p>
               <br>
             </div>
-
-<!--            <form th:if="${owner}" th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">-->
-<!--              <label class="form-input" for="tagName"> Create new tag: </label>-->
-<!--              <div style="display: flex;">-->
-<!--                <div>-->
-<!--                  <input type="text" class="form-control" id="tagName" th:name="tagName"-->
-<!--                         data-cy="tagName" autofocus>-->
-<!--                  <div id="autocomplete-list" class="inputStyle"></div>-->
-<!--                </div>-->
-<!--                <button id="tag-submit" type="submit">+</button>-->
-<!--              </div>-->
-<!--            </form>-->
-<!--            <p class="errorMessage" th:text="${tagErrors}"></p>-->
 
             <a th:href="@{${newPlantUri}}">
               <button th:if="${owner}"
