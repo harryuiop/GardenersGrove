@@ -131,6 +131,8 @@ public class LogInController {
 
         User user = userService.getUserById((int) userId);
 
+        model.addAttribute("loginUri", loginUri());
+
         if (user == null) {
             logger.info("Invalid user, redirecting to login page");
             return "redirect:" + loginUri();
@@ -203,6 +205,7 @@ public class LogInController {
                 emailSenderService.sendEmail(user, "resetPasswordEmail", baseUrl);
             }
         }
+        model.addAttribute("loginUri", loginUri());
         return "forgotPasswordForm";
 
     }
