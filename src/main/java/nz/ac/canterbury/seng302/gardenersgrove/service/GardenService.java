@@ -46,4 +46,12 @@ public class GardenService {
     public void deleteGarden(Long id) {
         gardenRepository.deleteById(id);
     }
+
+    public List<Garden> getPageOfPublicGardens(int pageNumber) {
+        return gardenRepository.findByGardenPublicTrue((pageNumber - 1) * 10);
+    }
+
+    public long countPublicGardens() {
+        return gardenRepository.countByIsGardenPublicTrue();
+    }
 }
