@@ -6,36 +6,6 @@
   <body>
     <div class="container-fluid p-0 m-0">
       <nav th:insert="~{fragments/navbar :: navbar}"></nav>
-      <style>
-        .card {
-          flex: 0 0 auto;
-          width: 100%;
-          max-width: 400px;
-          min-width: 20vw;
-          margin: 0 auto;
-        }
-
-        .card img {
-          flex-shrink: 0;
-          width: 80px;
-          height: 80px;
-        }
-
-        .scroll-div {
-          max-height: 538px;
-          overflow-y: auto;
-        }
-
-        body,
-        td {
-          background-color: #efefec;
-        }
-
-        .column-center {
-          display: flex;
-          justify-content: center;
-        }
-      </style>
       <div>
         <div class="container-fluid p-3 text-white text-center">
           <h1 class="text-dark">Manage my friends</h1>
@@ -398,6 +368,36 @@
       </div>
     </div>
   </body>
+  <style>
+    .card {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 400px;
+      min-width: 20vw;
+      margin: 0 auto;
+    }
+
+    .card img {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+    }
+
+    .scroll-div {
+      max-height: 538px;
+      overflow-y: auto;
+    }
+
+    body,
+    td {
+      background-color: #efefec;
+    }
+
+    .column-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
   <script>
     const removeFriendModal = document.getElementById("removeFriendModal");
     const removeFriendButton = document.querySelector(
