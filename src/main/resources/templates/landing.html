@@ -1,22 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Gardener's Grove</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-</head>
-<body>
-<div id="landingPage">
-    <h1>Gardener's Grove</h1>
-    <p>Welcome to Gardener's Grove!</p>
-    <div>
-        <button>
-            <a th:href="@{${loginUri}}">Sign In</a>
-        </button>
-        <button>
-            <a th:href="@{${registerUri}}">Register</a>
-        </button>
+  <head th:fragment="headerfiles">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Chrome" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/newstyle.css}" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"
+    />
+    <script
+      th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"
+    ></script>
+  </head>
+
+  <body>
+    <style>
+      body {
+        background: #efefec;
+        font-family:
+          gill sans,
+          sans-serif;
+      }
+
+      .btn {
+        border-color: #477641;
+        --bs-btn-color: #477641;
+        --bs-btn-hover-bg: #477641;
+        --bs-btn-hover-color: #fff;
+        --bs-btn-active-bg: #477641;
+      }
+    </style>
+    <div id="landingPage">
+      <div
+        class="landing-bg container-fluid align-items-center justify-content-center d-flex"
+      >
+        <h1 class="display-1 text-white fw-bold text-center">
+          Welcome to Gardeners Grove.
+        </h1>
+      </div>
+      <div class="bg vh-50 container-fluid justify-content-center pb-5">
+        <div class="d-flex container-fluid justify-content-center">
+          <a th:href="@{${loginUri}}">
+            <button
+              class="btn btn-outline-primary btn-lg mx-2 my-4 px-5"
+              type="button"
+            >
+              Sign In
+            </button>
+          </a>
+          <a th:href="@{${registerUri}}">
+            <button
+              class="btn btn-outline-primary btn-lg mx-2 my-4 px-5"
+              type="button"
+            >
+              Register
+            </button>
+          </a>
+        </div>
+        <div class="container-sm">
+          <br />
+          <br />
+          <p class="lead text-center">
+            Gardeners Grove is your one-stop shop for recording and managing
+            gardens and plants. You can also connect with friends, and checkout
+            each others gardens, or create tags to view gardens that you are
+            interested in. To get started, please register with the link above.
+            Once you have registered, you will be prompted to verify your email
+            address, after which you will be able to log in to the application
+            and begin your gardening journey. This application is under active
+            development by team 400 of SENG302 at the University of Canterbury.
+          </p>
+          <br />
+          <br />
+        </div>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>

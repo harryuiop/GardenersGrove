@@ -64,7 +64,7 @@ public class ViewAllGardensController extends NavBar {
 
         this.updateGardensNavBar(model, gardenService, userService);
         model.addAttribute("gardenList", gardenService.getAllFriendsGardens(friendId, userService));
-        model.addAttribute("viewGardenUriString", VIEW_FRIENDS_GARDEN_URI_STRING);
+        model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         model.addAttribute("friendId", friendId);
         model.addAttribute("owner", false);
         return "allGardens";
