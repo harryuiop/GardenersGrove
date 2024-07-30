@@ -13,15 +13,15 @@
                 aria-label="Search for public gardens"
                 autocomplete="off"
                 class="form-control rounded"
-                id="gardenSearch"
+                id="gardenName"
                 placeholder="Search for gardens"
-                th:name="gardenSearch"
+                th:name="gardenName"
                 type="text"
         />
         <button
                 class="input-group-text border-0"
                 id="search-addon"
-                th:for="gardenSearch"
+                th:for="gardenName"
                 type="submit"
         >
             <i class="bi bi-search" style="color: black"></i>
@@ -34,22 +34,22 @@
 </div>
 <nav>
     <ul class="pagination">
-        <li class="page-item" th:classappend="${currentPage == 1 } ? disabled">
-            <a th:href="@{${browsePublicGardensUriString}(page=${currentPage - 1})}" class="page-link">
-                <span aria-hidden="true">&laquo;</span>
+        <li class="page-item" th:classappend="${currentPage == 1 } ? 'disabled'">
+            <a th:href="@{${browsePublicGardensUriString}(page=${1}, gardenName=${gardenSearchSearch})}" class="page-link">
+                <span aria-hidden="true">First</span>
             </a>
         </li>
 
         <li th:each="page : ${pageNumbers}" class="page-item">
             <a class="page-link"
                th:classappend="${page == currentPage} ? active"
-               th:href="@{${browsePublicGardensUriString}(page=${page})}"
+               th:href="@{${browsePublicGardensUriString}(page=${page}, gardenName=${gardenSearchSearch})}"
                th:text="${page}"></a>
         </li>
 
-        <li class="page-item" th:classappend="${currentPage == numberOfPages}? disabled">
-            <a class="page-link" th:href="@{${browsePublicGardensUriString}(page=${currentPage + 1})}">
-                <span aria-hidden="true">&raquo;</span>
+        <li class="page-item" th:classappend="${currentPage == numberOfPages} ? 'disabled'">
+            <a class="page-link" th:href="@{${browsePublicGardensUriString}(page=${numberOfPages}, gardenName=${gardenSearchSearch})}">
+                <span aria-hidden="true">Last</span>
             </a>
         </li>
     </ul>

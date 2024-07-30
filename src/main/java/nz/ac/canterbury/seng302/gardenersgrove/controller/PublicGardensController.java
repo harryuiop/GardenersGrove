@@ -45,6 +45,8 @@ public class PublicGardensController extends NavBar {
      */
     @GetMapping(BROWSE_PUBLIC_GARDENS_URI_STRING)
     String browseGardens(@RequestParam(required = false) Integer page, @RequestParam(required = false) String gardenName, Model model) {
+        model.addAttribute("gardenSearchSearch", gardenName);
+
         logger.info("GET {}", browsePublicGardensUri());
 
         if (page == null) {
