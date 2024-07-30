@@ -27,7 +27,7 @@
                             --bs-btn-hover-color: #fff;
                             --bs-btn-active-bg: #000;
                           "
-                    ><i class="bi bi-pencil"></i> Edit Garden
+                    > Edit Garden <i class="bi bi-pencil"></i>
                     </button>
                   </a>
                 </div>
@@ -189,7 +189,14 @@
 </div>
 </body>
 <script>
-    function submitPublic() {
+  function submitForm(id) {
+    console.log("Image Uploaded on form: " + id);
+
+    // Currently clicks the first form only as getting by id.
+    document.getElementById(id + 'submit').click()
+  }
+
+  function submitPublic() {
       const checkbox = document.getElementById("publicGarden");
       if (checkbox.checked) {
             checkbox.value = "true";
