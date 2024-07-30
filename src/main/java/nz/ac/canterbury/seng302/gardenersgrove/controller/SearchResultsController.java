@@ -80,13 +80,14 @@ public class SearchResultsController {
     @PostMapping(SEARCH_RESULTS_STRING)
     public String getSearchResults(@RequestParam String searchUser,
                                    RedirectAttributes redirectAttributes) {
-        logger.info("POST /search/result/{}", searchUser);
-        redirectAttributes.addAttribute("searchUser", searchUser);
+        String trimmedSearchUser = searchUser.trim();
+        logger.info("POST /search/result/{}", trimmedSearchUser);
+        redirectAttributes.addAttribute("searchUser", trimmedSearchUser);
         return "redirect:"+SEARCH_RESULTS_STRING;
     }
 
     /**
-     * Incomplete send friend request function.
+     * Send friend request to user id.
      * @param userId    The id of the user the friend request is being sent to.
      * @return      Redirection to friends page.
      */

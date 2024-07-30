@@ -236,6 +236,7 @@ public class ProfileController extends NavBar {
             model.addAttribute("oldPassword", oldPassword);
             model.addAttribute("newPassword", newPassword);
             model.addAttribute("retypeNewPassword", retypeNewPassword);
+            model.addAttribute("editProfileUri", editProfileUri());
             return "editPassword";
         }
 

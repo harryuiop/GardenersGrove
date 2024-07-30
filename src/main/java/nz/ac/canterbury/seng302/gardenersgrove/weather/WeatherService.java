@@ -19,4 +19,14 @@ public interface WeatherService {
      */
     List<WeatherData> getWeatherData(double latitude, double longitude) throws InterruptedException;
     String getWeatherAdvice(List<WeatherData> weatherData);
+
+    /**
+     * @return The number of forecasted days.
+     */
+    int getPastDaysCount();
+
+    /**
+     * @return The number of previous days.
+     */
+    int getForecastDayCount();
 }
