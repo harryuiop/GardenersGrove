@@ -5,56 +5,82 @@ VALUES (TRUE, '2000-01-01', 'user1@gmail.com', 'Default', 'User',
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token)
-VALUES (TRUE, '2001-02-02', 'user2@gmail.com', 'Second', 'User',
+VALUES (TRUE, '2001-02-02', 'user2@gmail.com', 'Harry', 'Ellis',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token)
-VALUES (TRUE, '2001-02-02', 'user3@gmail.com', 'Third', 'User',
+VALUES (TRUE, '2001-02-02', 'user3@gmail.com', 'Sam', 'Willems',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token)
-VALUES (TRUE, '2001-02-02', 'user4@gmail.com', 'Fourth', 'User',
+VALUES (TRUE, '2001-02-02', 'user4@gmail.com', 'HanByeol', 'Yang',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token)
-VALUES (TRUE, '2001-02-02', 'user5@gmail.com', 'Fifth', 'User',
+VALUES (TRUE, '2001-02-02', 'user5@gmail.com', 'Harrison', 'Parkes',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token)
-VALUES (TRUE, '2001-02-02', 'user6@gmail.com', 'Sixth', 'User',
+VALUES (TRUE, '2001-02-02', 'user6@gmail.com', 'Josh', 'Winters',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token)
-VALUES (TRUE, '2001-02-02', 'user7@gmail.com', 'Seventh', 'User',
+VALUES (TRUE, '2001-02-02', 'user7@gmail.com', 'Vincent', 'Chen',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token)
-VALUES (TRUE, '2001-02-02', 'user8@gmail.com', 'Default', 'User',
+VALUES (TRUE, '2001-02-02', 'user8@gmail.com', 'Alex', 'Belcher',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
 INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
                    token)
-VALUES (TRUE, '2001-02-02', 'user9@gmail.com', 'Default', 'User',
+VALUES (TRUE, '2001-02-02', 'user9@gmail.com', 'Morgan', 'English',
         '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token)
+VALUES (TRUE, '2001-02-02', 'user10@gmail.com', 'Ella', 'Calder',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
-INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
-VALUES (1, 1, 5);
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token)
+VALUES (TRUE, '2001-02-02', 'user11@gmail.com', 'Marina', 'Filipovic',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
-INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
-VALUES (1, 1, 6);
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token)
+VALUES (TRUE, '2001-02-02', 'user12@gmail.com', 'Tim', 'Bell',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
 
-INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
-VALUES (1, 1, 7);
+INSERT INTO users (confirmation, dob, email, first_name, last_name, password, profile_picture_file_name,
+                   token)
+VALUES (TRUE, '2001-02-02', 'user13@gmail.com', 'Walter', 'Guttmann',
+        '$2a$08$/1k6IbJBx9wkbHzPHOnUr.7TePtLBFSfn4dST0XXnDNvZCnG6vHH2', NULL, NULL);
+
+INSERT INTO friendship (friend1_user_id, friend2_user_id, id) VALUES (4, 1, 100);
+
+INSERT INTO friendship (friend1_user_id, friend2_user_id, id) VALUES (3, 1, 101);
+
+INSERT INTO friendship (friend1_user_id, friend2_user_id, id) VALUES (5, 1, 102);
+
+INSERT INTO friendship (friend1_user_id, friend2_user_id, id) VALUES (6, 1, 103);
+
+INSERT INTO friendship (friend1_user_id, friend2_user_id, id) VALUES (7, 1, 104);
 
 INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
 VALUES (1, 1, 8);
+
+INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
+VALUES (1, 1, 12);
+
+INSERT INTO friend_request (status, receiver_user_id, sender_user_id)
+VALUES (1, 13, 1);
 
 
 INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)

@@ -1,393 +1,420 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:insert="~{fragments/importFragment :: headerfiles}">
-  <title>Friends</title>
-</head>
-
-<body style="">
-<div class="container-fluid p-0 m-0">
-  <nav th:insert="~{fragments/navbar :: navbar}"></nav>
-
-  <div>
-    <div class="container-fluid p-5 text-white text-center">
-      <h1 class="text-black">Manage my friends</h1>
-      <form method="post" th:action="@{${searchResultsUri}}">
-        <div class="input-group rounded mx-auto" style="width: 20vw">
-          <input
-                  aria-describedby="search-addon"
-                  aria-label="Search"
-                  autocomplete="off"
-                  class="form-control rounded"
-                  id="searchUsers"
-                  placeholder="Search for new friends"
-                  th:name="searchUser"
-                  th:value="*{search}"
-                  type="text"
-          />
-          <button
-                  class="input-group-text border-0"
-                  id="search-addon"
-                  th:for="searchForm"
-                  type="submit"
-          >
-            <i class="bi bi-search" style="color: black"></i>
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <div
-            class="modal"
-            id="confirm-send-request"
-            role="dialog"
-            tabindex="-1"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Request friend?</h5>
-          </div>
-          <div class="modal-body">
-            <p id="request-user"></p>
-          </div>
-          <div class="modal-footer">
-            <button
-                    class="btn btn-primary"
-                    onclick="makeFriends()"
-                    type="button"
+  <head th:insert="~{fragments/importFragment :: headerfiles}">
+    <title>Friends</title>
+  </head>
+  <body>
+    <div class="container-fluid p-0 m-0">
+      <nav th:insert="~{fragments/navbar :: navbar}"></nav>
+      <div>
+        <div class="container-fluid p-3 text-white text-center">
+          <h1 class="text-dark">Manage my friends</h1>
+          <form method="post" th:action="@{${searchResultsUri}}">
+            <div
+              class="input-group rounded mx-auto"
+              style="width: 100%; max-width: 20vw; min-width: 300px"
             >
-              Send Request
-            </button>
-            <button
-                    class="btn btn-secondary"
-                    data-dismiss="modal"
-                    onclick="closeModal()"
-                    type="button"
-            >
-              No Thanks
-            </button>
-          </div>
+              <input
+                aria-describedby="search-addon"
+                aria-label="Search"
+                style="min-width: 10vw"
+                autocomplete="off"
+                class="form-control rounded"
+                id="searchUsers"
+                placeholder="Search for new friends"
+                th:name="searchUser"
+                th:value="*{search}"
+                type="text"
+              />
+              <button
+                class="input-group-text border-0 btn-sm"
+                id="search-addon"
+                th:for="searchForm"
+                type="submit"
+              >
+                <i class="bi bi-search" style="color: black"></i>
+              </button>
+            </div>
+          </form>
         </div>
-      </div>
-    </div>
-
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col-sm-6">
-          <h3>My Friends</h3>
-          <div style="max-height: 600px; overflow-y: auto">
-            <table class="table table-borderless">
-              <tbody>
-              <tr th:each="friend : ${friends}">
-                <form th:action="@{${manageFriendsUri}}" method="post" th:id="'remove-' + ${friend.getId()}">
-                  <td>
-                    <div class="card" style="width: 25vw">
-                      <div class="card-body">
-                        <div class="container-fluid">
-                          <div class="row">
-                            <div class="col-sm-4">
-                              <img
-                                      alt="Profile Image"
-                                      class="rounded-circle"
-                                      style="width: 5vw"
-                                      th:src="@{${friend.getProfilePictureFilePath()}}"
-                              />
-                            </div>
-                            <div class="col-sm-8">
-                              <a
-                                      class="link-offset-2 link-underline link-underline-opacity-0"
-                                      href="#"
-                                      style="color: #142915; font-size: 30px"
-                                      th:text="${friend.getName()}"
-                              ></a>
-                              <div class="d-flex justify-content-lg-around">
-                                <a th:href="@{${viewFriendsGardensUriString}(friendId=${friend.getId()})}"
-                                   class="btn btn-outline-primary d-flex align-items-center"
-                                   style="
-                                       width: 100px;
-                                       font-size: 12px;
-                                        border-color: #477641;
-                                       --bs-btn-color: #477641;
-                                       --bs-btn-hover-bg: #477641;
-                                       --bs-btn-hover-color: #fff;
-                                       --bs-btn-active-bg: #477641;
-                                    "
-                                >
-                                  See Gardens
-                                </a>
-                                <div>
-                                  <button
-                                          class="btn btn-outline-primary d-flex align-items-center"
+        <div class="container mt-5">
+          <div class="row">
+            <div class="col-md-6 col-sm-12 mb-4 column-center">
+              <div>
+                <h3 class="column-center" style="color: #477641">My Friends</h3>
+                <div class="scroll-div">
+                  <table
+                    class="table table-borderless"
+                    style="background-color: #efefec"
+                  >
+                    <tbody>
+                      <tr th:each="friend : ${friends}">
+                        <form
+                          th:action="@{${manageFriendsUri}}"
+                          method="post"
+                          th:id="'remove-' + ${friend.getId()}"
+                        >
+                          <td style="background-color: #efefec;">
+                            <div class="card mb-1 shadow">
+                              <div class="card-body" style="min-width: 398px">
+                                <div class="container-fluid">
+                                  <div class="row">
+                                    <div
+                                      class="col-4 d-flex align-items-center"
+                                    >
+                                      <img
+                                        alt="Profile Image"
+                                        class="rounded-circle"
+                                        th:src="@{${friend.getProfilePictureFilePath()}}"
+                                      />
+                                    </div>
+                                    <div class="col-8">
+                                      <a
+                                        class="link-offset-2 link-underline link-underline-opacity-0"
+                                        style="color: #142915; font-size: 20px"
+                                        th:text="${friend.getName()}"
+                                      ></a>
+                                      <div class="mt-2">
+                                        <a
+                                          class="btn btn-outline-primary btn-sm"
+                                          style="
+                                            border-color: #477641;
+                                            --bs-btn-color: #477641;
+                                            --bs-btn-hover-bg: #477641;
+                                            --bs-btn-hover-color: #fff;
+                                            --bs-btn-active-bg: #477641;
+                                          "
+                                          th:href="@{${viewFriendsGardensUriString}(friendId=${friend.getId()})}"
+                                          >View Gardens</a
+                                        >
+                                        <button
+                                          class="btn btn-outline-primary btn-sm"
                                           type="button"
                                           style="
-                                       width: 100px;
-                                       font-size: 12px;
-                                        border-color: #477641;
-                                       --bs-btn-color: #477641;
-                                       --bs-btn-hover-bg: #477641;
-                                       --bs-btn-hover-color: #fff;
-                                       --bs-btn-active-bg: #477641;
-                                    "
+                                            border-color: #6f0c0c;
+                                            --bs-btn-color: #6f0c0c;
+                                            --bs-btn-hover-bg: #6f0c0c;
+                                            --bs-btn-hover-color: #fff;
+                                            --bs-btn-active-bg: #6f0c0c;
+                                          "
                                           data-bs-toggle="modal"
                                           data-bs-target="#removeFriendModal"
                                           th:data-form-id="'remove-' + ${friend.getId()}"
-                                  >
-                                    Remove Friend
-                                  </button>
-                                  <input
+                                        >
+                                          Remove
+                                        </button>
+                                        <input
                                           type="hidden"
                                           th:name="action"
                                           th:value="'Remove'"
-                                  >
-                                  <input
+                                        />
+                                        <input
                                           type="hidden"
                                           th:name="request"
                                           th:value="${friend.getId()}"
-                                  >
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-
                             </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                </form>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="col">
-            <h3>Incoming Requests</h3>
-            <table class="table table-borderless">
-              <tbody>
-              <tr
-                      th:if="${incoming.size() == 0}"
-              >
-                <td>
-                  <div class="card" style="width: 25vw">
-                    <div class="card-body">
-                      <div class="container-fluid">
-                        <div class="row">
-                          <div class="col-sm-8">
-                            <p
+                          </td>
+                        </form>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-4">
+              <div class="col">
+                <h3 class="column-center scroll-div" style="color: #477641; max-height: 400px; overflow-y: auto">Incoming Requests</h3>
+                <div class="scroll-div">
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr th:if="${incoming.size() == 0}">
+                      <td style="background-color: #efefec">
+                        <div class="card mb-1 shadow">
+                          <div class="card-body">
+                            <div class="container-fluid">
+                              <div class="row">
+                                <div
+                                  class="col-12 d-flex align-items-center column-center"
+                                >
+                                  <p
                                     style="color: #142915; font-size: 20px"
                                     th:text="'No Pending Friend Requests'"
-                            ></p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr
-                      th:each="request : ${incoming}"
-              >
-                <form method="post" th:action="@{${manageFriendsUri}}">
-                  <td>
-                    <div class="card" style="width: 25vw">
-                      <div class="card-body">
-                        <div class="container-fluid">
-                          <div class="row">
-                            <div class="col-sm-4">
-                              <img
-                                      alt="Profile Image"
-                                      class="rounded-circle"
-                                      style="width: 5vw"
-                                      th:src="@{${request.getSender().getProfilePictureFilePath()}}"
-                              />
-                            </div>
-                            <div class="col-sm-8">
-                              <a
-                                      class="link-offset-2 link-underline link-underline-opacity-0"
-                                      href="#"
-                                      style="color: #142915; font-size: 30px"
-                                      th:text="${request.getSender().getName()}"
-                              ></a>
-                              <div>
-                                <button class="btn btn-outline-primary"
-                                        type="button"
-                                        style="
-                                                border-color: #477641;
-                                                --bs-btn-color: #477641;
-                                                --bs-btn-hover-bg: #477641;
-                                                --bs-btn-hover-color: #fff;
-                                                --bs-btn-active-bg: #477641;
-                                              "
-                                        th:name="action"
-                                        th:type="submit"
-                                        th:value="'Accept'"
-                                >
-                                  Accept
-                                </button>
-                                <button
-                                        class="btn btn-outline-danger ms-2"
-                                        th:name="action"
-                                        th:type="submit"
-                                        th:value="'Decline'"
-                                >
-                                  Decline
-                                </button>
-                                <input
-                                        th:name="request"
-                                        th:value="${request.getId()}"
-                                        type="hidden"
-                                />
+                                  ></p>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </td>
-                </form>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col">
-            <h3>Outgoing Requests</h3>
-            <table class="table table-borderless">
-              <tbody>
-              <tr
-                      th:if="${outgoing.size() == 0}"
-              >
-                <td>
-                  <div class="card" style="width: 25vw">
-                    <div class="card-body">
-                      <div class="container-fluid">
-                        <div class="row">
-                          <div class="col-sm-8">
-                            <p
-                                    style="color: #142915; font-size: 20px"
-                                    th:text="'No Sent Friend Requests'"
-                            ></p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr
-                      th:each="request : ${outgoing}"
-              >
-                <form method="post" th:action="@{${manageFriendsUri}}">
-                  <td>
-                    <div class="card" style="width: 25vw">
-                      <div class="card-body">
-                        <div class="container-fluid">
-                          <div class="row">
-                            <div class="col-sm-4">
-                              <img
+                      </td>
+                    </tr>
+                    <tr th:each="request : ${incoming}">
+                      <form method="post" th:action="@{${manageFriendsUri}}">
+                        <td style="background-color: #efefec">
+                          <div class="card mb-1 shadow">
+                            <div class="card-body">
+                              <div class="container-fluid">
+                                <div class="row">
+                                  <div class="col-4 d-flex align-items-center">
+                                    <img
                                       alt="Profile Image"
                                       class="rounded-circle"
-                                      style="width: 5vw"
-                                      th:src="@{${request.getReceiver().getProfilePictureFilePath()}}"
-                              />
-                            </div>
-                            <div class="col-sm-8">
-                              <a
+                                      style="width: 80px; height: 80px"
+                                      th:src="@{${request.getSender().getProfilePictureFilePath()}}"
+                                    />
+                                  </div>
+                                  <div class="col-8">
+                                    <a
                                       class="link-offset-2 link-underline link-underline-opacity-0"
-                                      href="#"
-                                      style="color: #142915; font-size: 30px"
-                                      th:text="${request.getReceiver().getName()}"
-                              ></a>
-                              <div>
-                                <p
-                                        style="color: #142915; font-size: 20px"
-                                        th:text="${request.getStatus().toString()}"
-                                ></p>
-                                <button
-                                        class="btn btn-primary"
+                                      style="color: #142915; font-size: 20px"
+                                      th:text="${request.getSender().getName()}"
+                                    ></a>
+                                    <div class="mt-2">
+                                      <button
+                                        class="btn btn-outline-primary btn-sm"
+                                        type="submit"
                                         style="
                                           border-color: #477641;
-                                          width: 100px;
-                                          font-size: 12px;
-                                          background-color: #477641;
+                                          --bs-btn-color: #477641;
+                                          --bs-btn-hover-bg: #477641;
+                                          --bs-btn-hover-color: #fff;
+                                          --bs-btn-active-bg: #477641;
                                         "
                                         th:name="action"
-                                        th:type="submit"
-                                        th:value="'Cancel'"
-                                >
-                                  Cancel
-                                </button>
-                                <input
+                                        th:value="'Accept'"
+                                      >
+                                        Accept <i class="bi bi-check"></i>
+                                      </button>
+                                      <button
+                                        class="btn btn-outline-primary btn-sm"
+                                        type="button"
+                                        style="
+                                          border-color: #6f0c0c;
+                                          --bs-btn-color: #6f0c0c;
+                                          --bs-btn-hover-bg: #6f0c0c;
+                                          --bs-btn-hover-color: #fff;
+                                          --bs-btn-active-bg: #6f0c0c;
+                                        "
+                                        th:name="action"
+                                        th:value="'Decline'"
+                                      >
+                                        Decline <i class="bi bi-x"></i>
+                                      </button>
+                                      <input
                                         th:name="request"
                                         th:value="${request.getId()}"
                                         type="hidden"
-                                />
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </form>
+                    </tr>
+                  </tbody>
+                </table>
+                </div>
+              </div>
+              <div class="col">
+                <h3 class="column-center" style="color: #477641; margin-top: 10px">Outgoing Requests</h3>
+                <div class="scroll-div">
+                <table class="table table-borderless scroll-div">
+                  <tbody>
+                    <tr th:if="${outgoing.size() == 0}">
+                      <td style="background-color: #efefec">
+                        <div class="card mb-1 shadow">
+                          <div class="card-body">
+                            <div class="container-fluid">
+                              <div class="row">
+                                <div
+                                  class="col-12 d-flex align-items-center column-center"
+                                >
+                                  <p
+                                    style="color: #142915; font-size: 20px"
+                                    th:text="'No Sent Friend Requests'"
+                                  ></p>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </td>
-                </form>
-              </tr>
-              </tbody>
-            </table>
+                      </td>
+                    </tr>
+                    <tr th:each="request : ${outgoing}">
+                      <form method="post" th:action="@{${manageFriendsUri}}">
+                        <td style="background-color: #efefec">
+                          <div class="card mb-1 shadow">
+                            <div class="card-body">
+                              <div class="container-fluid">
+                                <div class="row">
+                                  <div class="col-4 d-flex align-items-center">
+                                    <img
+                                      alt="Profile Image"
+                                      class="rounded-circle"
+                                      style="width: 80px; height: 80px"
+                                      th:src="@{${request.getReceiver().getProfilePictureFilePath()}}"
+                                    />
+                                  </div>
+                                  <div class="col-8">
+                                    <a
+                                      class="link-offset-2 link-underline link-underline-opacity-0"
+                                      style="color: #142915; font-size: 20px"
+                                      th:text="${request.getReceiver().getName()}"
+                                    ></a>
+                                    <div class="mt-2">
+                                      <div style="display: flex">
+                                        <p
+                                                style="color: #142915; font-size: 20px; margin-bottom: 2px"
+                                        ><span th:text="${request.getStatus().toString()}" style="margin-right: 8px"></span></p>
+                                        <button
+                                                class="btn btn-sm"
+                                                type="submit"
+                                                style="
+                                          border-color: #6F0C0C;
+                                          --bs-btn-color: #6F0C0C;
+                                          --bs-btn-hover-bg: #6F0C0C;
+                                          --bs-btn-hover-color: #fff;
+                                          --bs-btn-active-bg: #6F0C0C;
+                                        "
+                                                th:name="action"
+                                                th:value="'Cancel'"
+                                        >
+                                          Cancel
+                                          <i class="bi bi-x"></i>
+                                        </button>
+                                      </div>
+                                      <input
+                                        th:name="request"
+                                        th:value="${request.getId()}"
+                                        type="hidden"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </form>
+                    </tr>
+                  </tbody>
+                </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="modal"
+            id="removeFriendModal"
+            aria-labelledby="removeFriendModalLabel"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+            style="display: none"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="removeFriendModalLabel">
+                    Remove Friend
+                  </h5>
+                </div>
+                <div class="modal-body">
+                  <p>Please confirm you want to remove this friend</p>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn"
+                    data-dismiss="modal"
+                    data-bs-dismiss="modal"
+                    data-bs-target="#removeFriendModal"
+                    style="
+                       border-color: #000;
+                       --bs-btn-color: #000;
+                       --bs-btn-hover-bg: #000;
+                       --bs-btn-hover-color: #fff;
+                       --bs-btn-active-bg: #000;
+                       "
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    class="btn"
+                    style="
+                       border-color: #477641;
+                       --bs-btn-color: #477641;
+                       --bs-btn-hover-bg: #477641;
+                       --bs-btn-hover-color: #fff;
+                       --bs-btn-active-bg: #477641;
+                       "
+                  >
+                    Remove Friend
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="modal"
-           id="removeFriendModal"
-           aria-labelledby="removeFriendModalLabel"
-           tabindex="-1"
-           role="dialog"
-           aria-hidden="true"
-           style="display: none"
-      >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="removeFriendModalLabel">Remove Friend</h5>
-            </div>
-            <div class="modal-body">
-              <p>Please confirm you want to remove as a friend</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button"
-                      class="btn btn-secondary"
-                      data-dismiss="modal"
-                      data-bs-dismiss="modal"
-                      data-bs-target="#removeFriendModal">
-                Cancel
-              </button>
-              <button type="button"
-                      class="btn btn-primary"
-                      style="border-color: #477641; background-color: #477641">
-                Remove Friend
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </div>
-</div>
-</div>
-</body>
-<script>
-    const removeFriendModal = document.getElementById('removeFriendModal');
-    const removeFriendButton = document.querySelector('#removeFriendModal .btn-primary');
+  </body>
+  <style>
+    .card {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 400px;
+      min-width: 20vw;
+      margin: 0 auto;
+    }
+
+    .card img {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+    }
+
+    .scroll-div {
+      max-height: 538px;
+      overflow-y: auto;
+    }
+
+    body,
+    td {
+      background-color: #efefec;
+    }
+
+    .column-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <script>
+    const removeFriendModal = document.getElementById("removeFriendModal");
+    const removeFriendButton = document.querySelector(
+      "#removeFriendModal .btn-primary",
+    );
     let formId;
 
-    removeFriendModal.addEventListener('show.bs.modal', (event) => {
-        // Button that triggered the modal
-        const button = event.relatedTarget;
+    removeFriendModal.addEventListener("show.bs.modal", (event) => {
+      // Button that triggered the modal
+      const button = event.relatedTarget;
 
-        // Extract form id from data-form-id attribute
-        formId = button.getAttribute('data-form-id');
+      // Extract form id from data-form-id attribute
+      formId = button.getAttribute("data-form-id");
     });
 
-    removeFriendButton.addEventListener('click', () => document.getElementById(formId).submit());
-</script>
+    removeFriendButton.addEventListener("click", () =>
+      document.getElementById(formId).submit(),
+    );
+  </script>
 </html>

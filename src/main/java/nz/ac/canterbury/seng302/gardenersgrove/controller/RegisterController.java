@@ -58,12 +58,12 @@ public class RegisterController {
     public String showRegisterPage(Model model) {
         logger.info("GET {}", registerUri());
         model.addAttribute("noSurname", false);
-        model.addAttribute("firstNameError", "");
-        model.addAttribute("lastNameError", "");
-        model.addAttribute("emailError", "");
-        model.addAttribute("passwordError", "");
-        model.addAttribute("passwordConfirmError", "");
-        model.addAttribute("dateOfBirthError", "");
+        model.addAttribute("firstNameError", null);
+        model.addAttribute("lastNameError", null);
+        model.addAttribute("emailError", null);
+        model.addAttribute("passwordError", null);
+        model.addAttribute("passwordConfirmError", null);
+        model.addAttribute("dateOfBirthError", null);
         model.addAttribute("homeUri", homeUri());
         model.addAttribute("registerUri", registerUri());
         model.addAttribute("loginUri", loginUri());
