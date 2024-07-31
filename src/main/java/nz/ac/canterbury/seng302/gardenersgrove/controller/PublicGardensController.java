@@ -65,10 +65,13 @@ public class PublicGardensController extends NavBar {
             numberOfGardens = gardenService.countPublicGardens();
         }
 
+        System.out.println(numberOfGardens);
+
         int numberOfPages = (int) Math.min(5, Math.ceil((double) numberOfGardens / 10));
 
         model.addAttribute("numberOfPages", numberOfPages);
         model.addAttribute("pageNumbers", IntStream.range(1, numberOfPages + 1).toArray());
+        model.addAttribute("numberOfGardens", numberOfGardens);
 
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         model.addAttribute("browsePublicGardensUriString", BROWSE_PUBLIC_GARDENS_URI_STRING);
