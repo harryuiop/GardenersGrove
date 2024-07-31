@@ -94,6 +94,7 @@ function renderAutocomplete(data) {
     dataList.forEach(item => {
         let suggestionElement = document.createElement("div");
         suggestionElement.classList.add("dropdown-item");
+        suggestionElement.classList.add("border-bottom");
         suggestionElement.classList.add("text-wrap");
         suggestionElement.style.cursor="pointer";
         let primaryTextElement = document.createElement("div");
@@ -108,7 +109,7 @@ function renderAutocomplete(data) {
         let suburb = item.suburb;
         let postcode = item.postcode;
 
-        let isStreetAddressPrimary = streetAddress ? true : false;
+        let isStreetAddressPrimary = !!streetAddress;
         if (isStreetAddressPrimary) {
             primaryTextElement.innerHTML = streetAddress;
             secondaryTextElement.innerHTML = outerLocation;
@@ -131,6 +132,8 @@ function renderAutocomplete(data) {
         if (isStreetAddressPrimary) suggestionElement.appendChild(secondaryTextElement);
         autocompleteList.appendChild(suggestionElement);
     });
+    const dropdownItems = document.getElementsByClassName("dropdown-item");
+    dropdownItems.item(dropdownItems.length - 1).classList.remove("border-bottom");
 }
 
 function removeAutocompleteBox() {
