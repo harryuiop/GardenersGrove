@@ -29,6 +29,8 @@ public class UriConfig {
     public static final String MANAGE_FRIENDS_URI_STRING = "/friends";
     public static final String VIEW_ALL_FRIENDS_GARDENS_URI_STRING = "/friends/{friendId}/gardens";
 
+    public static final String VIEW_FRIENDS_PROFILE_URI_STRING = "/friends/{friendId}/profile";
+
     public static final String SEARCH_RESULTS_STRING = "/search/results";
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
 
