@@ -29,7 +29,6 @@ import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.hamcrest.Matchers.hasToString;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -49,8 +48,8 @@ public class PubliciseGardensFeature {
 
     @Autowired
     private FormValuesValidator mockFormValuesValidator;
-    @Autowired
-    CustomAuthenticationProvider customAuthenticationProvider;
+
+    private CustomAuthenticationProvider customAuthenticationProvider;
 
     private Garden garden;
     private Long gardenId;
@@ -73,12 +72,14 @@ public class PubliciseGardensFeature {
     }
 
     @Given("I have a user account that has logged in")
-    public void iHaveAUserAccountThatHasLoggedIn() throws Exception {
-        User user = new User("jane.doe@gmail.com", "Jane", "Doe", "Password1!", "20/02/200");
-
+    public void iHaveAUserAccountThatHasLoggedIn() {
+        User user = new User("jane.doe@gmail.com", "Jane", "Doe", "Password1!", "");
+        customAuthenticationProvider = new CustomAuthenticationProvider(userService);
+        user.setConfirmation(true);
         userService.addUsers(user);
+
         UsernamePasswordAuthenticationToken authReq
-                = new UsernamePasswordAuthenticationToken(user, "Password1!");
+                = new UsernamePasswordAuthenticationToken(user.getEmail(), "Password1!");
         Authentication auth = customAuthenticationProvider.authenticate(authReq);
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
