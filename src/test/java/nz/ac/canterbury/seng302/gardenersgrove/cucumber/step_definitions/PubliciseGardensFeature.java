@@ -13,6 +13,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingExcep
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,8 @@ import java.net.URI;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
-import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -65,7 +67,7 @@ public class PubliciseGardensFeature {
     @Given("I have a garden")
     public void haveAGarden() {
         Location location = new Location("New Zealand", "Christchurch");
-        garden = new Garden(userService.getUserByEmail("jane.doe@gmail.com"), "Garden", "",
+        garden = new Garden(userService.getAuthenticatedUser(), "Garden", "",
                 location, null, true);
         gardenService.saveGarden(garden);
         gardenId = garden.getId();
@@ -90,22 +92,24 @@ public class PubliciseGardensFeature {
     @Given("I am on the garden details page for a garden I own")
     public void iAmOnTheGardenDetailsPageForAGardenIOwn() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(gardenId)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(view().name("redirect:/garden/" + gardenId));
+                .andExpect(status().isOk())
+                .andExpect(view().name("viewGarden"));
     }
 
-    @When("I mark a checkbox labelled “Make my garden public")
+    @When("I mark a checkbox labelled “Make my garden public“")
     public void iMarkACheckboxLabelledMakeMyGardenPublic() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(garden.getId()))
-                .param("publicGarden", "true"))
+        mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
+                .param("publicGarden", "true")
+                .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/garden/"+gardenId));
     }
 
     @Then("my garden will be visible in search results")
     public void myGardenWillBeVisibleInSearchResults() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId())))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get(BROWSE_PUBLIC_GARDENS_URI_STRING))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(model().attribute("gardenList", hasItem(Matchers.hasProperty("id", equalTo(gardenId)))));
     }
 
     @Then("my garden is not visible in search results")
