@@ -154,7 +154,8 @@
             <br>
 
             <div class="row-auto">
-              <div id="plantCard" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4 overflow-y-auto" style="max-height: 85vh">
+              <div id="plantCard" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4 overflow-y-auto"
+                   style="max-height: 100vh">
                 <div th:each="plant : ${plants}" class="col">
                   <div class="card shadow rounded-4 h-100 w-100">
                     <img th:src="@{${plant.getImageFilePath()}}" class="card-img-top rounded-top-4 hover-overlay"
