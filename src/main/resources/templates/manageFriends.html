@@ -73,7 +73,8 @@
                                         class="link-offset-2 link-underline link-underline-opacity-0"
                                         style="color: #142915; font-size: 20px"
                                         th:text="${friend.getName()}"
-                                      ></a>
+                                        th:href="@{${viewFriendsProfileUriString}(friendId=${friend.getId()})}">
+                                      </a>
                                       <div class="mt-2">
                                         <a
                                           class="btn btn-outline-primary btn-sm"
@@ -114,6 +115,10 @@
                                           th:value="${friend.getId()}"
                                         />
                                       </div>
+                                      <a
+                                      th:href="@{${viewFriendsProfileUriString}(friendId=${friend.getId()})}"
+                                      >
+                                      View Profile</a>
                                     </div>
                                   </div>
                                 </div>
