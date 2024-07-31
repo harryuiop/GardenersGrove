@@ -31,7 +31,7 @@
                         th:value="*{gardenName}"
                         data-cy="gardenName"
                         autofocus
-                        th:classappend="${gardenNameError} ? is-invalid"
+                        th:classappend="${gardenNameError} ? 'is-invalid'"
                       />
                       <label class="form-input" for="gardenName">
                         Garden Name *
@@ -51,7 +51,7 @@
                         th:value="*{gardenSize}"
                         data-cy="gardenSize"
                         autofocus
-                        th:classappend="${gardenSizeError} ? is-invalid"
+                        th:classappend="${gardenSizeError} ? 'is-invalid'"
                       />
                       <label class="form-input" for="gardenSize">
                         Garden size (m<sup>2</sup>)
@@ -69,7 +69,7 @@
                       th:text="*{gardenDescription}"
                       data-cy="gardenDescription"
                       autofocus
-                      th:classappend="${gardenDescriptionError} ? is-invalid"
+                      th:classappend="${gardenDescriptionError} ? 'is-invalid'"
                       style="min-height: 132px"
                     ></textarea>
                     <label
@@ -106,7 +106,7 @@
                     data-cy="streetAddress"
                     autocomplete="off"
                     placeholder=">Start typing location to see suggestions."
-                    th:classappend="${streetAddressError} ? is-invalid"
+                    th:classappend="${streetAddressError} ? 'is-invalid'"
                   />
                   <label class="form-input" for="streetAddress">
                     Street Address
@@ -125,7 +125,7 @@
                         th:name="country"
                         th:value="*{country}"
                         data-cy="country"
-                        th:classappend="${countryError} ? is-invalid"
+                        th:classappend="${countryError} ? 'is-invalid'"
                         autofocus
                       />
                       <label class="form-input" for="country"> Country * </label>
@@ -142,7 +142,7 @@
                         th:name="city"
                         th:value="*{city}"
                         data-cy="city"
-                        th:classappend="${cityError} ? is-invalid"
+                        th:classappend="${cityError} ? 'is-invalid'"
                         autofocus
                       />
                       <label class="form-input" for="city"> City * </label>
@@ -161,7 +161,7 @@
                         placeholder="e.g. Northland"
                         th:value="*{suburb}"
                         data-cy="suburb"
-                        th:classappend="${suburbError} ? is-invalid"
+                        th:classappend="${suburbError} ? 'is-invalid'"
                         autofocus
                       />
                       <label class="form-input" for="suburb"> Suburb </label>
@@ -178,7 +178,7 @@
                         th:name="postcode"
                         th:value="*{postcode}"
                         data-cy="postcode"
-                        th:classappend="${postcodeError} ? is-invalid"
+                        th:classappend="${postcodeError} ? 'is-invalid'"
                         autofocus
                       />
                       <label class="form-input" for="postcode">
