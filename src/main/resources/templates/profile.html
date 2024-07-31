@@ -12,22 +12,6 @@
         object-fit: cover;
     }
 
-    .btn-edit {
-        border-color: #000;
-        --bs-btn-color: #000;
-        --bs-btn-hover-bg: #000;
-        --bs-btn-hover-color: #fff;
-        --bs-btn-active-bg: #000;
-    }
-
-    .btn-confirm {
-        border-color: #477641;
-        --bs-btn-color: #477641;
-        --bs-btn-hover-bg: #477641;
-        --bs-btn-hover-color: #fff;
-        --bs-btn-active-bg: #477641;
-    }
-
     .err-text {
         color: #6f0c0c;
     }
@@ -42,12 +26,12 @@
                     <div class="col-sm-4 col-md-3 col-12 text-center my-4">
                         <img class="rounded-circle profile-img p-4" th:src="@{${user.getProfilePictureFilePath()}}"
                             alt="User Profile Picture" />
-                        <form class="text-center" th:action="@{${uploadProfileImageUri}}" method="post"
+                        <form th:unless="${isFriend}" class="text-center" th:action="@{${uploadProfileImageUri}}" method="post"
                             name="profilePhoto" enctype="multipart/form-data">
                             <p class="err-text text-wrap" th:text="${imageTypeError}"></p>
                             <p class="err-text text-wrap" th:text="${imageSizeError}"></p>
                             <div class="file-input-wrapper"></div>
-                            <button id="file-button" class="btn btn-confirm btn-outline-primary" type="button">
+                            <button id="file-button" class="btn btn-confirm" type="button">
                                 Edit Profile Picture <i class="bi bi-camera"></i>
                             </button>
                             <input class="d-none" id="file-picker" type="file" name="image" accept="image/jpeg, image/png, image/svg+xml"
@@ -62,9 +46,14 @@
                                 th:text="${user.getFirstName() + ' ' + user.getLastName()}"></p>
                             <p>Date of Birth: <span th:text="${user.getDob()}"></span></p>
                             <p>Email Address: <span th:text="${user.getEmail()}"></span></p>
-                            <a th:href="@{${editProfileUri}}" class="btn btn-edit btn-outline-primary">
+                            <a th:unless="${isFriend}" th:href="@{${editProfileUri}}" class="btn btn-edit">
                                 Edit Profile <i class="bi bi-pencil"></i>
                             </a>
+                            <a
+                                    th:if="${isFriend}"
+                                    class="btn btn-confirm"
+                                    th:href="@{${viewFriendsGardensUriString}(friendId=${user.getId()})}"
+                            >View Gardens <i class="bi bi-tree-fill"></i></a>
                         </div>
                     </div>
                 </div>
