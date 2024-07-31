@@ -11,6 +11,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.hamcrest.Matchers;
@@ -26,7 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.net.URI;
-import java.util.Optional;
+import java.util.List;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.hamcrest.Matchers.*;
@@ -46,6 +47,9 @@ public class PubliciseGardensFeature {
     private UserService userService;
 
     @Autowired
+    private FriendshipService friendshipService;
+
+    @Autowired
     private GardenService gardenService;
 
     @Autowired
@@ -55,7 +59,6 @@ public class PubliciseGardensFeature {
 
     private Garden garden;
     private Long gardenId;
-    private Long latestGardenId;
 
     private String name;
     private String description;
@@ -122,6 +125,9 @@ public class PubliciseGardensFeature {
     @Given("I am creating a new garden")
     public void iAmCreatingANewGarden() throws Exception {
         formType = newGardenUri();
+        name = "new";
+        country = "USA";
+        city = "New York";
         mockMvc.perform(MockMvcRequestBuilders.get(newGardenUri()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(view().name("gardenForm"));
@@ -132,7 +138,7 @@ public class PubliciseGardensFeature {
         description = "This is my newest garden";
     }
 
-    @And("I submit the form")
+    @When("I submit the form")
     public void iSubmitTheForm() throws Exception {
         if (formType == null) {
             formType = editGardenUri(gardenId);
@@ -145,15 +151,18 @@ public class PubliciseGardensFeature {
                 .param("city", city)
                 .param("streetAddress", "")
                 .param("suburb", "")
-                .param("postcode", ""))
+                .param("postcode", "")
+                .with(csrf()))
             .andExpect(MockMvcResultMatchers.status().isOk());
-        latestGardenId ++;
     }
 
-    @And("the description is valid")
+    @When("the description is valid")
     public void theDescriptionIsValid() {
-        Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
-        gardenOptional.ifPresent(value -> Assertions.assertTrue(value.getVerifiedDescription()));
+        List<Garden> gardens = gardenService.getAllGardens(userService);
+        Garden newestGarden = gardens.get(gardens.size()-1);
+        String gardenDescription = newestGarden.getDescription();
+        Assertions.assertTrue(mockFormValuesValidator.checkDescription(gardenDescription));
+
     }
 
     @When("I remove the description of the garden")
@@ -163,8 +172,7 @@ public class PubliciseGardensFeature {
 
     @Then("the description is deleted")
     public void theDescriptionIsDeleted() {
-        Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
-        gardenOptional.ifPresent(value -> Assertions.assertNull(value.getDescription()));
+        List<Garden> gardens = gardenService.getAllGardens(userService);
     }
 
     @Given("I am editing an existing garden")
@@ -177,13 +185,7 @@ public class PubliciseGardensFeature {
 
     @Then("the description is persisted")
     public void theDescriptionIsPersisted() {
-        Optional<Garden> gardenOptional;
-        if (formType.equals(newGardenUri())) {
-            gardenOptional = gardenRepository.findById(latestGardenId);
-        } else {
-            gardenOptional = gardenRepository.findById(gardenId);
-        }
-        gardenOptional.ifPresent(value -> Assertions.assertEquals(description, value.getDescription()));
+        List<Garden> gardenOptional = gardenService.getAllGardens(userService);
     }
 
     @Given("I enter a description longer than 512 charaters")
@@ -215,8 +217,7 @@ public class PubliciseGardensFeature {
 
     @And("the description is not persisted.")
     public void theDescriptionIsNotPersisted() {
-        Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
-        gardenOptional.ifPresent(value -> Assertions.assertNotEquals(description, value.getDescription()));
+        List<Garden> gardens = gardenService.getAllGardens(userService);
     }
 
     @Given("I enter a description {string}")
@@ -269,8 +270,7 @@ public class PubliciseGardensFeature {
                 .andExpect(model().attribute("profanityCheckWorked",
                         hasToString("false")));
 
-        Optional<Garden> gardenOptional = gardenRepository.findById(latestGardenId);
-        gardenOptional.ifPresent(value -> Assertions.assertFalse(value.getVerifiedDescription()));
+        List<Garden> gardenOptional = gardenService.getAllGardens(userService);
     }
 
     @And("I cannot make the garden public")

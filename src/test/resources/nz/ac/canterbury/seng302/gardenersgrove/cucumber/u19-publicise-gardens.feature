@@ -13,14 +13,16 @@ Feature: As Inaya, I want to be able to make my garden public so that others can
     Then my garden is not visible in search results
 
   Scenario: AC2 - I can add a description to my garden when I create it
-    Given I am creating a new garden
+    Given I have a user account that has logged in
+    And I am creating a new garden
     When I add an optional description of the garden
     And I submit the form
     And the description is valid
     Then the description is persisted
 
   Scenario: AC3 - I can edit an existing garden to add a description
-    Given I am creating a new garden
+    Given I have a user account that has logged in
+    And I am creating a new garden
     When I remove the description of the garden
     And I submit the form
     Then the description is deleted
