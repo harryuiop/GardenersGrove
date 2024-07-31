@@ -3,7 +3,7 @@
   <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Friends</title>
   </head>
-  <body>
+  <body class="bg">
     <div class="container-fluid p-0 m-0">
       <nav th:insert="~{fragments/navbar :: navbar}"></nav>
       <div>
@@ -56,7 +56,7 @@
                         >
                           <td style="background-color: #efefec;">
                             <div class="card mb-1 shadow">
-                              <div class="card-body" style="min-width: 398px">
+                              <div class="card-body" style="min-width: 415px">
                                 <div class="container-fluid">
                                   <div class="row">
                                     <div
@@ -86,8 +86,9 @@
                                             --bs-btn-active-bg: #477641;
                                           "
                                           th:href="@{${viewFriendsGardensUriString}(friendId=${friend.getId()})}"
-                                          >View Gardens</a
-                                        >
+                                          >
+                                          View Gardens <i class="bi bi-tree-fill"></i>
+                                        </a>
                                         <button
                                           class="btn btn-outline-primary btn-sm"
                                           type="button"
@@ -102,7 +103,7 @@
                                           data-bs-target="#removeFriendModal"
                                           th:data-form-id="'remove-' + ${friend.getId()}"
                                         >
-                                          Remove
+                                          Remove <i class="bi bi-x"></i>
                                         </button>
                                         <input
                                           type="hidden"
