@@ -71,6 +71,22 @@ public class FriendshipService {
     }
 
     /**
+     * Checks if two users are friends.
+     *
+     * @param user1 The first user.
+     * @param user2 The second user.
+     * @return True if the users are friends, false otherwise.
+     */
+    public boolean areFriends(User user1, User user2) {
+        try {
+            getFriendship(user1, user2);
+            return true;
+        } catch (NoSuchFriendRequestException e) {
+            return false;
+        }
+    }
+
+    /**
      * Removes a friendship between two users.
      *
      * @param friendship The friendship to remove.

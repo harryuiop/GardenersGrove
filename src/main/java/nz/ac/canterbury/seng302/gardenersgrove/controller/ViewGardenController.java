@@ -1,16 +1,13 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchPlantException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchPlantException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
@@ -137,9 +134,13 @@ public class ViewGardenController extends NavBar {
     ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
+        User currentUser = userService.getAuthenticatedUser();
+
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty() || (optionalGarden.get().getOwner().getId() != userService.getAuthenticatedUser().getId()) &&
-                !optionalGarden.get().isGardenPublic()){
+        if (optionalGarden.isEmpty()
+                || optionalGarden.get().getOwner().getId() != currentUser.getId()
+                && !optionalGarden.get().isGardenPublic()
+                && !friendshipService.areFriends(optionalGarden.get().getOwner(), currentUser)) {
             throw new NoSuchGardenException(gardenId);
         }
         boolean owner = optionalGarden.get().getOwner() == userService.getAuthenticatedUser();
@@ -150,33 +151,6 @@ public class ViewGardenController extends NavBar {
                         plantService.getAllPlantsInGarden(optionalGarden.get()),
                         owner,
                         model
-        );
-    }
-
-    /**
-     * Set up view garden page and display attributes but no editing features to friend of owner.
-     *
-     * @return Thyme leaf html template of the view garden page.
-     */
-    @GetMapping(VIEW_FRIENDS_GARDEN_URI_STRING)
-    public String displayFriendsGarden(
-            @PathVariable long gardenId,
-            @PathVariable long friendId,
-            Model model
-    ) throws NoSuchGardenException, InterruptedException {
-        logger.info("GET {}", viewFriendsGardenUri(friendId, gardenId));
-
-        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty() || !friendshipService.getFriends(optionalGarden.get().getOwner()).contains(userService.getAuthenticatedUser())) {
-            throw new NoSuchGardenException(gardenId);
-        }
-        return loadGardenPage(
-                optionalGarden.get(),
-                editGardenUri(gardenId),
-                newPlantUri(gardenId),
-                plantService.getAllPlantsInGarden(optionalGarden.get()),
-                false,
-                model
         );
     }
 
