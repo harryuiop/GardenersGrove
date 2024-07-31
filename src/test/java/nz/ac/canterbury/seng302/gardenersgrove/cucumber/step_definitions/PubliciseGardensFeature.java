@@ -114,8 +114,9 @@ public class PubliciseGardensFeature {
 
     @Then("my garden is not visible in search results")
     public void myGardenIsNotVisibleInSearchResults() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId())))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.get(browsePublicGardensUri()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(model().attribute("gardenList", not(hasItem(Matchers.hasProperty("id", equalTo(gardenId))))));
     }
 
     @Given("I am creating a new garden")

@@ -8,7 +8,8 @@ Feature: As Inaya, I want to be able to make my garden public so that others can
     Then my garden will be visible in search results
 
   Scenario: AC1 - A garden is not public if made public is not ticked
-    Given I am on the garden details page for a garden I own
+    Given I have a user account that has logged in
+    And I have a garden
     Then my garden is not visible in search results
 
   Scenario: AC2 - I can add a description to my garden when I create it
