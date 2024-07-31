@@ -17,9 +17,10 @@ public class NavBar {
     /**
      * This method passes information to the navbar thymeleaf fragment.
      * Currently, it just passes the currently logged-in user, and a list of all the user's gardens.
-     * @param model The portal which feeds information into the HTML.
+     *
+     * @param model         The portal which feeds information into the HTML.
      * @param gardenService Garden database access object.
-     * @param userService User database access object.
+     * @param userService   User database access object.
      */
     public void updateGardensNavBar(Model model, GardenService gardenService, UserService userService) {
         model.addAttribute("gardens", getTopNGardens(gardenService, userService));
@@ -27,6 +28,7 @@ public class NavBar {
         model.addAttribute("viewAllGardensUri", viewAllGardensUri());
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         model.addAttribute("user", userService.getAuthenticatedUser());
+        model.addAttribute("browsePublicGardensUri", browsePublicGardensUri());
     }
 
     private List<Garden> getTopNGardens(GardenService gardenService, UserService userService) {
