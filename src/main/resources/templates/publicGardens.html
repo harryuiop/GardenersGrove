@@ -33,8 +33,8 @@
        class="garden-item row rounded border p-5 my-3 w-75 position-relative bg-white shadow-sm">
     <a class="stretched-link" th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"></a>
     <div class="col-12 col-md-8 col-xl-4 mb-3 mb-md-0 align-items-center">
-      <h5 th:text="${garden.name}"></h5>
-      <div th:text="${garden.getLocationString()}"></div>
+      <h5 class="text-truncate" th:text="${garden.name}"></h5>
+      <div class="text-truncate" th:text="${garden.getLocationString()}"></div>
     </div>
     <div class="col-3 col-sm-2 col-lg-1 d-flex align-items-center">
       <div th:text="${garden.getPlants().size()}"></div>
