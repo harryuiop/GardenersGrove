@@ -65,6 +65,18 @@
                             <a th:unless="${isFriend}" th:href="@{${editProfileUri}}" class="btn btn-edit btn-outline-primary">
                                 Edit Profile <i class="bi bi-pencil"></i>
                             </a>
+                            <a
+                                    th:if="${isFriend}"
+                                    class="btn btn-outline-primary btn-sm"
+                                    style="
+                                            border-color: #477641;
+                                            --bs-btn-color: #477641;
+                                            --bs-btn-hover-bg: #477641;
+                                            --bs-btn-hover-color: #fff;
+                                            --bs-btn-active-bg: #477641;
+                                          "
+                                    th:href="@{${viewFriendsGardensUriString}(friendId=${user.getId()})}"
+                            >View Gardens</a>
                         </div>
                     </div>
                 </div>
