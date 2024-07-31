@@ -1,38 +1,55 @@
 :root {
-  --eerie-black: #141811;
-  --dark-green: #142915;
-  --fern-green: #477641;
-  --khaki: #ceb992;
-  --eggshell: #faf3dd;
+    --eerie-black: #141811;
+    --dark-green: #142915;
+    --fern-green: #477641;
+    --khaki: #ceb992;
+    --isabelline: #efefec;
+    --error-red: #6f0c0c;
 }
 
 .login-bg {
-  background-image: linear-gradient(
-    to bottom right,
-    var(--dark-green),
-    var(--fern-green)
-  );
+    background-image: linear-gradient(to bottom right,
+            var(--dark-green),
+            var(--fern-green));
 }
 
 .bg {
-  background-color: #efefec;
-  color: var(--dark-green);
-  font-family: "Gill Sans MT", sans-serif;
+    background-color: var(--isabelline);
+    font-family:
+        gill sans,
+        sans-serif;
+    margin: 0;
 }
 
 .message {
-  font-size: 0.8rem;
-  font-style: italic;
-  margin-top: 0;
+    font-size: 0.8rem;
+    font-style: italic;
+    margin-top: 0;
 }
 
 .error {
-  color: #6F0C0C
+    color: var(--error-red);
 }
 
 .landing-bg {
-  background-image: url("../images/landing_plant.jpeg");
-  background-size: cover;
-  background-position: center;
-  height: 40em;
+    background-image: url("../images/landing_plant.jpeg");
+    background-size: cover;
+    background-position: center;
+    height: 40em;
+}
+
+.btn-edit {
+    border-color: black;
+    --bs-btn-color: black;
+    --bs-btn-hover-bg: black;
+    --bs-btn-hover-color: white;
+    --bs-btn-active-bg: black;
+}
+
+.btn-confirm {
+    border-color: var(--fern-green);
+    --bs-btn-color: var(--fern-green);
+    --bs-btn-hover-bg: var(--fern-green);
+    --bs-btn-hover-color: white;
+    --bs-btn-active-bg: var(--fern-green);
 }
