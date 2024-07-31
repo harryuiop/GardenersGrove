@@ -66,6 +66,8 @@ function renderAutocomplete(tags) {
     showAutocompleteBox()
     tags.forEach(tag => {
         let suggestionElement = document.createElement("div");
+        suggestionElement.classList.add("dropdown-item");
+        suggestionElement.style.cursor="pointer";
         let primaryTextElement = document.createElement("div");
         primaryTextElement.classList.add("primary-text");
 
