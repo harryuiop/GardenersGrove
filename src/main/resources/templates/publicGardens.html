@@ -48,9 +48,9 @@
   </div>
   <nav>
     <ul class="pagination">
-      <li class="page-item" th:classappend="${currentPage == 1 } ? disabled">
-        <a th:href="@{${browsePublicGardensUriString}(page=${currentPage - 1})}" class="page-link">
-          <span aria-hidden="true">&laquo;</span>
+      <li class="page-item" th:classappend="${currentPage == 1} ? disabled">
+        <a th:href="@{${browsePublicGardensUriString}(page=${1})}" class="page-link">
+          <span aria-hidden="true">First</span>
         </a>
       </li>
 
@@ -61,9 +61,9 @@
            th:text="${page}"></a>
       </li>
 
-      <li class="page-item" th:classappend="${currentPage == numberOfPages}? disabled">
-        <a class="page-link" th:href="@{${browsePublicGardensUriString}(page=${currentPage + 1})}">
-          <span aria-hidden="true">&raquo;</span>
+      <li class="page-item" th:classappend="${currentPage == numberOfPages} ? disabled">
+        <a class="page-link" th:href="@{${browsePublicGardensUriString}(page=${numberOfPages})}">
+          <span aria-hidden="true">Last</span>
         </a>
       </li>
     </ul>
