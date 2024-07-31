@@ -15,7 +15,7 @@
               <div class="container">
                 <div class="row">
                   <div class="col-auto">
-                    <h2 th:text="${garden.getName()}"></h2>
+                    <h2 class="text-break" th:text="${garden.getName()}"></h2>
                   </div>
                   <div class="col-sm-2 col-md-3 col-lg-4">
                     <a th:href="@{${editGardenUri}}" style="text-decoration: none">
@@ -39,7 +39,7 @@
 
             <div class="row">
               <div class="container">
-                <p th:text="${garden.getDescription()}"></p>
+                <p class="text-break" th:text="${garden.getDescription()}"></p>
                 <p th:text="${garden.getLocationString()}"></p>
                 <p style="font-weight: bold"><i th:text="${advice}"></i></p>
                 <p th:if="${garden.getSize() != null}" th:utext="'Size: ' +${garden.getSize().toString()} + 'm<sup>2</sup>'"></p>
@@ -157,7 +157,7 @@
               <div id="plantCard" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
                 <div th:each="plant : ${plants}" class="col">
                   <div class="card shadow rounded-4 h-100 w-100">
-                    <img th:src="@{${plant.getImageFilePath()}}" class="card-img-top rounded-top-4"
+                    <img th:src="@{${plant.getImageFilePath()}}" class="card-img-top rounded-top-4 hover-overlay"
                          alt="Image of plant"/>
                     <div class="add-image">
                       <label th:for="${plant.getId()}" class="plus-button">
