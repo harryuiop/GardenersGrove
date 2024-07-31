@@ -68,6 +68,8 @@ public class SearchResultsController {
         }
         model.addAttribute("incomingRequests", incomingRequests);
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
+        model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
+        model.addAttribute("viewFriendsProfileUriString", VIEW_FRIENDS_PROFILE_URI_STRING);
         return "searchResults";
     }
 

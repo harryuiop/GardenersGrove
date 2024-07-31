@@ -34,6 +34,10 @@ public class SearchedUserResult {
         return status.toString();
     }
 
+    public boolean isFriend() {
+        return status == Status.FRIENDS;
+    }
+
 
     /**
      * @return If user can send friend request.
