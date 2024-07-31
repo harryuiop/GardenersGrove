@@ -5,13 +5,6 @@
     <title>Profile Page</title>
 </head>
 <style>
-    body {
-        background: #efefec;
-        font-family:
-            gill sans,
-            sans-serif;
-        margin: 0;
-    }
 
     .profile-img {
         aspect-ratio: 1 / 1;
@@ -40,7 +33,7 @@
     }
 </style>
 
-<body>
+<body class="bg">
     <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
     <div class="container-fluid">
         <div class="row">
@@ -55,7 +48,7 @@
                             <p class="err-text text-wrap" th:text="${imageSizeError}"></p>
                             <div class="file-input-wrapper"></div>
                             <button id="file-button" class="btn btn-confirm btn-outline-primary" type="button">
-                                Update Picture <i class="bi bi-check"></i>
+                                Edit Profile Picture <i class="bi bi-camera"></i>
                             </button>
                             <input class="d-none" id="file-picker" type="file" name="image" accept="image/jpeg, image/png, image/svg+xml"
                                 alt="Upload Profile Picture" />
