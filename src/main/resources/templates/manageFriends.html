@@ -77,28 +77,14 @@
                                       </a>
                                       <div class="mt-2">
                                         <a
-                                          class="btn btn-outline-primary btn-sm"
-                                          style="
-                                            border-color: #477641;
-                                            --bs-btn-color: #477641;
-                                            --bs-btn-hover-bg: #477641;
-                                            --bs-btn-hover-color: #fff;
-                                            --bs-btn-active-bg: #477641;
-                                          "
+                                          class="btn btn-confirm btn-sm"
                                           th:href="@{${viewFriendsGardensUriString}(friendId=${friend.getId()})}"
                                           >
                                           View Gardens <i class="bi bi-tree-fill"></i>
                                         </a>
                                         <button
-                                          class="btn btn-outline-primary btn-sm"
+                                          class="btn btn-cancel btn-sm"
                                           type="button"
-                                          style="
-                                            border-color: #6f0c0c;
-                                            --bs-btn-color: #6f0c0c;
-                                            --bs-btn-hover-bg: #6f0c0c;
-                                            --bs-btn-hover-color: #fff;
-                                            --bs-btn-active-bg: #6f0c0c;
-                                          "
                                           data-bs-toggle="modal"
                                           data-bs-target="#removeFriendModal"
                                           th:data-form-id="'remove-' + ${friend.getId()}"
@@ -182,30 +168,16 @@
                                     ></a>
                                     <div class="mt-2">
                                       <button
-                                        class="btn btn-outline-primary btn-sm"
+                                        class="btn btn-confirm btn-sm"
                                         type="submit"
-                                        style="
-                                          border-color: #477641;
-                                          --bs-btn-color: #477641;
-                                          --bs-btn-hover-bg: #477641;
-                                          --bs-btn-hover-color: #fff;
-                                          --bs-btn-active-bg: #477641;
-                                        "
                                         th:name="action"
                                         th:value="'Accept'"
                                       >
                                         Accept <i class="bi bi-check"></i>
                                       </button>
                                       <button
-                                        class="btn btn-outline-primary btn-sm"
+                                        class="btn btn-cancel btn-sm"
                                         type="button"
-                                        style="
-                                          border-color: #6f0c0c;
-                                          --bs-btn-color: #6f0c0c;
-                                          --bs-btn-hover-bg: #6f0c0c;
-                                          --bs-btn-hover-color: #fff;
-                                          --bs-btn-active-bg: #6f0c0c;
-                                        "
                                         th:name="action"
                                         th:value="'Decline'"
                                       >
@@ -281,15 +253,8 @@
                                                 style="color: #142915; font-size: 20px; margin-bottom: 2px"
                                         ><span th:text="${request.getStatus().toString()}" style="margin-right: 8px"></span></p>
                                         <button
-                                                class="btn btn-sm"
+                                                class="btn btn-cancel btn-sm"
                                                 type="submit"
-                                                style="
-                                          border-color: #6F0C0C;
-                                          --bs-btn-color: #6F0C0C;
-                                          --bs-btn-hover-bg: #6F0C0C;
-                                          --bs-btn-hover-color: #fff;
-                                          --bs-btn-active-bg: #6F0C0C;
-                                        "
                                                 th:name="action"
                                                 th:value="'Cancel'"
                                         >
@@ -339,30 +304,16 @@
                 <div class="modal-footer">
                   <button
                     type="button"
-                    class="btn"
+                    class="btn btn-edit"
                     data-dismiss="modal"
                     data-bs-dismiss="modal"
                     data-bs-target="#removeFriendModal"
-                    style="
-                       border-color: #000;
-                       --bs-btn-color: #000;
-                       --bs-btn-hover-bg: #000;
-                       --bs-btn-hover-color: #fff;
-                       --bs-btn-active-bg: #000;
-                       "
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
-                    class="btn"
-                    style="
-                       border-color: #477641;
-                       --bs-btn-color: #477641;
-                       --bs-btn-hover-bg: #477641;
-                       --bs-btn-hover-color: #fff;
-                       --bs-btn-active-bg: #477641;
-                       "
+                    class="btn btn-cancel"
                   >
                     Remove Friend
                   </button>
