@@ -41,7 +41,6 @@
               <div class="container">
                 <p class="text-break" th:text="${garden.getDescription()}"></p>
                 <p th:text="${garden.getLocationString()}"></p>
-                <p style="font-weight: bold"><i th:text="${advice}"></i></p>
                 <p th:if="${garden.getSize() != null}" th:utext="'Size: ' +${garden.getSize().toString()} + 'm<sup>2</sup>'"></p>
                 <p th:if="${garden.getSize() == null}">Size: Unspecified</p>
                 <form th:if="${owner}" th:action="@{${makeGardenPublic}}" method="post">
@@ -72,7 +71,7 @@
                 </div>
 
                 <form th:if="${owner}" th:action="@{${tagFormSubmissionUri}}" method="post" id="tag-form" autocomplete="off">
-                  <label class="form-input" for="tagName"> Create new tag: </label>
+                  <label class="form-input mt-3" for="tagName"> Create new tag: </label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <div class="input-group-text"
@@ -110,19 +109,24 @@
           </div>
 
           <div class="col-auto">
-            <div class="container">
-              <div id="weatherCard">
-                <div th:each="data : ${weatherData}" class="d-inline-grid">
-                  <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
-                       th:with="dayOfWeek=${data.date.dayOfWeek},
+            <div class="row">
+              <div class="container">
+                <div id="weatherCard">
+                  <div th:each="data : ${weatherData}" class="d-inline-grid">
+                    <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
+                         th:with="dayOfWeek=${data.date.dayOfWeek},
                            date=${data.date.format(dateFormatter)},
                            temperature=${data.temperature},
                            description=${data.weatherDescription},
                            image=${data.weatherIconName},
                            humidity=${data.humidity}">
+                    </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="card h-auto w-100 text-center mt-3 align-items-center">
+              <p class="mt-2" style="font-weight: bold"><i th:text="${advice}"></i></p>
             </div>
           </div>
         </div>
