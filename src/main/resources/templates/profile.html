@@ -42,7 +42,7 @@
                     <div class="col-sm-4 col-md-3 col-12 text-center my-4">
                         <img class="rounded-circle profile-img p-4" th:src="@{${user.getProfilePictureFilePath()}}"
                             alt="User Profile Picture" />
-                        <form class="text-center" th:action="@{${uploadProfileImageUri}}" method="post"
+                        <form th:unless="${isFriend}" class="text-center" th:action="@{${uploadProfileImageUri}}" method="post"
                             name="profilePhoto" enctype="multipart/form-data">
                             <p class="err-text text-wrap" th:text="${imageTypeError}"></p>
                             <p class="err-text text-wrap" th:text="${imageSizeError}"></p>
@@ -62,7 +62,7 @@
                                 th:text="${user.getFirstName() + ' ' + user.getLastName()}"></p>
                             <p>Date of Birth: <span th:text="${user.getDob()}"></span></p>
                             <p>Email Address: <span th:text="${user.getEmail()}"></span></p>
-                            <a th:href="@{${editProfileUri}}" class="btn btn-edit btn-outline-primary">
+                            <a th:unless="${isFriend}" th:href="@{${editProfileUri}}" class="btn btn-edit btn-outline-primary">
                                 Edit Profile <i class="bi bi-pencil"></i>
                             </a>
                         </div>

@@ -271,6 +271,7 @@ public class ProfileController extends NavBar {
         logger.info("GET {}", viewProfileUri());
         model.addAttribute("friendId", friendId);
         model.addAttribute("user", userService.getUserById(friendId));
+        model.addAttribute("isFriend", true);
         return "profile";
     }
 }
