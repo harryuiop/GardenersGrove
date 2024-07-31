@@ -55,8 +55,8 @@
                           th:id="'remove-' + ${friend.getId()}"
                         >
                           <td style="background-color: #efefec;">
-                            <div class="card mb-1 shadow">
-                              <div class="card-body" style="min-width: 415px">
+                            <div class="card card-container mb-1 shadow">
+                              <div class="card-body">
                                 <div class="container-fluid">
                                   <div class="row">
                                     <div
@@ -229,8 +229,8 @@
                     <tr th:each="request : ${outgoing}">
                       <form method="post" th:action="@{${manageFriendsUri}}">
                         <td style="background-color: #efefec">
-                          <div class="card mb-1 shadow">
-                            <div class="card-body">
+                          <div class="card card-container mb-1 shadow">
+                            <div class="card-body ">
                               <div class="container-fluid">
                                 <div class="row">
                                   <div class="col-4 d-flex align-items-center">
@@ -338,6 +338,15 @@
       flex-shrink: 0;
       width: 80px;
       height: 80px;
+    }
+
+     .card.card-container {
+       min-width: 415px;
+     }
+    @media (max-width: 994px) {
+      .card.card-container {
+        min-width: auto;
+      }
     }
 
     .scroll-div {
