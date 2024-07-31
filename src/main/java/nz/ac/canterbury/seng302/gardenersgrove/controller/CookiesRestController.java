@@ -11,19 +11,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ * Called through javascript for controlling setting up cookies through cookiesService
+ */
 @RestController
 @RequestMapping("/cookies")
 public class CookiesRestController {
 
     private final CookiesService cookiesService;
 
+    /**
+     * Constructor of this Class to autowiring CookiesService
+     *
+     * @param cookiesService Service that provides all functions to setting up cookies
+     */
     @Autowired
     public CookiesRestController (CookiesService cookiesService){
         this.cookiesService = cookiesService;
     }
 
     Logger logger = LoggerFactory.getLogger(CookiesRestController.class);
+
+    /**
+     * control cookies setup Rain popup message close for 24 hours
+     *
+     * @param response httpServletResponse
+     */
     @PostMapping("/set-rain-popup")
     public void setRainPopup(HttpServletResponse response) {
         logger.info("POST: /cookies/set-rain-popup");
