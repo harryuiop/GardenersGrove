@@ -68,6 +68,8 @@
       </li>
     </ul>
   </nav>
+  <div th:text="'Showing results '+ ${(currentPage - 1) * 10 + 1} + ' to ' + ${(currentPage - 1) * 10 + gardenList.size()} + ' of ' + ${numberOfResults}"
+       class="mb-3"></div>
 </div>
 </body>
 </html>
