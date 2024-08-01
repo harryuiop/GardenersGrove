@@ -71,6 +71,7 @@ public class FriendsController extends NavBar {
         this.updateGardensNavBar(model, gardenService, userService);
         model.addAttribute("user", userService.getAuthenticatedUser());
         model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
+        model.addAttribute("viewFriendsProfileUriString", VIEW_FRIENDS_PROFILE_URI_STRING);
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
         model.addAttribute("friends", friendshipService.getFriends(userService.getAuthenticatedUser()));
         model.addAttribute("incoming", friendRequestService.findRequestByReceiver(userService.getAuthenticatedUser()));

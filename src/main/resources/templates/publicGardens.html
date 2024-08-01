@@ -13,15 +13,16 @@
             aria-label="Search for public gardens"
             autocomplete="off"
             class="form-control rounded"
-            id="gardenSearch"
+            id="gardenName"
             placeholder="Search for gardens"
-            th:name="gardenSearch"
+            th:name="gardenName"
             type="text"
+            th:value="${gardenSearchSearch}"
     />
     <button
             class="input-group-text border-0"
             id="search-addon"
-            th:for="gardenSearch"
+            th:for="gardenName"
             type="submit"
     >
       <i class="bi bi-search" style="color: black"></i>
@@ -33,7 +34,7 @@
        class="garden-item row rounded border p-5 my-3 w-75 position-relative bg-white shadow-sm">
     <a class="stretched-link" th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"></a>
     <div class="col-12 col-md-8 col-xl-4 mb-3 mb-md-0 align-items-center">
-      <h5 class="text-truncate" th:text="${garden.name}"></h5>
+      <h5 class="text-truncate" th:text="${garden.getName()}"></h5>
       <div class="text-truncate" th:text="${garden.getLocationString()}"></div>
     </div>
     <div class="col-3 col-sm-2 col-lg-1 d-flex align-items-center">
@@ -54,12 +55,14 @@
         </a>
       </li>
 
-      <li th:each="page : ${pageNumbers}" class="page-item">
-        <a class="page-link"
-           th:classappend="${page == currentPage} ? active"
-           th:href="@{${browsePublicGardensUriString}(page=${page})}"
-           th:text="${page}"></a>
-      </li>
+          <li th:each="page : ${pageNumbers}" class="page-item">
+            <a
+              class="page-link"
+              th:classappend="${page == currentPage} ? active"
+              th:href="@{${browsePublicGardensUriString}(page=${page}, gardenName=${gardenSearchSearch}, gardenName=${gardenSearchSearch})}"
+              th:text="${page}"
+            ></a>
+          </li>
 
       <li class="page-item" th:classappend="${currentPage == numberOfPages} ? disabled">
         <a class="page-link" th:href="@{${browsePublicGardensUriString}(page=${numberOfPages})}">
@@ -68,6 +71,12 @@
       </li>
     </ul>
   </nav>
+    <div
+            class="d-flex justify-content-center mt-5"
+            th:if="${numberOfGardens == 0}"
+    >
+        <h3>No gardens match your search</h3>
+    </div>
   <div th:text="'Showing results '+ ${(currentPage - 1) * 10 + 1} + ' to ' + ${(currentPage - 1) * 10 + gardenList.size()} + ' of ' + ${numberOfResults}"
        class="mb-3"></div>
 </div>
