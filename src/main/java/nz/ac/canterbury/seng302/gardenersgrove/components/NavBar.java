@@ -23,7 +23,7 @@ public class NavBar {
      * @param userService   User database access object.
      */
     public void updateGardensNavBar(Model model, GardenService gardenService, UserService userService) {
-        model.addAttribute("gardens", getTopNGardens(gardenService, userService));
+        model.addAttribute("gardens", getTopNGardens(gardenService));
         model.addAttribute("newGardenUri", newGardenUri());
         model.addAttribute("viewAllGardensUri", viewAllGardensUri());
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
@@ -31,8 +31,8 @@ public class NavBar {
         model.addAttribute("browsePublicGardensUri", browsePublicGardensUri());
     }
 
-    private List<Garden> getTopNGardens(GardenService gardenService, UserService userService) {
-        List<Garden> allGardens = gardenService.getAllGardens(userService);
+    private List<Garden> getTopNGardens(GardenService gardenService) {
+        List<Garden> allGardens = gardenService.getAllGardens();
         return allGardens.subList(0, Math.min(5, allGardens.size()));
     }
 }

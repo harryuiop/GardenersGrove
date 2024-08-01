@@ -13,7 +13,7 @@ import java.util.Optional;
 public class GardenService {
 
     private final GardenRepository gardenRepository;
-
+    @Autowired
     private final UserService userService;
     private final FriendshipService friendshipService;
 
@@ -27,10 +27,9 @@ public class GardenService {
     /**
      * Querys the database and grabs all gardens from the logged-in user
      *
-     * @param userService User Service object
      * @return List of gardens
      */
-    public List<Garden> getAllGardens(UserService userService) {
+    public List<Garden> getAllGardens() {
         return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
     }
 
@@ -98,9 +97,17 @@ public class GardenService {
      * Querys the database for total amount of public gardens that match the search string
      *
      * @param gardenName Search parameter
-     * @return the number of total public gardens matching the search parameter 
+     * @return the number of total public gardens matching the search parameter
      */
     public long countPublicGardens(String gardenName) {
         return gardenRepository.countByIsGardenPublicTrueWithGardenNameSearch(gardenName);
+    }
+
+    /**
+     * Deletes a garden
+     * @param id The id of the garden to be deleted
+     */
+    public void deleteGarden(Long id) {
+        gardenRepository.deleteById(id);
     }
 }
