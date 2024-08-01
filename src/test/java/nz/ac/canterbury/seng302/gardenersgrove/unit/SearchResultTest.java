@@ -52,8 +52,6 @@ public class SearchResultTest {
 
         ReflectionTestUtils.setField(searchResult, "features", Arrays.asList(feature1, feature2, feature3));
 
-        System.out.println(searchResult.getFeatures().size());
-
         Map<String, List<Map<String, String>>> suggestions = searchResult.getAutocompleteSuggestions();
         List<Map<String, String>> locations = suggestions.get("locations");
         Assertions.assertEquals(3, locations.size());
