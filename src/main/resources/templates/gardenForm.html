@@ -20,7 +20,7 @@
               >
                 <h4>Garden Details</h4>
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-9 col-12">
                       <div class="form-field form-floating">
                       <input
                         type="text"
@@ -36,10 +36,10 @@
                       <label class="form-input" for="gardenName">
                         Garden Name *
                       </label>
-                      <p class="error message" style="max-width: 17vw" th:text="${gardenNameError}"></p>
+                      <p class="error message" style="max-width: 15vw" th:text="${gardenNameError}"></p>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3 col-12">
                       <div class="form-field form-floating">
                       <input
                         type="number"
@@ -55,7 +55,7 @@
                         th:classappend="${gardenSizeError} ? 'border border-danger'"
                       />
                       <label class="form-input" for="gardenSize">
-                        Garden size (m<sup>2</sup>)
+                        Size(m<sup>2</sup>)
                       </label>
                       <p class="error message" th:text="${gardenSizeError}"></p>
                     </div>
