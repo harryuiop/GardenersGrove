@@ -57,8 +57,6 @@ public class PublicGardensController extends NavBar {
         List<Garden> gardenList = gardenService.getPageOfPublicGardens(page, searchParameter);
         model.addAttribute("gardenList", gardenList);
 
-        System.out.println(gardenList);
-
         long numberOfGardens;
         if (searchParameter != null) {
             numberOfGardens = gardenService.countPublicGardens(searchParameter);
