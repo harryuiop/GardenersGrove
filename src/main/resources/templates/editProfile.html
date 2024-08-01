@@ -12,11 +12,12 @@
     th:src="@{/javascript/profilePictureUpload.js}"
   ></script>
 
-  <body onload="loadingPage()">
-    <div class="container-fluid p-0 m-0">
-      <nav th:insert="~{fragments/navbar :: navbar}"></nav>
-
+  <body class="bg" onload="loadingPage()">
+  <nav th:insert="~{fragments/navbar :: navbar}"></nav>
+  <div class="container-fluid">
       <div class="profileBody d-flex align-items-center justify-content-center">
+
+        <!-- CHANGE AND VIEW PROFILE PICTURE -->
         <div class="formContainer">
           <form
             id="uploadProfileImage"
@@ -56,101 +57,114 @@
             </div>
           </div>
 
+          <!-- BASIC INFORMATION FORM -->
           <form
             th:action="@{${editProfileUri}}"
             method="post"
             name="registerForm"
             id="editProfileForm"
           >
-            <label for="firstName">First name:</label>
-            <input
-              class="inputStyle"
-              type="text"
-              id="firstName"
-              name="firstName"
-              th:name="firstName"
-              th:value="${user.getFirstName()}"
-              autofocus
-            />
-            <p
-              class="errorMessage"
-              id="firstNameError"
-              th:text="${firstNameError}"
-            ></p>
-
-            <label for="lastName">Last name:</label>
-            <input
-              class="inputStyle"
-              type="text"
-              id="lastName"
-              name="lastName"
-              th:name="lastName"
-              th:value="${user.getLastName()}"
-              autofocus
-            />
-
-            <div class="noSurname">
-              <label for="noSurname" class="noSurnameCheckbox">
-                <input
-                  type="checkbox"
-                  id="noSurname"
-                  value="checked"
-                  th:name="noSurname"
-                  th:checked="${noSurname}"
-                  th:value="${noSurname}"
-                  autofocus
-                  autocomplete="off"
-                  onchange="updateCheckboxValue()"
-                />
-                I have no surname
-              </label>
+            <!-- FIRST NAME  -->
+            <div class="form-floating mb-3">
+              <input
+                class="form-control"
+                type="text"
+                id="firstName"
+                name="firstName"
+                th:name="firstName"
+                th:value="${user.getFirstName()}"
+                placeholder="firstName"
+                data-cy="firstName"
+                autofocus
+                th:classappend="${firstNameError} ? 'is-invalid'"
+              />
+              <label for="firstName">First name:</label>
+              <p class="error message" id="firstNameError" th:text="${firstNameError}"></p>
             </div>
 
-            <p
-              class="errorMessage"
-              id="lastNameError"
-              th:text="${lastNameError}"
-            ></p>
+            <!-- LAST NAME -->
+            <div class="form-floating mb-3">
+              <input
+                      class="form-control"
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      th:name="lastName"
+                      th:value="${user.getLastName()}"
+                      placeholder="lastName"
+                      data-cy="lastName"
+                      autofocus
+                      th:classappend="${lastNameError} ? 'is-invalid'"
+              />
+              <label for="lastName">Last name:</label>
+              <div class="noSurname">
+                <label for="noSurname" class="noSurnameCheckbox">
+                  <input
+                          type="checkbox"
+                          id="noSurname"
+                          value="checked"
+                          th:name="noSurname"
+                          th:checked="${noSurname}"
+                          th:value="${noSurname}"
+                          autofocus
+                          autocomplete="off"
+                          onchange="updateCheckboxValue()"
+                  />
+                  I have no surname
+                </label>
+              </div>
+              <p class="error message" id="lastNameError" th:text="${lastNameError}"></p>
+            </div>
 
-            <label for="email">Email:</label>
-            <input
-              class="inputStyle"
-              type="text"
-              id="email"
-              name="email"
-              th:name="email"
-              th:value="${user.getEmail()}"
-              autofocus
-            />
-            <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
+            <!-- EMAIL -->
+            <div class="form-floating mb-3">
+              <input
+                      class="form-control"
+                      type="text"
+                      id="email"
+                      name="email"
+                      th:name="email"
+                      th:value="${user.getEmail()}"
+                      placeholder="email"
+                      data-cy="email"
+                      autofocus
+                      th:classappend="${emailError} ? 'is-invalid'"
+              />
+              <label for="email">Email:</label>
+              <p class="error message" id="emailError" th:text="${emailError}"></p>
+            </div>
 
-            <label for="dateOfBirth">Date of Birth:</label>
-            <input
-              class="inputStyle"
-              type="date"
-              id="dateOfBirth"
-              name="dateOfBirth"
-              th:name="dateOfBirth"
-              th:value="${user.getDob()}"
-              autofocus
-            />
-            <p
-              class="errorMessage"
-              id="dateOfBirthError"
-              th:text="${dateOfBirthError}"
-            ></p>
-            <input
-              class="inputStyle"
+            <!-- DATE OF BIRTH -->
+            <div class="form-floating mb-3">
+              <input
+                      class="form-control"
+                      type="date"
+                      id="dateOfBirth"
+                      name="dateOfBirth"
+                      th:name="dateOfBirth"
+                      th:value="${user.getDob()}"
+                      autocomplete="off"
+                      autofocus
+                      th:classappend="${dateOfBirthError} ? 'is-invalid'"
+              />
+              <label for="dateOfBirth">Date of Birth:</label>
+              <p class="error message" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
+            </div>
+
+            <button
+              class="btn btn-confirm"
               id="submit"
               type="submit"
-              value="Submit"
-            />
+            > Submit <i class="bi bi-check"></i>
+            </button>
+
+            <a th:href="@{${profileUri}}">
+              <button class="btn btn-cancel"
+                      type="button"
+              >Cancel <i class="bi bi-x"></i>
+              </button>
+            </a>
           </form>
-          <div class="d-flex justify-content-center w-100 me-2">
-            <a th:href="@{${profileUri}}" class="hrefButtons" type="button"
-              >Cancel</a
-            >
-          </div>
           <a id="changePassword" th:href="@{${editPasswordUri}}"
             >Change Password</a
           >

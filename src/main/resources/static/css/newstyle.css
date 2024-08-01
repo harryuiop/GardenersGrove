@@ -65,3 +65,9 @@
     --bs-btn-hover-color: #fff;
     --bs-btn-active-bg: #6f0c0c;
 }
+
+.profile-img {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    object-fit: cover;
+}
