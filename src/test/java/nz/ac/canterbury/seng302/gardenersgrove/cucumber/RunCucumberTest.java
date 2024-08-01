@@ -37,7 +37,6 @@ public class RunCucumberTest {
     @MockBean
     private MapTilerGeocoding mapTilerGeocoding;
 
-
     @Before
     public void setup() throws Exception {
         Mockito.when(spyFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);

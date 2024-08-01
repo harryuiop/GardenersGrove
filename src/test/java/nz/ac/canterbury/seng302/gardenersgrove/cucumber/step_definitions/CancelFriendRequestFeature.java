@@ -3,19 +3,11 @@ package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.GardenController;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.FriendRequestRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,29 +19,11 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewFrien
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class CancelFriendRequestFeature {
-
-    Logger logger = LoggerFactory.getLogger(GardenController.class);
-
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private PlantRepository plantRepository;
-
-    @Autowired
-    private GardenRepository gardenRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private FriendRequestRepository friendRequestRepository;
-
-    @Autowired
     private FriendRequestService friendRequestService;
-
-    @Autowired
-    private FriendshipService friendshipService;
 
     @SpyBean
     private UserService userService;

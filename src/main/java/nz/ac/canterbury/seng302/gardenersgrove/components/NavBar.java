@@ -34,7 +34,7 @@ public class NavBar {
     /**
      * Returns the top 5 gardens. If the user has less than 5 it will return all the gardens.
      *
-     * @param gardenService Garden datatbase ascess object
+     * @param gardenService Garden database access object
      * @return              A list of the users first, at most, 5 gardens.
      */
     private List<Garden> getTop5Gardens(GardenService gardenService) {
