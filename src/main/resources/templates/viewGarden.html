@@ -169,7 +169,8 @@
                       <form th:action="@{${uploadPlantImageUriString}(gardenId=${garden.getId()},plantId=${plant.getId()})}"
                             method="post" enctype="multipart/form-data">
                         <div class="add-image">
-                          <button class="btn btn-light rounded-circle position-absolute top-0 end-0 m-2">
+                          <button class="btn btn-light rounded-circle position-absolute top-0 end-0 m-2"
+                                  th:id="${plant.getId()} + submit">
                             <i class="bi bi-plus-circle"></i>
                           </button>
                           <label th:for="${plant.getId()}" class="plus-button">
