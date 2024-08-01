@@ -10,8 +10,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
-import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.hamcrest.Matchers;
@@ -41,13 +39,7 @@ public class PubliciseGardensFeature {
     private MockMvc mockMvc;
 
     @Autowired
-    private GardenRepository gardenRepository;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private FriendshipService friendshipService;
 
     @Autowired
     private GardenService gardenService;
