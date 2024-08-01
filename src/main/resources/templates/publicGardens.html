@@ -17,6 +17,7 @@
           placeholder="Search for gardens"
           th:name="gardenName"
           type="text"
+          th:value="${gardenSearchSearch}"
         />
         <button
           class="input-group-text border-0"
@@ -79,7 +80,7 @@
       class="d-flex justify-content-center mt-5"
       th:if="${numberOfGardens == 0}"
     >
-      <h3>Not results</h3>
+      <h3>No gardens match your search</h3>
     </div>
   </body>
 </html>
