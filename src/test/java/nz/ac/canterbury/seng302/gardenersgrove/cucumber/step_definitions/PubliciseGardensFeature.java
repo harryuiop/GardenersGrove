@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 
+import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -54,8 +55,7 @@ public class PubliciseGardensFeature {
 
     @Autowired
     private FormValuesValidator mockFormValuesValidator;
-
-    private CustomAuthenticationProvider customAuthenticationProvider;
+    private Authentication auth;
 
     private Garden garden;
     private Long gardenId;
@@ -78,17 +78,20 @@ public class PubliciseGardensFeature {
 
     @Given("I have a user account that has logged in")
     public void iHaveAUserAccountThatHasLoggedIn() {
-        User user = new User("jane.doe@gmail.com", "Jane", "Doe", "Password1!", "");
-        customAuthenticationProvider = new CustomAuthenticationProvider(userService);
-        user.setConfirmation(true);
-        userService.addUsers(user);
+        User user;
+        if (userService.getUserByEmail("jane.doe@gmail.com") == null) {
+            user = new User("jane.doe@gmail.com", "Jane", "Doe", "Passwrod1!", "");
+            user.setConfirmation(true);
+            userService.addUsers(user);
 
+        } else {
+            user = userService.getUserByEmail("jane.doe@gmail.com");
+        }
+        CustomAuthenticationProvider customAuthenticationProvider = new CustomAuthenticationProvider(userService);
         UsernamePasswordAuthenticationToken authReq
-                = new UsernamePasswordAuthenticationToken(user.getEmail(), "Password1!");
-        Authentication auth = customAuthenticationProvider.authenticate(authReq);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
-
+                = new UsernamePasswordAuthenticationToken(user.getEmail(), "Passwrod1!");
+        auth = customAuthenticationProvider.authenticate(authReq);
+        SecurityContextHolder.getContext().setAuthentication(auth);
         Assertions.assertEquals(userService.getAuthenticatedUser().getUserId(), user.getUserId());
     }
 
