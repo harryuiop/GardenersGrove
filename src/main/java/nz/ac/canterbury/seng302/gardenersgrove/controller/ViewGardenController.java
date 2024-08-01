@@ -114,9 +114,6 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("advice", weatherService.getWeatherAdvice(weatherData));
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MMM yyyy"));
 
-        System.out.println(weatherData.get(0).getWeatherIconName());
-
-
         return "viewGarden";
     }
 

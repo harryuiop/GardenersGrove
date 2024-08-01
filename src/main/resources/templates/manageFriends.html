@@ -3,7 +3,7 @@
   <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Friends</title>
   </head>
-  <body>
+  <body class="bg">
     <div class="container-fluid p-0 m-0">
       <nav th:insert="~{fragments/navbar :: navbar}"></nav>
       <div>
@@ -55,8 +55,8 @@
                           th:id="'remove-' + ${friend.getId()}"
                         >
                           <td style="background-color: #efefec;">
-                            <div class="card mb-1 shadow">
-                              <div class="card-body" style="min-width: 398px">
+                            <div class="card card-container mb-1 shadow">
+                              <div class="card-body">
                                 <div class="container-fluid">
                                   <div class="row">
                                     <div
@@ -73,35 +73,23 @@
                                         class="link-offset-2 link-underline link-underline-opacity-0"
                                         style="color: #142915; font-size: 20px"
                                         th:text="${friend.getName()}"
-                                      ></a>
+                                        th:href="@{${viewFriendsProfileUriString}(friendId=${friend.getId()})}">
+                                      </a>
                                       <div class="mt-2">
                                         <a
-                                          class="btn btn-outline-primary btn-sm"
-                                          style="
-                                            border-color: #477641;
-                                            --bs-btn-color: #477641;
-                                            --bs-btn-hover-bg: #477641;
-                                            --bs-btn-hover-color: #fff;
-                                            --bs-btn-active-bg: #477641;
-                                          "
+                                          class="btn btn-confirm btn-sm"
                                           th:href="@{${viewFriendsGardensUriString}(friendId=${friend.getId()})}"
-                                          >View Gardens</a
-                                        >
+                                          >
+                                          View Gardens <i class="bi bi-tree-fill"></i>
+                                        </a>
                                         <button
-                                          class="btn btn-outline-primary btn-sm"
+                                          class="btn btn-cancel btn-sm"
                                           type="button"
-                                          style="
-                                            border-color: #6f0c0c;
-                                            --bs-btn-color: #6f0c0c;
-                                            --bs-btn-hover-bg: #6f0c0c;
-                                            --bs-btn-hover-color: #fff;
-                                            --bs-btn-active-bg: #6f0c0c;
-                                          "
                                           data-bs-toggle="modal"
                                           data-bs-target="#removeFriendModal"
                                           th:data-form-id="'remove-' + ${friend.getId()}"
                                         >
-                                          Remove
+                                          Remove <i class="bi bi-x"></i>
                                         </button>
                                         <input
                                           type="hidden"
@@ -114,6 +102,10 @@
                                           th:value="${friend.getId()}"
                                         />
                                       </div>
+                                      <a
+                                      th:href="@{${viewFriendsProfileUriString}(friendId=${friend.getId()})}"
+                                      >
+                                      View Profile</a>
                                     </div>
                                   </div>
                                 </div>
@@ -176,30 +168,16 @@
                                     ></a>
                                     <div class="mt-2">
                                       <button
-                                        class="btn btn-outline-primary btn-sm"
+                                        class="btn btn-confirm btn-sm"
                                         type="submit"
-                                        style="
-                                          border-color: #477641;
-                                          --bs-btn-color: #477641;
-                                          --bs-btn-hover-bg: #477641;
-                                          --bs-btn-hover-color: #fff;
-                                          --bs-btn-active-bg: #477641;
-                                        "
                                         th:name="action"
                                         th:value="'Accept'"
                                       >
                                         Accept <i class="bi bi-check"></i>
                                       </button>
                                       <button
-                                        class="btn btn-outline-primary btn-sm"
+                                        class="btn btn-cancel btn-sm"
                                         type="button"
-                                        style="
-                                          border-color: #6f0c0c;
-                                          --bs-btn-color: #6f0c0c;
-                                          --bs-btn-hover-bg: #6f0c0c;
-                                          --bs-btn-hover-color: #fff;
-                                          --bs-btn-active-bg: #6f0c0c;
-                                        "
                                         th:name="action"
                                         th:value="'Decline'"
                                       >
@@ -251,8 +229,8 @@
                     <tr th:each="request : ${outgoing}">
                       <form method="post" th:action="@{${manageFriendsUri}}">
                         <td style="background-color: #efefec">
-                          <div class="card mb-1 shadow">
-                            <div class="card-body">
+                          <div class="card card-container mb-1 shadow">
+                            <div class="card-body ">
                               <div class="container-fluid">
                                 <div class="row">
                                   <div class="col-4 d-flex align-items-center">
@@ -275,15 +253,8 @@
                                                 style="color: #142915; font-size: 20px; margin-bottom: 2px"
                                         ><span th:text="${request.getStatus().toString()}" style="margin-right: 8px"></span></p>
                                         <button
-                                                class="btn btn-sm"
+                                                class="btn btn-cancel btn-sm"
                                                 type="submit"
-                                                style="
-                                          border-color: #6F0C0C;
-                                          --bs-btn-color: #6F0C0C;
-                                          --bs-btn-hover-bg: #6F0C0C;
-                                          --bs-btn-hover-color: #fff;
-                                          --bs-btn-active-bg: #6F0C0C;
-                                        "
                                                 th:name="action"
                                                 th:value="'Cancel'"
                                         >
@@ -333,30 +304,16 @@
                 <div class="modal-footer">
                   <button
                     type="button"
-                    class="btn"
+                    class="btn btn-edit"
                     data-dismiss="modal"
                     data-bs-dismiss="modal"
                     data-bs-target="#removeFriendModal"
-                    style="
-                       border-color: #000;
-                       --bs-btn-color: #000;
-                       --bs-btn-hover-bg: #000;
-                       --bs-btn-hover-color: #fff;
-                       --bs-btn-active-bg: #000;
-                       "
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
-                    class="btn"
-                    style="
-                       border-color: #477641;
-                       --bs-btn-color: #477641;
-                       --bs-btn-hover-bg: #477641;
-                       --bs-btn-hover-color: #fff;
-                       --bs-btn-active-bg: #477641;
-                       "
+                    class="btn btn-cancel"
                   >
                     Remove Friend
                   </button>
@@ -381,6 +338,15 @@
       flex-shrink: 0;
       width: 80px;
       height: 80px;
+    }
+
+     .card.card-container {
+       min-width: 415px;
+     }
+    @media (max-width: 994px) {
+      .card.card-container {
+        min-width: auto;
+      }
     }
 
     .scroll-div {
