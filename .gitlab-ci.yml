@@ -102,7 +102,7 @@ sonarqube-check:
     - dev
 
 sonarqube-report:
-    stage: sonarqube
-    script:
-      ./gradlew sonarqube
+  stage: sonarqube
+  script:
+    ./gradlew sonarqube
 
