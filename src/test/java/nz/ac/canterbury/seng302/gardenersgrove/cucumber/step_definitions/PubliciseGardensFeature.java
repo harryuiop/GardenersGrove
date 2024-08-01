@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 
-import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -21,7 +20,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.hamcrest.Matchers.*;
@@ -69,8 +68,12 @@ public class PubliciseGardensFeature {
 
     @Given("I have a garden")
     public void haveAGarden() {
-        Location location = new Location("New Zealand", "Christchurch");
-        garden = new Garden(userService.getAuthenticatedUser(), "Garden", "",
+        country = "New Zealand";
+        city = "Christchurch";
+        Location location = new Location(country, city);
+        name = "Garden";
+        description = "";
+        garden = new Garden(userService.getAuthenticatedUser(), name, description,
                 location, null, true);
         gardenService.saveGarden(garden);
         gardenId = garden.getId();
@@ -161,21 +164,26 @@ public class PubliciseGardensFeature {
 
     @When("the description is valid")
     public void theDescriptionIsValid() {
-        List<Garden> gardens = gardenService.getAllGardens(userService);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        List<Garden> gardens = gardenService.getAllGardens();
         Garden newestGarden = gardens.get(gardens.size()-1);
         String gardenDescription = newestGarden.getDescription();
-        Assertions.assertTrue(mockFormValuesValidator.checkDescription(gardenDescription));
+        Assertions.assertTrue(mockFormValuesValidator.checkDescription(gardenDescription) &&
+                mockFormValuesValidator.checkContainsText(gardenDescription));
 
     }
 
     @When("I remove the description of the garden")
     public void iRemoveTheDescriptionOfTheGarden() {
-        description = null;
+        description = "";
     }
 
     @Then("the description is deleted")
     public void theDescriptionIsDeleted() {
-        List<Garden> gardens = gardenService.getAllGardens(userService);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        List<Garden> gardens = gardenService.getAllGardens();
+        Garden garden = gardens.get(gardens.size()-1);
+        Assertions.assertEquals("", garden.getDescription());
     }
 
     @Given("I am editing an existing garden")
@@ -188,10 +196,13 @@ public class PubliciseGardensFeature {
 
     @Then("the description is persisted")
     public void theDescriptionIsPersisted() {
-        List<Garden> gardenOptional = gardenService.getAllGardens(userService);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        List<Garden> gardens = gardenService.getAllGardens();
+        Garden garden = gardens.get(gardens.size() - 1);
+        Assertions.assertEquals(description, garden.getDescription());
     }
 
-    @Given("I enter a description longer than 512 charaters")
+    @Given("I enter a description longer than 512 characters")
     public void iEnterADescriptionLongerThan512Charaters() {
         description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. " +
                 "Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. " +
@@ -212,7 +223,8 @@ public class PubliciseGardensFeature {
                         .param("city", city)
                         .param("streetAddress", "")
                         .param("suburb", "")
-                        .param("postcode", ""))
+                        .param("postcode", "")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(model().attribute("gardenDescriptionError",
                         hasToString("Description must be 512 characters or less and contain some text")));
@@ -220,7 +232,11 @@ public class PubliciseGardensFeature {
 
     @And("the description is not persisted.")
     public void theDescriptionIsNotPersisted() {
-        List<Garden> gardens = gardenService.getAllGardens(userService);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        List<Garden> gardens = gardenService.getAllGardens();
+        Garden garden = gardens.get(gardens.size()-1);
+        Assertions.assertNotEquals(description, garden.getDescription());
     }
 
     @Given("I enter a description {string}")
@@ -245,7 +261,8 @@ public class PubliciseGardensFeature {
                         .param("city", city)
                         .param("streetAddress", "")
                         .param("suburb", "")
-                        .param("postcode", ""))
+                        .param("postcode", "")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(model().attribute("gardenDescriptionError",
                         hasToString("The description does not match the language standards of the app")));
@@ -268,18 +285,21 @@ public class PubliciseGardensFeature {
                         .param("city", city)
                         .param("streetAddress", "")
                         .param("suburb", "")
-                        .param("postcode", ""))
+                        .param("postcode", "")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(model().attribute("profanityCheckWorked",
                         hasToString("false")));
-
-        List<Garden> gardenOptional = gardenService.getAllGardens(userService);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        Optional<Garden> garden = gardenService.getGardenById(gardenId);
+        garden.ifPresent(value -> Assertions.assertEquals(description, value.getDescription()));
     }
 
     @And("I cannot make the garden public")
     public void iCannotMakeTheGardenPublic() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(garden.getId()))
-                        .param("publicGarden", "true"))
+                        .param("publicGarden", "true")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/garden/"+gardenId));
         Assertions.assertFalse(garden.isGardenPublic());

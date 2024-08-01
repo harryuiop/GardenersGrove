@@ -13,7 +13,7 @@ import java.util.Optional;
 public class GardenService {
 
     private final GardenRepository gardenRepository;
-
+    @Autowired
     private final UserService userService;
     private final FriendshipService friendshipService;
 
@@ -24,7 +24,7 @@ public class GardenService {
         this.friendshipService = friendshipService;
     }
 
-    public List<Garden> getAllGardens(UserService userService) {
+    public List<Garden> getAllGardens() {
         return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
     }
 
