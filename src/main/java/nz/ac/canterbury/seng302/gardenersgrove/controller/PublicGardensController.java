@@ -39,7 +39,7 @@ public class PublicGardensController extends NavBar {
      * Serve the browse public gardens page to the user,
      * with gardens paginated to 10 per page.
      *
-     * @param page  The page number to display, used for database query.
+     * @param page  The page number to display, used for a database query.
      * @param model The object used to pass data through to Thymeleaf.
      * @return Thymeleaf HTML browse public gardens.
      */
@@ -53,7 +53,6 @@ public class PublicGardensController extends NavBar {
             page = 1;
         }
         model.addAttribute("currentPage", page);
-
         List<Garden> gardenList = gardenService.getPageOfPublicGardens(page, searchParameter);
         model.addAttribute("gardenList", gardenList);
 
@@ -63,12 +62,13 @@ public class PublicGardensController extends NavBar {
         } else {
             numberOfGardens = gardenService.countPublicGardens();
         }
+        model.addAttribute("numberOfResults", numberOfGardens);
+
 
         int numberOfPages = (int) Math.min(5, Math.ceil((double) numberOfGardens / 10));
 
         model.addAttribute("numberOfPages", numberOfPages);
         model.addAttribute("pageNumbers", IntStream.range(1, numberOfPages + 1).toArray());
-        model.addAttribute("numberOfGardens", numberOfGardens);
 
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         model.addAttribute("browsePublicGardensUriString", BROWSE_PUBLIC_GARDENS_URI_STRING);
