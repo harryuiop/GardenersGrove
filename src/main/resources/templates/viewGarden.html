@@ -6,7 +6,7 @@
 <div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
   <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
 
-  <div class="d-flex justify-content-center mt-5 w-100">
+  <div class="d-flex justify-content-center mt-5 w-100 mb-5">
     <div class="content">
       <div class="container">
         <div class="row">
@@ -164,28 +164,29 @@
                   <div class="card shadow rounded-4 h-100 w-100">
                     <div class="card-img-top position-relative rounded-top-4">
                       <div class="bg-image rounded-top-4"
-                           th:style="'background-image: url(' + ${plant.getImageFilePath()} + '); height: 200px; background-size: cover; background-position: center;'">
+                           th:style="'background-image: url(' + ${plant.getImageFilePath()} + '); height: 30vh; background-size: cover; background-position: center;'">
                       </div>
                       <form th:action="@{${uploadPlantImageUriString}(gardenId=${garden.getId()},plantId=${plant.getId()})}"
                             method="post" enctype="multipart/form-data">
+                        <input type="hidden" th:name="plantId" th:value="${plant.getId()}"/>
                         <div class="add-image">
-                          <button class="btn btn-light rounded-circle position-absolute top-0 end-0 m-2"
-                                  th:id="${plant.getId()} + submit">
+                          <label th:for="${plant.getId()}"
+                                 class="btn btn-light rounded-circle position-absolute top-0 end-0 m-2">
                             <i class="bi bi-plus-circle"></i>
-                          </button>
-                          <label th:for="${plant.getId()}" class="plus-button">
-                            <input type="file"
-                                   class="form-control"
-                                   th:id="${plant.getId()}"
-                                   th:name="plantImage"
-                                   accept="image/jpeg, image/png, image/svg+xml"
-                                   data-cy="plantImage"
-                                   onchange="submitForm(id)"
-                                   style="display: none;"
-                            >
                           </label>
-                          <input type="hidden" th:name="plantId" th:value="${plant.getId()}"/>
+                          <input type="file"
+                                 class="form-control"
+                                 th:id="${plant.getId()}"
+                                 th:name="plantImage"
+                                 accept="image/jpeg, image/png, image/svg+xml"
+                                 data-cy="plantImage"
+                                 onchange="submitForm(id)"
+                                 style="display: none;"
+                          >
                         </div>
+                        <button class="form-button" type="submit" th:id="${plant.getId()} + submit"
+                                style="display: none;">Submit
+                        </button>
                       </form>
                     </div>
 
