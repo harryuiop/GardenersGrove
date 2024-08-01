@@ -31,6 +31,7 @@
                         th:value="*{gardenName}"
                         data-cy="gardenName"
                         autofocus
+                        th:classappend="${gardenNameError} ? 'is-invalid'"
                       />
                       <label class="form-input" for="gardenName">
                         Garden Name *
@@ -50,6 +51,7 @@
                         th:value="*{gardenSize}"
                         data-cy="gardenSize"
                         autofocus
+                        th:classappend="${gardenSizeError} ? 'is-invalid'"
                       />
                       <label class="form-input" for="gardenSize">
                         Garden size (m<sup>2</sup>)
@@ -67,6 +69,7 @@
                       th:text="*{gardenDescription}"
                       data-cy="gardenDescription"
                       autofocus
+                      th:classappend="${gardenDescriptionError} ? 'is-invalid'"
                       style="min-height: 132px"
                     ></textarea>
                     <label
@@ -103,12 +106,13 @@
                     data-cy="streetAddress"
                     autocomplete="off"
                     placeholder=">Start typing location to see suggestions."
+                    th:classappend="${streetAddressError} ? 'is-invalid'"
                   />
                   <label class="form-input" for="streetAddress">
                     Street Address
                   </label>
+                  <div id="autocomplete-list" class="dropdown-menu w-100 shadow"></div>
                   <p class="error message" th:text="${streetAddressError}"></p>
-                  <div id="autocomplete-list" class="inputStyle"></div>
                 </div>
                 <div class="row">
                   <div class="col-md-6">
@@ -121,6 +125,7 @@
                         th:name="country"
                         th:value="*{country}"
                         data-cy="country"
+                        th:classappend="${countryError} ? 'is-invalid'"
                         autofocus
                       />
                       <label class="form-input" for="country"> Country * </label>
@@ -137,6 +142,7 @@
                         th:name="city"
                         th:value="*{city}"
                         data-cy="city"
+                        th:classappend="${cityError} ? 'is-invalid'"
                         autofocus
                       />
                       <label class="form-input" for="city"> City * </label>
@@ -155,6 +161,7 @@
                         placeholder="e.g. Northland"
                         th:value="*{suburb}"
                         data-cy="suburb"
+                        th:classappend="${suburbError} ? 'is-invalid'"
                         autofocus
                       />
                       <label class="form-input" for="suburb"> Suburb </label>
@@ -171,6 +178,7 @@
                         th:name="postcode"
                         th:value="*{postcode}"
                         data-cy="postcode"
+                        th:classappend="${postcodeError} ? 'is-invalid'"
                         autofocus
                       />
                       <label class="form-input" for="postcode">
@@ -218,24 +226,48 @@
 
         <!-- No location message modal -->
         <div th:if="${editGardenUri != null}">
-          <div id="noLocationFoundModal" class="modal">
-            <div class="modal-content">
-              <p th:if="!${locationFound}">
-                Your garden has been saved. However, no matching location was
-                found. Location-based services will not work for this garden.
-              </p>
-              <p th:if="!${profanityCheckWorked}">
-                There was an issue checking the description for inappropriate
-                language. This garden cannot be made public until the
-                description is edited and language checks are completed.
-              </p>
-              <div class="modal-buttons">
-                <a th:href="@{${editGardenUri}}" id="backToFormBtn"
-                  >Edit garden</a
-                >
-                <a th:href="@{${viewGardenUri}}" id="useLocationBtn"
-                  >Continue</a
-                >
+        <div id="noLocationFoundModal" class="modal" style="display: block; background-color: rgba(0,0,0,0.4);">
+            <div class="modal-dialog">
+              <div class="modal-content shadow">
+                <div class="modal-body">
+                  <p th:if="!${locationFound}">
+                    Your garden has been saved. However, no matching location was
+                    found. Location-based services will not work for this garden.
+                  </p>
+                  <p th:if="!${profanityCheckWorked}">
+                    There was an issue checking the description for inappropriate
+                    language. This garden cannot be made public until the
+                    description is edited and language checks are completed.
+                  </p>
+                </div>
+                <div class="modal-footer">
+                  <a th:href="@{${editGardenUri}}" id="backToFormBtn">
+                    <button class="btn btn-outline-primary"
+                            type="button"
+                            style="
+                            border-color: #000;
+                            --bs-btn-color: #000;
+                            --bs-btn-hover-bg: #000;
+                            --bs-btn-hover-color: #fff;
+                            --bs-btn-active-bg: #000;
+                          "
+                      >Edit Garden<i class="bi bi-pencil"></i>
+                    </button></a>
+
+                  <a th:href="@{${viewGardenUri}}" id="useLocationBtn">
+                    <button class="btn btn-outline-primary"
+                              type="button"
+                              style="
+                               border-color: #477641;
+                               --bs-btn-color: #477641;
+                               --bs-btn-hover-bg: #477641;
+                               --bs-btn-hover-color: #fff;
+                               --bs-btn-active-bg: #477641;
+                               "
+                      >Continue <i class="bi bi-check"></i>
+                    </button>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

@@ -1,48 +1,74 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="~{fragments/importFragment :: headerfiles}"><title>Profile Page</title></head>
-  <body>
-  <div class="container-fluid p-0 m-0">
+
+<head th:insert="~{fragments/importFragment :: headerfiles}">
+    <title>Profile Page</title>
+</head>
+<style>
+
+    .profile-img {
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .err-text {
+        color: #6f0c0c;
+    }
+</style>
+
+<body class="bg">
     <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
-    <div class="profileBody" style="margin: 5vh">
-      <div class="formContainer">
-        <form
-                id="uploadProfileImage"
-                th:action="@{${uploadProfileImageUri}}"
-                method="post"
-                name="profilePhoto"
-                enctype="multipart/form-data"
-        >
-          <input
-                  id="profilePictureInput"
-                  type="file"
-                  name="image"
-                  accept="image/jpeg, image/png, image/svg+xml"
-                  class="formControlFile"
-                  alt="test"
-          />
-          <p class="errorMessage" id="imageTypeError" th:text="${imageTypeError}"></p>
-          <p class="errorMessage" id="imageSizeError" th:text="${imageSizeError}"></p>
-
-        </form>
-
-        <div id="profilePictureWrapper">
-          <img
-                  id="profilePicture"
-                  th:src="@{${user.getProfilePictureFilePath()}}"
-                  alt="User profile picture"
-          />
-          <div id="profilePictureOverlay">
-            <div id="profilePictureOverlayIcon">+</div>
-          </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col mx-4 rounded bg-white shadow-sm p-2">
+                <div class="row">
+                    <div class="col-sm-4 col-md-3 col-12 text-center my-4">
+                        <img class="rounded-circle profile-img p-4" th:src="@{${user.getProfilePictureFilePath()}}"
+                            alt="User Profile Picture" />
+                        <form th:unless="${isFriend}" class="text-center" th:action="@{${uploadProfileImageUri}}" method="post"
+                            name="profilePhoto" enctype="multipart/form-data">
+                            <p class="err-text text-wrap" th:text="${imageTypeError}"></p>
+                            <p class="err-text text-wrap" th:text="${imageSizeError}"></p>
+                            <div class="file-input-wrapper"></div>
+                            <button id="file-button" class="btn btn-confirm" type="button">
+                                Edit Profile Picture <i class="bi bi-camera"></i>
+                            </button>
+                            <input class="d-none" id="file-picker" type="file" name="image" accept="image/jpeg, image/png, image/svg+xml"
+                                alt="Upload Profile Picture" />
+                            <button class="d-none" id="submit-button" type="submit"></button>
+                        </form>
+                    </div>
+                    <div
+                        class="col-sm-8 col-md-9 col-12 my-4 text-sm-start text-center d-flex flex-column justify-content-between">
+                        <div class="flex-grow-1">
+                            <p class="display-3 mb-0 text-break"
+                                th:text="${user.getFirstName() + ' ' + user.getLastName()}"></p>
+                            <p>Date of Birth: <span th:text="${user.getDob()}"></span></p>
+                            <p>Email Address: <span th:text="${user.getEmail()}"></span></p>
+                            <a th:unless="${isFriend}" th:href="@{${editProfileUri}}" class="btn btn-edit">
+                                Edit Profile <i class="bi bi-pencil"></i>
+                            </a>
+                            <a
+                                    th:if="${isFriend}"
+                                    class="btn btn-confirm"
+                                    th:href="@{${viewFriendsGardensUriString}(friendId=${user.getId()})}"
+                            >View Gardens <i class="bi bi-tree-fill"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <h2 th:text="${user.getFirstName() + ' ' + user.getLastName()}"></h2>
-        <h3 id="profileDoB" th:text="${user.getDob()}"></h3>
-        <h3 id="profileEmail" th:text="${user.getEmail()}"></h3>
-        <a th:href="@{${editProfileUri}}" class="button">Edit Profile</a>
-      </div>
     </div>
-  </div>
-  </body>
+    <script>
+        document.getElementById('file-button').addEventListener('click', function () {
+            document.getElementById('file-picker').click();
+            });
+
+        document.getElementById('file-picker').addEventListener('change', function () {
+            document.getElementById('submit-button').click();
+            });
+        </script>
+</body>
+
 </html>

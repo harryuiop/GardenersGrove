@@ -33,6 +33,26 @@ streetAddressField.addEventListener('input', function() {
 });
 
 /**
+ * When the input field is clicked in, if there is already text in there it will ask for autocomplete
+ */
+streetAddressField.addEventListener('focus', () => {
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+        const inputValue = streetAddressField.value;
+        if (inputValue) {
+            updateAutocomplete(inputValue, countryField.value);
+        }
+    }, debounceTimeMs);
+});
+
+/**
+ * When user clicks outside the street address input the autocomplete box disappears
+ */
+streetAddressField.addEventListener('blur', function() {
+    setTimeout(removeAutocompleteBox, 100)
+})
+
+/**
  * Call Java function to get the API response,
  * only if maximum number of requests in given rate limit timeframe has not yet been reached.
  *
@@ -73,6 +93,10 @@ function renderAutocomplete(data) {
     showAutocompleteBox()
     dataList.forEach(item => {
         let suggestionElement = document.createElement("div");
+        suggestionElement.classList.add("dropdown-item");
+        suggestionElement.classList.add("border-bottom");
+        suggestionElement.classList.add("text-wrap");
+        suggestionElement.style.cursor="pointer";
         let primaryTextElement = document.createElement("div");
         let secondaryTextElement = document.createElement("div", );
         primaryTextElement.classList.add("primary-text");
@@ -85,7 +109,7 @@ function renderAutocomplete(data) {
         let suburb = item.suburb;
         let postcode = item.postcode;
 
-        let isStreetAddressPrimary = streetAddress ? true : false;
+        let isStreetAddressPrimary = !!streetAddress;
         if (isStreetAddressPrimary) {
             primaryTextElement.innerHTML = streetAddress;
             secondaryTextElement.innerHTML = outerLocation;
@@ -108,6 +132,8 @@ function renderAutocomplete(data) {
         if (isStreetAddressPrimary) suggestionElement.appendChild(secondaryTextElement);
         autocompleteList.appendChild(suggestionElement);
     });
+    const dropdownItems = document.getElementsByClassName("dropdown-item");
+    dropdownItems.item(dropdownItems.length - 1).classList.remove("border-bottom");
 }
 
 function removeAutocompleteBox() {

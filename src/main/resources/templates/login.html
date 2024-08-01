@@ -1,57 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:fragment="headerfiles">
+<head th:insert="~{fragments/importFragment :: headerfiles}">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Chrome">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/css/newstyle.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
-    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
 </head>
 
 
 <body>
-<div class="container-flex d-flex justify-content-center align-items-center vh-100 login-bg">
+<div class="container-flex d-flex justify-content-center align-items-center vh-100 login-bg p-3">
     <div>
-        <div class="bg-white py-3 rounded shadow" th:if="${accountActiveMessage} != null" style="margin-bottom: 25px">
+        <div class="bg-white py-3 rounded shadow" th:if="${accountActiveMessage} != null" style="margin-bottom: 1rem">
             <p th:text="${accountActiveMessage}"
-               style="font-size: small; font-style: italic; color: navy;"></p>
+               style="font-size: small; font-style: italic; color: navy; text-align: center; margin: 0"></p>
         </div>
+
+        <div class="bg-white py-3 rounded shadow" th:if="${tokenExpiredError} != null" style="margin-bottom: 1rem">
+            <p th:text="${tokenExpiredError}"
+               style="font-size: small; font-style: italic; color: #6F0C0C; text-align: center; margin: 0"></p>
+        </div>
+
         <div class="g-col-md-4">
             <div class="bg-white p-5 rounded shadow ">
-                <p class="form-text text-danger" th:text="${tokenExpiredError}"></p>
                 <form th:action="@{${loginUri}}" method="post" name="loginForm" class="">
                     <h2 class="text-center display-3 title-heading mb-4">Login</h2>
-                    <label for="email" class="form-label">Email Address</label>
-                    <div class="mb-4">
+
+                    <div class="form-floating mb-3">
                         <input
                                 class="form-control"
                                 type="text"
-                                id="email"
-                                name="email"
+                                id="username"
+                                name="username"
                                 th:name="username"
+                                placeholder="username"
+                                data-cy="username"
+                                autofocus
+                                th:classappend="${emailError} ? 'is-invalid'"
+                        />
+                        <label for="username">Email Address</label>
+                        <p class="error message" id="emailError" th:text="${emailError}"></p>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input
+                                class="form-control"
+                                type="password"
+                                id="password"
+                                name="password"
+                                th:name="password"
+                                placeholder="password"
+                                data-cy="password"
                                 autofocus
                         />
-                        <p class="form-text text-danger" id="emailError" th:text="${emailError}"></p>
+                        <label for="password">Password</label>
+                        <p class="error message" id="invalidError" th:text="${invalidError}"></p>
                     </div>
-
-                    <div class="mb-4">
-                        <label for="password" class="form-label">Password</label>
-                        <input class="form-control"
-                               type="password"
-                               id="password"
-                               name="password"
-                               th:name="password"
-                        >
-                        <p class="form-text text-danger" id="invalidError" th:text="${invalidError}"></p>
-                    </div>
-
                     <div class="col auto text-center mt-4 mb-4">
-                        <button type="submit"
-                                class="btn btn-lg text-white "
-                                style="background-color: var(--fern-green)">
-                            Sign In
+                        <button class="btn btn-outline-primary"
+                                type="submit"
+                                style="
+                                 border-color: #477641;
+                                 --bs-btn-color: #477641;
+                                 --bs-btn-hover-bg: #477641;
+                                 --bs-btn-hover-color: #fff;
+                                 --bs-btn-active-bg: #477641;
+                                 "
+                        >Sign In <i class="bi bi-box-arrow-in-right"></i>
                         </button>
                     </div>
                     <p class="registerLink">Forgot your Password? <a th:href="@{${resetPasswordEmailUri}}">Forgot Password</a></p>

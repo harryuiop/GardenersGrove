@@ -126,7 +126,7 @@ public class User {
      * @return User's first and last name together.
      */
     public String getName() {
-        return lastName == null ? firstName : firstName + ' ' + lastName;
+        return lastName == null || lastName.isEmpty() ? firstName : firstName + ' ' + lastName;
     }
 
     /**

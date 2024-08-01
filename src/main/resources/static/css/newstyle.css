@@ -1,37 +1,77 @@
 :root {
-  --eerie-black: #141811;
-  --dark-green: #142915;
-  --fern-green: #477641;
-  --khaki: #ceb992;
-  --eggshell: #faf3dd;
+    --eerie-black: #141811;
+    --dark-green: #142915;
+    --fern-green: #477641;
+    --khaki: #ceb992;
+    --isabelline: #efefec;
+    --error-red: #6f0c0c;
 }
 
 .login-bg {
-  background-image: linear-gradient(
-    to bottom right,
-    var(--dark-green),
-    var(--fern-green)
-  );
+    background-image: linear-gradient(to bottom right,
+            var(--dark-green),
+            var(--fern-green));
 }
 
 .bg {
-  background-color: #efefec;
-  color: var(--dark-green)
+    background-color: var(--isabelline);
+    font-family:
+        gill sans,
+        sans-serif;
+    margin: 0;
 }
 
 .message {
-  font-size: 0.8rem;
-  font-style: italic;
-  margin-top: 0;
+    font-size: 0.8rem;
+    font-style: italic;
+    margin-top: 0;
 }
 
 .error {
-  color: #6F0C0C
+    color: var(--error-red);
 }
 
 .landing-bg {
-  background-image: url("../images/landing_plant.jpeg");
-  background-size: cover;
-  background-position: center;
-  height: 40em;
+    background-image: url("../images/landing_plant.jpeg");
+    background-size: cover;
+    background-position: center;
+    height: 40em;
+}
+
+.btn.btn-edit {
+    border-color: #000;
+    --bs-btn-color: #000;
+    --bs-btn-hover-bg: #000;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #000;
+}
+
+.btn.btn-edit:hover {
+    border-color: #000;
+}
+
+.btn.btn-confirm {
+    border-color: var(--fern-green);
+    --bs-btn-color: var(--fern-green);
+    --bs-btn-hover-bg: var(--fern-green);
+    --bs-btn-hover-color: white;
+    --bs-btn-active-bg: var(--fern-green);
+}
+
+.garden-item {
+    transition-property: all;
+    transition-duration: 0.3s;
+}
+
+.garden-item:hover {
+    background-color: #d0dfd0 !important;
+    box-shadow: var(--bs-box-shadow-inset) !important;
+}
+
+.btn.btn-cancel {
+    border-color: #6f0c0c;
+    --bs-btn-color: #6f0c0c;
+    --bs-btn-hover-bg: #6f0c0c;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #6f0c0c;
 }
