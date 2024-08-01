@@ -39,7 +39,7 @@ public class PublicGardensController extends NavBar {
      * Serve the browse public gardens page to the user,
      * with gardens paginated to 10 per page.
      *
-     * @param page  The page number to display, used for database query.
+     * @param page  The page number to display, used for a database query.
      * @param model The object used to pass data through to Thymeleaf.
      * @return Thymeleaf HTML browse public gardens.
      */
