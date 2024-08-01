@@ -170,7 +170,7 @@ tasks.register("cucumberTestReport", JacocoReport) { // Generate a report for cu
 }
 
 jacocoTestReport { // Generate a report for all generated test data
-	dependsOn test
+	dependsOn test, cucumber, integration
 
 	reports {
 		xml.required = true
