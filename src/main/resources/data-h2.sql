@@ -125,6 +125,36 @@ VALUES ('Rotorua', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
 INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
 VALUES ('Whangarei', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
 
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Nelson', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Hastings', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Invercargill', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Upper Hutt', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Whanganui', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Gisborne', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Paraparaumu', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Blenheim', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Rolleston', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
+INSERT INTO location (city, country, is_coordinates_set, lat, lng, postcode, street_address, suburb)
+VALUES ('Queenstown', 'New Zealand', FALSE, 0.0, 0.0, NULL, NULL, NULL);
+
 
 INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
                     time_created)
@@ -176,11 +206,51 @@ VALUES (12, 'Default User''s Twelfth Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
 
 INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
                     time_created)
-VALUES (13, 'Second User''s First Garden', 'A demonstration garden.', 2, 0.5, FALSE, TRUE, NOW());
+VALUES (13, 'Default User''s Thirteenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
 
 INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
                     time_created)
-VALUES (14, 'Second User''s Second Garden', 'This description needs to be edited first as it is not verified', 2, 0.5,
+VALUES (14, 'Default User''s Fourteenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (15, 'Default User''s Fifteenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (16, 'Default User''s Sixteenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (17, 'Default User''s Seventeenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (18, 'Default User''s Eighteenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (19, 'Default User''s Nineteenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (20, 'Default User''s Twentieth Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (21, 'Default User''s Twenty First Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (22, 'Default User''s Twenty Second Garden', NULL, 1, NULL, TRUE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (23, 'Second User''s First Garden', 'A demonstration garden.', 2, 0.5, FALSE, TRUE, NOW());
+
+INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
+                    time_created)
+VALUES (24, 'Second User''s Second Garden', 'This description needs to be edited first as it is not verified', 2, 0.5,
         FALSE, FALSE, NOW());
 
 
