@@ -44,8 +44,8 @@ public class PublicGardensController extends NavBar {
      * @return Thymeleaf HTML browse public gardens.
      */
     @GetMapping(BROWSE_PUBLIC_GARDENS_URI_STRING)
-    String browseGardens(@RequestParam(required = false) Integer page, @RequestParam(required = false) String gardenName, Model model) {
-        model.addAttribute("gardenSearchSearch", gardenName);
+    String browseGardens(@RequestParam(required = false) Integer page, @RequestParam(required = false) String searchParameter, Model model) {
+        model.addAttribute("searchParameter", searchParameter);
 
         logger.info("GET {}", browsePublicGardensUri());
 
@@ -54,18 +54,17 @@ public class PublicGardensController extends NavBar {
         }
         model.addAttribute("currentPage", page);
 
-        List<Garden> gardenList = gardenService.getPageOfPublicGardens(page, gardenName);
-        System.out.println(gardenList);
+        List<Garden> gardenList = gardenService.getPageOfPublicGardens(page, searchParameter);
         model.addAttribute("gardenList", gardenList);
 
+        System.out.println(gardenList);
+
         long numberOfGardens;
-        if (gardenName != null) {
-            numberOfGardens = gardenService.countPublicGardens(gardenName);
+        if (searchParameter != null) {
+            numberOfGardens = gardenService.countPublicGardens(searchParameter);
         } else {
             numberOfGardens = gardenService.countPublicGardens();
         }
-
-        System.out.println(numberOfGardens);
 
         int numberOfPages = (int) Math.min(5, Math.ceil((double) numberOfGardens / 10));
 

@@ -15,9 +15,9 @@
           class="form-control rounded"
           id="gardenName"
           placeholder="Search for gardens"
-          th:name="gardenName"
+          th:name="searchParameter"
           type="text"
-          th:value="${gardenSearchSearch}"
+          th:value="${searchParameter}"
         />
         <button
           class="input-group-text border-0"
@@ -46,7 +46,7 @@
             th:classappend="${currentPage == 1 } ? 'disabled'"
           >
             <a
-              th:href="@{${browsePublicGardensUriString}(page=${1}, gardenName=${gardenSearchSearch})}"
+              th:href="@{${browsePublicGardensUriString}(page=${1}, searchParameter=${searchParameter})}"
               class="page-link"
             >
               <span aria-hidden="true">First</span>
@@ -57,7 +57,7 @@
             <a
               class="page-link"
               th:classappend="${page == currentPage} ? active"
-              th:href="@{${browsePublicGardensUriString}(page=${page}, gardenName=${gardenSearchSearch})}"
+              th:href="@{${browsePublicGardensUriString}(page=${page}, searchParameter=${searchParameter})}"
               th:text="${page}"
             ></a>
           </li>
@@ -68,7 +68,7 @@
           >
             <a
               class="page-link"
-              th:href="@{${browsePublicGardensUriString}(page=${numberOfPages}, gardenName=${gardenSearchSearch})}"
+              th:href="@{${browsePublicGardensUriString}(page=${numberOfPages}, searchParameter=${searchParameter})}"
             >
               <span aria-hidden="true">Last</span>
             </a>
