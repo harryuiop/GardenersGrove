@@ -126,21 +126,17 @@
               </div>
             </div>
             <div class="card h-auto w-100 mt-3 align-items-center rounded-4 d-flex flex-column" id="advice-message">
-              <p class="mt-2" style="font-weight: bold"><i th:text="${advice}"></i></p>
               <div class="w-100 d-flex justify-content-end">
-                <button class="btn btn-outline-primary btn-sm me-2"
+                <button class="btn me-2"
                         type="button"
                         style="
-                    border-color: #6F0C0C;
                     --bs-btn-color: #6F0C0C;
-                    --bs-btn-hover-bg: #6F0C0C;
-                    --bs-btn-hover-color: #fff;
-                    --bs-btn-active-bg: #6F0C0C;
-                ">
+                    --bs-btn-hover-color: #ec7676;
+                ">Close
                   <i class="bi bi-x"></i>
                 </button>
               </div>
-
+              <p class="mt-2" style="font-weight: bold; padding-bottom: 1rem"><i th:text="${advice}"></i></p>
             </div>
           </div>
         </div>
