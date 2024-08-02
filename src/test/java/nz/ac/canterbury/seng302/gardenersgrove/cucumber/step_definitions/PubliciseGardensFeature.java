@@ -4,11 +4,10 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import nz.ac.canterbury.seng302.gardenersgrove.authentication.CustomAuthenticationProvider;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
+import nz.ac.canterbury.seng302.gardenersgrove.cucumber.RunCucumberTest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -16,7 +15,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -73,21 +71,7 @@ public class PubliciseGardensFeature {
 
     @Given("I have a user account that has logged in as {string}, {string}")
     public void iHaveAUserAccountThatHasLoggedIn(String email, String password) {
-        User user;
-        if (userService.getUserByEmail(email) == null) {
-            user = new User(email, "Jane", "Doe", password, "");
-            user.setConfirmation(true);
-            userService.addUsers(user);
-
-        } else {
-            user = userService.getUserByEmail(email);
-        }
-        CustomAuthenticationProvider customAuthenticationProvider = new CustomAuthenticationProvider(userService);
-        UsernamePasswordAuthenticationToken authReq
-                = new UsernamePasswordAuthenticationToken(user.getEmail(), password);
-        auth = customAuthenticationProvider.authenticate(authReq);
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        Assertions.assertEquals(userService.getAuthenticatedUser().getUserId(), user.getUserId());
+        auth = RunCucumberTest.authMaker.accept(email, password, userService);
     }
 
     @Given("I am on the garden details page for a garden I own")
@@ -189,6 +173,8 @@ public class PubliciseGardensFeature {
     @Then("the description is persisted")
     public void theDescriptionIsPersisted() {
         SecurityContextHolder.getContext().setAuthentication(auth);
+//        RunCucumberTest.authMaker.accept(email, password, userService);
+
         List<Garden> gardens = gardenService.getAllGardens();
         Garden garden = gardens.get(gardens.size() - 1);
         Assertions.assertEquals(description, garden.getDescription());

@@ -3,16 +3,14 @@ package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import nz.ac.canterbury.seng302.gardenersgrove.cucumber.RunCucumberTest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.FriendRequestRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -28,26 +26,19 @@ public class CancelFriendRequestFeature {
 
     @Autowired
     private FriendRequestService friendRequestService;
-    @Autowired
-    private FriendRequestRepository friendRequestRepository;
 
     @Autowired
     private UserService userService;
 
     private ResultActions result;
+    private Authentication auth;
 
-    private static boolean usersCreated;
-
-    private final User user1 = new User(
-            "user1@mail.com",
-            "Test", "User",
-            "Password1!", "01/01/2000"
-    );
+    private User user1;
 
     private final User user2 = new User(
             "user2@mail.com",
-            "Test2", "User2",
-            "Password1!", "01/01/2000"
+            "Test", "User",
+            "Password1!", ""
     );
 
     // AC 1
@@ -61,6 +52,7 @@ public class CancelFriendRequestFeature {
 
     @When("I cancel my friend request")
     public void i_cancel_my_friend_request() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(auth);
         FriendRequest friendRequest = friendRequestService.findRequestBySender(user1).get(0);
         result = mockMvc.perform(MockMvcRequestBuilders.post(viewFriendsUri())
                 .param("action","Cancel")
@@ -70,6 +62,7 @@ public class CancelFriendRequestFeature {
 
     @Then("The other user cannot accept the request anymore")
     public void the_other_user_cannot_accept_the_request_anymore() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(auth);
         FriendRequest friendRequest = friendRequestService.findRequestBySender(user1).get(0);
         result.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.forwardedUrl(viewFriendsUri().toString()));
@@ -83,10 +76,15 @@ public class CancelFriendRequestFeature {
 
     @Given("I have two users")
     public void iHaveTwoUsers() {
-        if (!usersCreated) {
-//            userService.addUsers(user1);
+        String email = "user1@mail.com";
+        String password = "Password1!";
+        if (userService.getUserByEmail(email) == null) {
+            user1 = new User(email, "User", "One", password, "");
+            user1.setConfirmation(true);
+            user2.setConfirmation(true);
+            userService.addUsers(user1);
             userService.addUsers(user2);
-            usersCreated = true;
         }
+        auth = RunCucumberTest.authMaker.accept(email, password, userService);
     }
 }
