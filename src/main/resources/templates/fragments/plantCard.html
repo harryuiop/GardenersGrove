@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:insert="~{fragments/importFragment :: headerfiles}">
+</head>
+<body>
+<div th:fragment="plantCard" >
+    <div id="plantCard">
+        <h2 class="display-5" th:text="${plantName}"></h2>
+        <p class="overflow-y-auto" style="max-height: 20vh" th:text="${plantDescription}"></p>
+        <p>
+            <span th:if="${plantCount == 1}">There is <b th:text="${plantCount}"></b> in the garden</span>
+            <span th:if="${plantCount != 1}">There are <b th:text="${plantCount}"></b> in the garden</span>
+        </p>
+        <p style="font-style: italic;" th:if="${plantDate != null}" th:text="'Planted on ' + ${plantDate}"></p>
+    </div>
+</div>
+</body>
+</html>
