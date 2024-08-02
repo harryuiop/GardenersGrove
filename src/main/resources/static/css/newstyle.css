@@ -75,3 +75,13 @@
     --bs-btn-hover-color: #fff;
     --bs-btn-active-bg: #6f0c0c;
 }
+
+.garden-item {
+  transition-property: all;
+  transition-duration: 0.3s;
+}
+
+.garden-item:hover {
+  background-color: #d0dfd0 !important;
+  box-shadow: var(--bs-box-shadow-inset) !important;
+}
