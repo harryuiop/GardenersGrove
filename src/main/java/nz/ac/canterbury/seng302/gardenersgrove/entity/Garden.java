@@ -61,7 +61,7 @@ public class Garden {
      * @param description           a note made about the garden by the creator
      * @param location              The details of the physical place where the garden is
      * @param size                  The physical size of the garden in square metres
-     * @param verifiedDescription   Whether the description is suitible for public consumption
+     * @param verifiedDescription   Whether the description is suitable for public consumption
      */
     public Garden(User owner, String name, String description, Location location, Float size, boolean verifiedDescription) {
         this.owner = owner;

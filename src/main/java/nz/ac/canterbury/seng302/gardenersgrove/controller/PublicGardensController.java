@@ -39,13 +39,13 @@ public class PublicGardensController extends NavBar {
      * Serve the browse public gardens page to the user,
      * with gardens paginated to 10 per page.
      *
-     * @param page  The page number to display, used for database query.
+     * @param page  The page number to display, used for a database query.
      * @param model The object used to pass data through to Thymeleaf.
      * @return Thymeleaf HTML browse public gardens.
      */
     @GetMapping(BROWSE_PUBLIC_GARDENS_URI_STRING)
-    String browseGardens(@RequestParam(required = false) Integer page, @RequestParam(required = false) String gardenName, Model model) {
-        model.addAttribute("gardenSearchSearch", gardenName);
+    String browseGardens(@RequestParam(required = false) Integer page, @RequestParam(required = false) String searchParameter, Model model) {
+        model.addAttribute("searchParameter", searchParameter);
 
         logger.info("GET {}", browsePublicGardensUri());
 
@@ -53,25 +53,22 @@ public class PublicGardensController extends NavBar {
             page = 1;
         }
         model.addAttribute("currentPage", page);
-
-        List<Garden> gardenList = gardenService.getPageOfPublicGardens(page, gardenName);
-        System.out.println(gardenList);
+        List<Garden> gardenList = gardenService.getPageOfPublicGardens(page, searchParameter);
         model.addAttribute("gardenList", gardenList);
 
         long numberOfGardens;
-        if (gardenName != null) {
-            numberOfGardens = gardenService.countPublicGardens(gardenName);
+        if (searchParameter != null) {
+            numberOfGardens = gardenService.countPublicGardens(searchParameter);
         } else {
             numberOfGardens = gardenService.countPublicGardens();
         }
+        model.addAttribute("numberOfResults", numberOfGardens);
 
-        System.out.println(numberOfGardens);
 
         int numberOfPages = (int) Math.min(5, Math.ceil((double) numberOfGardens / 10));
 
         model.addAttribute("numberOfPages", numberOfPages);
         model.addAttribute("pageNumbers", IntStream.range(1, numberOfPages + 1).toArray());
-        model.addAttribute("numberOfGardens", numberOfGardens);
 
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
         model.addAttribute("browsePublicGardensUriString", BROWSE_PUBLIC_GARDENS_URI_STRING);

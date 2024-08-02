@@ -17,13 +17,22 @@ public interface GardenRepository extends CrudRepository<Garden, Long> {
             nativeQuery = true)
     List<Garden> findByGardenPublicTrue(int paginationOffset);
 
-    @Query(value = "SELECT * FROM garden WHERE is_garden_public = TRUE AND LOWER(name) LIKE CONCAT('%', LOWER(?2), '%')" +
-            "ORDER BY time_created DESC LIMIT 10 OFFSET ?1", nativeQuery = true)
-    List<Garden> findByGardenPublicTrueWithSearchName(int paginationOffset, String searchGardenName);
-
+    @Query(value = "SELECT DISTINCT g.* " +
+                   "FROM garden g " +
+                   "LEFT JOIN plant p ON g.id = p.garden_id " +
+                   "WHERE g.is_garden_public = TRUE " +
+                   "AND (LOWER(g.name) LIKE CONCAT('%', LOWER(?2), '%') OR LOWER(p.name) LIKE CONCAT('%', LOWER(?2), '%')) " +
+                   "ORDER BY g.time_created DESC " +
+                   "LIMIT 10 OFFSET ?1", nativeQuery = true)
+    List<Garden> findByGardenPublicTrueWithSearchParameter(int paginationOffset, String searchParameter);
 
     long countByIsGardenPublicTrue();
 
-    @Query(value = "SELECT COUNT(*) FROM garden WHERE is_garden_public = TRUE AND LOWER(name) LIKE CONCAT('%', LOWER(?1), '%')", nativeQuery = true)
-    long countByIsGardenPublicTrueWithGardenNameSearch(String searchGardenName);
+    @Query(value = "SELECT COUNT(DISTINCT g.id) " +
+            "FROM garden g " +
+            "LEFT JOIN plant p ON g.id = p.garden_id " +
+            "WHERE g.is_garden_public = TRUE " +
+            "AND (LOWER(g.name) LIKE CONCAT('%', LOWER(?1), '%') OR LOWER(p.name) LIKE CONCAT('%', LOWER(?1), '%'))", nativeQuery = true)
+    long countByIsGardenPublicTrueWithGardenNameSearch(String searchParameter);
+
 }
