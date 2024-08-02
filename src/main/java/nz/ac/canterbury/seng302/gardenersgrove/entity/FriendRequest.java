@@ -65,6 +65,15 @@ public class FriendRequest {
         return status;
     }
 
+    /**
+     * Check user's request is declined
+     *
+     * @return true if user's request has been declined once
+     */
+    public boolean isDeclined() {
+        return status == Status.DECLINED || status == Status.DECLINED_REMOVED;
+    }
+
     public void setStatus(Status status) {
         this.status = status;
     }
