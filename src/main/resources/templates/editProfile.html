@@ -19,7 +19,7 @@
       <div class="col mx-4 rounded bg-white shadow-sm p-2">
         <div class="row">
           <!-- CHANGE AND VIEW PROFILE PICTURE -->
-          <div class="col-sm-6 col-md-3 col-12 text-center my-4">
+          <div class="col-sm-6 col-md-3 col-12 text-center my-4 m-0">
             <img class="rounded-circle profile-img p-4"                  id="profilePicture"
                 th:src="@{${user.getProfilePictureFilePath()}}"
                 alt="User profile picture"
@@ -149,24 +149,21 @@
                 </div>
 
                 <button
-                        class="btn btn-confirm"
+                        class="btn btn-confirm mt-2"
                         id="submit"
                         type="submit"
                 > Submit <i class="bi bi-check"></i>
                 </button>
+
                 <span>
-                  <a th:href="@{${profileUri}}">
-                  <button class="btn btn-cancel"
-                          type="button"
-                  >Cancel <i class="bi bi-x"></i>
-                  </button>
-                </a>
+                  <a th:href="@{${profileUri}}" class="btn btn-cancel mt-2">
+                    Cancel <i class="bi bi-x"></i>
+                  </a>
                 </span>
+
                 <span>
-                  <a id="changePassword" th:href="@{${editPasswordUri}}">
-                    <button class="btn btn-edit float-sm-end" type="button" onClick>
+                  <a id="changePassword" th:href="@{${editPasswordUri}}" class="btn btn-edit float-sm-end mt-2">
                       Change Password <i class="bi bi-pencil"></i>
-                    </button>
                   </a>
                 </span>
               </form>
