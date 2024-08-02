@@ -1,16 +1,57 @@
 package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import nz.ac.canterbury.seng302.gardenersgrove.authentication.CustomAuthenticationProvider;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class EditUserProfileFeature {
+    @Autowired
+    private MockMvc mockMvc;
+
     @When("I visit the edit profile page")
-    public void iVisitTheEditProfilePage() {
+    public void iVisitTheEditProfilePage() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(editProfileUri()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("editProfile"));
     }
 
     @Then("My details are populated into the fields except my password")
     public void myDetailsArePopulatedIntoTheFieldsExceptMyPassword() {
+//        mockMvc.perform(MockMvcRequestBuilders.get(editProfileUri()))
+//                .andExpect(status().isOk())
+//                .andExpect(view().getClass())
     }
 
     @And("My user account does not have a last name")
@@ -85,10 +126,6 @@ public class EditUserProfileFeature {
     public void iEnterANameLongerThanCharactersIntoTheLastNameField(int maxLength) {
     }
 
-    @When("I enter a malformed {email} into the email field on the edit profile page")
-    public void iEnterAMalformedEmailIntoTheEmailFieldOnTheEditProfilePage(String email) {
-    }
-
     @Then("I get an error message saying \"Email address must be in the form ‘jane@doe.nz’\"")
     public void iGetAnErrorMessageSayingEmailAddressMustBeInTheFormJaneDoeNz() {
     }
@@ -110,10 +147,14 @@ public class EditUserProfileFeature {
     }
 
     @And("I click the \"Cancel\" button")
-    public void iClickTheButton(String arg0) {
+    public void iClickTheButton() {
     }
 
     @Then("The changes are not saved")
     public void theChangesAreNotSaved() {
+    }
+
+    @When("I enter a malformed {string} into the email field on the edit profile page")
+    public void iEnterAMalformedStringIntoTheEmailFieldOnTheEditProfilePage(String email) {
     }
 }

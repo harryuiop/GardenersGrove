@@ -75,12 +75,12 @@ Feature: As Sarah, I want to edit my user profile so that I can keep my details 
 
   Scenario: AC7 - When I submit an invalid email address, I get an error message saying "Email address must be in the form ‘jane@doe.nz’"
     Given I have a user account that has logged in
-    When I enter a malformed <email> into the email field on the edit profile page
+    When I enter a malformed <string> into the email field on the edit profile page
     And I click the submit button
-    Then I get an error message saying "Email address must be in the form ‘jane@doe.nz’”
+    Then I get an error message saying "Email address must be in the form ‘jane@doe.nz’"
     Examples:
-    | email       |
-    | "asdfsdf"   |
+    | string      |
+    | "asdoc"     |
     | "sam@gmail" |
     | "email.com" |
 
