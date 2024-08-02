@@ -38,18 +38,40 @@
     height: 40em;
 }
 
-.btn-edit {
-    border-color: black;
-    --bs-btn-color: black;
-    --bs-btn-hover-bg: black;
-    --bs-btn-hover-color: white;
-    --bs-btn-active-bg: black;
+.btn.btn-edit {
+    border-color: #000;
+    --bs-btn-color: #000;
+    --bs-btn-hover-bg: #000;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #000;
 }
 
-.btn-confirm {
+.btn.btn-edit:hover {
+    border-color: #000;
+}
+
+.btn.btn-confirm {
     border-color: var(--fern-green);
     --bs-btn-color: var(--fern-green);
     --bs-btn-hover-bg: var(--fern-green);
     --bs-btn-hover-color: white;
     --bs-btn-active-bg: var(--fern-green);
+}
+
+.garden-item {
+    transition-property: all;
+    transition-duration: 0.3s;
+}
+
+.garden-item:hover {
+    background-color: #d0dfd0 !important;
+    box-shadow: var(--bs-box-shadow-inset) !important;
+}
+
+.btn.btn-cancel {
+    border-color: #6f0c0c;
+    --bs-btn-color: #6f0c0c;
+    --bs-btn-hover-bg: #6f0c0c;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #6f0c0c;
 }

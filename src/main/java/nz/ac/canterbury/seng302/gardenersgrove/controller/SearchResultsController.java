@@ -1,11 +1,13 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.friends.SearchedUserResult;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import nz.ac.canterbury.seng302.gardenersgrove.friends.SearchedUserResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +18,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.sendFriendRequestUri;
 
 /**
  * Controls the searchResults page for users. This controls what the users see when the user uses the search bar on the
  * friends page.
  */
 @Controller
-public class SearchResultsController {
+public class SearchResultsController extends NavBar {
+    private final GardenService gardenService;
     Logger logger = LoggerFactory.getLogger(SearchResultsController.class);
     private final UserService userService;
     private final FriendRequestService friendRequestService;
@@ -41,10 +42,11 @@ public class SearchResultsController {
      * @param userService the current service being used to get information about the users
      */
     @Autowired
-    public SearchResultsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService) {
+    public SearchResultsController(UserService userService, FriendRequestService friendRequestService, FriendshipService friendshipService, GardenService gardenService) {
         this.userService = userService;
         this.friendRequestService = friendRequestService;
         this.friendshipService = friendshipService;
+        this.gardenService = gardenService;
     }
 
     /**
@@ -68,6 +70,9 @@ public class SearchResultsController {
         }
         model.addAttribute("incomingRequests", incomingRequests);
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
+        model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
+        model.addAttribute("viewFriendsProfileUriString", VIEW_FRIENDS_PROFILE_URI_STRING);
+        this.updateGardensNavBar(model, gardenService, userService);
         return "searchResults";
     }
 
