@@ -4,11 +4,6 @@
 <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Profile Page</title>
 </head>
-<style>
-    .err-text {
-        color: #6f0c0c;
-    }
-</style>
 
 <body class="bg">
     <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
@@ -21,8 +16,8 @@
                             alt="User Profile Picture" />
                         <form th:unless="${isFriend}" class="text-center" th:action="@{${uploadProfileImageUri}}" method="post"
                             name="profilePhoto" enctype="multipart/form-data">
-                            <p class="err-text text-wrap" th:text="${imageTypeError}"></p>
-                            <p class="err-text text-wrap" th:text="${imageSizeError}"></p>
+                            <p class="error message text-wrap" th:text="${imageTypeError}"></p>
+                            <p class="error message text-wrap" th:text="${imageSizeError}"></p>
                             <div class="file-input-wrapper"></div>
                             <button id="file-button" class="btn btn-confirm" type="button">
                                 Edit Profile Picture <i class="bi bi-camera"></i>

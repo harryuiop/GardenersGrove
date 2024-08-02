@@ -12,164 +12,173 @@
     th:src="@{/javascript/profilePictureUpload.js}"
   ></script>
 
-  <body class="bg" onload="loadingPage()">
+<body class="bg" onload="loadingPage()">
   <nav th:insert="~{fragments/navbar :: navbar}"></nav>
   <div class="container-fluid">
-      <div class="profileBody d-flex align-items-center justify-content-center">
-
-        <!-- CHANGE AND VIEW PROFILE PICTURE -->
-        <div class="formContainer">
-          <form
-            id="uploadProfileImage"
-            th:action="@{${uploadProfileImageUri}}"
-            method="post"
-            name="profilePhoto"
-            enctype="multipart/form-data"
-          >
-            <input
-              id="profilePictureInput"
-              type="file"
-              name="image"
-              accept="image/jpeg, image/png, image/svg+xml"
-              class="formControlFile"
-              alt="test"
-            />
-            <p
-              class="errorMessage"
-              id="imageTypeError"
-              th:text="${imageTypeError}"
-            ></p>
-            <p
-              class="errorMessage"
-              id="imageSizeError"
-              th:text="${imageSizeError}"
-            ></p>
-          </form>
-
-          <div id="profilePictureWrapper">
-            <img
-              id="profilePicture"
-              th:src="@{${user.getProfilePictureFilePath()}}"
-              alt="User profile picture"
-            />
-            <div id="profilePictureOverlay">
-              <div id="profilePictureOverlayIcon">+</div>
-            </div>
+    <div class="row">
+      <div class="col mx-4 rounded bg-white shadow-sm p-2">
+        <div class="row">
+          <!-- CHANGE AND VIEW PROFILE PICTURE -->
+          <div class="col-sm-4 col-md-3 col-12 text-center my-4">
+            <img class="rounded-circle profile-img p-4"                  id="profilePicture"
+                th:src="@{${user.getProfilePictureFilePath()}}"
+                alt="User profile picture"
+              />
+            <form id="uploadProfileImage" th:action="@{${uploadProfileImageUri}}" method="post" name="profilePhoto" enctype="multipart/form-data">
+              <input
+                      class="d-none"
+                      id="file-picker"
+                      type="file"
+                      name="image"
+                      accept="image/jpeg, image/png, image/svg+xml"
+                      alt="test"
+              />
+              <p class="error message" id="imageTypeError" th:text="${imageTypeError}"></p>
+              <p class="error message" id="imageSizeError" th:text="${imageSizeError}"></p>
+              <button id="file-button" class="btn btn-confirm" type="button">
+                Edit Profile Picture <i class="bi bi-camera"></i>
+              </button>
+              <button class="d-none" id="submit-button" type="submit"></button>
+            </form>
           </div>
 
           <!-- BASIC INFORMATION FORM -->
-          <form
-            th:action="@{${editProfileUri}}"
-            method="post"
-            name="registerForm"
-            id="editProfileForm"
-          >
-            <!-- FIRST NAME  -->
-            <div class="form-floating mb-3">
-              <input
-                class="form-control"
-                type="text"
-                id="firstName"
-                name="firstName"
-                th:name="firstName"
-                th:value="${user.getFirstName()}"
-                placeholder="firstName"
-                data-cy="firstName"
-                autofocus
-                th:classappend="${firstNameError} ? 'is-invalid'"
-              />
-              <label for="firstName">First name:</label>
-              <p class="error message" id="firstNameError" th:text="${firstNameError}"></p>
-            </div>
+          <div
+                  class="col-sm-8 col-md-9 col-12 my-4 text-sm-start text-center d-flex flex-column justify-content-between">
+            <div class="flex-grow-1">
+              <p class="display-3 mb-0 text-break">Edit Profile</p>
+              <form
+                      th:action="@{${editProfileUri}}"
+                      method="post"
+                      name="registerForm"
+                      id="editProfileForm"
+              >
+                <!-- NAME -->
+                <div class="row d-flex align-content-around align-items-start">
+                <!-- FIRST NAME  -->
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input
+                              class="form-control"
+                              type="text"
+                              id="firstName"
+                              name="firstName"
+                              th:name="firstName"
+                              th:value="${user.getFirstName()}"
+                              placeholder="firstName"
+                              data-cy="firstName"
+                              autofocus
+                              th:classappend="${firstNameError} ? 'is-invalid'"
+                      />
+                      <label for="firstName">First name:</label>
+                      <p class="error message" id="firstNameError" th:text="${firstNameError}"></p>
+                    </div>
+                  </div>
 
-            <!-- LAST NAME -->
-            <div class="form-floating mb-3">
-              <input
-                      class="form-control"
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      th:name="lastName"
-                      th:value="${user.getLastName()}"
-                      placeholder="lastName"
-                      data-cy="lastName"
-                      autofocus
-                      th:classappend="${lastNameError} ? 'is-invalid'"
-              />
-              <label for="lastName">Last name:</label>
-              <div class="noSurname">
-                <label for="noSurname" class="noSurnameCheckbox">
+                <!-- LAST NAME -->
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input
+                              class="form-control"
+                              type="text"
+                              id="lastName"
+                              name="lastName"
+                              th:name="lastName"
+                              th:value="${user.getLastName()}"
+                              placeholder="lastName"
+                              data-cy="lastName"
+                              autofocus
+                              th:classappend="${lastNameError} ? 'is-invalid'"
+                      />
+                      <label for="lastName">Last name:</label>
+                      <div class="noSurname">
+                        <label for="noSurname" class="noSurnameCheckbox">
+                          <input
+                                  type="checkbox"
+                                  id="noSurname"
+                                  value="checked"
+                                  th:name="noSurname"
+                                  th:checked="${noSurname}"
+                                  th:value="${noSurname}"
+                                  autofocus
+                                  autocomplete="off"
+                                  onchange="updateCheckboxValue()"
+                          />
+                          I have no surname
+                        </label>
+                      </div>
+                      <p class="error message" id="lastNameError" th:text="${lastNameError}"></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="form-floating mb-3">
                   <input
-                          type="checkbox"
-                          id="noSurname"
-                          value="checked"
-                          th:name="noSurname"
-                          th:checked="${noSurname}"
-                          th:value="${noSurname}"
+                          class="form-control"
+                          type="text"
+                          id="email"
+                          name="email"
+                          th:name="email"
+                          th:value="${user.getEmail()}"
+                          placeholder="email"
+                          data-cy="email"
                           autofocus
-                          autocomplete="off"
-                          onchange="updateCheckboxValue()"
+                          th:classappend="${emailError} ? 'is-invalid'"
                   />
-                  I have no surname
-                </label>
-              </div>
-              <p class="error message" id="lastNameError" th:text="${lastNameError}"></p>
+                  <label for="email">Email:</label>
+                  <p class="error message" id="emailError" th:text="${emailError}"></p>
+                </div>
+
+                <!-- DATE OF BIRTH -->
+                <div class="form-floating mb-3">
+                  <input
+                          class="form-control"
+                          type="date"
+                          id="dateOfBirth"
+                          name="dateOfBirth"
+                          th:name="dateOfBirth"
+                          th:value="${user.getDob()}"
+                          autocomplete="off"
+                          autofocus
+                          th:classappend="${dateOfBirthError} ? 'is-invalid'"
+                  />
+                  <label for="dateOfBirth">Date of Birth:</label>
+                  <p class="error message" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
+                </div>
+
+                <button
+                        class="btn btn-confirm"
+                        id="submit"
+                        type="submit"
+                > Submit <i class="bi bi-check"></i>
+                </button>
+
+                <a th:href="@{${profileUri}}">
+                  <button class="btn btn-cancel"
+                          type="button"
+                  >Cancel <i class="bi bi-x"></i>
+                  </button>
+                </a>
+                <a id="changePassword" th:href="@{${editPasswordUri}}" class="btn btn-edit" style="float: right">
+                  Change Password <i class="bi bi-pencil"></i>
+                </a>
+              </form>
             </div>
+          </div>
 
-            <!-- EMAIL -->
-            <div class="form-floating mb-3">
-              <input
-                      class="form-control"
-                      type="text"
-                      id="email"
-                      name="email"
-                      th:name="email"
-                      th:value="${user.getEmail()}"
-                      placeholder="email"
-                      data-cy="email"
-                      autofocus
-                      th:classappend="${emailError} ? 'is-invalid'"
-              />
-              <label for="email">Email:</label>
-              <p class="error message" id="emailError" th:text="${emailError}"></p>
-            </div>
-
-            <!-- DATE OF BIRTH -->
-            <div class="form-floating mb-3">
-              <input
-                      class="form-control"
-                      type="date"
-                      id="dateOfBirth"
-                      name="dateOfBirth"
-                      th:name="dateOfBirth"
-                      th:value="${user.getDob()}"
-                      autocomplete="off"
-                      autofocus
-                      th:classappend="${dateOfBirthError} ? 'is-invalid'"
-              />
-              <label for="dateOfBirth">Date of Birth:</label>
-              <p class="error message" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
-            </div>
-
-            <button
-              class="btn btn-confirm"
-              id="submit"
-              type="submit"
-            > Submit <i class="bi bi-check"></i>
-            </button>
-
-            <a th:href="@{${profileUri}}">
-              <button class="btn btn-cancel"
-                      type="button"
-              >Cancel <i class="bi bi-x"></i>
-              </button>
-            </a>
-          </form>
-          <a id="changePassword" th:href="@{${editPasswordUri}}"
-            >Change Password</a
-          >
         </div>
       </div>
     </div>
-  </body>
+  </div>
+  <script>
+    document.getElementById('file-button').addEventListener('click', function () {
+      document.getElementById('file-picker').click();
+    });
+
+    document.getElementById('file-picker').addEventListener('change', function () {
+      document.getElementById('submit-button').click();
+    });
+  </script>
+</body>
 </html>
