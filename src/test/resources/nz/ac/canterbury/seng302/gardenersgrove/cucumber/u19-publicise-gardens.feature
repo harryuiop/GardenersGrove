@@ -1,6 +1,6 @@
 Feature: As Inaya, I want to be able to make my garden public so that others can see what I’m growing.
   Background:
-    Given I have a user account that has logged in
+    Given I have a user account that has logged in as "jane.doe@gmail.com", "Password1!"
     And I have a garden
 
   Scenario: AC1 - A garden can be made public by checking a tick-box

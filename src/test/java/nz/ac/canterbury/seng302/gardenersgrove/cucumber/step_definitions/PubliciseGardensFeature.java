@@ -71,20 +71,20 @@ public class PubliciseGardensFeature {
         gardenId = garden.getId();
     }
 
-    @Given("I have a user account that has logged in")
-    public void iHaveAUserAccountThatHasLoggedIn() {
+    @Given("I have a user account that has logged in as {string}, {string}")
+    public void iHaveAUserAccountThatHasLoggedIn(String email, String password) {
         User user;
-        if (userService.getUserByEmail("jane.doe@gmail.com") == null) {
-            user = new User("jane.doe@gmail.com", "Jane", "Doe", "Passwrod1!", "");
+        if (userService.getUserByEmail(email) == null) {
+            user = new User(email, "Jane", "Doe", password, "");
             user.setConfirmation(true);
             userService.addUsers(user);
 
         } else {
-            user = userService.getUserByEmail("jane.doe@gmail.com");
+            user = userService.getUserByEmail(email);
         }
         CustomAuthenticationProvider customAuthenticationProvider = new CustomAuthenticationProvider(userService);
         UsernamePasswordAuthenticationToken authReq
-                = new UsernamePasswordAuthenticationToken(user.getEmail(), "Passwrod1!");
+                = new UsernamePasswordAuthenticationToken(user.getEmail(), password);
         auth = customAuthenticationProvider.authenticate(authReq);
         SecurityContextHolder.getContext().setAuthentication(auth);
         Assertions.assertEquals(userService.getAuthenticatedUser().getUserId(), user.getUserId());
