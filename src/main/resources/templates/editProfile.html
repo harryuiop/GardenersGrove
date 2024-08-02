@@ -19,7 +19,7 @@
       <div class="col mx-4 rounded bg-white shadow-sm p-2">
         <div class="row">
           <!-- CHANGE AND VIEW PROFILE PICTURE -->
-          <div class="col-sm-4 col-md-3 col-12 text-center my-4">
+          <div class="col-sm-6 col-md-3 col-12 text-center my-4">
             <img class="rounded-circle profile-img p-4"                  id="profilePicture"
                 th:src="@{${user.getProfilePictureFilePath()}}"
                 alt="User profile picture"
@@ -44,7 +44,7 @@
 
           <!-- BASIC INFORMATION FORM -->
           <div
-                  class="col-sm-8 col-md-9 col-12 my-4 text-sm-start text-center d-flex flex-column justify-content-between">
+                  class="col-sm-12 col-md-9 col-12 my-4 text-sm-start text-center d-flex flex-column justify-content-between">
             <div class="flex-grow-1">
               <p class="display-3 mb-0 text-break">Edit Profile</p>
               <form
@@ -52,6 +52,7 @@
                       method="post"
                       name="registerForm"
                       id="editProfileForm"
+                      class="col-lg-8 col-md-12"
               >
                 <!-- NAME -->
                 <div class="row d-flex align-content-around align-items-start">
@@ -160,7 +161,7 @@
                   >Cancel <i class="bi bi-x"></i>
                   </button>
                 </a>
-                <a id="changePassword" th:href="@{${editPasswordUri}}" class="btn btn-edit" style="float: right">
+                <a id="changePassword" th:href="@{${editPasswordUri}}" class="btn btn-edit float-md-end float-sm">
                   Change Password <i class="bi bi-pencil"></i>
                 </a>
               </form>
