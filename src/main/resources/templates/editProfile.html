@@ -154,20 +154,24 @@
                         type="submit"
                 > Submit <i class="bi bi-check"></i>
                 </button>
-
-                <a th:href="@{${profileUri}}">
+                <span>
+                  <a th:href="@{${profileUri}}">
                   <button class="btn btn-cancel"
                           type="button"
                   >Cancel <i class="bi bi-x"></i>
                   </button>
                 </a>
-                <a id="changePassword" th:href="@{${editPasswordUri}}" class="btn btn-edit float-md-end float-sm">
-                  Change Password <i class="bi bi-pencil"></i>
-                </a>
+                </span>
+                <span>
+                  <a id="changePassword" th:href="@{${editPasswordUri}}">
+                    <button class="btn btn-edit float-sm-end" type="button" onClick>
+                      Change Password <i class="bi bi-pencil"></i>
+                    </button>
+                  </a>
+                </span>
               </form>
             </div>
           </div>
-
         </div>
       </div>
     </div>
