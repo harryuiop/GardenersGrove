@@ -4,6 +4,9 @@
 <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Profile Page</title>
 </head>
+<script type="text/javascript"
+        th:src="@{/javascript/imageUploadButton.js}">
+</script>
 
 <body class="bg">
     <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
@@ -48,15 +51,6 @@
             </div>
         </div>
     </div>
-    <script>
-        document.getElementById('file-button').addEventListener('click', function () {
-            document.getElementById('file-picker').click();
-            });
-
-        document.getElementById('file-picker').addEventListener('change', function () {
-            document.getElementById('submit-button').click();
-            });
-        </script>
 </body>
 
 </html>
