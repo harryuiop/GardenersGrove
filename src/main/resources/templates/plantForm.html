@@ -109,8 +109,9 @@
               <p class="error message" th:text="${imageSizeError}"></p>
               <p class="error message" th:text="${plantImageUploadError}"></p>
             </div>
-
-            <br>
+            <div class="message">
+              <p>Required fields are marked by a *</p>
+            </div>
             <button class="btn btn-confirm" type="submit">Submit</button>
             <a th:href="@{${cancelButtonUri}}">
               <button class="btn btn-cancel" type="button">Cancel</button>
