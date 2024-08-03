@@ -1,85 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="~{fragments/importFragment :: headerfiles}"><title>Add Plant</title></head>
+<head th:insert="~{fragments/importFragment :: headerfiles}">
+  <title>Add Plant</title>
+</head>
+<script type="text/javascript"
+        th:src="@{/javascript/imageUploadButton.js}">
+</script>
 
-<body>
+<body class="bg">
 <div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
-    <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
-
-    <div class="d-flex justify-content-center mt-5 w-100">
-        <div class="content">
-            <h1 th:text="${gardenName}"></h1>
-            <div>
-                <div class="forumContentsDiv">
-                    <form th:action="@{${formSubmissionUri}}" method="post" id="plant-form"
-                          enctype="multipart/form-data">
-                        <div class="form-field">
-                            <label class="form-input" for="plantName"> Plant Name: </label>
-                            <input type="text" class="form-control" id="plantName" th:name="plantName"
-                                   th:value="*{plantName}" data-cy="plantName" autofocus>
-                            <h5 th:text="${plantNameError}"></h5>
-                        </div>
-                        <br/>
-                        <div class="form-field">
-                            <label class="form-input" for="plantCount"> Number of these plants to add to
-                                garden: </label>
-                            <input type="text"
-                                   step="1"
-                                   max="1000000000"
-                                   class="form-control"
-                                   id="plantCount"
-                                   th:name="plantCount"
-                                   th:value="*{plantCount}" data-cy="plantCount" autofocus>
-                            <h5 th:text="${plantCountError}"></h5>
-                        </div>
-                        <br/>
-                        <div class="form-field">
-                            <label class="form-input" for="plantDescription"> Plant Description: </label>
-                            <textarea form="plant-form"
-                                      oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
-                                      class="form-control" id="plantDescription" th:name="plantDescription"
-                                      th:text="*{plantDescription}" data-cy="plantDescription" autofocus></textarea>
-                            <h5 th:text="${plantDescriptionError}"></h5>
-                        </div>
-                        <br/>
-                        <div class="form-field">
-                            <label class="form-input" for="plantedDate"> Date Planted: </label>
-                            <input type="date" class="form-control" id="plantedDate" th:name="plantedDate"
-                                   th:value="*{plantedDate}" data-cy="plantedDate" placeholder="DD/MM/YYYY" autofocus>
-                            <h5 th:text="${plantedDateError}"></h5>
-                        </div>
-                        <br/>
-
-                        <div class="form-field">
-                            <div class="plant-image-container">
-                                <img class="selectedImage" th:src="@{${plantImagePath}}" style="width: 7vw" alt="Plant Image">
-                                <p id="image-selected-message"></p>
-                                <div class="add-image">
-                                    <input type="file"
-                                           class="form-control"
-                                           id="plantImage"
-                                           th:name="plantImage"
-                                           accept="image/jpeg, image/png, image/svg+xml"
-                                           data-cy="plantImage"
-                                           onchange="displayImage()"
-                                    >
-                                </div>
-                            </div>
-                            <h5 th:text="${imageTypeError}"></h5>
-                            <h5 th:text="${imageSizeError}"></h5>
-                            <h5 th:text="${plantImageUploadError}"></h5>
-                        </div>
-
-                        <br>
-                        <button class="hrefButtons" type="submit">Submit!</button>
-                        <a th:href="@{${cancelButtonUri}}">
-                            <button class="hrefButtons" type="button">Cancel</button>
-                        </a>
-                    </form>
-                </div>
+  <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
+  <div class="d-flex justify-content-center mt-5 w-100 align-items-center">
+    <div class="content d-flex justify-content-center w-50">
+      <div>
+        <div class="forumContentsDiv">
+          <form id="plant-form"
+                th:action="@{${formSubmissionUri}}"
+                method="post"
+                enctype="multipart/form-data"
+                style="max-width: 750px">
+            <h4 th:text="${gardenName}"></h4>
+            <div class="form-floating">
+              <input id="plantName"
+                     class="form-control"
+                     th:classappend="${plantNameError} ? 'border border-danger'"
+                     type="text"
+                     placeholder="Rose Bush"
+                     th:name="plantName"
+                     th:value="*{plantName}"
+                     data-cy="plantName"
+                     autofocus>
+              <label for="plantName">Plant Name *</label>
+              <p class="error message" th:text="${plantNameError}"></p>
             </div>
+            <br/>
+            <div class="form-floating">
+              <input id="plantCount"
+                     class="form-control"
+                     th:classappend="${plantCountError} ? 'border border-danger'"
+                     type="text"
+                     placeholder="2"
+                     th:name="plantCount"
+                     th:value="*{plantCount}"
+                     data-cy="plantCount"
+                     autofocus>
+              <label for="plantCount">
+                Number of this plant in garden
+              </label>
+              <p class="error message" th:text="${plantCountError}"></p>
+            </div>
+            <br/>
+            <div class="form-floating">
+                            <textarea id="plantDescription"
+                                      class="form-control"
+                                      th:classappend="${plantDescriptionError} ? 'border border-danger'"
+                                      form="plant-form"
+                                      placeholder="My largest red rose bush"
+                                      oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                                      th:name="plantDescription"
+                                      th:text="*{plantDescription}"
+                                      data-cy="plantDescription"
+                                      autofocus>
+                            </textarea>
+              <label for="plantDescription">
+                Plant Description
+              </label>
+              <p class="error message" th:text="${plantDescriptionError}"></p>
+            </div>
+            <br/>
+            <div class="form-floating">
+              <input id="plantedDate"
+                     class="form-control"
+                     th:classappend="${plantedDateError} ? 'border border-danger'"
+                     type="date"
+                     placeholder="25/03/2020"
+                     th:name="plantedDate"
+                     th:value="*{plantedDate}"
+                     data-cy="plantedDate"
+                     autofocus>
+              <label for="plantedDate">
+                Date Planted
+              </label>
+              <p class="error message" th:text="${plantedDateError}"></p>
+            </div>
+            <br/>
+
+            <div class="form-field">
+              <div class="plant-image-container">
+                <img class="selectedImage border rounded"
+                     th:src="@{${plantImagePath}}"
+                     style="width: 7vw"
+                     alt="Plant Image">
+                <p id="image-selected-message"></p>
+                <div class="add-image">
+                  <input id="file-picker"
+                         class="d-none"
+                         type="file"
+                         accept="image/jpeg, image/png, image/svg+xml"
+                         th:name="plantImage"
+                         data-cy="plantImage"
+                         onchange="displayImage()">
+                  <button id="file-button" class="btn btn-edit" type="button">
+                    Upload plant image <i class="bi bi-image"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="error message" th:text="${imageTypeError}"></p>
+              <p class="error message" th:text="${imageSizeError}"></p>
+              <p class="error message" th:text="${plantImageUploadError}"></p>
+            </div>
+
+            <br>
+            <button class="btn btn-confirm" type="submit">Submit</button>
+            <a th:href="@{${cancelButtonUri}}">
+              <button class="btn btn-cancel" type="button">Cancel</button>
+            </a>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 </body>
 <script type="text/javascript" th:src="@{/javascript/image.js}"></script>
