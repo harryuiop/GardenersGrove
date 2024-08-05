@@ -58,10 +58,36 @@
     --bs-btn-active-bg: var(--fern-green);
 }
 
+.garden-item {
+    transition-property: all;
+    transition-duration: 0.3s;
+}
+
+.garden-item:hover {
+    background-color: #d0dfd0 !important;
+    box-shadow: var(--bs-box-shadow-inset) !important;
+}
+
 .btn.btn-cancel {
     border-color: #6f0c0c;
     --bs-btn-color: #6f0c0c;
     --bs-btn-hover-bg: #6f0c0c;
     --bs-btn-hover-color: #fff;
     --bs-btn-active-bg: #6f0c0c;
+}
+
+.profile-img {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    object-fit: cover;
+}
+
+.garden-item {
+  transition-property: all;
+  transition-duration: 0.3s;
+}
+
+.garden-item:hover {
+  background-color: #d0dfd0 !important;
+  box-shadow: var(--bs-box-shadow-inset) !important;
 }

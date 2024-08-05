@@ -55,10 +55,10 @@ jacoco {
 sonar {
 	properties {
 		property "sonar.projectKey", "seng302-2024-team400"
-			property "sonar.projectName", "seng302-2024-team400"
-			property "sonar.sourceEncoding", "UTF-8"
+		property "sonar.projectName", "seng302-2024-team400"
+		property "sonar.sourceEncoding", "UTF-8"
 		property "sonar.host.url", "$System.env.SONAR_HOST_URL"
-			property "sonar.login", "$System.env.SONAR_TOKEN"
+		property "sonar.login", "$System.env.SONAR_TOKEN"
 	}
 }
 
@@ -170,7 +170,13 @@ tasks.register("cucumberTestReport", JacocoReport) { // Generate a report for cu
 }
 
 jacocoTestReport { // Generate a report for all generated test data
-	dependsOn test
+	dependsOn test, cucumber, integration
+
+	executionData fileTree(dir: "$buildDir/jacoco", includes: [
+			"test.exec",
+			"cucumber.exec",
+			"integration.exec"
+	])
 
 	reports {
 		xml.required = true

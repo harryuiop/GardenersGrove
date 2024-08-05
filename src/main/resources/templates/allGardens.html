@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:insert="~{fragments/importFragment :: headerfiles}"><title>Gardeners' Grove</title></head>
-<body>
+<body class="bg">
 <div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
     <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
 
-    <div class="d-flex justify-content-center mt-5 w-100">
-        <div>
-            <h2>My Gardens</h2>
-            <div class="list-container">
-                <a th:each="garden: ${gardenList}"
-                   th:href="@{${viewGardenUriString}(gardenId=${garden.id})}">
-                    <div class="garden-item"><span th:text="${garden.name}">Name</span></div>
-                </a>
+    <div class="d-flex flex-column align-items-center mt-5 w-100">
+        <h2 class="text-center">My Gardens</h2>
+        <div th:each="garden: ${gardenList}"
+             class="garden-item row rounded border p-5 my-3 w-75 position-relative bg-white shadow-sm">
+            <a class="stretched-link" th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"></a>
+            <div class="col-12 col-md-8 col-xl-4 mb-3 mb-md-0 align-items-center">
+                <h5 class="text-truncate" th:text="${garden.name}"></h5>
+                <div class="text-truncate" th:text="${garden.getLocationString()}"></div>
+            </div>
+            <div class="col-3 col-sm-2 col-lg-1 d-flex align-items-center">
+                <div th:text="${garden.getPlants().size()}"></div>
+                <i class="bi bi-tree-fill"></i>
+            </div>
+            <div class="col-5 col-sm-3 col-md-2 col-xl-1 d-flex align-items-center text-nowrap"
+                 th:utext="${garden.getSize() != null} ? (${garden.getSize()} + ' m<sup>2</sup>')"></div>
+            <div class="col-12 col-xl-6 d-flex mt-3 mt-xxl-0 align-items-center flex-wrap">
+                <div th:each="tag : ${garden.getTags()}" class="me-3" th:text="'#' + ${tag.getName()}">Hello</div>
             </div>
         </div>
     </div>
