@@ -29,7 +29,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     }
 
     /**
-     * Custom authentication implementation
+     * Custom authentication implementation. Throws BadCredentialsExceptions which include
+     * the error type and email to show feedback to the user.
      *
      * @param authentication An implementation object that must have non-empty email (name) and password (credentials)
      * @return A new {@link UsernamePasswordAuthenticationToken} if email and password are valid with users authorities
@@ -44,11 +45,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (
                 email == null || email.isEmpty() || !emailIsValid(email)
         ) {
-            throw new BadCredentialsException("Invalid_Email");
+            throw new BadCredentialsException("Invalid_Email" + email);
         } else if (
                 password == null || password.isEmpty()
         ) {
-            throw new BadCredentialsException("Invalid_Password");
+            throw new BadCredentialsException("Invalid_Password" + email);
         }
 
         // Attempt to retrieve user from the database using email and password
@@ -57,11 +58,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // If user is not found or the password is incorrect, throw BadCredentialsException
         if (user == null || !encoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException("Authentication_Failed");
+            throw new BadCredentialsException("Authentication_Failed" + email);
         }
 
         if (!user.isConfirmed()) {
-            throw new BadCredentialsException("Unconfirmed");
+            System.out.println("Is Confirmed");
+            throw new BadCredentialsException("Unconfirmed" + email);
         }
 
         // If user is found, create and return a UsernamePasswordAuthenticationToken
