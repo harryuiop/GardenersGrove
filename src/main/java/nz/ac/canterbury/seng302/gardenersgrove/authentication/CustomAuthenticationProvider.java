@@ -62,7 +62,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         if (!user.isConfirmed()) {
-            System.out.println("Is Confirmed");
             throw new BadCredentialsException("Unconfirmed" + email);
         }
 

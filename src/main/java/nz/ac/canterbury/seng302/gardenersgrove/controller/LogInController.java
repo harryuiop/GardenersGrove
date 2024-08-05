@@ -219,6 +219,7 @@ public class LogInController {
             }
         }
         model.addAttribute("loginUri", loginUri());
+        model.addAttribute("userEmail", userEmail);
         return "forgotPasswordForm";
 
     }
