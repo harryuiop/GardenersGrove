@@ -29,11 +29,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     }
 
     /**
-     * Custom authentication implementation. Throws BadCredentialsExceptions which include
-     * the error type and email to show feedback to the user.
+     * Custom authentication implementation.
      *
      * @param authentication An implementation object that must have non-empty email (name) and password (credentials)
      * @return A new {@link UsernamePasswordAuthenticationToken} if email and password are valid with users authorities
+     * @throws BadCredentialsException Type of error concatenated with email to show feedback to user
      */
     @Override
     public Authentication authenticate(Authentication authentication) {
