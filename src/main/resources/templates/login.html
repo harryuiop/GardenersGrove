@@ -33,6 +33,7 @@
                                 id="username"
                                 name="username"
                                 th:name="username"
+                                th:value="${username}"
                                 placeholder="username"
                                 data-cy="username"
                                 autofocus
@@ -57,15 +58,8 @@
                         <p class="error message" id="invalidError" th:text="${invalidError}"></p>
                     </div>
                     <div class="col auto text-center mt-4 mb-4">
-                        <button class="btn btn-outline-primary"
+                        <button class="btn btn-confirm"
                                 type="submit"
-                                style="
-                                 border-color: #477641;
-                                 --bs-btn-color: #477641;
-                                 --bs-btn-hover-bg: #477641;
-                                 --bs-btn-hover-color: #fff;
-                                 --bs-btn-active-bg: #477641;
-                                 "
                         >Sign In <i class="bi bi-box-arrow-in-right"></i>
                         </button>
                     </div>
