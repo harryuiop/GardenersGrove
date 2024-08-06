@@ -30,7 +30,7 @@ public class CookiesService {
         Cookie cookie = new Cookie("rainPopupSeen", "true");
         cookie.setHttpOnly(true);
         cookie.setPath("/garden");
-        cookie.setMaxAge(secondsUntilNextMidnight); // alive until next days midnight
+        cookie.setMaxAge(secondsUntilNextMidnight); // alive until midnight
 
         return cookie;
     }
