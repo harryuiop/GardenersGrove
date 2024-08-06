@@ -22,25 +22,23 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-
 
 @Suite
 @IncludeEngines("cucumber")
 @SelectClasspathResource("nz/ac/canterbury/seng302/gardenersgrove/cucumber")
 @ConfigurationParameters({
-        @ConfigurationParameter(key = Constants.GLUE_PROPERTY_NAME, value = "nz/ac/canterbury/seng302/gardenersgrove/cucumber/step_definitions"),
+        @ConfigurationParameter(key = Constants.GLUE_PROPERTY_NAME, value = "nz.ac.canterbury.seng302.gardenersgrove.cucumber"),
         @ConfigurationParameter(key = Constants.PLUGIN_PROPERTY_NAME, value = "pretty, html:target/cucumber-report/cucumber.html"),
         @ConfigurationParameter(key = Constants.PLUGIN_PUBLISH_QUIET_PROPERTY_NAME, value = "true")
 })
-@ContextConfiguration(classes = GardenersGroveApplication.class)
 @CucumberContextConfiguration
-@SpringBootTest
+@SpringBootTest(classes = GardenersGroveApplication.class)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {"maptiler.api.key=test", "spring.mail.username=test"})
 public class RunCucumberTest {
+
     @SpyBean
     private FormValuesValidator spyFormValuesValidator;
 
@@ -51,7 +49,6 @@ public class RunCucumberTest {
     UserService userService;
 
     public static TriConsumer<String, String, UserService> authMaker;
-
 
     @BeforeAll
     public static void beforeAll() {
@@ -65,8 +62,7 @@ public class RunCucumberTest {
                 user = userService.getUserByEmail(email);
             }
             CustomAuthenticationProvider customAuthenticationProvider = new CustomAuthenticationProvider(userService);
-            UsernamePasswordAuthenticationToken authReq
-                    = new UsernamePasswordAuthenticationToken(user.getEmail(), password);
+            UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user.getEmail(), password);
             Authentication auth = customAuthenticationProvider.authenticate(authReq);
             SecurityContextHolder.getContext().setAuthentication(auth);
             Assertions.assertEquals(userService.getAuthenticatedUser().getUserId(), user.getUserId());
@@ -78,5 +74,4 @@ public class RunCucumberTest {
     public void setup() throws Exception {
         Mockito.when(spyFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
     }
-
 }
