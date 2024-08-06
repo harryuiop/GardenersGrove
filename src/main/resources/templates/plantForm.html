@@ -82,23 +82,20 @@
             </div>
 
             <div class="form-field">
-              <div class="plant-image-container">
+              <div class="plant-image-container position-relative d-inline-block">
                 <img class="selectedImage border rounded"
                      th:src="@{${plantImagePath}}"
-                     style="width: 7vw"
+                     style="max-height: 15vh"
                      alt="Plant Image">
-                <p id="image-selected-message"></p>
-                <div class="add-image">
-                  <input id="file-picker"
-                         class="d-none"
-                         type="file"
-                         accept="image/jpeg, image/png, image/svg+xml"
-                         th:name="plantImage"
-                         data-cy="plantImage"
-                         onchange="displayImage()">
-                  <button id="file-button" class="btn btn-edit" type="button">
-                    Upload plant image <i class="bi bi-image"></i>
-                  </button>
+                <input id="file-picker"
+                       class="d-none"
+                       type="file"
+                       accept="image/jpeg, image/png, image/svg+xml"
+                       th:name="plantImage"
+                       data-cy="plantImage"
+                       onchange="displayImage()">
+                <div id="file-button" class="btn btn-light rounded-circle position-absolute top-0 end-0 m-1 opacity-50">
+                  <i class="bi bi-plus-circle"></i>
                 </div>
               </div>
               <p class="error message" th:text="${imageTypeError}"></p>
