@@ -15,4 +15,6 @@ const setRainPopupCookie = () => {
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
+
+    document.getElementById("advice-message").hidden = true;
 }
