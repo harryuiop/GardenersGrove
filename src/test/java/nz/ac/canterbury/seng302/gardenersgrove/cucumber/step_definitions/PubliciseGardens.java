@@ -74,7 +74,8 @@ public class PubliciseGardens {
         user1Id = "" + user1.getId();
         user2Id = "" + user2.getId();
 
-        garden = new Garden (user1, "Garden 1", "Valid", new Location("NZ", "CHCH"), null, true);
+        garden = new Garden (user1, "Garden 1", "Valid", new Location("NZ", "CHCH"),
+                null, true, false);
         gardenRepository.save(garden);
         gardenId=garden.getId();
         latestGardenId = gardenId;
