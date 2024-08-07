@@ -7,9 +7,8 @@
   <body class="bg">
     <div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
       <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
-      <div
-        class="container-flex d-flex justify-content-center mt-5 w-100 align-items-center">
-        <div class="content">
+      <div class="container-flex d-flex justify-content-center mt-5 w-100 align-items-center">
+        <div class="content d-flex justify-content-center w-50">
           <div>
             <div class="forumContentsDiv">
               <form
@@ -19,9 +18,9 @@
                 style="max-width: 750px"
               >
                 <h4>Garden Details</h4>
-                <div class="row" style="margin-left: 3px">
-                  <div class="col-md-6">
-                    <div class="row form-floating">
+                  <div class="row">
+                    <div class="col-md-9 col-12">
+                      <div class="form-field form-floating">
                       <input
                         type="text"
                         class="form-control"
@@ -31,14 +30,16 @@
                         th:value="*{gardenName}"
                         data-cy="gardenName"
                         autofocus
-                        th:classappend="${gardenNameError} ? 'is-invalid'"
+                        th:classappend="${gardenNameError} ? 'border border-danger'"
                       />
                       <label class="form-input" for="gardenName">
                         Garden Name *
                       </label>
-                      <p class="error message" th:text="${gardenNameError}"></p>
+                      <p class="error message" style="max-width: 15vw" th:text="${gardenNameError}"></p>
+                      </div>
                     </div>
-                    <div class="row form-floating">
+                    <div class="col-md-3 col-12">
+                      <div class="form-field form-floating">
                       <input
                         type="number"
                         step="0.0001"
@@ -50,16 +51,16 @@
                         th:name="gardenSize"
                         th:value="*{gardenSize}"
                         data-cy="gardenSize"
-                        autofocus
-                        th:classappend="${gardenSizeError} ? 'is-invalid'"
+                        th:classappend="${gardenSizeError} ? 'border border-danger'"
                       />
                       <label class="form-input" for="gardenSize">
-                        Garden size (m<sup>2</sup>)
+                        Size(m<sup>2</sup>)
                       </label>
                       <p class="error message" th:text="${gardenSizeError}"></p>
                     </div>
+                    </div>
                   </div>
-                  <div class="col-md-6 form-floating">
+                  <div class="form-floating">
                     <textarea
                       type="text"
                       class="form-control"
@@ -68,8 +69,7 @@
                       placeholder="e.g. My rose garden"
                       th:text="*{gardenDescription}"
                       data-cy="gardenDescription"
-                      autofocus
-                      th:classappend="${gardenDescriptionError} ? 'is-invalid'"
+                      th:classappend="${gardenDescriptionError} ? ''"
                       style="min-height: 132px"
                     ></textarea>
                     <label
@@ -94,7 +94,6 @@
                       th:text="${gardenDescriptionError}"
                     ></p>
                   </div>
-                </div>
                 <h4>Location</h4>
                 <div class="form-field form-floating">
                   <input
@@ -106,7 +105,7 @@
                     data-cy="streetAddress"
                     autocomplete="off"
                     placeholder=">Start typing location to see suggestions."
-                    th:classappend="${streetAddressError} ? 'is-invalid'"
+                    th:classappend="${streetAddressError} ? 'border border-danger'"
                   />
                   <label class="form-input" for="streetAddress">
                     Street Address
@@ -119,14 +118,13 @@
                     <div class="form-field form-floating">
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control mw-100"
                         id="country"
                         placeholder="e.g. New Zealand"
                         th:name="country"
                         th:value="*{country}"
                         data-cy="country"
-                        th:classappend="${countryError} ? 'is-invalid'"
-                        autofocus
+                        th:classappend="${countryError} ? 'border border-danger'"
                       />
                       <label class="form-input" for="country"> Country * </label>
                       <p class="error message" th:text="${countryError}"></p>
@@ -136,14 +134,13 @@
                     <div class="form-field form-floating">
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control mw-100"
                         id="city"
                         placeholder="e.g. Christchurch"
                         th:name="city"
                         th:value="*{city}"
                         data-cy="city"
-                        th:classappend="${cityError} ? 'is-invalid'"
-                        autofocus
+                        th:classappend="${cityError} ? 'border border-danger'"
                       />
                       <label class="form-input" for="city"> City * </label>
                       <p class="error message" th:text="${cityError}"></p>
@@ -161,8 +158,7 @@
                         placeholder="e.g. Northland"
                         th:value="*{suburb}"
                         data-cy="suburb"
-                        th:classappend="${suburbError} ? 'is-invalid'"
-                        autofocus
+                        th:classappend="${suburbError} ? 'border border-danger'"
                       />
                       <label class="form-input" for="suburb"> Suburb </label>
                       <p class="error message" th:text="${suburbError}"></p>
@@ -178,8 +174,7 @@
                         th:name="postcode"
                         th:value="*{postcode}"
                         data-cy="postcode"
-                        th:classappend="${postcodeError} ? 'is-invalid'"
-                        autofocus
+                        th:classappend="${postcodeError} ? 'border border-danger'"
                       />
                       <label class="form-input" for="postcode">
                         Postcode

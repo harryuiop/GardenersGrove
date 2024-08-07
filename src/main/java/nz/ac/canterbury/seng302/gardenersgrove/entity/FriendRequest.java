@@ -14,10 +14,10 @@ public class FriendRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User sender;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User receiver;
 
     @Column
@@ -63,6 +63,15 @@ public class FriendRequest {
 
     public Status getStatus() {
         return status;
+    }
+
+    /**
+     * Check user's request is declined
+     *
+     * @return true if user's request has been declined once
+     */
+    public boolean isDeclined() {
+        return status == Status.DECLINED || status == Status.DECLINED_REMOVED;
     }
 
     public void setStatus(Status status) {

@@ -9,10 +9,10 @@ public class Friendship {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
     private User friend1;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
     private User friend2;
 
     public Friendship(User friend1, User friend2) {

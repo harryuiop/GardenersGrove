@@ -4,18 +4,9 @@
 <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Profile Page</title>
 </head>
-<style>
-
-    .profile-img {
-        aspect-ratio: 1 / 1;
-        width: 100%;
-        object-fit: cover;
-    }
-
-    .err-text {
-        color: #6f0c0c;
-    }
-</style>
+<script type="text/javascript"
+        th:src="@{/javascript/imageUploadButton.js}">
+</script>
 
 <body class="bg">
     <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
@@ -28,11 +19,11 @@
                             alt="User Profile Picture" />
                         <form th:unless="${isFriend}" class="text-center" th:action="@{${uploadProfileImageUri}}" method="post"
                             name="profilePhoto" enctype="multipart/form-data">
-                            <p class="err-text text-wrap" th:text="${imageTypeError}"></p>
-                            <p class="err-text text-wrap" th:text="${imageSizeError}"></p>
+                            <p class="error message text-wrap" th:text="${imageTypeError}"></p>
+                            <p class="error message text-wrap" th:text="${imageSizeError}"></p>
                             <div class="file-input-wrapper"></div>
                             <button id="file-button" class="btn btn-confirm" type="button">
-                                Edit Profile Picture <i class="bi bi-camera"></i>
+                                Edit Profile Picture <i class="bi bi-image"></i>
                             </button>
                             <input class="d-none" id="file-picker" type="file" name="image" accept="image/jpeg, image/png, image/svg+xml"
                                 alt="Upload Profile Picture" />
@@ -60,15 +51,6 @@
             </div>
         </div>
     </div>
-    <script>
-        document.getElementById('file-button').addEventListener('click', function () {
-            document.getElementById('file-picker').click();
-            });
-
-        document.getElementById('file-picker').addEventListener('change', function () {
-            document.getElementById('submit-button').click();
-            });
-        </script>
 </body>
 
 </html>

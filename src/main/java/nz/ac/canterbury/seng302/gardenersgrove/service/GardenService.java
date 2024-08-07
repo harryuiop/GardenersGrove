@@ -13,7 +13,6 @@ import java.util.Optional;
 public class GardenService {
 
     private final GardenRepository gardenRepository;
-    @Autowired
     private final UserService userService;
     private final FriendshipService friendshipService;
 
@@ -27,7 +26,7 @@ public class GardenService {
     /**
      * Querys the database and grabs all gardens from the logged-in user
      *
-     * @return List of gardens
+     * @return List of all the authenticated users gardens
      */
     public List<Garden> getAllGardens() {
         return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
@@ -36,9 +35,9 @@ public class GardenService {
     /**
      * Querys the database for all the given gardens of a friend
      *
-     * @param friendId ID of friend
-     * @param userService Logged in users user service
-     * @return List of gardens
+     * @param friendId              ID of friend
+     * @param userService           Logged in users user service
+     * @return                      List of all the friends gardens
      * @throws NoSuchFriendException Thrown if no friend is found in the database
      */
     public List<Garden> getAllFriendsGardens(long friendId, UserService userService) throws NoSuchFriendException {
@@ -74,12 +73,12 @@ public class GardenService {
      * parameter
      *
      * @param pageNumber Requested pagination page number
-     * @param gardenName Optional search parameter (plant within garden or garden itself)
+     * @param searchParameter Optional search parameter (plant within garden or garden itself)
      * @return The list of all public gardens that match the search string, or all public gardens if unspecified
      */
-    public List<Garden> getPageOfPublicGardens(int pageNumber, String gardenName) {
-        if (gardenName != null && !gardenName.isEmpty()) {
-            return gardenRepository.findByGardenPublicTrueWithSearchName(((pageNumber - 1) * 10), gardenName);
+    public List<Garden> getPageOfPublicGardens(int pageNumber, String searchParameter) {
+        if (searchParameter != null && !searchParameter.isEmpty()) {
+            return gardenRepository.findByGardenPublicTrueWithSearchParameter(((pageNumber - 1) * 10), searchParameter);
         }
         return gardenRepository.findByGardenPublicTrue((pageNumber - 1) * 10);
     }
@@ -96,11 +95,11 @@ public class GardenService {
     /**
      * Querys the database for total amount of public gardens that match the search string
      *
-     * @param gardenName Search parameter
-     * @return the number of total public gardens matching the search parameter
+     * @param searchParameter Search parameter
+     * @return the number of total public gardens matching the search parameter 
      */
-    public long countPublicGardens(String gardenName) {
-        return gardenRepository.countByIsGardenPublicTrueWithGardenNameSearch(gardenName);
+    public long countPublicGardens(String searchParameter) {
+        return gardenRepository.countByIsGardenPublicTrueWithGardenNameSearch(searchParameter);
     }
 
     /**
