@@ -33,6 +33,7 @@ public class UriConfig {
 
     public static final String SEARCH_RESULTS_STRING = "/search/results";
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
+    public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup";
 
 
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);

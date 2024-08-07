@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.SET_WEATHER_POPUP_ALERT_COOKIES;
+
 /**
  * Called through javascript for controlling setting up cookies through cookiesService
  */
@@ -34,7 +36,7 @@ public class CookiesRestController {
      *
      * @param response httpServletResponse
      */
-    @GetMapping("/cookies/set-rain-popup")
+    @GetMapping(SET_WEATHER_POPUP_ALERT_COOKIES)
     public void setRainPopup(HttpServletResponse response) {
         logger.info("GET: /cookies/set-rain-popup");
 
