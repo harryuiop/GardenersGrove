@@ -21,7 +21,7 @@ public class CookiesService {
     public Cookie cookieWeatherRainPopupClose() {
 
         // setup maxAge time for cookie to survive until end of the day
-        // This code is based on GitHub copilot suggestion
+        // The codes about setting maxAge is based on GitHub copilot suggestion
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nextMidnight = now.plusDays(1).with(LocalTime.MIDNIGHT);
         Duration durationUntilNextMidnight = Duration.between(now, nextMidnight);
