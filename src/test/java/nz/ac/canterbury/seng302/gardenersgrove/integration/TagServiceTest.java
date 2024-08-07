@@ -1,6 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.*;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Tag;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.TagRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
@@ -53,14 +56,14 @@ class TagServiceTest {
         gardenRepository.deleteAll();
         tagRepositorySpy.deleteAll();
         garden1 = new Garden(user, "Test Garden1", null, new Location("New Zealand", "Christchurch"),
-                null, true, false);
+                null, true);
         gardenRepository.save(garden1);
     }
 
     @Test
     void saveExistingTag() {
         Garden garden2 = new Garden(user, "Test Garden2", null, new Location("New Zealand",
-                "Christchurch"), null, true, false);
+                "Christchurch"), null, true);
         gardenRepository.save(garden2);
 
         tagService.saveTag("tag", garden1);
