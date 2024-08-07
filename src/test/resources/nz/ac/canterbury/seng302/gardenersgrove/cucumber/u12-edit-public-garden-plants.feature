@@ -1,7 +1,7 @@
 Feature: As Kaia, I want to update the plants I have in my garden so that I can add more details about them as I know more about them.
 
   Background:
-    Given I have a user account that has logged in as "user1@gmail.com", "Password1!"
+    Given I am logged in as "user1@gmail.com", "Password1!"
     And I have a garden
     And I am on the garden details page for a garden I own
 
