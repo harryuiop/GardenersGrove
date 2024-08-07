@@ -18,7 +18,7 @@ public class CookiesService {
      *
      * @return cookies for advice popup close
      */
-    public Cookie cookieWeatherRainPopupClose() {
+    public Cookie cookieWeatherRainPopupClose(long gardenId) {
 
         // setup maxAge time for cookie to survive until end of the day
         // The codes about setting maxAge is based on GitHub copilot suggestion
@@ -29,7 +29,7 @@ public class CookiesService {
 
         Cookie cookie = new Cookie("rainPopupSeen", "true");
         cookie.setHttpOnly(true);
-        cookie.setPath("/garden");
+        cookie.setPath("/garden/" + gardenId);
         cookie.setMaxAge(secondsUntilNextMidnight); // alive until midnight
 
         return cookie;

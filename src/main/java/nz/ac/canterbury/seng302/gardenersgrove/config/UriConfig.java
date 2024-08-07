@@ -33,7 +33,7 @@ public class UriConfig {
 
     public static final String SEARCH_RESULTS_STRING = "/search/results";
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
-    public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup";
+    public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup/{gardenId}";
 
 
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
@@ -45,6 +45,7 @@ public class UriConfig {
     private static final UriTemplate EDIT_PLANT_URI = new UriTemplate(EDIT_PLANT_URI_STRING);
     private static final UriTemplate UPLOAD_PLANT_IMAGE_URI = new UriTemplate(UPLOAD_PLANT_IMAGE_URI_STRING);
     private static final UriTemplate MAKE_GARDEN_PUBLIC_URI = new UriTemplate(MAKE_GARDEN_PUBLIC_STRING);
+    private static final UriTemplate SET_WEATHER_POPUP_ALERT_COOKIES_URI = new UriTemplate(SET_WEATHER_POPUP_ALERT_COOKIES);
 
     private UriConfig() {
         throw new IllegalStateException("Utility class");
@@ -127,6 +128,9 @@ public class UriConfig {
     public static URI uploadPlantImageUri(long gardenId, long plantId) {
         return UPLOAD_PLANT_IMAGE_URI.expand(gardenId, plantId);
     }
+    public static URI sendCookiesForWeatherAdvicePopup(long gardenId) {
+        return SET_WEATHER_POPUP_ALERT_COOKIES_URI.expand(gardenId);
+    }
 
     public static URI viewAllGardensUri() {
         return URI.create(VIEW_ALL_GARDENS_URI_STRING);
@@ -140,5 +144,6 @@ public class UriConfig {
     }
     public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
     public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
+
 
 }
