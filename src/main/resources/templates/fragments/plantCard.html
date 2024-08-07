@@ -3,15 +3,53 @@
 <head th:insert="~{fragments/importFragment :: headerfiles}">
 </head>
 <body>
-<div th:fragment="plantCard" >
-    <div id="plantCard">
-        <h2 class="display-5" th:text="${plantName}"></h2>
-        <p class="overflow-y-auto" style="max-height: 20vh" th:text="${plantDescription}"></p>
-        <p>
-            <span>Count: <b th:text="${plantCount}"></b></span>
-        </p>
-        <p style="font-style: italic;" th:if="${plantDate != null}" th:text="'Planted on ' + ${plantDate}"></p>
+<div th:fragment="plantCard" class="card shadow rounded-4 h-100 w-100" id="plantCard">
+  <div class="card-group position-relative">
+    <img th:src="@{${plant.getImageFilePath()}}" class="card-img-top position-relative rounded-top-4"
+         alt="Plant picture">
+    <form th:if="${owner}"
+          th:name="'imageForm' + ${plant.getId()}"
+          th:action="@{${uploadPlantImageUriString}(gardenId=${garden.getId()},plantId=${plant.getId()})}"
+          method="post" enctype="multipart/form-data">
+      <input type="file"
+             class="form-control d-none"
+             th:id="'imageInput' + ${plant.getId()}"
+             th:name="plantImage"
+             accept="image/jpeg, image/png, image/svg+xml"
+             data-cy="plantImage"
+             th:onchange="'document.forms[\'imageForm' + ${plant.getId()} +'\'].submit()'"
+      >
+      <div id="file-button" class="btn btn-light rounded-circle position-absolute top-0 end-0 m-1 opacity-50"
+           th:onclick="'document.getElementById(\'imageInput' + ${plant.getId()} + '\').click()'">
+        <i class="bi bi-plus-circle"></i>
+      </div>
+    </form>
+    <div class="alert alert-danger" role="alert"
+         th:if="${(plant.getId() == selectedPlantId) and
+                          ((imageTypeError != null and !imageTypeError.isEmpty()) or
+                          (imageSizeError != null and !imageSizeError.isEmpty()) or
+                          (plantImageUploadError != null and !plantImageUploadError.isEmpty()))}">
+      <h5 th:if="${imageTypeError != null and !imageTypeError.isEmpty()}"
+          th:text="${imageTypeError}"></h5>
+      <h5 th:if="${imageSizeError != null and !imageSizeError.isEmpty()}"
+          th:text="${imageSizeError}"></h5>
+      <h5 th:if="${plantImageUploadError != null and !plantImageUploadError.isEmpty()}"
+          th:text="${plantImageUploadError}"></h5>
     </div>
+  </div>
+  <div class="card-body">
+    <h2 class="display-5" th:text="${plantName}"></h2>
+    <p class="overflow-y-auto" style="max-height: 20vh" th:text="${plantDescription}"></p>
+    <p th:if="${plantCount}">Count: <b th:text="${plantCount}"></b></p>
+    <p style="font-style: italic;" th:if="${plantDate != null}" th:text="'Planted on ' + ${plantDate}"></p>
+  </div>
+  <div th:if="${owner}" class="card-footer">
+    <a th:href="@{${editPlantUriString}(gardenId = ${garden.getId()}, plantId = ${plant.getId()})}">
+      <button class="btn btn-edit w-100" type="button">
+        Edit Plant <i class="bi bi-pencil"></i>
+      </button>
+    </a>
+  </div>
 </div>
 </body>
 </html>
