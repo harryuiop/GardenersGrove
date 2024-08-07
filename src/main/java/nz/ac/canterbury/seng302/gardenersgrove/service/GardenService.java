@@ -13,7 +13,6 @@ import java.util.Optional;
 public class GardenService {
 
     private final GardenRepository gardenRepository;
-
     private final UserService userService;
     private final FriendshipService friendshipService;
 
@@ -24,10 +23,23 @@ public class GardenService {
         this.friendshipService = friendshipService;
     }
 
-    public List<Garden> getAllGardens(UserService userService) {
+    /**
+     * Querys the database and grabs all gardens from the logged-in user
+     *
+     * @return List of all the authenticated users gardens
+     */
+    public List<Garden> getAllGardens() {
         return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
     }
 
+    /**
+     * Querys the database for all the given gardens of a friend
+     *
+     * @param friendId              ID of friend
+     * @param userService           Logged in users user service
+     * @return                      List of all the friends gardens
+     * @throws NoSuchFriendException Thrown if no friend is found in the database
+     */
     public List<Garden> getAllFriendsGardens(long friendId, UserService userService) throws NoSuchFriendException {
         if (friendshipService.getFriends(userService.getAuthenticatedUser()).contains(userService.getUserById(friendId))) {
             return gardenRepository.findAllByOwner(userService.getUserById(friendId));
@@ -35,15 +47,58 @@ public class GardenService {
             throw new NoSuchFriendException(friendId);
         }
     }
+
+    /**
+     * Querys the database for a garden of a given ID
+     *
+     * @param id Garden ID
+     * @return Returns a garden OR null
+     */
     public Optional<Garden> getGardenById(Long id) {
         return gardenRepository.findById(id);
     }
 
+    /**
+     * Saves a garden to the database
+     *
+     * @param garden Garden object to be saved
+     * @return The given garden
+     */
     public Garden saveGarden(Garden garden) {
         return gardenRepository.save(garden);
     }
 
-    public void deleteGarden(Long id) {
-        gardenRepository.deleteById(id);
+    /**
+     * Grabs the correct gardens to display on the page based on the page number through an SQL offset with optional search
+     * parameter
+     *
+     * @param pageNumber Requested pagination page number
+     * @param searchParameter Optional search parameter (plant within garden or garden itself)
+     * @return The list of all public gardens that match the search string, or all public gardens if unspecified
+     */
+    public List<Garden> getPageOfPublicGardens(int pageNumber, String searchParameter) {
+        if (searchParameter != null && !searchParameter.isEmpty()) {
+            return gardenRepository.findByGardenPublicTrueWithSearchParameter(((pageNumber - 1) * 10), searchParameter);
+        }
+        return gardenRepository.findByGardenPublicTrue((pageNumber - 1) * 10);
+    }
+
+    /**
+     * Querys the entire database for total amount of public gardens
+     *
+     * @return the number of total public gardens
+     */
+    public long countPublicGardens() {
+        return gardenRepository.countByIsGardenPublicTrue();
+    }
+
+    /**
+     * Querys the database for total amount of public gardens that match the search string
+     *
+     * @param searchParameter Search parameter
+     * @return the number of total public gardens matching the search parameter 
+     */
+    public long countPublicGardens(String searchParameter) {
+        return gardenRepository.countByIsGardenPublicTrueWithGardenNameSearch(searchParameter);
     }
 }

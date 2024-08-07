@@ -34,6 +34,19 @@ public class SearchedUserResult {
         return status.toString();
     }
 
+    /**
+     * @return True if the users are friends
+     */
+    public boolean isFriend() {
+        return status == Status.FRIENDS;
+    }
+
+    /**
+     * @return If status is currently declined or declined and removed.
+     */
+    public boolean isStatusDeclined() {
+        return status == Status.DECLINED || status == Status.DECLINED_REMOVED;
+    }
 
     /**
      * @return If user can send friend request.

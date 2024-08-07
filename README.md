@@ -1,8 +1,14 @@
 # SENG302 Team 400 Project
 
-Project's tech stack
-includes ```gradle```, ```Spring Boot```, ```Thymeleaf```, ```Spring Boot Starter Mail```, ```MapTiler```,```PurgoMalum```
-and ```GitLab CI```.
+Project's tech stack includes
+
+- [`gradle`](https://gradle.org/),
+- [`Spring Boot`](https://spring.io/),
+- [`Thymeleaf`](https://www.thymeleaf.org/),
+- [`Spring Boot Starter Mail`](https://docs.spring.io/spring-boot/reference/io/email.html),
+- [`MapTiler`](https://www.maptiler.com/cloud/geocoding/),
+- [`Open-Meteo`](https://open-meteo.com/)
+- [`GitLab CI`](https://about.gitlab.com/).
 
 ## How to run tests
 

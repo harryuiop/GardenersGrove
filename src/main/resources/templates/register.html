@@ -4,123 +4,171 @@
   xmlns:th="http://www.thymeleaf.org"
   lang="en"
 >
-  <head>
-    <meta charset="utf-8" />
-    <title>register</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-    <script type="text/javascript" th:src="@{/javascript/disableLastName.js}"></script>
+  <head th:insert="~{fragments/importFragment :: headerfiles}">
+    <title>Register</title>
   </head>
-  <body onload="loadingPage()">
 
-    <div class="registerBody">
-        <h1 id="registerH1">Register</h1>
-      <a th:href="@{${homeUri}}" class="button">Cancel</a>
-      <div class="forumContentsDiv">
-        <h1>Register</h1>
-        <form
-                th:action="@{${registerUri}}"
-          method="post"
-          name="registerForm"
-        >
-          <label for="firstName">First name:</label>
-          <input
-            class="inputStyle"
-            type="text"
-            id="firstName"
-            name="firstName"
-            th:name="firstName"
-            th:value="${firstName}"
-            autofocus
-            autocomplete="off"
-          />
-          <p class="errorMessage" id="firstNameError" th:text="${firstNameError}"></p>
-
-
-          <label for="lastName">Last name:</label>
-          <input
-            class="inputStyle"
-            type="text"
-            id="lastName"
-            name="lastName"
-            th:name="lastName"
-            th:value="${lastName}"
-            autofocus
-            autocomplete="off"
-          />
-
-          <div class="noSurname">
-            <label for="noSurname" class="noSurnameCheckbox">
-              <input
-                type="checkbox"
-                id="noSurname"
-                value="checked"
-                th:name="noSurname"
-                th:checked="${noSurname}"
-                th:value="${noSurname}"
-                autofocus
-                autocomplete="off"
-                onchange="updateCheckboxValue()"
-              />
-              I have no surname
-            </label>
+  <body onload="loadingPage()" class="login-bg min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="container-flex d-flex align-items-center p-3">
+      <div class="g-col-md-4">
+        <div class="bg-white p-5 rounded shadow">
+          <div class="row align-content-center">
+            <h1 id="title" class="text-center display-3 title-heading mb-4">Register</h1>
           </div>
 
-          <p class="errorMessage" id="lastNameError" th:text="${lastNameError}"></p>
+          <form
+                  th:action="@{${registerUri}}"
+                  method="post"
+                  name="registerForm"
+          >
+            <div class="row d-flex align-content-around align-items-start">
+              <div class="col-md-6">
+                <div class="mb-3 form-floating">
+                  <input
+                          class="form-control"
+                          type="text"
+                          id="firstName"
+                          name="firstName"
+                          th:name="firstName"
+                          th:value="${firstName}"
+                          autofocus
+                          autocomplete="off"
+                          placeholder="First Name*"
+                          th:classappend="${firstNameError} ? 'is-invalid'"
+                  />
+                  <label for="firstName" class="form-label">First Name*</label>
+                  <p class="error message" id="firstnameError" th:text="${firstNameError}"></p>
+                </div>
 
-          <label for="email">Email:</label>
-          <input
-            class="inputStyle"
-            type="text"
-            id="email"
-            name="email"
-            th:name="email"
-            th:value="${email}"
-            autofocus
-            autocomplete="off"
-          />
-          <p class="errorMessage" id="emailError" th:text="${emailError}"></p>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3 form-floating">
+                  <input
+                          class="form-control"
+                          type="text"
+                          id="lastName"
+                          name="lastName"
+                          th:name="lastName"
+                          th:value="${lastName}"
+                          autofocus
+                          autocomplete="off"
+                          placeholder="Last Name*"
+                          th:classappend="${lastNameError} ? 'is-invalid'"
+                  />
+                  <label for="lastName" class="form-label">Last Name*</label>
+                  <div class="row">
+                    <div class="noSurname">
+                      <label for="noSurname" class="noSurnameCheckbox">
+                        <input
+                                type="checkbox"
+                                id="noSurname"
+                                value="checked"
+                                th:name="noSurname"
+                                th:checked="${noSurname}"
+                                th:value="${noSurname}"
+                                autofocus
+                                autocomplete="off"
+                                onchange="updateCheckboxValue()"
+                        />
+                        I have no surname
+                      </label>
+                    </div>
+                  </div>
+                  <p class="error message" id="lastNameError" style="max-width: 12rem" th:text="${lastNameError}"></p>
+                </div>
+              </div>
+            </div>
 
-          <label for="password">Password:</label>
-          <input
-            class="inputStyle"
-            type="password"
-            id="password"
-            name="password"
-            th:name="password"
-            autofocus
-            autocomplete="off"
-          />
-          <p class="errorMessage" id="passwordError" th:text="${passwordError}"></p>
+            <div class="mb-3 form-floating">
+              <input
+                      class="form-control"
+                      type="text"
+                      id="email"
+                      name="email"
+                      th:name="email"
+                      th:value="${email}"
+                      autofocus
+                      autocomplete="off"
+                      placeholder="Email*"
+                      th:classappend="${emailError} ? 'is-invalid'"
+              />
+              <label for="email" class="form-label">Email*</label>
+              <p class="error message" id="emailError" th:text="${emailError}"></p>
+            </div>
 
-          <label for="passwordConfirm">Confirm Password:</label>
-          <input
-            class="inputStyle"
-            type="password"
-            id="passwordConfirm"
-            name="passwordConfirm"
-            th:name="passwordConfirm"
-            autofocus
-          />
-          <p class="errorMessage" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
+            <div class="mb-3 form-floating">
+              <input
+                      class="form-control"
+                      type="date"
+                      id="dateOfBirth"
+                      name="dateOfBirth"
+                      th:name="dateOfBirth"
+                      th:value="${dateofBirth}"
+                      autofocus
+                      autocomplete="off"
+                      th:classappend="${dateOfBirthError} ? 'is-invalid'"
+              />
+              <label for="dateOfBirth" class="form-label">Date of Birth</label>
+              <p class="error message" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3 form-floating">
+                  <input
+                          class="form-control"
+                          type="password"
+                          id="password"
+                          name="password"
+                          th:name="password"
+                          placeholder="Password*"
+                          autofocus
+                          autocomplete="off"
+                          th:classappend="${passwordError} ? 'is-invalid'"
+                  />
+                  <label for="password" class="form-label">Password*</label>
+                  <p class="error message" id="passwordError" th:text="${passwordError}"></p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3 form-floating">
+                  <input
+                          class="form-control"
+                          type="password"
+                          id="passwordConfirm"
+                          name="passwordConfirm"
+                          th:name="passwordConfirm"
+                          placeholder="Confirm Password*"
+                          autofocus
+                          autocomplete="off"
+                          th:classappend="${passwordConfirmError} ? 'is-invalid'"
+                  />
+                  <label for="passwordConfirm" class="form-label">Confirm Password*</label>
+                  <p class="error message" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
+                </div>
+              </div>
+            </div>
 
-          <label for="dateOfBirth">Date of Birth:</label>
-          <input
-            class="inputStyle"
-            type="date"
-            id="dateOfBirth"
-            name="dateOfBirth"
-            th:name="dateOfBirth"
-            th:value="${dateOfBirth}"
-            autofocus
-            autocomplete="off"
-          />
-          <p class="errorMessage" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
+           <div class="d-flex justify-content-center">
+             <button class="btn btn-confirm me-1"
+                     type="submit"
+             >Sign Up <i class="bi bi-check"></i>
+             </button>
+             <a th:href="@{${homeUri}}">
+               <button class="btn btn-cancel ms-1"
+                       type="button"
+               >Cancel <i class="bi bi-x"></i>
+               </button>
+             </a>
+           </div>
 
-          <input class="inputStyle" id="submit" type="submit" value="Submit"/>
-        </form>
-        <p class="registerLink"> Already have an account?<a id="registerLink" th:href="@{${loginUri}}"> Login
-          Here.</a></p>
+          </form>
+          <div class="d-flex justify-content-center mt-5">
+            <p class="registerLink"> Already have an account?<a id="registerLink" th:href="@{${loginUri}}"> Login
+              Here.</a></p>
+          </div>
+        </div>
       </div>
     </div>
+    <script type="text/javascript" th:src="@{/javascript/disableLastName.js}"></script>
   </body>
 </html>

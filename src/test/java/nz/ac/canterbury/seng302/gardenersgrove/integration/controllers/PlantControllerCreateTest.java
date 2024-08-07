@@ -12,6 +12,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -83,9 +85,9 @@ class PlantControllerCreateTest {
         Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
     }
 
-    @Test
-    void submitForm_allValid_plantSaved() throws Exception {
-        String plantName = "Test Plant";
+    @ParameterizedTest
+    @ValueSource(strings = {"Test Plant", "a", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"})
+    void submitForm_allValid_plantSaved(String plantName) throws Exception {
         Integer plantCount = 4;
         String plantDescription = "Test Description";
         String plantedDate = "2024-01-01";
@@ -190,9 +192,10 @@ class PlantControllerCreateTest {
         assertNotNull(plant.getImageFileName());
     }
 
-    @Test
-    void submitForm_invalidName_plantNotSaved() throws Exception {
-        String plantName = "Test&Plant";
+    @ParameterizedTest
+    @ValueSource(strings = {"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+                            "@(#&%$(*&(@*", ""})
+    void submitForm_invalidName_plantNotSaved(String plantName) throws Exception {
         Integer plantCount = 4;
         String plantDescription = "Test Description";
         String plantedDate = "2024-01-01";
@@ -214,10 +217,10 @@ class PlantControllerCreateTest {
         assertTrue(allPlants.isEmpty());
     }
 
-    @Test
-    void submitForm_invalidCount_plantNotSaved() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"-1", "text"})
+    void submitForm_invalidCount_plantNotSaved(String plantCount) throws Exception {
         String plantName = "Test Plant";
-        Integer plantCount = -1;
         String plantDescription = "Test Description";
         String plantedDate = "2024-01-01";
         byte[] fakeImageBytes = new byte[10];
@@ -228,7 +231,7 @@ class PlantControllerCreateTest {
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                                         .param("plantName", plantName)
-                                        .param("plantCount", String.valueOf(plantCount))
+                                        .param("plantCount", plantCount)
                                         .param("plantDescription", plantDescription)
                                         .param("plantedDate", plantedDate))
                         .andExpect(MockMvcResultMatchers.status().isOk())

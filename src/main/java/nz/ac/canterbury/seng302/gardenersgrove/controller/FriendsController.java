@@ -71,10 +71,11 @@ public class FriendsController extends NavBar {
         this.updateGardensNavBar(model, gardenService, userService);
         model.addAttribute("user", userService.getAuthenticatedUser());
         model.addAttribute("viewFriendsGardensUriString", VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
+        model.addAttribute("viewFriendsProfileUriString", VIEW_FRIENDS_PROFILE_URI_STRING);
         model.addAttribute("manageFriendsUri", MANAGE_FRIENDS_URI_STRING);
         model.addAttribute("friends", friendshipService.getFriends(userService.getAuthenticatedUser()));
         model.addAttribute("incoming", friendRequestService.findRequestByReceiver(userService.getAuthenticatedUser()));
-        model.addAttribute("outgoing", friendRequestService.findRequestBySender(userService.getAuthenticatedUser()));
+        model.addAttribute("outgoing", friendRequestService.findOutgoingRequests(userService.getAuthenticatedUser()));
         model.addAttribute("viewAllGardensUri", viewAllGardensUri());
         model.addAttribute("newGardenUri", newGardenUri());
         model.addAttribute("searchResultsUri", searchResultsUri());
@@ -115,7 +116,12 @@ public class FriendsController extends NavBar {
                     break;
                 case "Cancel":
                     logger.info("Canceled Request");
-                    friendRequestService.removeRequest(friendRequest);
+                    if (friendRequest.getStatus() == Status.PENDING) {
+                        friendRequestService.removeRequest(friendRequest);
+                    } else {
+                        friendRequest.setStatus(Status.DECLINED_REMOVED);
+                        friendRequestService.updateRequest(friendRequest);
+                    }
                     break;
                 default:
                     logger.info("Default in switch statement");

@@ -71,10 +71,23 @@ public class LogInController {
         logger.info("GET {}", loginUri());
 
         if (error != null) {
-            if (error.equals("Authentication_Failed") || error.equals("Invalid_Password")) {
+            String errorMessage = "";
+            if (error.startsWith("Authentication_Failed") || error.startsWith("Invalid_Password")) {
                 model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
-            } else if (error.equals("Invalid_Email")) {
+                errorMessage = error.startsWith("Authentication_Failed") ? "Authentication_Failed" : "Invalid_Password";
+            } else if (error.startsWith("Invalid_Email")) {
                 model.addAttribute("emailError", "Email address must be in the form ‘jane@doe.nz’");
+                errorMessage = "Invalid_Email";
+            }
+
+            int errorMessageLength = errorMessage.length();
+            if (errorMessageLength > 0) {
+                if (error.length() > errorMessageLength) {
+                    String email = error.substring(errorMessageLength);
+                    model.addAttribute("username", email);
+                } else {
+                    model.addAttribute("username", "");
+                }
             }
         }
 
@@ -107,6 +120,7 @@ public class LogInController {
         }
         model.addAttribute("resetPasswordUri", resetPasswordUri(token, userId));
         model.addAttribute("userId", userId);
+        model.addAttribute("loginUri", loginUri());
         return "resetPassword";
     }
 
@@ -129,6 +143,8 @@ public class LogInController {
         logger.info("POST {}", resetPasswordUri(token, userId));
 
         User user = userService.getUserById((int) userId);
+
+        model.addAttribute("loginUri", loginUri());
 
         if (user == null) {
             logger.info("Invalid user, redirecting to login page");
@@ -161,7 +177,7 @@ public class LogInController {
     }
 
     /**
-     * return reset password form when user click forgot password
+     * Forgot Password form
      *
      * @param model The Model object used for adding attributes to the view.
      * @return The name of the template
@@ -171,6 +187,7 @@ public class LogInController {
         logger.info("GET {}", resetPasswordEmailUri());
 
         model.addAttribute("resetPasswordEmailUri", resetPasswordEmailUri());
+        model.addAttribute("loginUri", loginUri());
         return "forgotPasswordForm";
     }
 
@@ -201,6 +218,8 @@ public class LogInController {
                 emailSenderService.sendEmail(user, "resetPasswordEmail", baseUrl);
             }
         }
+        model.addAttribute("loginUri", loginUri());
+        model.addAttribute("userEmail", userEmail);
         return "forgotPasswordForm";
 
     }

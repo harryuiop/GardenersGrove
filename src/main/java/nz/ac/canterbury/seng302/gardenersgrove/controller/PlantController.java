@@ -136,7 +136,7 @@ public class PlantController extends NavBar {
         }
         Garden garden = optionalGarden.get();
         return loadPlantForm(
-                "", "", "", "", "", "", "",
+                        null, null, null, null, null, null, null,
                 null, null, null, null, "/images/default-plant.jpg",
                 garden.getName(),
                 newPlantUri(gardenId), viewGardenUri(gardenId),
@@ -170,9 +170,9 @@ public class PlantController extends NavBar {
         Plant plant = optionalPlant.get();
 
         return loadPlantForm(
-                "", "", "", "", "", "", "",
+                        null, null, null, null, null, null, null,
                 plant.getName(),
-                plant.getCount() != null ? plant.getCount().toString() : null,
+                plant.getCount() == null ? "" : plant.getCount().toString(),
                 plant.getDescription(),
                 plant.getPlantedOn(),
                 plant.getImageFilePath(),
@@ -265,13 +265,13 @@ public class PlantController extends NavBar {
 
         if (!errors.isEmpty()) {
             return loadPlantForm(
-                    errors.getOrDefault("plantNameError", ""),
-                    errors.getOrDefault("plantCountError", ""),
-                    errors.getOrDefault("plantDescriptionError", ""),
-                    errors.getOrDefault("plantedDateError", ""),
-                    errors.getOrDefault("imageTypeError", ""),
-                    errors.getOrDefault("imageSizeError", ""),
-                    errors.getOrDefault("plantImageUploadError", ""),
+                            errors.get("plantNameError"),
+                            errors.get("plantCountError"),
+                            errors.get("plantDescriptionError"),
+                            errors.get("plantedDateError"),
+                            errors.get("imageTypeError"),
+                            errors.get("imageSizeError"),
+                            errors.get("plantImageUploadError"),
                     plantName,
                     plantCount,
                     plantDescription,
@@ -283,12 +283,8 @@ public class PlantController extends NavBar {
                     model
             );
         }
-        Integer intPlantCount = null;
-        if (plantCount != null) {
-            intPlantCount = Integer.parseInt(plantCount, 10);
-        }
 
-        Plant plant = new Plant(plantName, intPlantCount, plantDescription, date, imageFileName, garden);
+        Plant plant = new Plant(plantName, parseStringToInt(plantCount), plantDescription, date, imageFileName, garden);
         plantService.savePlant(plant);
         return "redirect:" + viewGardenUri(garden.getId());
     }
@@ -340,13 +336,13 @@ public class PlantController extends NavBar {
 
         if (!errors.isEmpty()) {
             return loadPlantForm(
-                    errors.getOrDefault("plantNameError", ""),
-                    errors.getOrDefault("plantCountError", ""),
-                    errors.getOrDefault("plantDescriptionError", ""),
-                    errors.getOrDefault("plantedDateError", ""),
-                    errors.getOrDefault("imageTypeError", ""),
-                    errors.getOrDefault("imageSizeError", ""),
-                    errors.getOrDefault("plantImageUploadError", ""),
+                            errors.get("plantNameError"),
+                            errors.get("plantCountError"),
+                            errors.get("plantDescriptionError"),
+                            errors.get("plantedDateError"),
+                            errors.get("imageTypeError"),
+                            errors.get("imageSizeError"),
+                            errors.get("plantImageUploadError"),
                     plantName,
                     plantCount,
                     plantDescription,
@@ -359,12 +355,8 @@ public class PlantController extends NavBar {
             );
         }
 
-        Integer intPlantCount = null;
-        if (plantCount != null) {
-            intPlantCount = Integer.parseInt(plantCount, 10);
-        }
         plant.setName(plantName);
-        plant.setCount(intPlantCount);
+        plant.setCount(parseStringToInt(plantCount));
         plant.setDescription(plantDescription);
         plant.setPlantedOn(date);
         if (imageFileName != null) {
@@ -372,5 +364,14 @@ public class PlantController extends NavBar {
         }
         plantService.savePlant(plant);
         return "redirect:" + viewGardenUri(plant.getGarden().getId());
+    }
+
+    /**
+     * Helper method to turn string into integer
+     * @param plantCount String
+     * @return null or Integer
+     */
+    private Integer parseStringToInt(String plantCount) {
+        return ( plantCount == null || plantCount.isEmpty() ) ? null : Integer.parseInt(plantCount);
     }
 }

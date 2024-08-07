@@ -84,6 +84,14 @@ public class Location {
         return streetAddress;
     }
 
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
     public String getSuburb() {
         return suburb;
     }
@@ -91,6 +99,7 @@ public class Location {
     public String getPostcode() {
         return postcode;
     }
+
 
     /**
      * Set longitude, latitude coordinates for location.

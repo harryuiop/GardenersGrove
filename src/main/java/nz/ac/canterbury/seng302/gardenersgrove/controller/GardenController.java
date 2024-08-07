@@ -13,6 +13,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Featu
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.LocationService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class GardenController extends NavBar {
     private final UserService userService;
     private final LocationService locationService;
     private final MapTilerGeocoding mapTilerGeocoding;
+    private final WeatherService weatherService;
     private String refererUrl;
     private final ErrorChecker errorChecker;
 
@@ -53,6 +55,7 @@ public class GardenController extends NavBar {
             UserService userService,
             LocationService locationService,
             MapTilerGeocoding mapTilerGeocoding,
+            WeatherService weatherService,
             ErrorChecker errorChecker
     ) {
         this.gardenService = gardenService;
@@ -60,6 +63,7 @@ public class GardenController extends NavBar {
         this.locationService = locationService;
         this.mapTilerGeocoding = mapTilerGeocoding;
         this.errorChecker = errorChecker;
+        this.weatherService = weatherService;
     }
 
     /**
@@ -104,7 +108,7 @@ public class GardenController extends NavBar {
 
         model.addAttribute("formSubmissionUri", formSubmissionUri);
         model.addAttribute("previousPage", this.refererUrl);
-
+        
         return "gardenForm";
     }
 
@@ -134,7 +138,7 @@ public class GardenController extends NavBar {
     ) {
         logger.info("GET {}", newGardenUri());
 
-        if (referer == null) {
+        if (referer == null || referer.contains(NEW_GARDEN_URI_STRING))  {
             referer = VIEW_ALL_GARDENS_URI_STRING;
         }
         this.refererUrl = referer;
@@ -221,7 +225,8 @@ public class GardenController extends NavBar {
         }
         Garden garden = optionalGarden.get();
 
-        if (referer == null) {
+        if (referer == null || referer.contains(NEW_GARDEN_URI_STRING)
+                || referer.contains(editGardenUri(gardenId).toString())) {
             referer = viewGardenUri(gardenId).toString();
         }
         this.refererUrl = referer;

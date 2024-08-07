@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ProfanityChecker;
@@ -17,7 +18,7 @@ import java.time.format.DateTimeParseException;
 public class FormValuesValidator {
     // Matches letters, hyphens, apostrophes and spaces, with at least one character.
     static String namePattern = "^[a-zA-Z\\-' ]+$";
-    static String tagPattern = "^[a-zA-Z0-9\\-'\"_ ]+$";
+    static String tagPattern = "^\\p{L}[\\p{L}0-9 _\\-\"']*\\p{L}$";
     static Logger logger = LoggerFactory.getLogger(FormValuesValidator.class);
 
     /**
@@ -125,6 +126,11 @@ public class FormValuesValidator {
         return name.length() <= 64;
     }
 
+
+    public boolean checkPlantNameLength(String name) {
+        return name.length() <= Plant.NAME_CHARACTER_LIMIT;
+    }
+
     /**
      * Checks the users' name contains only valid characters.
      *
@@ -173,7 +179,7 @@ public class FormValuesValidator {
      * @return bool: Whether the email is in use or not.
      */
     public boolean emailInUse(String email, UserService userService) {
-        return userService.getUserByEmail(email) == null;
+        return userService.getUserByEmail(email.toLowerCase()) == null;
     }
 
 

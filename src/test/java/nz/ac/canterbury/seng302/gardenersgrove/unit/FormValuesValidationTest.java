@@ -114,6 +114,18 @@ public class FormValuesValidationTest {
     }
 
     @Test
+    void checkInvalidPlantNameLength_returnFalse() {
+        String name = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        Assertions.assertFalse(formValuesValidator.checkPlantNameLength(name));
+    }
+
+    @Test
+    void checkValidPlantNameLength_returnTrue() {
+        String name ="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        Assertions.assertTrue(formValuesValidator.checkPlantNameLength(name));
+    }
+
+    @Test
     void checkSamePassword_returnTrue() {
         String password = "abE123!!";
         Assertions.assertTrue(formValuesValidator.checkConfirmPasswords(password, password));
@@ -158,13 +170,13 @@ public class FormValuesValidationTest {
         Assertions.assertFalse(formValuesValidator.emailInUse(email, userService));
     }
     @ParameterizedTest
-    @ValueSource(strings = {"1", "100", "9923", "999999999", "01"})
+    @ValueSource(strings = {"1", "100", "9923", "999999999", "01", ""})
     void checkValidPlantCount_returnTrue(String value) {
        Assertions.assertTrue(formValuesValidator.checkValidPlantCount(value));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"1.0", "abc", "#!12", "9999999999", "0", "-1"})
+    @ValueSource(strings = {"1.0", "abc", "#!12", "9999999999", "0", "-1", "    ", "1  ", "  1", "1 2"})
     void checkValidPlantCount_returnFalse(String value) {
         Assertions.assertFalse(formValuesValidator.checkValidPlantCount(value));
     }
