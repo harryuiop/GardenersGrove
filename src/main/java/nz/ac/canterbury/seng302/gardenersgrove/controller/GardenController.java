@@ -1,12 +1,10 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchPlantException;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.location.CountryCode;
 import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
 import nz.ac.canterbury.seng302.gardenersgrove.location.map_tiler_response.Feature;
@@ -108,7 +106,7 @@ public class GardenController extends NavBar {
 
         model.addAttribute("formSubmissionUri", formSubmissionUri);
         model.addAttribute("previousPage", this.refererUrl);
-        
+
         return "gardenForm";
     }
 
@@ -138,7 +136,7 @@ public class GardenController extends NavBar {
     ) {
         logger.info("GET {}", newGardenUri());
 
-        if (referer == null || referer.contains(NEW_GARDEN_URI_STRING))  {
+        if (referer == null || referer.contains(NEW_GARDEN_URI_STRING)) {
             referer = VIEW_ALL_GARDENS_URI_STRING;
         }
         this.refererUrl = referer;
@@ -186,7 +184,8 @@ public class GardenController extends NavBar {
             locationEntity.setSuburb(suburb);
             locationEntity.setPostcode(postcode);
             locationEntity.setStreetAddress(streetAddress);
-            Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName, gardenDescription, locationEntity, gardenSize, profanityCheckWorked);
+            Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName,
+                    gardenDescription, locationEntity, gardenSize, profanityCheckWorked);
             gardenService.saveGarden(garden);
 
             if (locationFound && profanityCheckWorked) {
@@ -297,6 +296,7 @@ public class GardenController extends NavBar {
             garden.setDescription(gardenDescription);
             garden.setLocation(locationEntity);
             garden.setVerifiedDescription(profanityCheckWorked);
+
             gardenService.saveGarden(garden);
             if (locationFound && profanityCheckWorked) {
                 return "redirect:" + viewGardenUri(garden.getId());

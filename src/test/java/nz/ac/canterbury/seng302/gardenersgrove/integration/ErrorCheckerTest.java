@@ -324,7 +324,7 @@ class ErrorCheckerTest {
 
     @Test
     void firstNameErrors_validFirstName_returnsNoErrors() {
-        String firstName = "Jane-Mary's ";
+        String firstName = "Jane-Mary's";
         Map<String, String> errors = errorChecker.firstNameErrors(firstName);
         HashMap<String, String> correctErrors = new HashMap<>();
         Assertions.assertEquals(correctErrors, errors);
@@ -345,9 +345,7 @@ class ErrorCheckerTest {
         Map<String, String> errors = errorChecker.firstNameErrors(firstName);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put(
-                "firstNameError",
-                "First name cannot exceed length of 64 characters and " +
-                        "first name cannot be empty and must only include letters, spaces, hyphens or apostrophes"
+                "firstNameError", "A valid name must:\n- Contain only letters, numbers, spaces, -, _, ', and \"\n- Start with a letter\n- End with a letter\n- Be at least two characters long"
         );
         Assertions.assertEquals(correctErrors, errors);
     }

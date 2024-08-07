@@ -79,7 +79,8 @@ class PlantControllerCreateTest {
         gardenLocation.setSuburb("Ilam");
         gardenLocation.setPostcode("8041");
 
-        gardenRepository.save(new Garden(user, "Test Garden", null, gardenLocation, null, true));
+        gardenRepository.save(new Garden(user, "Test Garden", null, gardenLocation, null,
+                true));
         plantRepository.deleteAll();
 
         Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
