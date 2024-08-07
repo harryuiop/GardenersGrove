@@ -314,6 +314,7 @@
                   <button
                     type="button"
                     class="btn btn-cancel"
+                    id="remove-friend-submit"
                   >
                     Remove Friend
                   </button>
@@ -366,9 +367,7 @@
   </style>
   <script>
     const removeFriendModal = document.getElementById("removeFriendModal");
-    const removeFriendButton = document.querySelector(
-      "#removeFriendModal .btn-primary",
-    );
+    const removeFriendButton = document.getElementById("remove-friend-submit");
     let formId;
 
     removeFriendModal.addEventListener("show.bs.modal", (event) => {
