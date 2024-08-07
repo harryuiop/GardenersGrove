@@ -17,6 +17,8 @@ public class CookiesService {
     /**
      * setup cookies for controlling rain advice popup close
      *
+     * @param gardenId garden id
+     * @param deployed deployed environment
      * @return cookies for advice popup close
      */
     public Cookie cookieWeatherRainPopupClose(long gardenId, int deployed) {
@@ -26,7 +28,6 @@ public class CookiesService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nextMidnight = now.plusDays(1).with(LocalTime.MIDNIGHT);
         Duration durationUntilNextMidnight = Duration.between(now, nextMidnight);
-        int secondsUntilNextMidnight = (int) durationUntilNextMidnight.getSeconds();
 
         Cookie cookie = new Cookie("rainPopupSeen", "true");
         cookie.setHttpOnly(true);
@@ -34,7 +35,7 @@ public class CookiesService {
                                     : deployed == 2 ? String.format("/prod/garden/%d", gardenId)
                                     : String.format("/garden/%d", gardenId);
         cookie.setPath(path);
-        cookie.setMaxAge(secondsUntilNextMidnight); // alive until midnight
+        cookie.setMaxAge((int) durationUntilNextMidnight.getSeconds()); // alive until midnight
 
         return cookie;
     }

@@ -36,6 +36,8 @@ public class CookiesRestController {
      * control cookies setup Rain popup message close for 24 hours
      *
      * @param response httpServletResponse
+     * @param gardenId garden id
+     * @param deployed deployed environment
      */
     @GetMapping(SET_WEATHER_POPUP_ALERT_COOKIES)
     public void setRainPopup(HttpServletResponse response,
