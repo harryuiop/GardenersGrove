@@ -133,6 +133,30 @@
             <div th:if="${garden.locationFound}"
                  class="card h-auto w-100 text-center mt-3 align-items-center rounded-4">
               <p class="mt-2" style="font-weight: bold"><i th:text="${advice}"></i></p>
+                <div class="h-auto mt-3 rounded-4 d-flex flex-column">
+                    <div th:if="${popupClosed} != 'true'"
+                         class="alert w-100 alert-success"
+                         id="advice-message"
+                         style="
+                   --bs-alert-bg: #d0dfd0;
+                   --bs-alert-border-color: #477641"
+                         role="alert">
+                        <div class="w-100 d-flex justify-content-end">
+                            <button class="btn btn-sm me-2"
+                                    type="button"
+                                    style="
+                    --bs-btn-color: #6F0C0C;
+                    --bs-btn-hover-color: #ec7676;
+                    --bs-btn-active-border-color: transparent;
+                    --bs-btn-active-color: #6F0C0C;"
+                                    onclick="setRainPopupCookie()">Close
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                        <p class="mt-2 d-flex justify-content-center" style="font-weight: bold; padding-bottom: 1rem">
+                            <i th:text="${advice}"></i>
+                        </p>
+                    </div>
             </div>
           </div>
         </div>
@@ -260,4 +284,5 @@
     }
 </script>
 <script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/cookies.js}"></script>
 </html>
