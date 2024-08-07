@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 /**
  * Service to set up cookies for client
@@ -18,7 +19,7 @@ public class CookiesService {
      *
      * @return cookies for advice popup close
      */
-    public Cookie cookieWeatherRainPopupClose(long gardenId) {
+    public Cookie cookieWeatherRainPopupClose(long gardenId, int deployed) {
 
         // setup maxAge time for cookie to survive until end of the day
         // The codes about setting maxAge is based on GitHub copilot suggestion
@@ -29,7 +30,10 @@ public class CookiesService {
 
         Cookie cookie = new Cookie("rainPopupSeen", "true");
         cookie.setHttpOnly(true);
-        cookie.setPath("/garden/" + gardenId);
+        String path = deployed == 1 ? String.format("test/garden/%d", gardenId)
+                                    : deployed == 2 ? String.format("/prod/garden/%d", gardenId)
+                                    : String.format("/garden/%d", gardenId);
+        cookie.setPath(path);
         cookie.setMaxAge(secondsUntilNextMidnight); // alive until midnight
 
         return cookie;
