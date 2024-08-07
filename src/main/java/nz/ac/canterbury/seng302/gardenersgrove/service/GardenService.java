@@ -101,4 +101,12 @@ public class GardenService {
     public long countPublicGardens(String searchParameter) {
         return gardenRepository.countByIsGardenPublicTrueWithGardenNameSearch(searchParameter);
     }
+
+    /**
+     * Deletes a garden
+     * @param id The id of the garden to be deleted
+     */
+    public void deleteGarden(Long id) {
+        gardenRepository.deleteById(id);
+    }
 }
