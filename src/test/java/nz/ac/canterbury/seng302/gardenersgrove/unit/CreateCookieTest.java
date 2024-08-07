@@ -16,9 +16,10 @@ public class CreateCookieTest {
     @Test
     void createCookieForWeatherPopupMessage() {
 
-        Cookie cookie = cookiesService.cookieWeatherRainPopupClose();
+        long tempGardenId = 1;
+        Cookie cookie = cookiesService.cookieWeatherRainPopupClose(tempGardenId);
 
         Assertions.assertTrue(cookie.isHttpOnly());
-        Assertions.assertEquals("/garden", cookie.getPath());
+        Assertions.assertEquals("/garden/"+tempGardenId, cookie.getPath());
     }
 }
