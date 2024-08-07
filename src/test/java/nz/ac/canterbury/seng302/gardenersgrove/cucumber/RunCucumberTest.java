@@ -52,6 +52,7 @@ public class RunCucumberTest {
 
     @BeforeAll
     public static void beforeAll() {
+        // Sets up authenticated user, call this instead of rewriting in every file
         authMaker = (String email, String password, UserService userService) -> {
             User user;
             if (userService.getUserByEmail(email) == null) {

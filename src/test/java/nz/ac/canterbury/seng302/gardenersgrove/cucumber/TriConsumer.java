@@ -2,6 +2,13 @@ package nz.ac.canterbury.seng302.gardenersgrove.cucumber;
 
 import org.springframework.security.core.Authentication;
 
+/**
+ * The tri consumer is an interface, so we can use a function as a .
+ * This is used in our project for sending through authentication for users
+ * @param <T> Declared in runCucumberTest
+ * @param <U> Declared in runCumberTest
+ * @param <V> Declared in runCucumberTest
+ */
 @FunctionalInterface
 public interface TriConsumer<T, U, V> {
     Authentication accept(T t, U u, V v);

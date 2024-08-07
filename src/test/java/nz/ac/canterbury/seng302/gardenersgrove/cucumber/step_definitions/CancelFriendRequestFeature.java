@@ -86,8 +86,10 @@ public class CancelFriendRequestFeature {
 
     @Given("I have two users")
     public void iHaveTwoUsers() {
-        if (userService.getUserByEmail("user1@mail.com") == null) {
+        if (userService.getUserByEmail(user1.getEmail()) == null) {
             userService.addUsers(user1);
+        }
+        if (userService.getUserByEmail(user2.getEmail()) == null) {
             userService.addUsers(user2);
         }
         auth = RunCucumberTest.authMaker.accept(user1.getEmail(), user1.getPassword(), userService);
