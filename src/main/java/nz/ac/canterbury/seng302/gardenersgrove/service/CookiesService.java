@@ -31,7 +31,7 @@ public class CookiesService {
 
         Cookie cookie = new Cookie("rainPopupSeen", "true");
         cookie.setHttpOnly(true);
-        String path = deployed == 1 ? String.format("test/garden/%d", gardenId)
+        String path = deployed == 1 ? String.format("/test/garden/%d", gardenId)
                                     : deployed == 2 ? String.format("/prod/garden/%d", gardenId)
                                     : String.format("/garden/%d", gardenId);
         cookie.setPath(path);
