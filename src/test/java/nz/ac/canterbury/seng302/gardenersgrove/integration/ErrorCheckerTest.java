@@ -394,7 +394,7 @@ class ErrorCheckerTest {
         boolean noSurname = false;
         Map<String, String> errors = errorChecker.lastNameErrors(lastName, noSurname);
         HashMap<String, String> correctErrors = new HashMap<>();
-        correctErrors.put("lastNameError", "Last name cannot be empty unless box labelled No Lastname is ticked");
+        correctErrors.put("lastNameError", "Last name cannot be empty unless box labelled No surname is ticked");
         Assertions.assertEquals(correctErrors, errors);
     }
 

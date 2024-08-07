@@ -211,7 +211,7 @@ public class ErrorChecker {
     Map<String, String> errors = new HashMap<>();
     if (!noSurname) {
       if (formValuesValidator.checkBlank(lastName)) {
-        errors.put("lastNameError", "Last name cannot be empty unless box labelled No Lastname is ticked");
+        errors.put("lastNameError", "Last name cannot be empty unless box labelled No surname is ticked");
       } else {
         if (!formValuesValidator.checkNameLength(lastName) && !formValuesValidator.checkUserName(lastName)) {
           errors.put(

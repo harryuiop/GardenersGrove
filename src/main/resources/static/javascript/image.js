@@ -1,5 +1,5 @@
 function displayImage() {
-    const input = document.getElementById('plantImage');
+    const input = document.getElementById('file-picker');
     const imgs = document.querySelectorAll('.selectedImage');
     const file = input.files[0];
     const reader = new FileReader();
