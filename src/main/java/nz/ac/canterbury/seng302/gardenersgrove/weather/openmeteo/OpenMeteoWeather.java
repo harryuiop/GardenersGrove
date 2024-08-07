@@ -36,6 +36,9 @@ public class OpenMeteoWeather implements WeatherService {
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+    private final List<String> sunnyDescription = Arrays.asList("Clear sky", "Mainly clear", "Partly cloudy");
+    private final List<String> otherDescription = Arrays.asList("Overcast", "Fog", "Depositing rine fog");
+
     /**
      * Gets the json data from the Open Meteo API
      *
@@ -172,21 +175,59 @@ public class OpenMeteoWeather implements WeatherService {
      */
     @Override
     public String getWeatherAdvice(List<WeatherData> weatherData) {
-        List<String> weatherDescriptions = new ArrayList<>();
-        weatherDescriptions.add(weatherData.get(0).getWeatherDescription());
-        weatherDescriptions.add(weatherData.get(1).getWeatherDescription());
 
-        List<String> sunnyDescription = Arrays.asList("Clear sky", "Mainly clear", "Partly cloudy");
-        List<String> otherDescription = Arrays.asList("Overcast", "Fog", "Depositing rine fog");
+        List<String> weatherDescriptions = this.getWeatherDescription(weatherData);
 
         // Check to see if past two consecutive days match sunny or rainy weather descriptions
         if (sunnyDescription.contains(weatherDescriptions.get(0)) && sunnyDescription.contains(weatherDescriptions.get(1))) {
             return "There hasn’t been any rain recently, make sure to water your plants if they need it";
-        } else if ((!sunnyDescription.contains(weatherDescriptions.get(0)) && !otherDescription.contains(weatherDescriptions.get(0))) &&
-                (!sunnyDescription.contains(weatherDescriptions.get(1)) && !otherDescription.contains(weatherDescriptions.get(1)))) {
+        } else if (checkWeatherIsRainy(weatherDescriptions)) {
             return "Outdoor plants don’t need any water today";
         } else {
             return "Have you checked on your garden today?";
         }
+    }
+
+    /**
+     * This method checks if the weather is rainy
+     *
+     * @param weatherData List of weather data forwarded from the Open Meteo API
+     * @return true if the weather is rainy, false otherwise
+     */
+    @Override
+    public boolean isRainy(List<WeatherData> weatherData) {
+
+        List<String> weatherDescriptions = getWeatherDescription(weatherData);
+
+        return checkWeatherIsRainy(weatherDescriptions);
+    }
+
+    /**
+     * This method checks weatherDescriptions if the weather is rainy
+     *
+     * @param weatherDescriptions List of weather descriptions
+     * @return true if the weather is rainy, false otherwise
+     */
+    private boolean checkWeatherIsRainy(List<String> weatherDescriptions) {
+
+        return (!sunnyDescription.contains(weatherDescriptions.get(0)) && !otherDescription.contains(weatherDescriptions.get(0))) &&
+                (!sunnyDescription.contains(weatherDescriptions.get(1)) && !otherDescription.contains(weatherDescriptions.get(1)));
+    }
+
+
+    /**
+     * This method gets the weather description from the weather data
+     *
+     * @param weatherData List of weather data forwarded from the Open Meteo API
+     * @return a list of detail about the weather description
+     */
+    private List<String> getWeatherDescription(List<WeatherData> weatherData) {
+
+        List<String> weatherDescriptions = new ArrayList<>();
+
+        weatherDescriptions.add(weatherData.get(0).getWeatherDescription());
+        weatherDescriptions.add(weatherData.get(1).getWeatherDescription());
+
+        return weatherDescriptions;
     }
 }

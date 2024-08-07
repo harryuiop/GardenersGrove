@@ -29,4 +29,6 @@ public interface WeatherService {
      * @return The number of previous days.
      */
     int getForecastDayCount();
+
+    boolean isRainy(List<WeatherData> weatherData);
 }
