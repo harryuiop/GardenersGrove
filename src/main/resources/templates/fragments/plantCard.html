@@ -40,10 +40,7 @@
   <div class="card-body">
     <h2 class="display-5" th:text="${plantName}"></h2>
     <p class="overflow-y-auto" style="max-height: 20vh" th:text="${plantDescription}"></p>
-    <p class="card-text">
-      <span th:if="${plantCount == 1}">There is <b th:text="${plantCount}"></b> in the garden</span>
-      <span th:if="${plantCount != 1}">There are <b th:text="${plantCount}"></b> in the garden</span>
-    </p>
+    <p th:if="${plantCount}">Count: <b th:text="${plantCount}"></b></p>
     <p style="font-style: italic;" th:if="${plantDate != null}" th:text="'Planted on ' + ${plantDate}"></p>
   </div>
   <div th:if="${owner}" class="card-footer">

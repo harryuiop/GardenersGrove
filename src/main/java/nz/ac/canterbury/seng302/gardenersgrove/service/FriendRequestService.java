@@ -42,7 +42,17 @@ public class FriendRequestService {
         return friendRequestRepository.findFriendRequestsBySender(sender);
     }
 
-    public List<FriendRequest> findRequestBySenderAndReceiver(User sender, User receiver) {
+    /**
+     * Find the outgoing requests for a particular user, in order to display this information to the user
+     * @param sender The authenticated user
+     * @return List of their outgoing requests
+     */
+    public List<FriendRequest> findOutgoingRequests(User sender) {
+        return friendRequestRepository.findOutgoingRequests(sender);
+    }
+
+
+        public List<FriendRequest> findRequestBySenderAndReceiver(User sender, User receiver) {
         return friendRequestRepository.findFriendRequestBySenderAndReceiver(sender, receiver);
     }
 

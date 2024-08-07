@@ -13,7 +13,6 @@ import java.util.Optional;
 public class GardenService {
 
     private final GardenRepository gardenRepository;
-
     private final UserService userService;
     private final FriendshipService friendshipService;
 
@@ -27,19 +26,18 @@ public class GardenService {
     /**
      * Querys the database and grabs all gardens from the logged-in user
      *
-     * @param userService User Service object
-     * @return List of gardens
+     * @return List of all the authenticated users gardens
      */
-    public List<Garden> getAllGardens(UserService userService) {
+    public List<Garden> getAllGardens() {
         return gardenRepository.findAllByOwner(userService.getAuthenticatedUser());
     }
 
     /**
      * Querys the database for all the given gardens of a friend
      *
-     * @param friendId ID of friend
-     * @param userService Logged in users user service
-     * @return List of gardens
+     * @param friendId              ID of friend
+     * @param userService           Logged in users user service
+     * @return                      List of all the friends gardens
      * @throws NoSuchFriendException Thrown if no friend is found in the database
      */
     public List<Garden> getAllFriendsGardens(long friendId, UserService userService) throws NoSuchFriendException {
