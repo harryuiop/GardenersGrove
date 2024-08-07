@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class UserValidation {
-    static String emailPattern = "[a-zA-Z0-9]+([.\\-_][a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,}){1,2}";
-    static String passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
-    static String namePattern = "^[a-zA-Z\\-' ]+$";
+    static String emailPattern = "[\\p{L}0-9]+([.\\-_][\\p{L}0-9]+)*@[\\p{L}0-9-]+(\\.[\\p{L}]{2,}){1,2}";
+    static String passwordPattern = "^(?=.*?[\\p{Lu}])(?=.*?[\\p{Ll}])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
+    static String namePattern = "^[\\p{L}\\-' ]+$";
 
     /**
      * Check if the email is valid
