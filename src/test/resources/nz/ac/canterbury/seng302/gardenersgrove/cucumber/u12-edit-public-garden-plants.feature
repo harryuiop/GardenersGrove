@@ -12,3 +12,6 @@ Feature: As Kaia, I want to update the plants I have in my garden so that I can 
       When I click the edit plant button next to plant with id int 1
       Then I am taken to the edit plant page for plant with id int 1
       And the form values are prepopulated with the details of plant with id int 1
+
+
+

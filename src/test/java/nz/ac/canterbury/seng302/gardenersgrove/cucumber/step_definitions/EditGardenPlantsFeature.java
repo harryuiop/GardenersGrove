@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 
-import ch.qos.logback.core.model.Model;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -11,7 +10,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.assertj.core.api.CollectionAssert;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -22,16 +20,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.ui.ModelMap;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class EditGardenPlantsFeature {
@@ -79,5 +74,30 @@ public class EditGardenPlantsFeature {
         Assertions.assertTrue(gardensPlantsIds.containsAll(plantsIds) && plantsIds.containsAll(gardensPlantsIds));
 
         SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    @When("I click the edit plant button next to plant with id int {int}")
+    public void iClickTheEditPlantButtonNextToPlantWithIdInt(int plantId) throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(editPlantUri(1, plantId)))
+                .andExpect(status().isOk());
+    }
+
+
+    @Then("I am taken to the edit plant page for plant with id int {int}")
+    public void iAmTakenToTheEditPlantPageForPlantWithIdInt(int plantId) throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(editPlantUri(1, plantId)))
+                .andExpect(status().isOk());
+    }
+
+    @And("the form values are prepopulated with the details of plant with id int {int}")
+    public void theFormValuesArePrepopulatedWithTheDetailsOfPlantWithIdInt(int plantId) throws Exception {
+        Optional<Plant> plant = plantRepository.findById((long)plantId);
+        if (plant.isPresent()) {
+            mockMvc.perform(MockMvcRequestBuilders.get(editPlantUri(1, plantId)))
+                    .andExpect(status().isOk())
+                    .andExpect(model().attribute("plantName", plant.get().getName()))
+                    .andExpect(model().attribute("plantCount", plant.get().getCount().toString()))
+                    .andExpect(model().attribute("plantDescription", plant.get().getDescription()));
+        }
     }
 }
