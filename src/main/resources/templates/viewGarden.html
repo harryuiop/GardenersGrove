@@ -113,7 +113,7 @@
             <div class="row">
               <div class="container">
                 <div id="weatherCard">
-                  <div th:if="${garden.locationFound}"
+                  <div th:if="${garden.getLocation().isCoordinatesSet()}"
                        th:each="data : ${weatherData}" class="d-inline-grid">
                     <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
                          th:with="dayOfWeek=${data.date.dayOfWeek},
@@ -124,7 +124,7 @@
                            humidity=${data.humidity}">
                     </div>
                   </div>
-                  <div th:unless="${garden.locationFound}" class="alert alert-warning">
+                  <div th:unless="${garden.getLocation().isCoordinatesSet()}" class="alert alert-warning">
                     Location not found, please update your location to see the weather
                   </div>
                 </div>
