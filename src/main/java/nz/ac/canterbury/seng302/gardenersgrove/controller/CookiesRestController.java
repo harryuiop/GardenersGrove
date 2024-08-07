@@ -36,11 +36,15 @@ public class CookiesRestController {
      * control cookies setup Rain popup message close for 24 hours
      *
      * @param response httpServletResponse
+     * @param gardenId garden id
+     * @param deployed deployed environment
      */
     @GetMapping(SET_WEATHER_POPUP_ALERT_COOKIES)
-    public void setRainPopup(HttpServletResponse response, @PathVariable long gardenId) {
-        logger.info("GET {}", sendCookiesForWeatherAdvicePopup(gardenId));
+    public void setRainPopup(HttpServletResponse response,
+                             @PathVariable(name = "gardenId") long gardenId,
+                             @PathVariable(name = "deployed") int deployed) {
+        logger.info("GET {}", sendCookiesForWeatherAdvicePopup(gardenId, deployed));
 
-        response.addCookie(cookiesService.cookieWeatherRainPopupClose(gardenId));
+        response.addCookie(cookiesService.cookieWeatherRainPopupClose(gardenId, deployed));
     }
 }
