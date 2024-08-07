@@ -8,8 +8,10 @@ import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesV
 import nz.ac.canterbury.seng302.gardenersgrove.cucumber.RunCucumberTest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.PlantService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -22,6 +24,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +45,9 @@ public class PubliciseGardensFeature {
 
     @Autowired
     private GardenService gardenService;
+
+    @Autowired
+    private PlantService plantService;
 
     @Autowired
     private FormValuesValidator mockFormValuesValidator;
@@ -67,6 +74,16 @@ public class PubliciseGardensFeature {
                 location, null, true);
         gardenService.saveGarden(garden);
         gardenId = garden.getId();
+        plantService.savePlant(new Plant("Plant1", 1, "", LocalDate.now(), "", garden));
+        plantService.savePlant(new Plant("Plant2", 1, "", LocalDate.now(), "", garden));
+        plantService.savePlant(new Plant("Plant3", 1, "", LocalDate.now(), "", garden));
+        plantService.savePlant(new Plant("Plant4", 1, "", LocalDate.now(), "", garden));
+        plantService.savePlant(new Plant("Plant5", 1, "", LocalDate.now(), "", garden));
+        plantService.savePlant(new Plant("Plant6", 1, "", LocalDate.now(), "", garden));
+        plantService.savePlant(new Plant("Plant7", 1, "", LocalDate.now(), "", garden));
+        plantService.savePlant(new Plant("Plant8", 1, "", LocalDate.now(), "", garden));
+        plantService.savePlant(new Plant("Plant9", 1, "", LocalDate.now(), "", garden));
+        plantService.savePlant(new Plant("Plant10", 1, "", LocalDate.now(), "", garden));
     }
 
     @Given("I have a user account that has logged in as {string}, {string}")
