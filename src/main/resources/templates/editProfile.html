@@ -69,7 +69,7 @@
                               placeholder="firstName"
                               data-cy="firstName"
                               autofocus
-                              th:classappend="${firstNameError} ? 'is-invalid'"
+                              th:classappend="${firstNameError} ? 'border-danger'"
                       />
                       <label for="firstName">First name</label>
                       <p class="error message" id="firstNameError" th:text="${firstNameError}"></p>
@@ -89,7 +89,7 @@
                               placeholder="lastName"
                               data-cy="lastName"
                               autofocus
-                              th:classappend="${lastNameError} ? 'is-invalid'"
+                              th:classappend="${lastNameError} ? 'border-danger'"
                       />
                       <label for="lastName">Last name</label>
                       <div class="noSurname">
@@ -125,7 +125,7 @@
                           placeholder="email"
                           data-cy="email"
                           autofocus
-                          th:classappend="${emailError} ? 'is-invalid'"
+                          th:classappend="${emailError} ? 'border-danger'"
                   />
                   <label for="email">Email</label>
                   <p class="error message" id="emailError" th:text="${emailError}"></p>
@@ -142,7 +142,7 @@
                           th:value="${user.getDob()}"
                           autocomplete="off"
                           autofocus
-                          th:classappend="${dateOfBirthError} ? 'is-invalid'"
+                          th:classappend="${dateOfBirthError} ? 'border-danger'"
                   />
                   <label for="dateOfBirth">Date of Birth</label>
                   <p class="error message" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
