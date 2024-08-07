@@ -64,7 +64,7 @@ public class PubliciseGardensFeature {
         name = "Garden";
         description = "";
         garden = new Garden(userService.getAuthenticatedUser(), name, description,
-                location, null, true);
+                location, null, true, false);
         gardenService.saveGarden(garden);
         gardenId = garden.getId();
     }
