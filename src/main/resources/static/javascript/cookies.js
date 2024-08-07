@@ -3,14 +3,15 @@ const setRainPopupCookie = () => {
 
     // Used for sending rest requests to deployed application
     const possible_deployments = ['test', 'prod']
-    console.log(window.location.pathname);
     const deployment = window.location.pathname.split('/')[1];
     const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
     const gardenId = deployment !== undefined && possible_deployments.includes(deployment)
                                             ? window.location.pathname.split('/')[3]
                                             : window.location.pathname.split('/')[2];
-    console.log(gardenId);
-    fetch(`${baseUri}/cookies/set-rain-popup/${gardenId}`)
+
+    const deployed = baseUri === possible_deployments[0] ? 1 : baseUri === possible_deployments[1] ? 2 : 0;
+    console.log(deployed);
+    fetch(`${baseUri}/cookies/set-rain-popup/${gardenId}/${deployed}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

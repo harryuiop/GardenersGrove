@@ -17,7 +17,8 @@ public class CreateCookieTest {
     void createCookieForWeatherPopupMessage() {
 
         long tempGardenId = 1;
-        Cookie cookie = cookiesService.cookieWeatherRainPopupClose(tempGardenId);
+        int tempBaseUri = 0;
+        Cookie cookie = cookiesService.cookieWeatherRainPopupClose(tempGardenId, tempBaseUri);
 
         Assertions.assertTrue(cookie.isHttpOnly());
         Assertions.assertEquals("/garden/"+tempGardenId, cookie.getPath());
