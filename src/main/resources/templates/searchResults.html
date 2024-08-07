@@ -83,7 +83,7 @@
                                                             </div>
                                                             <div th:unless="${friend.isRequestEnabled()}">
                                                                 <p
-                                                                        style="font-weight: bold; color: #477641"
+                                                                        th:style="${friend.isStatusDeclined() ? 'color: #6F0C0C; font-weight: bold' : 'color: #477641; font-weight: bold'}"
                                                                         th:text="${friend.getStatusText()}"
                                                                         th:unless="${friend.isUserSelf()}">
                                                                 </p>
@@ -169,9 +169,9 @@
                                                                 </div>
                                                                 <a
                                                                         th:if="${usersFound[iterStat.index + 1].isFriend()}"
-                                                                        th:href="@{${viewFriendsProfileUriString}(usersFound[iterStat.index + 1]=${friend.getUser().getId()})}"
+                                                                        th:href="@{${viewFriendsProfileUriString}(${usersFound[iterStat.index + 1]}=${friend.getUser().getId()})}"
                                                                 >
-                                                                    View Profile</a>
+                                                                View Profile</a>
                                                             </div>
                                                         </div>
                                                     </div>

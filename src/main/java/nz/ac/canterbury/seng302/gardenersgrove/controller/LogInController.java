@@ -71,10 +71,23 @@ public class LogInController {
         logger.info("GET {}", loginUri());
 
         if (error != null) {
-            if (error.equals("Authentication_Failed") || error.equals("Invalid_Password")) {
+            String errorMessage = "";
+            if (error.startsWith("Authentication_Failed") || error.startsWith("Invalid_Password")) {
                 model.addAttribute("invalidError", "The email address is unknown, or the password is invalid");
-            } else if (error.equals("Invalid_Email")) {
+                errorMessage = error.startsWith("Authentication_Failed") ? "Authentication_Failed" : "Invalid_Password";
+            } else if (error.startsWith("Invalid_Email")) {
                 model.addAttribute("emailError", "Email address must be in the form ‘jane@doe.nz’");
+                errorMessage = "Invalid_Email";
+            }
+
+            int errorMessageLength = errorMessage.length();
+            if (errorMessageLength > 0) {
+                if (error.length() > errorMessageLength) {
+                    String email = error.substring(errorMessageLength);
+                    model.addAttribute("username", email);
+                } else {
+                    model.addAttribute("username", "");
+                }
             }
         }
 
@@ -206,6 +219,7 @@ public class LogInController {
             }
         }
         model.addAttribute("loginUri", loginUri());
+        model.addAttribute("userEmail", userEmail);
         return "forgotPasswordForm";
 
     }

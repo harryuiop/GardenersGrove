@@ -36,9 +36,8 @@
                           placeholder="First Name*"
                           th:classappend="${firstNameError} ? 'is-invalid'"
                   />
-                  <!-- The smallest font size of bootstrap is still big enough for mobile so need to make it smaller -->
                   <label for="firstName" class="form-label">First Name*</label>
-                  <p class="form-text text-danger" id="firstnameError" th:text="${firstNameError}"></p>
+                  <p class="error message" id="firstnameError" th:text="${firstNameError}"></p>
                 </div>
 
               </div>
@@ -75,7 +74,7 @@
                       </label>
                     </div>
                   </div>
-                  <p class="form-text text-danger" id="lastNameError" th:text="${lastNameError}"></p>
+                  <p class="error message" id="lastNameError" style="max-width: 12rem" th:text="${lastNameError}"></p>
                 </div>
               </div>
             </div>
@@ -94,7 +93,7 @@
                       th:classappend="${emailError} ? 'is-invalid'"
               />
               <label for="email" class="form-label">Email*</label>
-              <p class="form-text text-danger" id="emailError" th:text="${emailError}"></p>
+              <p class="error message" id="emailError" th:text="${emailError}"></p>
             </div>
 
             <div class="mb-3 form-floating">
@@ -110,7 +109,7 @@
                       th:classappend="${dateOfBirthError} ? 'is-invalid'"
               />
               <label for="dateOfBirth" class="form-label">Date of Birth</label>
-              <p class="form-text text-danger" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
+              <p class="error message" id="dateOfBirthError" th:text="${dateOfBirthError}"></p>
             </div>
             <div class="row">
               <div class="col-md-6">
@@ -127,7 +126,7 @@
                           th:classappend="${passwordError} ? 'is-invalid'"
                   />
                   <label for="password" class="form-label">Password*</label>
-                  <p class="form-text text-danger" id="passwordError" th:text="${passwordError}"></p>
+                  <p class="error message" id="passwordError" th:text="${passwordError}"></p>
                 </div>
               </div>
               <div class="col-md-6">
@@ -144,33 +143,19 @@
                           th:classappend="${passwordConfirmError} ? 'is-invalid'"
                   />
                   <label for="passwordConfirm" class="form-label">Confirm Password*</label>
-                  <p class="form-text text-danger" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
+                  <p class="error message" id="passwordConfirmError" th:text="${passwordConfirmError}"></p>
                 </div>
               </div>
             </div>
 
            <div class="d-flex justify-content-center">
-             <button class="btn btn-outline-primary me-1"
+             <button class="btn btn-confirm me-1"
                      type="submit"
-                     style="
-                           border-color: #477641;
-                           --bs-btn-color: #477641;
-                           --bs-btn-hover-bg: #477641;
-                           --bs-btn-hover-color: #fff;
-                           --bs-btn-active-bg: #477641;
-                           "
              >Register <i class="bi bi-check"></i>
              </button>
-             <a th:href="@{homeUri}">
-               <button class="btn btn-outline-primary ms-1"
+             <a th:href="@{${homeUri}}">
+               <button class="btn btn-cancel ms-1"
                        type="button"
-                       style="
-                                    border-color: #6F0C0C;
-                                    --bs-btn-color: #6F0C0C;
-                                    --bs-btn-hover-bg: #6F0C0C;
-                                    --bs-btn-hover-color: #fff;
-                                    --bs-btn-active-bg: #6F0C0C;
-                                  "
                >Cancel <i class="bi bi-x"></i>
                </button>
              </a>

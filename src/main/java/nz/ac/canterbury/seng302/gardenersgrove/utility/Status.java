@@ -8,6 +8,7 @@ public enum Status {
     ACCEPTED("Accepted"),
     PENDING("Pending"),
     DECLINED("Declined"),
+    DECLINED_REMOVED("Declined and Removed"),
     FRIENDS("Friends"),
     SEND_REQUEST("Invite as friend"),
     SELF("Self");
