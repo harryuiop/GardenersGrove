@@ -186,7 +186,8 @@ public class GardenController extends NavBar {
             locationEntity.setSuburb(suburb);
             locationEntity.setPostcode(postcode);
             locationEntity.setStreetAddress(streetAddress);
-            Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName, gardenDescription, locationEntity, gardenSize, profanityCheckWorked);
+            Garden garden = new Garden(userService.getAuthenticatedUser(), gardenName,
+                    gardenDescription, locationEntity, gardenSize, profanityCheckWorked, locationFound);
             gardenService.saveGarden(garden);
 
             if (locationFound && profanityCheckWorked) {
@@ -297,6 +298,8 @@ public class GardenController extends NavBar {
             garden.setDescription(gardenDescription);
             garden.setLocation(locationEntity);
             garden.setVerifiedDescription(profanityCheckWorked);
+            garden.setLocationFound(locationFound);
+
             gardenService.saveGarden(garden);
             if (locationFound && profanityCheckWorked) {
                 return "redirect:" + viewGardenUri(garden.getId());

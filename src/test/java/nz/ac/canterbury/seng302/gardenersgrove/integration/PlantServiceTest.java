@@ -58,7 +58,8 @@ class PlantServiceTest {
             userRepository.save(user);
         }
         gardenRepository.deleteAll();
-        this.garden = new Garden(user, "Test Garden", null, new Location("New Zealand", "Christchurch"), null, true);
+        this.garden = new Garden(user, "Test Garden", null, new Location("New Zealand", "Christchurch"),
+                null, true, false);
         gardenRepository.save(this.garden);
     }
 
@@ -96,7 +97,8 @@ class PlantServiceTest {
         );
         plantService.savePlant(plant);
 
-        Garden gardenTwo = new Garden(user, "Test Garden Two", null, new Location("United States", "Evans"), null, true);
+        Garden gardenTwo = new Garden(user, "Test Garden Two", null, new Location("United States", "Evans"),
+                null, true, false);
         gardenRepository.save(gardenTwo);
 
         Plant plantTwo = new Plant(

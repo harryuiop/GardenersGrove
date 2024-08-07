@@ -47,6 +47,9 @@ public class Garden {
     @Column
     private boolean verifiedDescription;
 
+    @Column
+    private boolean locationFound;
+
     /**
      * JPA required no-args constructor
      */
@@ -62,8 +65,10 @@ public class Garden {
      * @param location              The details of the physical place where the garden is
      * @param size                  The physical size of the garden in square metres
      * @param verifiedDescription   Whether the description is suitable for public consumption
+     * @param locationFound         Whether the location is found by the location API
      */
-    public Garden(User owner, String name, String description, Location location, Float size, boolean verifiedDescription) {
+    public Garden(User owner, String name, String description, Location location,
+                  Float size, boolean verifiedDescription, boolean locationFound) {
         this.owner = owner;
         this.name = name;
         this.description = description;
@@ -73,6 +78,7 @@ public class Garden {
         this.tags = new ArrayList<>();
         this.isGardenPublic = false;
         this.verifiedDescription = verifiedDescription;
+        this.locationFound = locationFound;
         this.timeCreated = LocalDateTime.now();
     }
 
@@ -151,6 +157,14 @@ public class Garden {
 
     public void setVerifiedDescription(boolean verifiedDescription) {
         this.verifiedDescription = verifiedDescription;
+    }
+
+    public void setLocationFound(boolean locationFound) {
+        this.locationFound = locationFound;
+    }
+
+    public boolean getLocationFound() {
+        return locationFound;
     }
 
     public LocalDateTime getTimeCreated() {

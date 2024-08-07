@@ -64,7 +64,8 @@ class ViewGardenControllerTest {
         userRepository.save(user);
 
         Location location = new Location("New Zealand", "Christchurch");
-        Garden garden = new Garden(user, "Test Garden", "Test Description", location, 1f, true);
+        Garden garden = new Garden(user, "Test Garden", "Test Description", location, 1f,
+                true, false);
         gardenRepository.save(garden);
 
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
