@@ -279,7 +279,7 @@ public class GardenController extends NavBar {
             boolean locationFound = true;
             boolean profanityCheckWorked = !errors.containsKey("profanityCheckError");
             // Get new location from API request
-            if (locationEntity.getStreetAddress() == null
+            if ((locationEntity.getStreetAddress() == null || locationEntity.getStreetAddress().isEmpty())
                     || !locationEntity.getStreetAddress().equals(streetAddress)
                     || !locationEntity.isCoordinatesSet()) {
                 locationFound = updateLocationCoordinates(locationEntity, streetAddress, country, city);
