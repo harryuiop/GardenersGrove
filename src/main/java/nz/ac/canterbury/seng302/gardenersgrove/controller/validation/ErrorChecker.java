@@ -1,7 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -483,8 +485,7 @@ public class ErrorChecker {
   }
 
   /**
-   * Checks provided tag name is less than or equal to 25 characters and has valid
-   * characters
+   * Checks all errors associated with adding tags.
    *
    * @param tag tag name user provided
    * @return String of error message
@@ -492,11 +493,13 @@ public class ErrorChecker {
   public String tagNameErrors(String tag) {
     String errors = "";
 
-    if (!formValuesValidator.checkTagName(tag))
+    if (!formValuesValidator.checkTagName(tag)) {
       errors += "A valid tag name must:\n- Contain only letters, numbers, spaces, -, _, ', and \"\n- Start with a letter\n- End with a letter\n- Be at least two characters long";
+    }
 
-    if (!formValuesValidator.checkTagNameLength(tag))
+    if (!formValuesValidator.checkTagNameLength(tag)) {
       errors += (!errors.isEmpty() ? "\n" : "") + "A tag cannot exceed 25 characters";
+    }
 
     return errors;
   }

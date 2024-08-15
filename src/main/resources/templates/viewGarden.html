@@ -19,15 +19,8 @@
                   </div>
                   <div class="col-sm-2 col-md-3 col-lg-4">
                     <a th:href="@{${editGardenUri}}" style="text-decoration: none">
-                      <button class="btn btn-outline-primary"
+                      <button class="btn btn-edit"
                               type="button"
-                              style="
-                            border-color: #000;
-                            --bs-btn-color: #000;
-                            --bs-btn-hover-bg: #000;
-                            --bs-btn-hover-color: #fff;
-                            --bs-btn-active-bg: #000;
-                          "
                       > Edit Garden <i class="bi bi-pencil"></i>
                       </button>
                     </a>
@@ -86,19 +79,14 @@
                     </div>
                     <div>
                       <input type="text" class="form-control" placeholder="CoolGarden" id="tagName" th:name="tagName"
-                             data-cy="tagName" style="border-radius: 0" autofocus>
+                             data-cy="tagName" style="border-radius: 0" th:classappend="${tagErrors} ? 'border border-danger'" autofocus>
                       <div id="autocomplete-list" class="dropdown-menu w-40 shadow inputStyle"></div>
                     </div>
                     <div class="input-group-append">
-                      <button class="btn btn-outline-secondary"
+                      <button class="btn btn-confirm"
                               id="tag-submit"
                               type="submit"
                               style="
-                           border-color: #477641;
-                           --bs-btn-color: #477641;
-                           --bs-btn-hover-bg: #477641;
-                           --bs-btn-hover-color: #fff;
-                           --bs-btn-active-bg: #477641;
                            border-top-left-radius: 0;
                            border-bottom-left-radius: 0;
                            "
@@ -107,7 +95,7 @@
                     </div>
                   </div>
                 </form>
-                <p class="errorMessage" th:text="${tagErrors}"></p>
+                <p class="error message" th:text="${tagErrors}"></p>
                 <br>
               </div>
             </div>
@@ -172,15 +160,8 @@
               <div class="col-auto">
                 <a th:href="@{${newPlantUri}}">
                   <button th:if="${owner}"
-                          class="btn btn-outline-primary"
+                          class="btn btn-confirm"
                           type="button"
-                          style="
-                    border-color: #477641;
-                    --bs-btn-color: #477641;
-                    --bs-btn-hover-bg: #477641;
-                    --bs-btn-hover-color: #fff;
-                    --bs-btn-active-bg: #477641;
-                  "
                   ><i class="bi bi-plus-lg"></i> Add Plant
                   </button>
                 </a>
