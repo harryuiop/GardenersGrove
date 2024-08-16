@@ -212,11 +212,11 @@ public class ViewGardenController extends NavBar {
 
     /**
      * Changes the garden so that it is public (viewable by all)
-     * @param gardenId                  The Id of the garden being made public
+     * @param gardenId                  The id of the garden being made public
      * @param publicGarden              A string of whether the garden should be public or not
      * @param redirectAttributes        Add attributes to that are still there after the redirect
      * @return                          The edit garden page the user was already on
-     * @throws NoSuchGardenException    If the garden can't be found by the given Id will throw this error
+     * @throws NoSuchGardenException    If the garden can't be found by the given id will throw this error
      */
     @PostMapping(MAKE_GARDEN_PUBLIC_STRING)
     public String makeGardenPublic(@PathVariable long gardenId, @RequestParam(required = false)
@@ -233,7 +233,7 @@ public class ViewGardenController extends NavBar {
             isGardenPublic = publicGarden != null && (publicGarden.equals("true"));
         } else {
             redirectAttributes.addFlashAttribute("gardenDescriptionError",
-                    "Garden description has not been checked against our langauge standards. " +
+                    "Garden description has not been checked against our language standards. " +
                             "You must edit your description before this garden can be made public");
         }
         optionalGarden.get().setIsGardenPublic(isGardenPublic);
