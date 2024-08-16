@@ -9,6 +9,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import java.io.Console;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -178,6 +179,8 @@ public class OpenMeteoWeather implements WeatherService {
 
         List<String> weatherDescriptions = this.getWeatherDescription(weatherData);
 
+        System.out.println(weatherData);
+
         // Check to see if past two consecutive days match sunny or rainy weather descriptions
         if (sunnyDescription.contains(weatherDescriptions.get(0)) && sunnyDescription.contains(weatherDescriptions.get(1))) {
             return "There hasn’t been any rain recently, make sure to water your plants if they need it";
@@ -209,9 +212,7 @@ public class OpenMeteoWeather implements WeatherService {
      * @return true if the weather is rainy, false otherwise
      */
     private boolean checkWeatherIsRainy(List<String> weatherDescriptions) {
-
-        return (!sunnyDescription.contains(weatherDescriptions.get(0)) && !otherDescription.contains(weatherDescriptions.get(0))) &&
-                (!sunnyDescription.contains(weatherDescriptions.get(1)) && !otherDescription.contains(weatherDescriptions.get(1)));
+        return !sunnyDescription.contains(weatherDescriptions.get(2)) && !otherDescription.contains(weatherDescriptions.get(2));
     }
 
 
@@ -227,6 +228,7 @@ public class OpenMeteoWeather implements WeatherService {
 
         weatherDescriptions.add(weatherData.get(0).getWeatherDescription());
         weatherDescriptions.add(weatherData.get(1).getWeatherDescription());
+        weatherDescriptions.add(weatherData.get(2).getWeatherDescription());
 
         return weatherDescriptions;
     }
