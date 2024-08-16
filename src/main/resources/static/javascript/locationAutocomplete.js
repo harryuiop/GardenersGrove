@@ -87,6 +87,7 @@ function renderAutocomplete(data) {
     let dataList = data.locations;
     if (!dataList || dataList.length === 0) {
         console.log("No data, or maximum number of requests in set timeframe reached");
+        removeAutocompleteBox();
         return;
     }
     autocompleteList.innerHTML = '';
