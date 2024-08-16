@@ -112,6 +112,14 @@ public class Location {
     }
 
     /**
+     * Check if the location is recognized by the API
+     * @return boolean if location has been defaulted to 0, 0
+     */
+    public boolean isLocationRecognized() {
+        return lat != 0 && lng != 0;
+    }
+
+    /**
      * @return If latitude and longitude have been set.
      */
     public boolean isCoordinatesSet() {

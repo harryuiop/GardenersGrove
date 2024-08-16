@@ -233,7 +233,7 @@ public class ViewGardenController extends NavBar {
             isGardenPublic = publicGarden != null && (publicGarden.equals("true"));
         } else {
             redirectAttributes.addFlashAttribute("gardenDescriptionError",
-                    "Garden description has not been checked against our langauge standards. " +
+                    "Garden description has not been checked against our language standards. " +
                             "You must edit your description before this garden can be made public");
         }
         optionalGarden.get().setIsGardenPublic(isGardenPublic);
