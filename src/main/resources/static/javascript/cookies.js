@@ -9,7 +9,7 @@ const setRainPopupCookie = () => {
                                             ? window.location.pathname.split('/')[3]
                                             : window.location.pathname.split('/')[2];
 
-    const deployed = baseUri === possible_deployments[0] ? 1 : baseUri === possible_deployments[1] ? 2 : 0;
+    const deployed = baseUri === `/${possible_deployments[0]}` ? 1 : baseUri === possible_deployments[1] ? 2 : 0;
     console.log(deployed);
     fetch(`${baseUri}/cookies/set-rain-popup/${gardenId}/${deployed}`)
         .then(response => {
