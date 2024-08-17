@@ -190,7 +190,13 @@
 
   </div>
   <div id="temp-graph">
-    <img src="https://quickchart.io/chart?c={type:%27line%27,data:{labels:[1,2,3,4,5],datasets:[{label:%27Users%27,data:[4,6,2,1,10]}]}}">
+    <img th:with="
+    baseUrl='https://quickchart.io/chart?c=',
+    typePart='%7Btype:%27line%27,',
+    dataPart='data:%7Blabels:[' + ${tempGraphLabel} + '],',
+    datasetPart='datasets:[%7Blabel:%27Average Temperature%27,data:[' + ${tempGraphData} + ']%7D]%7D%7D'
+    "
+    th:src="${baseUrl + typePart + dataPart + datasetPart}">
   </div>
 </div>
 </body>
