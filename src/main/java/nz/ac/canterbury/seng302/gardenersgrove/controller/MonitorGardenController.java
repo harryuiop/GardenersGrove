@@ -17,8 +17,8 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  */
 @Controller
 public class MonitorGardenController {
-    private UserService userService;
-    private GardenService gardenService;
+    private final UserService userService;
+    private final GardenService gardenService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
