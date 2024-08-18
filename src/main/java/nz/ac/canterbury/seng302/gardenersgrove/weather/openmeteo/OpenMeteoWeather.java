@@ -179,8 +179,6 @@ public class OpenMeteoWeather implements WeatherService {
 
         List<String> weatherDescriptions = this.getWeatherDescription(weatherData);
 
-        System.out.println(weatherData);
-
         // Check to see if past two consecutive days match sunny or rainy weather descriptions
         if (sunnyDescription.contains(weatherDescriptions.get(0)) && sunnyDescription.contains(weatherDescriptions.get(1))) {
             return "There hasn’t been any rain recently, make sure to water your plants if they need it";
