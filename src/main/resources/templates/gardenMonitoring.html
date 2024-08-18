@@ -9,8 +9,18 @@
     <div class="d-flex justify-content-center mt-5 w-100 mb-5">
         <div class="content">
             <div class="container">
-                <div class="row">
-
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                        <h2 class="text-break" th:text="${garden.getName()}"></h2>
+                    </div>
+                    <div class="col-auto">
+                        <div th:if="${connected}" class="alert alert-success">
+                            <i class="bi bi-link"></i> Garden Connected
+                        </div>
+                        <div th:unless="${connected}" class="alert alert-warning">
+                            No Device Found
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="container">
