@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:insert="~{fragments/importFragment :: headerfiles}"><title>Gardeners' Grove</title></head>
+
+<body class="bg">
+<div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
+    <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
+
+    <div class="d-flex justify-content-center mt-5 w-100 mb-5">
+        <div class="content">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                        <h2 class="text-break" th:text="${garden.getName()}"></h2>
+                    </div>
+                    <div class="col-auto">
+                        <div th:if="${connected}" class="alert alert-success">
+                            <i class="bi bi-link"></i> Garden Connected
+                        </div>
+                        <div th:unless="${connected}" class="alert alert-warning">
+                            No Device Found
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container">
+                        <div id="currentStats">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
