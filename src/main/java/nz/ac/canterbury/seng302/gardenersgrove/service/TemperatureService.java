@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -18,15 +17,7 @@ public class TemperatureService {
     @Autowired
     public TemperatureService(TemperatureRepository temperatureRepository) {
         this.temperatureRepository = temperatureRepository;
-        addTemperature(new Temperature(Date.valueOf(LocalDate.now()),Time.valueOf(LocalTime.of(12,50,33)), 12.6d));
-        addTemperature(new Temperature(Date.valueOf(LocalDate.now()),Time.valueOf(LocalTime.of(14,50,33)), 11.3d));
-        addTemperature(new Temperature(Date.valueOf(LocalDate.now()),Time.valueOf(LocalTime.of(9,50,33)), 10.7));
-        addTemperature(new Temperature(Date.valueOf(LocalDate.now().minusDays(1)),Time.valueOf(LocalTime.of(12,50,33)), 12.6d));
-        addTemperature(new Temperature(Date.valueOf(LocalDate.now().minusDays(1)),Time.valueOf(LocalTime.of(12,50,33)), 12.6d));
-        addTemperature(new Temperature(Date.valueOf(LocalDate.now().minusDays(1)),Time.valueOf(LocalTime.of(12,50,33)), 12.6d));
-        addTemperature(new Temperature(Date.valueOf(LocalDate.now().minusDays(2)),Time.valueOf(LocalTime.of(14,50,33)), 11d));
-        addTemperature(new Temperature(Date.valueOf(LocalDate.now().minusDays(2)),Time.valueOf(LocalTime.of(12,50,33)), 10d));
-        addTemperature(new Temperature(Date.valueOf(LocalDate.now().minusDays(2)),Time.valueOf(LocalTime.of(9,50,33)), 12d));
+
      }
 
     /**
