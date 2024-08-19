@@ -1,8 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.sql.Time;
 import java.sql.Date;
@@ -17,6 +15,7 @@ public class Temperature {
      * Temperature will have an ID number that is unique and exists
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private long id;
 

@@ -13,11 +13,11 @@ import java.util.List;
  */
 @Repository
 public interface TemperatureRepository extends CrudRepository<Temperature, Long> {
-    /**
-     * Retrieves all Temperature entities
-     * @return A list of Temperature entities
-     */
-    List<Temperature> findALl();
+//    /**
+//     * Retrieves all Temperature entities
+//     * @return A list of Temperature entities
+//     */
+//    List<Temperature> findALl();
 
     /**
      * Returns all values from a given data
