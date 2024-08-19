@@ -265,11 +265,12 @@ public class ViewGardenController extends NavBar {
 
         Garden garden = optionalGarden.get();
         String errorMessages = errorChecker.tagNameErrors(tagName);
+        String lowerTagName = tagName.toLowerCase();
 
         if (!errorMessages.isEmpty())
             redirectAttributes.addFlashAttribute("tagErrors", errorMessages);
-        else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
-            tagService.saveTag(tagName, garden);
+        else if (tagService.findByName(lowerTagName) == null || !tagService.findByName(lowerTagName).getGardens().contains(garden))
+            tagService.saveTag(lowerTagName, garden);
 
         return "redirect:" + viewGardenUri(gardenId);
     }

@@ -36,6 +36,7 @@ public class TagService {
     /**
      * Get tag suggestions based on user input.
      * Used by javascript to show the autocomplete suggestions.
+     * All suggestions are in lower case.
      * JPA does not have support for adding a limit parameter
      * so the logic is completed in the service.
      *
@@ -44,7 +45,7 @@ public class TagService {
      * @return List of tag name suggestions.
      */
     public List<String> findAutocompleteSuggestions(String query, int limit) {
-        List<Tag> tags = tagRepository.findByNameContains(query);
+        List<Tag> tags = tagRepository.findByNameContains(query.toLowerCase());
         int subListLimit = Math.min(limit, tags.size());
         return tags.subList(0, subListLimit).stream().map(Tag::getName).toList();
     }
@@ -57,7 +58,6 @@ public class TagService {
     }
 
     public Tag findByName(String name) {
-
         return tagRepository.findByName(name);
     }
 }
