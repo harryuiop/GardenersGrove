@@ -109,6 +109,7 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("plants", plants);
         model.addAttribute("owner", owner);
         model.addAttribute("editPlantUriString", EDIT_PLANT_URI_STRING);
+        model.addAttribute("monitorGardenUriString", monitorGardenUri(garden.getId()));
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
@@ -154,7 +155,7 @@ public class ViewGardenController extends NavBar {
                 && !friendshipService.areFriends(optionalGarden.get().getOwner(), currentUser)) {
             throw new NoSuchGardenException(gardenId);
         }
-        boolean owner = optionalGarden.get().getOwner() == userService.getAuthenticatedUser();
+        boolean owner = optionalGarden.get().getOwner() == currentUser;
         return loadGardenPage(
                         optionalGarden.get(),
                         editGardenUri(gardenId),
