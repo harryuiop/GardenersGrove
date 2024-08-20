@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entity to save data collected from the sensors of an arduino every time they are sent to the system.
+ */
 @Entity
 public class ArduinoDataPoint {
 

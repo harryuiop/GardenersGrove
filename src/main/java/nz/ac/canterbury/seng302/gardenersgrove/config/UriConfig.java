@@ -29,12 +29,11 @@ public class UriConfig {
     public static final String BROWSE_PUBLIC_GARDENS_URI_STRING = "/browse";
     public static final String MANAGE_FRIENDS_URI_STRING = "/friends";
     public static final String VIEW_ALL_FRIENDS_GARDENS_URI_STRING = "/friends/{friendId}/gardens";
-
     public static final String VIEW_FRIENDS_PROFILE_URI_STRING = "/friends/{friendId}/profile";
-
     public static final String SEARCH_RESULTS_STRING = "/search/results";
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
     public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup/{gardenId}/{deployed}";
+    public static final String ARDUINO_SENSOR_DATA = "/sensor-data";
 
 
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
