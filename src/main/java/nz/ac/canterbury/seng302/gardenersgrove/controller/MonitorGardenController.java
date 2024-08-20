@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
@@ -16,7 +17,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  * Controller for the monitor garden page. For viewing statistics and live updates for a specific garden.
  */
 @Controller
-public class MonitorGardenController {
+public class MonitorGardenController extends NavBar {
     private final UserService userService;
     private final GardenService gardenService;
 
@@ -44,6 +45,8 @@ public class MonitorGardenController {
             @PathVariable long gardenId,
             Model model
     ) throws NoSuchGardenException {
+        this.updateGardensNavBar(model, gardenService, userService);
+
         User currentUser = userService.getAuthenticatedUser();
 
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
