@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,6 +48,9 @@ public class Garden {
     @Column
     private boolean verifiedDescription;
 
+    @Unique
+    private String arduinoId = null;
+
     /**
      * JPA required no-args constructor
      */
@@ -77,6 +81,9 @@ public class Garden {
         this.timeCreated = LocalDateTime.now();
     }
 
+    public void setArduinoId(String id) {
+        this.arduinoId = id;
+    }
 
     public void setName(String newName) {
         this.name = newName;
