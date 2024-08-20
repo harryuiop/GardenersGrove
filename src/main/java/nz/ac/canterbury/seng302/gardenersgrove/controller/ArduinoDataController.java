@@ -1,18 +1,25 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoJsonData;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import java.util.Optional;
 
+/**
+ * Controller for endpoints used by the arduinos.
+ */
 @Controller
 public class ArduinoDataController {
 
@@ -22,23 +29,24 @@ public class ArduinoDataController {
     @Autowired
     private ArduinoDataPointService dataPointService;
 
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
     /**
-     * This is the endpoint that the arduino will send data to about the sensor values to be saved into the database.
+     * Endpoint for arduinos to send sensor data to that creates an ArduinoDataPoint element that is saved to the database.
+     * @param sensorData the json data to parse
      */
-    @PostMapping
-    public void receiveArduinoData() {
-        //Get json and parse data and insert into data entity
-        String id = "testid";
-        LocalDateTime time = LocalDateTime.now();
-        double tempCelsius = 0;
-        double humidityPercent = 0;
-        double atmosphereAtm = 0;
-        double lightPercent = 0;
-        double moisturePercent = 0;
-        Optional<Garden> optionalGarden = gardenService.getGardenByArduinoId(id);
-        if (optionalGarden.isPresent()) {
-            Garden garden = optionalGarden.get();
-            dataPointService.saveDataPoint(new ArduinoDataPoint(garden, time, tempCelsius, humidityPercent, atmosphereAtm, lightPercent, moisturePercent));
+    @PostMapping(ARDUINO_SENSOR_DATA)
+    public void receiveArduinoData(@RequestBody String sensorData) {
+        try {
+            ArduinoJsonData response = objectMapper.readValue(sensorData, ArduinoJsonData.class);
+            Optional<Garden> optionalGarden = gardenService.getGardenByArduinoId(response.getId());
+            if (optionalGarden.isPresent()) {
+                Garden garden = optionalGarden.get();
+                dataPointService.saveDataPoint(new ArduinoDataPoint(garden, response.getTime(), response.getTemperatureCelsius(), response.getHumidityPercentage(), response.getAtmosphereAtm(), response.getLightLevelPercentage(), response.getMoisturePercentage()));
+            }
+        } catch (JsonProcessingException exception) {
+            throw new UnableToFetchWeatherException("Failed to parse JSON response from API", exception);
         }
     }
 
