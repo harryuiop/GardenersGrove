@@ -10,4 +10,6 @@ public interface ArduinoDataPointRepository extends CrudRepository<ArduinoDataPo
 
     List<ArduinoDataPoint> findAllByGarden(Garden garden);
 
+    int countAllByGarden(Garden garden);
+
 }

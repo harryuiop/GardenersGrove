@@ -175,6 +175,7 @@ public class Garden {
                 ", tags=" + tags +
                 ", isGardenPublic=" + isGardenPublic +
                 ", verifiedDescription=" + verifiedDescription +
+                ", arduinoId=" + arduinoId +
                 '}';
     }
 }

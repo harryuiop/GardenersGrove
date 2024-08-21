@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import java.util.Optional;
@@ -37,14 +38,12 @@ public class ArduinoDataController {
      * @param sensorData the json data to parse
      */
     @PostMapping(ARDUINO_SENSOR_DATA)
+    @ResponseBody
     public void receiveArduinoData(@RequestBody String sensorData) {
         try {
             ArduinoJsonData response = objectMapper.readValue(sensorData, ArduinoJsonData.class);
             Optional<Garden> optionalGarden = gardenService.getGardenByArduinoId(response.getId());
-            if (optionalGarden.isPresent()) {
-                Garden garden = optionalGarden.get();
-                dataPointService.saveDataPoint(new ArduinoDataPoint(garden, response.getTime(), response.getTemperatureCelsius(), response.getHumidityPercentage(), response.getAtmosphereAtm(), response.getLightLevelPercentage(), response.getMoisturePercentage()));
-            }
+            optionalGarden.ifPresent(garden -> dataPointService.saveDataPoint(new ArduinoDataPoint(garden, response.getTime(), response.getTemperatureCelsius(), response.getHumidityPercentage(), response.getAtmosphereAtm(), response.getLightLevelPercentage(), response.getMoisturePercentage())));
         } catch (JsonProcessingException exception) {
             throw new UnableToFetchWeatherException("Failed to parse JSON response from API", exception);
         }
