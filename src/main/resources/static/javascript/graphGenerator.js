@@ -7,6 +7,7 @@ const celsiusButton = document.getElementById("celsius-btn");
 const temperatureGraphContainer = document.getElementById("temperature-graphs");
 const tempMonthResults = JSON.parse(document.getElementById("temp-graph-month").dataset.results);
 const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
+const tempDayResults = JSON.parse(document.getElementById("temp-graph-day").dataset.results);
 
 /**
  * Render all graphs on page load.
@@ -43,6 +44,9 @@ function renderTemperatureGraphs() {
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
     createGraph(convertedWeeklyResults,"temp-graph-week", "Average Daily Temp Over last 7 days", "Days", "Average Temp" );
+
+    const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
+    createGraph(convertedDayResults,"temp-graph-day", "Average Daily Temp Over last day", "Time (each 30 mins)", "Average Temp" );
 }
 
 function convertCelsiusToFahrenheit(celsiusInput) {
@@ -72,6 +76,7 @@ function createGraph(data, graphId, title, xLabel, yLabel) {
         console.log("No data points given")
         return;
     }
+
     const labels = labelLength(8)
 
     new Chart(

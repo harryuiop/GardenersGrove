@@ -54,9 +54,20 @@
                     </div>
 
                     <div class="row" id="temperature-graphs" data-units="c">
-                        <canvas id="temp-graph-month" th:attr="data-results=${averageMonthTemp}"></canvas>
-                        <canvas id="temp-graph-week" th:attr="data-results=${averageWeekTemp}"></canvas>
-<!--                        <canvas id="temp-graph-day" th:attr="data-results=${averageDayTemp}"></canvas>-->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <canvas id="temp-graph-month" th:attr="data-results=${averageMonthTemp}"></canvas>
+                                </div>
+                                <div class="col-lg-6">
+                                    <canvas id="temp-graph-week" th:attr="data-results=${averageWeekTemp}"></canvas>
+                                </div>
+                                <div class="col-lg-6">
+                                    <canvas id="temp-graph-day" th:attr="data-results=${averageDayTemp}"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 

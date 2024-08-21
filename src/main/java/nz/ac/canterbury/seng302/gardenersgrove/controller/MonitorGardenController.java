@@ -61,6 +61,10 @@ public class MonitorGardenController {
         model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
         model.addAttribute("averageMonthTemp", temperatureService.getGraphData(30));
         model.addAttribute("averageWeekTemp", temperatureService.getGraphData(7));
+
+        // TODO: Change to get results every 6 hours
+        model.addAttribute("averageDayTemp", temperatureService.getGraphData(1));
+
         return "gardenMonitoring";
     }
 
