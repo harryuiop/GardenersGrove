@@ -32,23 +32,25 @@
 
                 <!-- Temperature -->
                 <div class="sensor-data" id="temperature-data">
-                    <div class="input-group mb-3">
-                        <button class="btn btn-toggle-selected" id="celsius-btn"
-                                style="
-                    border-top-right-radius: 0;
-                    border-bottom-right-radius: 0;
-                    "
-                                onclick="changeTemperatureUnit('c')">
-                            Celsius
-                        </button>
-                        <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
-                                style="
-                            border-top-left-radius: 0;
-                            border-bottom-left-radius: 0;
+                    <div class="row">
+                        <div class="input-group mb-3">
+                            <button class="btn btn-toggle-selected" id="celsius-btn"
+                                    style="
+                        border-top-right-radius: 0;
+                        border-bottom-right-radius: 0;
                         "
-                                onclick="changeTemperatureUnit('f')">
-                            Fahrenheit
-                        </button>
+                                    onclick="changeTemperatureUnit('c')">
+                                Celsius
+                            </button>
+                            <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
+                                    style="
+                                border-top-left-radius: 0;
+                                border-bottom-left-radius: 0;
+                            "
+                                    onclick="changeTemperatureUnit('f')">
+                                Fahrenheit
+                            </button>
+                        </div>
                     </div>
 
                     <div class="row" id="temperature-graphs" data-units="c">
