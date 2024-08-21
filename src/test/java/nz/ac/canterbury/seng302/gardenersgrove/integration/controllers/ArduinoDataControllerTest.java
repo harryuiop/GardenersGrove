@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -76,14 +78,16 @@ public class ArduinoDataControllerTest {
     @Test
     void send_valid_data_saved_to_database() throws Exception {
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+
         JSONObject json = new JSONObject();
         json.put("id", "testid");
         json.put("temperatureCelsius", 18);
         json.put("humidityPercentage", 35);
-        json.put("atmosphereAtm", 29);
+        json.put("atmosphereAtm", 100);
         json.put("lightLevelPercentage", 80);
         json.put("moisturePercentage", 75);
-        json.put("time", "01-01-2024 09:30");
+        json.put("time", LocalDateTime.now().format(formatter));
 
         mockMvc.perform(MockMvcRequestBuilders.post(ARDUINO_SENSOR_DATA)
                         .content(String.valueOf(json)));

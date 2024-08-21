@@ -7,6 +7,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.newGarden
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.searchResultsUri;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewAllGardensUri;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewFriendsUri;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendRequestException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendRequestException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
