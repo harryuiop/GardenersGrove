@@ -57,11 +57,14 @@ public class TemperatureService {
      * @param date  The date that the readings were taken on
      * @return      A double of the mean temperature for the day
      */
-    public double getAverageDailyTemperature(Date date) {
+    public Double getAverageDailyTemperature(Date date) {
         List<Temperature> temperatures = getTemperaturesByDate(date);
         double sum = 0;
         for (Temperature temperature : temperatures) {
             sum += temperature.getTemperature();
+        }
+        if (temperatures.size() == 0) {
+            return null;
         }
         return sum / temperatures.size();
     }
@@ -75,7 +78,7 @@ public class TemperatureService {
     public List<String> getGraphData(int days) {
         List<String> list = new ArrayList<>();
         for (int i = days; i >= 0; i--) {
-            double averageDailyTemperature = getAverageDailyTemperature(Date.valueOf(LocalDate.now().minusDays(i)));
+            Double averageDailyTemperature = getAverageDailyTemperature(Date.valueOf(LocalDate.now().minusDays(i)));
             list.add(String.valueOf(averageDailyTemperature));
         }
         return list;
