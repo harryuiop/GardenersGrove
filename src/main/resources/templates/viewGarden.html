@@ -197,15 +197,6 @@
     </div>
 
   </div>
-  <div id="temp-graph">
-    <img th:with="
-    baseUrl='https://quickchart.io/chart?c=',
-    typePart='%7Btype:%27line%27,',
-    dataPart='data:%7Blabels:[' + ${tempGraphLabel} + '],',
-    datasetPart='datasets:[%7Blabel:%27Average Temperature%27,data:[' + ${tempGraphData} + ']%7D]%7D%7D'
-    "
-    th:src="${baseUrl + typePart + dataPart + datasetPart}">
-  </div>
 </div>
 </body>
 <script>

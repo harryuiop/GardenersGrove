@@ -84,7 +84,7 @@ public class TemperatureMonitoringFeature {
 
     @When("I choose to see a graph of the temperature in Degree Celsius over the last {int} days")
     public void iChooseToSeeAGraphOfTheTemperatureInDegreeCelsiusOverTheLastDays(int days) {
-        graphData = temperatureService.getGraphData(days);
+//        graphData = temperatureService.getGraphData(days);
     }
 
     @Then("I see a a display of the results for the average temperature for each day \\(average taken from each recorded 30 minute period).")

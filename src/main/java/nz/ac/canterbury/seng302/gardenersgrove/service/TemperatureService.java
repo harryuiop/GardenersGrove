@@ -8,7 +8,12 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static java.lang.Double.parseDouble;
 
 @Service
 public class TemperatureService {
@@ -70,12 +75,15 @@ public class TemperatureService {
      * @param days  the number of days of records to collect
      * @return      a string in with commas between each daily average
      */
-    public String getGraphData(int days) {
-        StringBuilder list = new StringBuilder();
+    public List<Map<String, Double>> getGraphData(int days) {
+        List<Map<String, Double>> list = new ArrayList<>();
         for (int i = days; i >= 0; i--) {
             double averageDailyTemperature = getAverageDailyTemperature(Date.valueOf(LocalDate.now().minusDays(i)));
-            list.append(String.format("%.2f,", averageDailyTemperature));
+            Map<String, Double> graphData = new HashMap<>();
+            graphData.put("x", parseDouble(String.valueOf(i)));
+            graphData.put("y", averageDailyTemperature);
+            list.add(graphData);
         }
-        return list.toString();
+        return list;
     }
 }

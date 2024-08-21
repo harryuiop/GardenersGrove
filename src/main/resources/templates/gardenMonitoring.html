@@ -3,6 +3,7 @@
 <head th:insert="~{fragments/importFragment :: headerfiles}"><title>Gardeners' Grove</title></head>
 
 <body class="bg">
+<script type="text/javascript" th:src="@{/javascript/tempGraph2.js}"></script>
 <div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
     <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
 
@@ -28,6 +29,9 @@
 
                         </div>
                     </div>
+                </div>
+                <div id="temp-graph" class="row">
+                    <button onclick="getData()">Fetch Data</button>
                 </div>
             </div>
         </div>
