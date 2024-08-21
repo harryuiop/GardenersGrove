@@ -48,9 +48,9 @@ public class ArduinoDataController {
                 optionalGarden.ifPresent(garden -> dataPointService.saveDataPoint(new ArduinoDataPoint(garden, response.getTime(),
                         response.getTemperatureCelsius(), response.getHumidityPercentage(), response.getAtmosphereAtm(),
                         response.getLightLevelPercentage(), response.getMoisturePercentage())));
-            }
-        } catch (JsonProcessingException exception) {
-            throw new UnableToFetchWeatherException("Failed to parse JSON response from API", exception);
+    }
+} catch (JsonProcessingException exception) {
+        throw new UnableToFetchWeatherException("Failed to parse JSON response from API", exception);
         }
     }
 

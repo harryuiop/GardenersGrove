@@ -24,13 +24,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 
 @SpringBootTest
@@ -92,15 +90,17 @@ public class ArduinoDataControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post(ARDUINO_SENSOR_DATA)
                         .content(String.valueOf(json)));
 
-        Assertions.assertEquals(1, dataPointRepository.countAllByGarden(garden));
+        Assertions.assertEquals(1, dataPointRepository.findAllByGarden(garden).size());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"{}"})
+    @ValueSource(strings = {"{}", "{\"humidityPercentage\":-10,\"lightLevelPercentage\":80,\"moisturePercentage\":75,\"id\":\"testid\",\"time\":\"21-08-2024 16:51\",\"temperatureCelsius\":18,\"atmosphereAtm\":100}",
+            "{\"humidityPercentage\":10,\"lightLevelPercentage\":810,\"moisturePercentage\":75,\"id\":\"testid\",\"time\":\"21-08-2024 16:51\",\"temperatureCelsius\":18,\"atmosphereAtm\":100}",
+            "{\"humidityPercentage\":10,\"lightLevelPercentage\":80,\"moisturePercentage\":751,\"id\":\"testid\",\"time\":\"21-08-2024 16:51\",\"temperatureCelsius\":18,\"atmosphereAtm\":100}",
+})
     void send_invalid_data_not_saved(String jsonString) throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ARDUINO_SENSOR_DATA)
                         .content(jsonString));
-
-        Assertions.assertEquals(0, dataPointRepository.countAllByGarden(garden));
+        Assertions.assertEquals(0, dataPointRepository.findAllByGarden(garden).size());
     }
 }
