@@ -26,7 +26,7 @@ public class ArduinoDataPointService {
     }
 
     /**
-     * Takes in a list of all ArdunioDataPoints objects attached to a garden and returns the most 
+     * Takes in a list of all ArduinoDataPoints objects attached to a garden and returns the most
      * recent datapoint based on date element
      *
      * @param gardenId A list of datapoints attached to a garden inside the database
