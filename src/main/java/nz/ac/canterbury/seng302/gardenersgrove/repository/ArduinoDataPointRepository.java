@@ -11,7 +11,7 @@ import java.util.List;
 public interface ArduinoDataPointRepository extends CrudRepository<ArduinoDataPoint, Long> {
 
     List<ArduinoDataPoint> findAllByGarden(Garden garden);
-    
-    @Query("SELECT moisturePercent FROM ArduinoDataPoint WHERE id=?1 ORDER BY STR_TO_DATE(time, '%d-%m-%Y %H:%i') DESC") 
-     List<ArduinoDataPoint> getGardenArduinoStats(Long id);
+
+    @Query("SELECT a FROM ArduinoDataPoint a WHERE a.id=?1 ORDER BY PARSEDATETIME(a.time, 'yyyy-MM-dd HH:mm:ss') DESC")
+    List<ArduinoDataPoint> getGardenArduinoStats(Long id);
 }

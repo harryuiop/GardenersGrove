@@ -29,10 +29,10 @@ public class ArduinoDataPointService {
      * Takes in a list of all ArdunioDataPoints objects attached to a garden and returns the most 
      * recent datapoint based on date element
      *
-     * @param dataPoints A list of datapoints attached to a garden inside the database
+     * @param gardenId A list of datapoints attached to a garden inside the database
      * @return The most recent data point
      */
     public ArduinoDataPoint getMostRecentArduinoDataPoint(Long gardenId) {
-        return dataPointRepository.getGardenArduinoStats(gardenId).get(-1);
+        return dataPointRepository.getGardenArduinoStats(gardenId).getLast();
     }
 }

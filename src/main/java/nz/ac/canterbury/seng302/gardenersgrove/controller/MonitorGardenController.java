@@ -29,9 +29,10 @@ public class MonitorGardenController extends NavBar {
      * @param userService   A User database access object.
      */
     @Autowired
-    public MonitorGardenController(UserService userService, GardenService gardenService) {
+    public MonitorGardenController(UserService userService, GardenService gardenService, ArduinoDataPointService arduinoDataPointService) {
         this.userService = userService;
         this.gardenService = gardenService;
+        this.arduinoDataPointService = arduinoDataPointService;
     }
 
     /**
