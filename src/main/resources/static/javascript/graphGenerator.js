@@ -1,13 +1,60 @@
-window.onload = function() {
-    const monthResults = document.getElementById("temp-graph").dataset.results;
-    console.log(monthResults)
-    addData(JSON.parse(monthResults),"temp-graph", "Average Daily Temp Over last 30 days", "Days", "Average Temp" );
-    const weeklyResults = document.getElementById("temp-graph2").dataset.results;
-    addData(JSON.parse(weeklyResults),"temp-graph2", "Average Daily Temp Over last 7 days", "Days", "Average Temp" );
-}
-function labelLength(count) {
-    return Array.from({ length: count }, (_, index)=>index+1);
+/**
+ * Generator and manage Graphs for all sensors in garden monitoring page
+ */
 
+const fahrenheitButton = document.getElementById("fahrenheit-btn");
+const celsiusButton = document.getElementById("celsius-btn");
+const temperatureGraphContainer = document.getElementById("locationGraphs");
+const tempMonthResults = JSON.parse(document.getElementById("temp-graph-month").dataset.results);
+const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
+
+/**
+ * Render all graphs on page load.
+ * Manage what graphs are shown / hidden.
+ */
+window.onload = function() {
+    renderTemperatureGraphs();
+}
+
+/**
+ * Change temperature unit to Fahrenheit or Celsius AND update graph
+ * @param unit c for Celsius, anything else for Fahrenheit
+ */
+function changeTemperatureUnit(unit) {
+    if (unit === 'c') {
+        celsiusButton.className = "btn btn-toggle-selected";
+        fahrenheitButton.className = "btn btn-toggle-unselected";
+        temperatureGraphContainer.setAttribute("data-units", "c");
+        renderTemperatureGraphs();
+    } else {
+        celsiusButton.className = "btn btn-toggle-unselected";
+        fahrenheitButton.className = "btn btn-toggle-selected";
+        temperatureGraphContainer.setAttribute("data-units", "f");
+        renderTemperatureGraphs();
+    }
+}
+
+function renderTemperatureGraphs() {
+    const isCelsius = locationContainer.dataset.units === 'c';
+
+    const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
+    createGraph(convertedMonthResults,"temp-graph-month", "Average Daily Temp Over last 30 days", "Days", "Average Temp" );
+
+    const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
+    createGraph(convertedWeeklyResults,"temp-graph-week", "Average Daily Temp Over last 7 days", "Days", "Average Temp" );
+}
+
+function convertCelsiusToFahrenheit(celsiusInput) {
+    if (celsiusInput === null) return null;
+    return celsiusInput * 1.8 + 32;
+}
+
+/**
+ * @param count Number of labels.
+ * @returns X axis labels corresponding to time.
+ */
+function labelLength(count) {
+    return Array.from({length: count}, (_, index) => index + 1);
 }
 
 /**
@@ -15,10 +62,10 @@ function labelLength(count) {
  * @param data          data points for the graph
  * @param graphId       the id of the div where the graph goes
  * @param title         the title of the graph
- * @param xAxisLabel    x label name
- * @param yAxisLabel    y label name
+ * @param xLabel        x label name
+ * @param yLabel        y label name
  */
-function addData(data, graphId, title, xAxisLabel, yAxisLabel) {
+function createGraph(data, graphId, title, xLabel, yLabel) {
     if (!data || data.length === 0){
         console.log(data)
         console.log("No data points given")
@@ -45,13 +92,13 @@ function addData(data, graphId, title, xAxisLabel, yAxisLabel) {
                     yAxes: [{
                         scaleLabel: {
                             display: true,
-                            labelString: yAxisLabel
+                            labelString: yLabel
                         }
                     }],
                     xAxes: [{
                         scaleLabel: {
                             display: true,
-                            labelString: xAxisLabel
+                            labelString: xLabel
                         }
                     }]
                 }

@@ -3,7 +3,6 @@
 <head th:insert="~{fragments/importFragment :: headerfiles}"><title>Gardeners' Grove</title></head>
 
 <body class="bg">
-<script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
 <div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
     <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
 
@@ -30,55 +29,47 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <ul class="nav nav-pills">
-                        <li class="nav-item">
-                            <button class="btn btn-toggle-selected" id="celsius-btn"
-                            style="
-                        border-top-right-radius: 0;
-                        border-bottom-right-radius: 0;
-                        border: 1px solid green;
+
+                <!-- Temperature -->
+                <div class="sensor-data" id="temperature-data">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-toggle-selected" id="celsius-btn"
+                                style="
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                    "
+                                onclick="changeTemperatureUnit('c')">
+                            Celsius
+                        </button>
+                        <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
+                                style="
+                            border-top-left-radius: 0;
+                            border-bottom-left-radius: 0;
                         "
-                            onclick="changeTempUnit('c')">
-                                Celsius
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
-                                    style="
-                                    border-top-left-radius: 0;
-                                    border-bottom-left-radius: 0;
-                                    border: 1px solid green;
-                                "
-                                    onclick="changeTempUnit('f')">
-                                Fahrenheit
-                            </button>
-                        </li>
-                    </ul>
+                                onclick="changeTemperatureUnit('f')">
+                            Fahrenheit
+                        </button>
+                    </div>
+
+                    <div class="row" id="temperature-graphs" data-units="c">
+                        <canvas id="temp-graph-month" th:attr="data-results=${averageMonthTemp}"></canvas>
+                        <canvas id="temp-graph-week" th:attr="data-results=${averageWeekTemp}"></canvas>
+<!--                        <canvas id="temp-graph-day" th:attr="data-results=${averageDayTemp}"></canvas>-->
+                    </div>
                 </div>
-                <div class="row">
-                    <canvas id="temp-graph" th:attr="data-results=${averageMonthTemp}">
-                    </canvas>
-                    <canvas id="temp-graph2" th:attr="data-results=${averageWeekTemp}">
-                    </canvas>
-                </div>
+
+                <!-- Light Example -->
+<!--                <div class="sensor-data" id="light-data">-->
+<!--                    <div class="row" id="light-graphs" data-units="c">-->
+<!--                        <canvas id="light-graph-month" th:attr="data-results=${averageMonthLight}"></canvas>-->
+<!--                        <canvas id="light-graph-week" th:attr="data-results=${averageWeekLight}"></canvas>-->
+<!--                    </div>-->
+<!--                </div>-->
+
             </div>
         </div>
     </div>
 </div>
-<script>
-    const fahrenheitButton = document.getElementById("fahrenheit-btn");
-    const celsiusButton = document.getElementById("celsius-btn");
-    function changeTempUnit(unit) {
-        if (unit == 'c') {
-            celsiusButton.className = "btn btn-toggle-selected";
-            fahrenheitButton.className = "btn btn-toggle-unselected";
-
-        } else {
-            celsiusButton.className = "btn btn-toggle-unselected";
-            fahrenheitButton.className = "btn btn-toggle-selected";
-        }
-    }
-</script>
+<script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
 </body>
 </html>
