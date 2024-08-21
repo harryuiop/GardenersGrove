@@ -20,6 +20,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 public class MonitorGardenController extends NavBar {
     private final UserService userService;
     private final GardenService gardenService;
+    private final ArduinoDataPointService arduinoDataPointService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -57,6 +58,8 @@ public class MonitorGardenController extends NavBar {
         }
         boolean owner = optionalGarden.get().getOwner() == currentUser;
 
+        System.out.println(arduinoDataPointService.getMostRecentArduinoDataPoint(gardenId));
+        model.addAttribute("gardenStats");
         model.addAttribute("garden", optionalGarden.get());
         model.addAttribute("owner", owner);
         model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.

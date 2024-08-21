@@ -6,7 +6,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.Status;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
