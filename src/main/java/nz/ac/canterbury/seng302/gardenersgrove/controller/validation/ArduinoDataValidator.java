@@ -3,6 +3,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoJsonData;
 import org.springframework.stereotype.Component;
 
 
@@ -32,7 +34,7 @@ public class ArduinoDataValidator {
      * @param temperature the temperature value recorded in the arduino data
      * @return a boolean of whether the temperature is valid or not
      */
-    public boolean checkValidTemperature(double temperature) {
+    public static boolean checkValidTemperature(double temperature) {
         return temperature >= MIN_TEMPERATURE && temperature <= MAX_TEMPERATURE;
     }
 
@@ -42,7 +44,7 @@ public class ArduinoDataValidator {
      * @param humidity the humidity value recorded in the arduino data
      * @return a boolean of whether the humidity is valid or not
      */
-    public boolean checkValidHumidity(double humidity) {
+    public static boolean checkValidHumidity(double humidity) {
         return humidity >= MIN_HUMIDITY && humidity <= MAX_HUMIDITY;
     }
 
@@ -52,7 +54,7 @@ public class ArduinoDataValidator {
      * @param atmosphericPressure the atmospheric pressure value recorded in the arduino data
      * @return a boolean of whether the atmospheric pressure is valid or not
      */
-    public boolean checkValidAtmosphericPressure(double atmosphericPressure) {
+    public static boolean checkValidAtmosphericPressure(double atmosphericPressure) {
         return atmosphericPressure >= MIN_ATMOSPHERE && atmosphericPressure <= MAX_ATMOSPHERE;
     }
 
@@ -61,27 +63,33 @@ public class ArduinoDataValidator {
      * @param lightLevel the light level value recorded in the arduino data
      * @return a boolean of whether the light level is valid or not
      */
-    public boolean checkValidLight(double lightLevel) {
+    public static boolean checkValidLight(double lightLevel) {
         return lightLevel >= MIN_LIGHT && lightLevel <= MAX_LIGHT;
     }
 
     /**
      * Returns true if the moisture is within the range MIN_LIGHT to MAX_LIGHT
-     * @param lightLevel the moisture value recorded in the arduino data
+     * @param moisture the moisture value recorded in the arduino data
      * @return a boolean of whether the moisture is valid or not
      */
-    public boolean checkValidMoisture(double moisture) {
+    public static boolean checkValidMoisture(double moisture) {
         return moisture >= MIN_MOISTURE && moisture <= MAX_MOISTURE;
     }
 
     /**
-     * Returns true if the difference in time between the reading and the current time is less than MAX_DELAY_TIME, else false
+     * Returns true if the difference in time between the reading and the current time is less than MAX_READING_DELAY, else false
      * @param time the LocalDateTime time of data reading
-     * @return a boolean of whether the time difference is less than MAX_DELAY_TIME
+     * @return a boolean of whether the time difference is less than MAX_READING_DELAY
      */
-    public boolean checkValidTime(LocalDateTime time) {
+    public static boolean checkValidTime(LocalDateTime time) {
         LocalDateTime currentTime = LocalDateTime.now();
         Duration difference = Duration.between(currentTime, time);
-        return (difference.toMinutes() < 5);
+        return (difference.toMinutes() < MAX_READING_DELAY);
+    }
+
+    public static boolean checkValidSensorData(ArduinoJsonData dataPoint) {
+        return checkValidAtmosphericPressure(dataPoint.getAtmosphereAtm()) && checkValidLight(dataPoint.getLightLevelPercentage())
+                && checkValidTime(dataPoint.getTime()) && checkValidTemperature(dataPoint.getTemperatureCelsius())
+                && checkValidMoisture(dataPoint.getMoisturePercentage()) && checkValidHumidity(dataPoint.getHumidityPercentage());
     }
 }

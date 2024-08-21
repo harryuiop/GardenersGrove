@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
@@ -42,8 +43,12 @@ public class ArduinoDataController {
     public void receiveArduinoData(@RequestBody String sensorData) throws UnableToFetchWeatherException {
         try {
             ArduinoJsonData response = objectMapper.readValue(sensorData, ArduinoJsonData.class);
-            Optional<Garden> optionalGarden = gardenService.getGardenByArduinoId(response.getId());
-            optionalGarden.ifPresent(garden -> dataPointService.saveDataPoint(new ArduinoDataPoint(garden, response.getTime(), response.getTemperatureCelsius(), response.getHumidityPercentage(), response.getAtmosphereAtm(), response.getLightLevelPercentage(), response.getMoisturePercentage())));
+            if (ArduinoDataValidator.checkValidSensorData(response)) {
+                Optional<Garden> optionalGarden = gardenService.getGardenByArduinoId(response.getId());
+                optionalGarden.ifPresent(garden -> dataPointService.saveDataPoint(new ArduinoDataPoint(garden, response.getTime(),
+                        response.getTemperatureCelsius(), response.getHumidityPercentage(), response.getAtmosphereAtm(),
+                        response.getLightLevelPercentage(), response.getMoisturePercentage())));
+            }
         } catch (JsonProcessingException exception) {
             throw new UnableToFetchWeatherException("Failed to parse JSON response from API", exception);
         }
