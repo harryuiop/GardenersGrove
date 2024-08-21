@@ -24,25 +24,38 @@
         <div class="col bg-white rounded m-4 p-3 shadow-sm">
             <div class="d-flex justify-content-between flex-column flex-md-row">
                 <div class="container w-100 text-center align-content-center">
-                    <button class="btn btn-lg btn-no-bold m-0 lead"><i class="bi bi-thermometer-half"></i> <span th:text="'Temperature: '+ ${gardenStats.getTempCelsius()}"></span></button>
+                    <button onclick="makeActive('Temperature')" id="Temperature" class="btn btn-stats-bar-active btn-no-bold m-0 lead"><i class="bi bi-thermometer-half"></i> <span th:text="'Temperature: '+ ${gardenStats.getTempCelsius()}"></span></button>
                 </div>
-
-                <div class="container w-100 text-center">
-                    <button class="btn btn-confirm m-0"><i class="bi bi-moisture"></i> <span th:text="'Soil Moisture: '+ ${gardenStats.getMoisturePercent()}"></span></button>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0"><i class="bi bi-moisture"></i> <span th:text="'Soil Moisture: '+ ${gardenStats.getMoisturePercent()}"></span></button>
                 </div>
-
-                <div class="container w-100 text-center">
-                    <button class="btn btn-lg btn-no-bold m-0 lead"><i class="bi bi-brightness-high"></i> <span th:text="'Light: '+ ${gardenStats.getLightPercent()}"></span></button>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Light')" id="Light" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-brightness-high"></i> <span th:text="'Light: '+ ${gardenStats.getLightPercent()}"></span></button>
                 </div>
-                <div class="container w-100 text-center">
-                    <button class="btn btn-lg btn-no-bold m-0 lead"><i class="bi bi-speedometer"></i> <span th:text="'Air Pressure: '+ ${gardenStats.getAtmosphereAtm()}"></span></button>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Pressure')" id="Pressure" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-speedometer"></i> <span th:text="'Air Pressure: '+ ${gardenStats.getAtmosphereAtm()}"></span></button>
                 </div>
-                <div class="container w-100 text-center">
-                    <button class="btn btn-lg btn-no-bold m-0 lead"><i class="bi bi-droplet-half"></i> <span th:text="'Humidity: '+ ${gardenStats.getHumidityPercent()}"></span></button>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Humidity')" id="Humidity" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-droplet-half"></i> <span th:text="'Humidity: '+ ${gardenStats.getHumidityPercent()}"></span></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 </body>
+<script>
+    function makeActive(buttonId) {
+        const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
+        const button = document.getElementById(buttonId);
+
+        button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead'
+
+        allButtons.forEach( allButtonsItem => {
+            if (allButtonsItem !== buttonId) {
+                document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
+                }
+            }
+        )
+    }
+</script>
 </html>
