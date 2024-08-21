@@ -19,6 +19,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 public class MonitorGardenController {
     private final UserService userService;
     private final GardenService gardenService;
+    private final TemperatureService temperatureService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -27,9 +28,10 @@ public class MonitorGardenController {
      * @param userService   A User database access object.
      */
     @Autowired
-    public MonitorGardenController(UserService userService, GardenService gardenService) {
+    public MonitorGardenController(UserService userService, GardenService gardenService, TemperatureService temperatureService) {
         this.userService = userService;
         this.gardenService = gardenService;
+        this.temperatureService = temperatureService;
     }
 
     /**
@@ -57,6 +59,7 @@ public class MonitorGardenController {
         model.addAttribute("garden", optionalGarden.get());
         model.addAttribute("owner", owner);
         model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
+        model.addAttribute("averageTemp", temperatureService.getGraphData(7));
         return "gardenMonitoring";
     }
 
