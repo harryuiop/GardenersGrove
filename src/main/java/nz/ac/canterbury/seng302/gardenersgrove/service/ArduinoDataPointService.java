@@ -33,6 +33,6 @@ public class ArduinoDataPointService {
      * @return The most recent data point
      */
     public ArduinoDataPoint getMostRecentArduinoDataPoint(Long gardenId) {
-        return dataPointRepository.getGardenArduinoStats(gardenId).getLast();
+        return dataPointRepository.getGardenArduinoStats(gardenId).getFirst();
     }
 }

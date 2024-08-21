@@ -12,6 +12,7 @@ public interface ArduinoDataPointRepository extends CrudRepository<ArduinoDataPo
 
     List<ArduinoDataPoint> findAllByGarden(Garden garden);
 
-    @Query("SELECT a FROM ArduinoDataPoint a WHERE a.id=?1 ORDER BY PARSEDATETIME(a.time, 'yyyy-MM-dd HH:mm:ss') DESC")
+    // If this is not working on VM it is likely due to the PARSEDATETIME function being database type specific
+    @Query("SELECT a FROM ArduinoDataPoint a WHERE a.garden.id=?1 ORDER BY PARSEDATETIME(a.time, 'yyyy-MM-dd HH:mm:ss') DESC")
     List<ArduinoDataPoint> getGardenArduinoStats(Long id);
 }

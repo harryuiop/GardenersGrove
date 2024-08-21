@@ -24,24 +24,19 @@
                 <div class="col bg-white rounded m-4 p-3 shadow-sm">
                     <div class="d-flex justify-content-between flex-column flex-md-row">
                         <div class="container w-100 lead text-center">
-                            <i class="bi bi-thermometer-half"></i>
-                            Temperature: 10ºC
+                            <p><i class="bi bi-thermometer-half"></i> <span th:text="'Temperature: '+ ${gardenStats.getTempCelsius()}"></span></p>
                         </div>
                         <div class="container w-100 lead text-center">
-                            <i class="bi bi-moisture"></i>
-                            Soil Moisture: 23%
+                            <p><i class="bi bi-moisture"></i> <span th:text="'Soil Moisture: '+ ${gardenStats.getMoisturePercent()}"></span></p>
                         </div>
                         <div class="container w-100 lead text-center">
-                            <i class="bi bi-brightness-high"></i>
-                            Light: 43%
+                            <p><i class="bi bi-brightness-high"></i> <span th:text="'Light: '+ ${gardenStats.getLightPercent()}"></span></p>
                         </div>
                         <div class="container w-100 lead text-center">
-                            <i class="bi bi-speedometer"></i>
-                            Air Pressure: 1.04kPa
+                            <p><i class="bi bi-speedometer"></i> <span th:text="'Air Pressure: '+ ${gardenStats.getAtmosphereAtm()}"></span></p>
                         </div>
                         <div class="container w-100 lead text-center">
-                            <i class="bi bi-droplet-half"></i>
-                            Humidity: 45%
+                            <p><i class="bi bi-droplet-half"></i> <span th:text="'Humidity: '+ ${gardenStats.getHumidityPercent()}"></span></p>
                         </div>
                     </div>
                 </div>
