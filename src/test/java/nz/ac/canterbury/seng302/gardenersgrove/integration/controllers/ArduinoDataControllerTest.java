@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,10 +86,17 @@ public class ArduinoDataControllerTest {
         json.put("time", "01-01-2024 09:30");
 
         mockMvc.perform(MockMvcRequestBuilders.post(ARDUINO_SENSOR_DATA)
-                        .content(String.valueOf(json))
-        );
+                        .content(String.valueOf(json)));
 
         Assertions.assertEquals(1, dataPointRepository.countAllByGarden(garden));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"{}"})
+    void send_invalid_data_not_saved(String jsonString) throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(ARDUINO_SENSOR_DATA)
+                        .content(jsonString));
+
+        Assertions.assertEquals(0, dataPointRepository.countAllByGarden(garden));
+    }
 }

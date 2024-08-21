@@ -39,7 +39,7 @@ public class ArduinoDataController {
      */
     @PostMapping(ARDUINO_SENSOR_DATA)
     @ResponseBody
-    public void receiveArduinoData(@RequestBody String sensorData) {
+    public void receiveArduinoData(@RequestBody String sensorData) throws UnableToFetchWeatherException {
         try {
             ArduinoJsonData response = objectMapper.readValue(sensorData, ArduinoJsonData.class);
             Optional<Garden> optionalGarden = gardenService.getGardenByArduinoId(response.getId());
