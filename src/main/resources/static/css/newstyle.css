@@ -59,6 +59,19 @@
     --bs-btn-active-bg: var(--fern-green);
 }
 
+.btn.btn-toggle-unselected {
+    border-color: var(--fern-green);
+    --bs-btn-color: var(--dark-green);
+}
+
+.btn.btn-toggle-selected {
+    border-color: var(--fern-green);
+    --bs-btn-color: white;
+    --bs-btn-hover-color: white;
+    --bs-btn-hover-bg: var(--fern-green);
+    --bs-btn-bg: var(--fern-green);
+}
+
 .garden-item {
     transition-property: all;
     transition-duration: 0.3s;

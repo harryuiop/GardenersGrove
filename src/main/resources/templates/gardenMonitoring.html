@@ -31,6 +31,32 @@
                     </div>
                 </div>
                 <div class="row">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <button class="btn btn-toggle-selected" id="celsius-btn"
+                            style="
+                        border-top-right-radius: 0;
+                        border-bottom-right-radius: 0;
+                        border: 1px solid green;
+                        "
+                            onclick="changeTempUnit('c')">
+                                Celsius
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
+                                    style="
+                                    border-top-left-radius: 0;
+                                    border-bottom-left-radius: 0;
+                                    border: 1px solid green;
+                                "
+                                    onclick="changeTempUnit('f')">
+                                Fahrenheit
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
                     <canvas id="temp-graph" th:attr="data-results=${averageMonthTemp}">
                     </canvas>
                     <canvas id="temp-graph2" th:attr="data-results=${averageWeekTemp}">
@@ -40,5 +66,19 @@
         </div>
     </div>
 </div>
+<script>
+    const fahrenheitButton = document.getElementById("fahrenheit-btn");
+    const celsiusButton = document.getElementById("celsius-btn");
+    function changeTempUnit(unit) {
+        if (unit == 'c') {
+            celsiusButton.className = "btn btn-toggle-selected";
+            fahrenheitButton.className = "btn btn-toggle-unselected";
+
+        } else {
+            celsiusButton.className = "btn btn-toggle-unselected";
+            fahrenheitButton.className = "btn btn-toggle-selected";
+        }
+    }
+</script>
 </body>
 </html>
