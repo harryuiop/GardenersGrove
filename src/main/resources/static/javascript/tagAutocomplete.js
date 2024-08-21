@@ -60,6 +60,7 @@ function updateAutocomplete(query) {
 function renderAutocomplete(tags) {
     if (!tags || tags.length === 0) {
         console.log("No tags exist with given search.");
+        removeAutocompleteBox();
         return;
     }
     autocompleteList.innerHTML = '';
