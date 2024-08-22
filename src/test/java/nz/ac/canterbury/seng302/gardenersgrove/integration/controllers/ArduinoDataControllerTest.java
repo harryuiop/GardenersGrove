@@ -8,6 +8,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingExcep
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
@@ -23,12 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -49,28 +53,27 @@ public class ArduinoDataControllerTest {
 
     private User user;
 
-    private Garden garden;
-
-    private boolean isSetUp = false;
+    private Long gardenId;
 
     Logger logger = LoggerFactory.getLogger(ArduinoDataController.class);
 
+    static Integer count = 0;
+
     @BeforeEach
     public void set_up() {
-        if (isSetUp) {
-            return;
+        if (gardenRepository.findAllByArduinoId("testid").isEmpty()) {
+            user = new User("test@mail.com", "Test", "User", "Password1!", "01/01/2000");
+            userRepository.save(user);
+
+            Location location = new Location("New Zealand", "Christchurch");
+            Garden garden = new Garden(user, "Test Garden", "Test Description", location, 1f, true);
+            garden.setArduinoId("testid");
+            gardenRepository.save(garden);
+
+            this.gardenId = garden.getId();
+        } else {
+            gardenId = gardenRepository.findAllByArduinoId("testid").get(0).getId();
         }
-
-        User user = new User("test@mail.com", "Test", "User", "Password1!", "01/01/2000");
-        userRepository.save(user);
-
-        Location location = new Location("New Zealand", "Christchurch");
-        garden = new Garden(user, "Test Garden", "Test Description", location, 1f,
-                true);
-        garden.setArduinoId("testid");
-        gardenRepository.save(garden);
-
-        isSetUp = true;
     }
 
     @Test
@@ -78,19 +81,16 @@ public class ArduinoDataControllerTest {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-        JSONObject json = new JSONObject();
-        json.put("id", "testid");
-        json.put("temperatureCelsius", 18);
-        json.put("humidityPercentage", 35);
-        json.put("atmosphereAtm", 100);
-        json.put("lightLevelPercentage", 80);
-        json.put("moisturePercentage", 75);
-        json.put("time", LocalDateTime.now().format(formatter));
+        String jsonString = "{\"humidityPercentage\":35,\"lightLevelPercentage\":80,\"moisturePercentage\":75,\"id\":\"testid\",\"time\":\"22-08-2024 14:36\",\"temperatureCelsius\":18,\"atmosphereAtm\":100}";
 
         mockMvc.perform(MockMvcRequestBuilders.post(ARDUINO_SENSOR_DATA)
-                        .content(String.valueOf(json)));
+                        .content(jsonString)
+                        .contentType(MediaType.TEXT_PLAIN))
+                        .andExpect(status().isOk());
 
-        Assertions.assertEquals(1, dataPointRepository.findAllByGarden(garden).size());
+        logger.info(String.valueOf(count) + "saved");
+        count += 1;
+        Assertions.assertEquals(1, dataPointRepository.findAllByGardenId(gardenId).size());
     }
 
     @ParameterizedTest
@@ -100,7 +100,12 @@ public class ArduinoDataControllerTest {
 })
     void send_invalid_data_not_saved(String jsonString) throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ARDUINO_SENSOR_DATA)
-                        .content(jsonString));
-        Assertions.assertEquals(0, dataPointRepository.findAllByGarden(garden).size());
+                        .content(jsonString)
+                        .contentType(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk());
+
+        logger.info(String.valueOf(count) + "invalid");
+        count += 1;
+        Assertions.assertEquals(0, dataPointRepository.findAllByGardenId(gardenId).size());
     }
 }
