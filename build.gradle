@@ -36,7 +36,7 @@ dependencies {
 	implementation 'org.webjars.npm:bootstrap-icons:1.11.3'
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
 	implementation 'org.webjars.npm:bootstrap-icons:1.11.3'
-	implementation 'org.webjars.npm:github-com-chartjs-Chart-js:2.8.0'
+	implementation 'org.webjars:chartjs:2.9.4'
 
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

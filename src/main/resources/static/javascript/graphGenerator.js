@@ -91,10 +91,6 @@ function getMonthGraphInformation(sensorName) {
     return [timeLabels, `Average ${sensorName} over last day`, "Time of day", sensorName];
 }
 
-// function getWeekGraphInformation(sensorName) {
-//     const timeLabels =
-// }
-
 /**
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
@@ -115,10 +111,7 @@ function createGraph(data, graphId, sensorName, graphType) {
 
     const [labels, title, xLabel, yLabel] = getMonthGraphInformation(sensorName);
 
-    // const labels = labelLength(8)
-
-    new Chart(
-        document.getElementById(graphId),
+    var myChart = new Chart(document.getElementById(graphId),
         {
             type: 'line',
             data: {
