@@ -1,5 +1,5 @@
 /**
- * Generator and manage Graphs for all sensors in garden monitoring page
+ * Generator and manager for Graphs for all sensors in garden monitoring page.
  */
 
 const fahrenheitButton = document.getElementById("fahrenheit-btn");
@@ -40,26 +40,27 @@ function changeTemperatureUnit(unit) {
         celsiusButton.className = "btn btn-toggle-selected";
         fahrenheitButton.className = "btn btn-toggle-unselected";
         temperatureGraphContainer.setAttribute("data-units", "c");
-        renderTemperatureGraphs();
     } else {
         celsiusButton.className = "btn btn-toggle-unselected";
         fahrenheitButton.className = "btn btn-toggle-selected";
         temperatureGraphContainer.setAttribute("data-units", "f");
-        renderTemperatureGraphs();
     }
+    renderTemperatureGraphs();
+
 }
 
 function renderTemperatureGraphs() {
     const isCelsius = temperatureGraphContainer.dataset.units === 'c';
+    const temperatureUnit = isCelsius ? '°C' : '°F';
 
     const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedMonthResults,"temp-graph-month", "Temperature", GraphType.MONTH);
+    createGraph(convertedMonthResults,"temp-graph-month", `Temperature (${temperatureUnit})`, GraphType.MONTH);
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedWeeklyResults,"temp-graph-week", "Temperature", GraphType.WEEK);
+    createGraph(convertedWeeklyResults,"temp-graph-week", `Temperature (${temperatureUnit})`, GraphType.WEEK);
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedDayResults,"temp-graph-day", "Temperature", GraphType.DAY);
+    createGraph(convertedDayResults,"temp-graph-day", `Temperature (${temperatureUnit})`, GraphType.DAY);
 }
 
 
