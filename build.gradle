@@ -81,8 +81,6 @@ tasks.named('test') {
 	useJUnitPlatform()
 	filter {
 		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.unit.*"
-		excludeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.integration.*"
-		excludeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.cucumber.*"
 	}
 	testLogging {
 		events "passed", "skipped", "failed", "standardOut", "standardError"
@@ -96,10 +94,7 @@ tasks.register("integration", Test) {
 	useJUnitPlatform()
 	filter {
 		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.integration.*"
-		excludeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.unit.*"
-		excludeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.cucumber.*"
 	}
-
 	testLogging {
 		events "passed", "skipped", "failed", "standardOut", "standardError"
 	}
@@ -114,8 +109,6 @@ tasks.register("cucumber", Test) {
 	filter {
 		// Ensure this lines up with the package your cucumber tests are located in
 		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.cucumber.*"
-		excludeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.unit.*"
-		excludeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.integration.*"
 	}
 	testLogging {
 		events "passed", "skipped", "failed", "standardOut", "standardError"
@@ -208,3 +201,40 @@ jacocoTestReport { // Generate a report for all generated test data
 tasks.named("unitTestReport").configure { finalizedBy "jacocoTestReport" }
 tasks.named("integrationTestReport").configure { finalizedBy "jacocoTestReport" }
 tasks.named("cucumberTestReport").configure { finalizedBy "jacocoTestReport" }
+
+
+// These tasks are here for specially running only sections of tests
+
+tasks.register("only-integration", Test) {
+	useJUnitPlatform()
+	filter {
+		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.integration.*"
+	}
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
+	}
+}
+
+tasks.register("only-cucumber", Test) {
+	testLogging.showStandardStreams = true
+	useJUnitPlatform()
+	filter {
+		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.cucumber.*"
+	}
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
+		exceptionFormat TestExceptionFormat.FULL
+	}
+}
+
+tasks.register("only-unit", Test) {
+	testLogging.showStandardStreams = true
+	useJUnitPlatform()
+	filter {
+		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.unit.*"
+	}
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
+		exceptionFormat TestExceptionFormat.FULL
+	}
+}
