@@ -9,6 +9,15 @@ const tempMonthResults = JSON.parse(document.getElementById("temp-graph-month").
 const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
 const tempDayResults = JSON.parse(document.getElementById("temp-graph-day").dataset.results);
 
+const HOURS_IN_DAY = 24;
+const DAYS_IN_MONTH = 30;
+const monthStrings = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// Graph Type enum, used for labelling.
+const GraphType = Object.freeze({
+    MONTH: 0, WEEK: 1, DAY: 2
+});
+
 /**
  * Render all graphs on page load.
  * Manage what graphs are shown / hidden.
@@ -40,13 +49,13 @@ function renderTemperatureGraphs() {
     const isCelsius = temperatureGraphContainer.dataset.units === 'c';
 
     const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedMonthResults,"temp-graph-month", "Average Daily Temp Over last 30 days", "Days", "Average Temp" );
+    createGraph(convertedMonthResults,"temp-graph-month", "Temperature", GraphType.MONTH);
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedWeeklyResults,"temp-graph-week", "Average Daily Temp Over last 7 days", "Days", "Average Temp" );
+    createGraph(convertedWeeklyResults,"temp-graph-week", "Temperature", GraphType.WEEK);
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedDayResults,"temp-graph-day", "Average Daily Temp Over last day", "Time (each 30 mins)", "Average Temp" );
+    createGraph(convertedDayResults,"temp-graph-day", "Temperature", GraphType.DAY);
 }
 
 function convertCelsiusToFahrenheit(celsiusInput) {
@@ -54,13 +63,37 @@ function convertCelsiusToFahrenheit(celsiusInput) {
     return celsiusInput * 1.8 + 32;
 }
 
+
 /**
- * @param count Number of labels.
- * @returns X axis labels corresponding to time.
+ * Get graph information for a time graph.
+ *
+ * @param sensorName Name of sensor used, e.g Temperature
+ * @returns tuple of labels, graph title, xLabel, yLabel
  */
-function labelLength(count) {
-    return Array.from({length: count}, (_, index) => index + 1);
+function getTimeGraphInformation(sensorName) {
+    let timeLabels = [];
+    for (let hour = 0; hour < HOURS_IN_DAY; hour++) {
+        timeLabels.push(`${hour}: 00`);
+        timeLabels.push(`${hour}: 30`);
+    }
+    return [timeLabels, `Average ${sensorName} over last day`, "Time of day", sensorName];
 }
+
+function getMonthGraphInformation(sensorName) {
+    const timeLabels = [];
+    const currentDay = new Date();
+    currentDay.setDate(currentDay.getDate() - DAYS_IN_MONTH);
+    for (let i = 1; i < DAYS_IN_MONTH + 1; i++) {
+        const newDay = new Date(currentDay);
+        newDay.setDate(currentDay.getDate() + i);
+        timeLabels.push(`${newDay.getDate()}  ${monthStrings[newDay.getMonth()]}`);
+    }
+    return [timeLabels, `Average ${sensorName} over last day`, "Time of day", sensorName];
+}
+
+// function getWeekGraphInformation(sensorName) {
+//     const timeLabels =
+// }
 
 /**
  * Uses data to create a graph which is generated and displayed in given id
@@ -70,14 +103,19 @@ function labelLength(count) {
  * @param xLabel        x label name
  * @param yLabel        y label name
  */
-function createGraph(data, graphId, title, xLabel, yLabel) {
+function createGraph(data, graphId, sensorName, graphType) {
     if (!data || data.length === 0){
         console.log(data)
         console.log("No data points given")
         return;
     }
 
-    const labels = labelLength(8)
+    // Get graph information
+    // const [labels, title, xLabel, yLabel] = getTimeGraphInformation(sensorName);
+
+    const [labels, title, xLabel, yLabel] = getMonthGraphInformation(sensorName);
+
+    // const labels = labelLength(8)
 
     new Chart(
         document.getElementById(graphId),
