@@ -289,10 +289,7 @@ public class GardenController extends NavBar {
 
             // Sets garden location to 0.0, 0.0 if there is no matching location
             if (!locationFound) {
-                List<Double> zeroList = new ArrayList<>();
-                zeroList.add(0.0);
-                zeroList.add(0.0);
-                locationEntity.setLngLat(zeroList);
+                garden.getLocation().setCoordinatesToZero();
             }
 
             locationEntity.setCountry(country);

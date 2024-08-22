@@ -117,15 +117,18 @@
             <div class="row">
               <div class="container">
                 <div id="weatherCard">
-                  <div th:if="${garden.getLocation().isLocationRecognized()}"
-                       th:each="data : ${weatherData}" class="d-inline-grid">
-                    <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
+                  <div th:if="${garden.getLocation().isLocationRecognized()}">
+                    <div th:each="data : ${weatherData}" class="d-inline-grid"
+                         th:insert="~{fragments/locationWeatherCard :: weatherCard}"
                          th:with="dayOfWeek=${data.date.dayOfWeek},
                            date=${data.date.format(dateFormatter)},
                            temperature=${data.temperature},
                            description=${data.weatherDescription},
                            image=${data.weatherIconName},
                            humidity=${data.humidity}">
+                    </div>
+                    <div class="pt-1 text-end">Weather provided by
+                      <a href="https://open-meteo.com/">Open-Meteo.com</a>
                     </div>
                   </div>
                   <div th:unless="${garden.getLocation().isLocationRecognized()}"
