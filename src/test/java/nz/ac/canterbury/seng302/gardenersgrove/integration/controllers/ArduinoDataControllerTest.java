@@ -50,10 +50,6 @@ public class ArduinoDataControllerTest {
 
     private Long gardenId;
 
-    Logger logger = LoggerFactory.getLogger(ArduinoDataController.class);
-
-    static Integer count = 0;
-
     @BeforeEach
     public void set_up() {
         if (gardenRepository.findAllByArduinoId("testid").isEmpty()) {
@@ -83,8 +79,6 @@ public class ArduinoDataControllerTest {
                         .contentType(MediaType.TEXT_PLAIN))
                         .andExpect(status().isOk());
 
-        logger.info(String.valueOf(count) + "saved");
-        count += 1;
         Assertions.assertEquals(1, dataPointRepository.findAllByGardenId(gardenId).size());
     }
 
@@ -99,8 +93,6 @@ public class ArduinoDataControllerTest {
                         .contentType(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk());
 
-        logger.info(String.valueOf(count) + "invalid");
-        count += 1;
         Assertions.assertEquals(0, dataPointRepository.findAllByGardenId(gardenId).size());
     }
 }
