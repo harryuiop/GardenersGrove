@@ -65,7 +65,7 @@ public class GardenService {
      * @return Returns a garden OR null
      */
     public Garden getGardenByArduinoId(String id) {
-        return gardenRepository.findAllByArduinoId(id).get(0);
+        return gardenRepository.findByArduinoId(id);
     }
 
     /**

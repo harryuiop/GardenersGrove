@@ -6,8 +6,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,11 +14,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.format.DateTimeFormatter;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.ARDUINO_SENSOR_DATA;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -46,7 +46,7 @@ public class ArduinoDataControllerTest {
 
     @BeforeEach
     public void set_up() {
-        if (gardenRepository.findAllByArduinoId("testid").isEmpty()) {
+        if (gardenRepository.findByArduinoId("testid") == null) {
             user = new User("test@mail.com", "Test", "User", "Password1!", "01/01/2000");
             userRepository.save(user);
 
@@ -57,7 +57,7 @@ public class ArduinoDataControllerTest {
 
             this.gardenId = garden.getId();
         } else {
-            gardenId = gardenRepository.findAllByArduinoId("testid").get(0).getId();
+            gardenId = gardenRepository.findByArduinoId("testid").getId();
         }
     }
 

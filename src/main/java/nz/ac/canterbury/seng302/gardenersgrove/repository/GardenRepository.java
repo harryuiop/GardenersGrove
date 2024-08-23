@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface GardenRepository extends CrudRepository<Garden, Long> {
     Optional<Garden> findById(long id);
 
-    List<Garden> findAllByArduinoId(String id);
+    Garden findByArduinoId(String id);
 
     List<Garden> findAllByOwner(User owner);
 
