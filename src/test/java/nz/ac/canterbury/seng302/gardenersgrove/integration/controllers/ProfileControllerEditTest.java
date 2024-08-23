@@ -3,9 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
@@ -23,6 +21,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 @SpringBootTest
 @WithMockUser(value = "1")
 @AutoConfigureMockMvc(addFilters = false)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProfileControllerEditTest {
 
     @Autowired
@@ -36,19 +35,24 @@ class ProfileControllerEditTest {
 
     private User user;
 
+    @BeforeAll
+    void setUpAll() {
+        user = new User(
+                "test@domain.net",
+                "Test",
+                "User",
+                "Password1!",
+                "2000-01-01"
+        );
+        userRepository.save(user);
+    }
+
     @BeforeEach
     void setUp() {
-        if (user == null) {
-            user = new User(
-                    "test@domain.net",
-                    "Test",
-                    "User",
-                    "Password1!",
-                    "2000-01-01"
-            );
-            userRepository.save(user);
-        }
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
+        user.setEmail("test@domain.net");
+        user.setFirstName("Test");
+        user.setLastName("User");
 
     }
 

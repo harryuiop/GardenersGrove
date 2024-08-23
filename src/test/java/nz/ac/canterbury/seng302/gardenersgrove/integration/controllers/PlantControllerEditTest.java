@@ -10,8 +10,10 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.LocationRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
@@ -38,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @WithMockUser(value = "1")
 @AutoConfigureMockMvc(addFilters = false)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PlantControllerEditTest {
 
     @Autowired
@@ -65,19 +68,21 @@ class PlantControllerEditTest {
     private final LocalDate originalPlantedDate = LocalDate.now();
 
     private User user;
+    @BeforeAll
+    void setUpAll() throws ProfanityCheckingException, InterruptedException {
+        user = new User(
+                "test@domain.net",
+                "Test",
+                "User",
+                "Password1!",
+                "2000-01-01"
+        );
+        userRepository.save(user);
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
+    }
 
     @BeforeEach
-    void setUp() throws ProfanityCheckingException, InterruptedException {
-        if (user == null) {
-            user = new User(
-                            "test@domain.net",
-                            "Test",
-                            "User",
-                            "Password1!",
-                            "2000-01-01"
-            );
-            userRepository.save(user);
-        }
+    void setUp() {
         gardenRepository.deleteAll();
         locationRepository.deleteAll();
 
@@ -92,7 +97,6 @@ class PlantControllerEditTest {
                         originalPlantName, originalPlantCount, originalPlantDescription, originalPlantedDate, null, garden
         ));
 
-        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
 
     }
 

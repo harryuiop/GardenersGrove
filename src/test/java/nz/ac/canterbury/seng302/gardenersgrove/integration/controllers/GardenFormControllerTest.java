@@ -9,8 +9,10 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.LocationService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @WithMockUser(value = "1")
 @AutoConfigureMockMvc(addFilters = false)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GardenFormControllerTest {
 
     @Autowired
@@ -56,25 +59,24 @@ class GardenFormControllerTest {
     @MockBean
     private MapTilerGeocoding mapTilerGeocoding;
 
-    @BeforeEach
-    void setUp() throws ProfanityCheckingException, InterruptedException {
+    @BeforeAll
+    void setUpAll() throws ProfanityCheckingException, InterruptedException {
         Mockito.when(mapTilerGeocoding.getFirstSearchResult(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(null);
-
-        if (user == null) {
-            user = new User(
-                    "test@domain.net",
-                    "Test",
-                    "User",
-                    "Password1!",
-                    "2000-01-01"
-            );
-            userRepository.save(user);
-        }
-
-        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
+        user = new User(
+                "test@domain.net",
+                "Test",
+                "User",
+                "Password1!",
+                "2000-01-01"
+        );
+        userRepository.save(user);
         Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
+    }
 
+    @BeforeEach
+    void setUp() throws ProfanityCheckingException, InterruptedException {
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
         gardenRepository.deleteAll();
         locationService.deleteAll();
     }

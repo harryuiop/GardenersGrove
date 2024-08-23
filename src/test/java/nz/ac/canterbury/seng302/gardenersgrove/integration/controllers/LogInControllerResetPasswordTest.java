@@ -8,9 +8,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ResetPasswordTokenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -61,17 +59,14 @@ class LogInControllerResetPasswordTest {
         Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any()))
                 .thenReturn(true);
 
-        if (user == null) {
-            user = new User(
-                    "test@domain.net",
-                    "Test",
-                    "User",
-                    "Password1!",
-                    "2000-01-01"
-            );
-            userRepository.save(user);
-        }
-
+        user = new User(
+                "test@domain.net",
+                "Test",
+                "User",
+                "Password1!",
+                "2000-01-01"
+        );
+        userRepository.save(user);
         resetPasswordTokenRepository.deleteAll();
         correctTokenStr = "123e4567-e89b-12d3-a456-426614174000";
         resetPasswordTokenService.addToken(correctTokenStr, user.getUserId());
@@ -79,7 +74,6 @@ class LogInControllerResetPasswordTest {
         currentPassword = user.getPassword();
 
         Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
-
     }
 
     @Test

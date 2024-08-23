@@ -8,8 +8,10 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.PlantRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RegisterControllerTest {
 
     @Autowired
@@ -54,14 +57,19 @@ class RegisterControllerTest {
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
+    @BeforeAll
+    void setUpAll() throws ProfanityCheckingException, InterruptedException {
+        Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
+    }
+
+
     @BeforeEach
-    void setUp() throws ProfanityCheckingException, InterruptedException {
+    void setUp() {
         plantRepository.deleteAll();
         gardenRepository.deleteAll();
         friendRequestRepository.deleteAll();
         userRepository.deleteAll();
-        Mockito.when(emailSenderService.sendEmail(Mockito.any(), Mockito.any())).thenReturn(true);
-        Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
     }
 
     @Test
