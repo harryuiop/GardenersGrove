@@ -29,6 +29,38 @@ public class ArduinoDataPoint {
     @Column
     private double atmosphereAtm;
 
+    public Long getId() {
+        return id;
+    }
+
+    public Garden getGarden() {
+        return garden;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public double getTempCelsius() {
+        return tempCelsius;
+    }
+
+    public double getHumidityPercent() {
+        return humidityPercent;
+    }
+
+    public double getAtmosphereAtm() {
+        return atmosphereAtm;
+    }
+
+    public double getLightPercent() {
+        return lightPercent;
+    }
+
+    public double getMoisturePercent() {
+        return moisturePercent;
+    }
+
     @Column
     private double lightPercent;
 
