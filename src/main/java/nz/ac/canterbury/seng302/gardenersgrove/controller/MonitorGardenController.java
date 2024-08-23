@@ -1,17 +1,24 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
-import nz.ac.canterbury.seng302.gardenersgrove.service.*;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
 
 /**
  * Controller for the monitor garden page. For viewing statistics and live updates for a specific garden.
@@ -20,6 +27,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 public class MonitorGardenController extends NavBar {
     private final UserService userService;
     private final GardenService gardenService;
+    private final ArduinoDataPointService dataPointService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -28,9 +36,14 @@ public class MonitorGardenController extends NavBar {
      * @param userService   A User database access object.
      */
     @Autowired
-    public MonitorGardenController(UserService userService, GardenService gardenService) {
+    public MonitorGardenController(
+            UserService userService,
+            GardenService gardenService,
+            ArduinoDataPointService dataPointService
+    ) {
         this.userService = userService;
         this.gardenService = gardenService;
+        this.dataPointService = dataPointService;
     }
 
     /**
@@ -55,11 +68,15 @@ public class MonitorGardenController extends NavBar {
                 && !optionalGarden.get().isGardenPublic()) {
             throw new NoSuchGardenException(gardenId);
         }
-        boolean owner = optionalGarden.get().getOwner() == currentUser;
+        Garden garden = optionalGarden.get();
+        ArduinoDataPoint lastDataPoint = dataPointService.lastPointFromGarden(garden);
+        Long minutesSinceLastReading = lastDataPoint == null ? null
+                : Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).toMinutes();
 
-        model.addAttribute("garden", optionalGarden.get());
-        model.addAttribute("owner", owner);
-        model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
+        model.addAttribute("garden", garden);
+        model.addAttribute("owner", garden.getOwner() == currentUser);
+        model.addAttribute("connected", garden.getArduinoId() != null);
+        model.addAttribute("timeSinceLastReading", minutesSinceLastReading);
         return "gardenMonitoring";
     }
 

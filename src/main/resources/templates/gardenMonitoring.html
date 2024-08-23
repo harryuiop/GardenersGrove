@@ -14,11 +14,16 @@
                         <h2 class="text-break" th:text="${garden.getName()}"></h2>
                     </div>
                     <div class="col-auto">
-                        <div th:if="${connected}" class="alert alert-success">
-                            <i class="bi bi-link"></i> Garden Connected
+                        <div th:if="${connected} AND ${timeSinceLastReading} != null" class="alert alert-success">
+                            <i class="bi bi-link"></i> Device linked to garden! The last update was received
+                            <span th:text="${timeSinceLastReading}"> </span>
+                            minutes ago.
                         </div>
-                        <div th:unless="${connected}" class="alert alert-warning">
-                            No Device Found
+                        <div th:if="${connected} AND ${timeSinceLastReading} == null" class="alert alert-warning">
+                            <i class="bi bi-link"></i> Device linked to garden! No data available
+                        </div>
+                        <div th:unless="${connected}" class="alert alert-danger">
+                            There is no device linked to this garden
                         </div>
                     </div>
                 </div>
