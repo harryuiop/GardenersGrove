@@ -10,6 +10,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.LocationService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
+import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -51,10 +53,16 @@ public class WeatherLocationTest {
     private UserService userService;
 
     @SpyBean
+    private WeatherService weatherService;
+
+    @SpyBean
     private FormValuesValidator mockFormValuesValidator;
 
     @MockBean
     private Feature mockFeature;
+
+    @MockBean
+    private List<WeatherData> mockWeatherData;
 
     private User user;
 
@@ -66,6 +74,12 @@ public class WeatherLocationTest {
         this.mockFeature = Mockito.mock(Feature.class);
         Mockito.when(mapTilerGeocoding.getFirstSearchResult(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(mockFeature);
+        Mockito.when(weatherService.getWeatherData(Mockito.anyDouble(), Mockito.anyDouble()))
+                .thenReturn(mockWeatherData);
+        Mockito.when(weatherService.getWeatherAdvice(mockWeatherData))
+                .thenReturn("Have you checked on your garden today?");
+        Mockito.when(weatherService.isRainy(mockWeatherData))
+                .thenReturn(false);
 
         if (user == null) {
             user = new User(
@@ -117,9 +131,13 @@ public class WeatherLocationTest {
         Garden garden = allGardens.get(0);
 
         // Weather testing
-//        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId()))
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.view().name("gardenForm"));
+        mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("viewGarden"));
+
+        Mockito.verify(weatherService).getWeatherData(expectedCoords.getFirst(), expectedCoords.getLast());
+
+
     }
 
 }
