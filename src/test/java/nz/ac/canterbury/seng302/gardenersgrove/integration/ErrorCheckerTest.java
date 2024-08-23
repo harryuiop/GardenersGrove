@@ -34,7 +34,6 @@ class ErrorCheckerTest {
     @BeforeAll
     static void setUp() throws ProfanityCheckingException, InterruptedException {
 
-        // Initialize the components only once to save time
         mockFormValuesValidator = Mockito.spy(new FormValuesValidator());
         Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
 
@@ -47,9 +46,6 @@ class ErrorCheckerTest {
             encoder.encode("Password1!"),
             "2000-01-01");
         userService.addUsers(user);
-
-        // Additional setup that needs to run before each test can be placed here
-        // e.g., resetting mocks if needed
     }
 
     @Test
