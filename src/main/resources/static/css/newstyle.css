@@ -75,6 +75,29 @@
     --bs-btn-border: 1px solid var(--fern-green);
 }
 
+.btn.btn-stats-bar {
+    border-color: white;
+    font-size: 20px;
+    --bs-btn-color: var(--fern-green);
+    --bs-btn-hover-bg: var(--fern-green);
+    --bs-btn-hover-color: white;
+    --bs-btn-active-border-color: white;
+    --bs-btn-active-color: var(--fern-green);
+}
+
+.btn.btn-stats-bar-active {
+    background-color: var(--fern-green);
+    border-color: white;
+    color: white;
+    font-size: 20px;
+    --bs-btn-color: var(--fern-green);
+    --bs-btn-hover-bg: var(--fern-green);;
+    --bs-btn-hover-color: white;
+    --bs-btn-active-border-color: white;
+    --bs-btn-active-color: var(--fern-green);
+
+}
+
 .garden-item {
     transition-property: all;
     transition-duration: 0.3s;

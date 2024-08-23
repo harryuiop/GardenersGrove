@@ -13,6 +13,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -83,32 +85,10 @@ class ViewGardenControllerTest {
                 .andExpect(view().name("viewGarden"));
     }
 
-    @Test
-    void userInputInvalidTagName() throws Exception {
-        String tagName = "alkals@U)$(*%&(#*!$&@)";
-        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
-                .param("tagName", tagName))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/garden/"+gardenId));
-        Tag tag = tagService.findByName(tagName);
-        Assertions.assertNull(tag);
-    }
-
-    @Test
-    void userInputTagNameExceed25Characters() throws Exception {
-        String tagName = "This is invalid tag name which will give you a lot of annoy";
-        mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
-                        .param("tagName", tagName))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/garden/"+gardenId));
-        Tag tag = tagService.findByName(tagName);
-
-        Assertions.assertNull(tag);
-    }
-
-    @Test
-    void userInputTagNameExceed25CharactersAndHasInvalidCharacters() throws Exception {
-        String tagName = "Thi$ i$ inv@lid t@g name with inv@lid ch@r@cter which will give you @ lot of @nnoy";
+    @ParameterizedTest
+    @ValueSource(strings = {"Thi$ i$ inv@lid t@g name with inv@lid ch@r@cter which will give you @ lot of @nnoy", "Thisisinvalidtagnamethatisexceeding25characters",
+            "alkals@U)$(*%&(#*!$&@)a", "'", "a", "''", "'ab", "ab'", "'ab'"})
+    void userInputValidTagName(String tagName) throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(gardenId))
                         .param("tagName", tagName))
                 .andExpect(status().is3xxRedirection())
@@ -120,7 +100,7 @@ class ViewGardenControllerTest {
 
     @Test
     void userInputValidTagName() throws Exception {
-        String validTagName = "Invalid tag name";
+        String validTagName = "first";
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenTagUri(1))
                         .param("tagName", validTagName))
                 .andExpect(status().is3xxRedirection())
@@ -130,7 +110,7 @@ class ViewGardenControllerTest {
         Assertions.assertNotNull(tag);
     }
 
-@Test
+    @Test
     void makePublic_publicTrue_gardenIsPublic() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(makeGardenPublicUri(gardenId))
                         .param("publicGarden","true"))
