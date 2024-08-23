@@ -20,17 +20,20 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 public class MonitorGardenController extends NavBar {
     private final UserService userService;
     private final GardenService gardenService;
+    private final ArduinoDataPointService arduinoDataPointService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
      *
      * @param gardenService A Garden database access object.
      * @param userService   A User database access object.
+     * @param arduinoDataPointService A arduinoDataPointService database access object.
      */
     @Autowired
-    public MonitorGardenController(UserService userService, GardenService gardenService) {
+    public MonitorGardenController(UserService userService, GardenService gardenService, ArduinoDataPointService arduinoDataPointService) {
         this.userService = userService;
         this.gardenService = gardenService;
+        this.arduinoDataPointService = arduinoDataPointService;
     }
 
     /**
@@ -38,6 +41,7 @@ public class MonitorGardenController extends NavBar {
      *
      * @param gardenId The id of the garden being viewed
      * @param model    Puts the data into the template to be viewed
+     *
      * @return Thymeleaf html template of the monitor garden page.
      */
     @GetMapping(MONITOR_GARDEN_URI_STRING)
@@ -57,6 +61,7 @@ public class MonitorGardenController extends NavBar {
         }
         boolean owner = optionalGarden.get().getOwner() == currentUser;
 
+        model.addAttribute("gardenStats", arduinoDataPointService.getMostRecentArduinoDataPoint(gardenId));
         model.addAttribute("garden", optionalGarden.get());
         model.addAttribute("owner", owner);
         model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
