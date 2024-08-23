@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
  * Controller for endpoints used by the Arduino.
  */

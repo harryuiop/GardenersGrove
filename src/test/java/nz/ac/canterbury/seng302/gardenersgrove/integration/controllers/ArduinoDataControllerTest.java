@@ -23,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ArduinoDataControllerTest {
