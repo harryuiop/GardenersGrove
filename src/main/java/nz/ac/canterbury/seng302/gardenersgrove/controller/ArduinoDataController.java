@@ -5,39 +5,30 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoJsonData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
-
-import java.util.List;
-import java.util.Optional;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.ARDUINO_SENSOR_DATA;
 
 /**
  * Controller for endpoints used by the Arduino.
  */
 @Controller
 public class ArduinoDataController {
+    private final GardenService gardenService;
 
-    @Autowired
-    private GardenService gardenService;
+    private final ArduinoDataPointService dataPointService;
 
-    @Autowired
-    private ArduinoDataPointService dataPointService;
-
-    @Autowired
-    private ArduinoDataPointRepository dataPointRepository;
-
-    @Autowired
-    private ArduinoDataPointRepository arduinoDataPointRepository;
+    ArduinoDataController(GardenService gardenService, ArduinoDataPointService dataPointService) {
+        this.gardenService = gardenService;
+        this.dataPointService = dataPointService;
+    }
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
