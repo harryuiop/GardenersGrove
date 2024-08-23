@@ -42,48 +42,47 @@
                 <div class="container w-100 text-center align-content-center">
                     <button onclick="makeActive('Humidity')" id="Humidity" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-droplet-half"></i> <span th:text="'Humidity: '+ ${gardenStats.getHumidityPercent()} +'%'"></span></button>
                 </div>
+            </div>
+        </div>
 
-                <!-- Temperature -->
-                <div class="sensor-data" id="temperature-data">
+        <!-- Temperature -->
+        <div class="sensor-data" id="temperature-data">
+            <div class="row">
+                <div class="input-group mb-3">
+                    <button class="btn btn-toggle-selected" id="celsius-btn"
+                            style="
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                "
+                            onclick="changeTemperatureUnit('c')">
+                        Celsius
+                    </button>
+                    <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
+                            style="
+                        border-top-left-radius: 0;
+                        border-bottom-left-radius: 0;
+                    "
+                            onclick="changeTemperatureUnit('f')">
+                        Fahrenheit
+                    </button>
+                </div>
+            </div>
+
+            <div class="row" id="temperature-graphs" data-units="c">
+                <div class="container">
                     <div class="row">
-                        <div class="input-group mb-3">
-                            <button class="btn btn-toggle-selected" id="celsius-btn"
-                                    style="
-                        border-top-right-radius: 0;
-                        border-bottom-right-radius: 0;
-                        "
-                                    onclick="changeTemperatureUnit('c')">
-                                Celsius
-                            </button>
-                            <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
-                                    style="
-                                border-top-left-radius: 0;
-                                border-bottom-left-radius: 0;
-                            "
-                                    onclick="changeTemperatureUnit('f')">
-                                Fahrenheit
-                            </button>
+                        <div class="col-lg-6 mt-3 col-sx-8">
+                            <h5 class="text-break text-center">Temperature Today</h5>
+                            <canvas id="temp-graph-day" th:attr="data-results=${averageDayTemp}"></canvas>
                         </div>
-                    </div>
-
-                    <div class="row" id="temperature-graphs" data-units="c">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-6 mt-3 col-sx-8">
-                                    <h5 class="text-break text-center">Temperature Today</h5>
-                                    <canvas id="temp-graph-day" th:attr="data-results=${averageDayTemp}"></canvas>
-                                </div>
-                                <div class="col-lg-6 mt-3 col-sx-8">
-                                    <h5 class="text-break text-center">Temperature Last 30 Days</h5>
-                                    <canvas id="temp-graph-month" th:attr="data-results=${averageMonthTemp}"></canvas>
-                                </div>
-                                <div class="col-lg-6 mt-3 col-sx-8">
-                                    <h5 class="text-break text-center">Temperature Last 7 Days</h5>
-                                    <canvas id="temp-graph-week" th:attr="data-results=${averageWeekTemp}"></canvas>
-                                </div>
-                            </div>
+                        <div class="col-lg-6 mt-3 col-sx-8">
+                            <h5 class="text-break text-center">Temperature Last 30 Days</h5>
+                            <canvas id="temp-graph-month" th:attr="data-results=${averageMonthTemp}"></canvas>
                         </div>
-
+                        <div class="col-lg-6 mt-3 col-sx-8">
+                            <h5 class="text-break text-center">Temperature Last 7 Days</h5>
+                            <canvas id="temp-graph-week" th:attr="data-results=${averageWeekTemp}"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
