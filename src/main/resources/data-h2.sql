@@ -104,6 +104,17 @@ VALUES (1, 'Default User''s first Garden', 'The first garden created.', 1, 2, TR
        (24, 'Second User''s Second Garden', 'This description needs to be edited first as it is not verified', 2, 0.5,
         FALSE, FALSE, NOW());
 
+UPDATE garden
+SET arduino_id = '127.0.0.1'
+WHERE id = 1;
+UPDATE garden
+SET arduino_id = '127.0.0.2'
+WHERE id = 2;
+
+INSERT INTO arduino_data_point (garden_id, atmosphere_atm, humidity_percent, light_percent, moisture_percent,
+                                temp_celsius, time)
+VALUES (1, 1.001, 50, 50, 50, 20, NOW()),
+       (1, 1.01, 51, 51, 51, 21, NOW());
 
 INSERT INTO tag (name)
 VALUES ('first_tag'),
