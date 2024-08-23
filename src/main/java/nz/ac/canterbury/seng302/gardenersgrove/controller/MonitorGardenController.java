@@ -71,7 +71,7 @@ public class MonitorGardenController extends NavBar {
         Garden garden = optionalGarden.get();
         ArduinoDataPoint lastDataPoint = dataPointService.lastPointFromGarden(garden);
         Long minutesSinceLastReading = lastDataPoint == null ? null
-                : Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).toMinutes();
+                : Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs().toMinutes();
 
         model.addAttribute("garden", garden);
         model.addAttribute("owner", garden.getOwner() == currentUser);
