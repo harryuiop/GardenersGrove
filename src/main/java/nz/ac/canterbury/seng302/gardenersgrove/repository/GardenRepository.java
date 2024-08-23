@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface GardenRepository extends CrudRepository<Garden, Long> {
     Optional<Garden> findById(long id);
 
+    Garden findByArduinoId(String id);
+
     List<Garden> findAllByOwner(User owner);
 
     @Query(value = "SELECT * FROM garden WHERE garden.is_garden_public = TRUE ORDER BY garden.time_created DESC LIMIT 10 OFFSET ?1",

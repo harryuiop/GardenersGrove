@@ -59,6 +59,16 @@ public class GardenService {
     }
 
     /**
+     * Querys the database for a garden of a given Arduino ID
+     *
+     * @param id Arduino ID linked to the garden
+     * @return Returns a garden OR null
+     */
+    public Garden getGardenByArduinoId(String id) {
+        return gardenRepository.findByArduinoId(id);
+    }
+
+    /**
      * Saves a garden to the database
      *
      * @param garden Garden object to be saved
