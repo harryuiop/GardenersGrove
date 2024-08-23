@@ -17,7 +17,7 @@
                   <div class="col-auto">
                     <h2 class="text-break" th:text="${garden.getName()}"></h2>
                   </div>
-                  <div class="col-sm-2 col-md-3 col-lg-4">
+                  <div th:if="${owner}" class="col-sm-2 col-md-3 col-lg-4">
                     <a th:href="@{${editGardenUri}}" style="text-decoration: none">
                       <button class="btn btn-edit"
                               type="button"
@@ -25,7 +25,7 @@
                       </button>
                     </a>
                   </div>
-                  <div class="col-sm-2 col-md-3 col-lg-4">
+                  <div th:if="${owner}" class="col-sm-2 col-md-3 col-lg-4">
                     <a th:href="@{${monitorGardenUriString}}" style="text-decoration: none">
                       <button class="btn btn-edit"
                               type="button"
@@ -124,7 +124,7 @@
                            humidity=${data.humidity}">
                     </div>
                   </div>
-                  <div th:unless="${garden.getLocation().isCoordinatesSet()}" class="alert alert-warning">
+                  <div th:unless="${garden.getLocation().isCoordinatesSet() || !owner}" class="alert alert-warning">
                     Location not found, please update your location to see the weather
                   </div>
                 </div>
