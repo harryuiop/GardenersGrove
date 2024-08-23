@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
@@ -65,11 +66,12 @@ public class MonitorGardenController extends NavBar {
         }
         boolean owner = optionalGarden.get().getOwner() == currentUser;
 
+        List<Double> averageWeeklyTemp = arduinoDataPointService.averageDataPointsOverWeek(arduinoDataPointService.getDataPointsOverDays(gardenId, 7)).get(0);
         model.addAttribute("gardenStats", arduinoDataPointService.getMostRecentArduinoDataPoint(gardenId));
         model.addAttribute("garden", optionalGarden.get());
         model.addAttribute("owner", owner);
         model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
-
+        model.addAttribute("averageWeekTemp", averageWeeklyTemp); //This is where we input if the arduino is connected. Still to be implemented.
 
         return "gardenMonitoring";
     }

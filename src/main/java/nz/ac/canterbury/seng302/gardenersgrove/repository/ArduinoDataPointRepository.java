@@ -5,6 +5,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ArduinoDataPointRepository extends CrudRepository<ArduinoDataPoint, Long> {
@@ -17,4 +18,7 @@ public interface ArduinoDataPointRepository extends CrudRepository<ArduinoDataPo
 
     @Query("SELECT a FROM ArduinoDataPoint a WHERE a.garden.id=?1")
     List<ArduinoDataPoint> findAllByGardenId(Long id);
+
+    @Query("SELECT a FROM ArduinoDataPoint a WHERE a.garden.id=?1 and a.time >= ?2 and a.time <= ?3 ORDER BY PARSEDATETIME(a.time, 'yyyy-MM-dd HH:mm:ss') DESC")
+    List<ArduinoDataPoint> getArduinoDataPointOverDays(Long gardenId, LocalDateTime startDateRange, LocalDateTime endDataRange);
 }
