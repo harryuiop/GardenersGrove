@@ -64,7 +64,7 @@ public class GardenService {
      * @param id Arduino ID linked to the garden
      * @return Returns a garden OR null
      */
-    public Optional<Garden> getGardenByArduinoId(String id) {
+    public Garden getGardenByArduinoId(String id) {
         return gardenRepository.findByArduinoId(id);
     }
 
