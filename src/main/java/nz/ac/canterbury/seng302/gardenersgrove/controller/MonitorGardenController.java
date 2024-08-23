@@ -27,6 +27,7 @@ public class MonitorGardenController extends NavBar {
      *
      * @param gardenService A Garden database access object.
      * @param userService   A User database access object.
+     * @param arduinoDataPointService A arduinoDataPointService database access object.
      */
     @Autowired
     public MonitorGardenController(UserService userService, GardenService gardenService, ArduinoDataPointService arduinoDataPointService) {
@@ -40,6 +41,7 @@ public class MonitorGardenController extends NavBar {
      *
      * @param gardenId The id of the garden being viewed
      * @param model    Puts the data into the template to be viewed
+     *
      * @return Thymeleaf html template of the monitor garden page.
      */
     @GetMapping(MONITOR_GARDEN_URI_STRING)
