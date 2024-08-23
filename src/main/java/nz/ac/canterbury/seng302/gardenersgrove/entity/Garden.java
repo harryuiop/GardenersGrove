@@ -1,7 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
-import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class Garden {
     @Column
     private boolean verifiedDescription;
 
-    @Unique
+    @Column(unique = true)
     private String arduinoId = null;
 
     /**
