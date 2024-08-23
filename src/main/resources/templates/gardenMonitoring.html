@@ -56,15 +56,15 @@
                     <div class="row" id="temperature-graphs" data-units="c">
                         <div class="container">
                             <div class="row">
-                                <div class="col-lg-6 mt-3">
+                                <div class="col-lg-6 mt-3 col-sx-8">
                                     <h5 class="text-break text-center">Temperature Today</h5>
                                     <canvas id="temp-graph-day" th:attr="data-results=${averageDayTemp}"></canvas>
                                 </div>
-                                <div class="col-lg-6 mt-3">
+                                <div class="col-lg-6 mt-3 col-sx-8">
                                     <h5 class="text-break text-center">Temperature Last 30 Days</h5>
                                     <canvas id="temp-graph-month" th:attr="data-results=${averageMonthTemp}"></canvas>
                                 </div>
-                                <div class="col-lg-6 mt-3">
+                                <div class="col-lg-6 mt-3 col-sx-8">
                                     <h5 class="text-break text-center">Temperature Last 7 Days</h5>
                                     <canvas id="temp-graph-week" th:attr="data-results=${averageWeekTemp}"></canvas>
                                 </div>

@@ -211,6 +211,7 @@ function createGraph(data, graphId, sensorName, graphType) {
             type: 'line',
             data: dataObject,
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
                         scaleLabel: {
