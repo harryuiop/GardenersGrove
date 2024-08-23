@@ -1,17 +1,14 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MANAGE_FRIENDS_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_ALL_FRIENDS_GARDENS_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.VIEW_FRIENDS_PROFILE_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.newGardenUri;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.searchResultsUri;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewAllGardensUri;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewFriendsUri;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.ResponseStatuses.NoSuchFriendRequestException;
-
-import java.util.List;
-import java.util.Optional;
-
+import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendRequestException;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +18,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.FriendRequest;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.service.FriendRequestService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.Status;
+import java.util.List;
+import java.util.Optional;
+
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 /**
  * Controls the manage friends page which displays current friends and, incoming and outgoing friend requests.
