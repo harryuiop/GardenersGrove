@@ -47,6 +47,9 @@ public class Garden {
     @Column
     private boolean verifiedDescription;
 
+    @Column(unique = true)
+    private String arduinoId = null;
+
     /**
      * JPA required no-args constructor
      */
@@ -77,6 +80,9 @@ public class Garden {
         this.timeCreated = LocalDateTime.now();
     }
 
+    public void setArduinoId(String id) {
+        this.arduinoId = id;
+    }
 
     public void setName(String newName) {
         this.name = newName;
@@ -168,6 +174,7 @@ public class Garden {
                 ", tags=" + tags +
                 ", isGardenPublic=" + isGardenPublic +
                 ", verifiedDescription=" + verifiedDescription +
+                ", arduinoId=" + arduinoId +
                 '}';
     }
 }
