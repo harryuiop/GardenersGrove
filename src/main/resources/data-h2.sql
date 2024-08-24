@@ -111,11 +111,6 @@ UPDATE garden
 SET arduino_id = '127.0.0.2'
 WHERE id = 2;
 
-INSERT INTO arduino_data_point (garden_id, atmosphere_atm, humidity_percent, light_percent, moisture_percent,
-                                temp_celsius, time)
-VALUES (1, 1.001, 50, 50, 50, 20, NOW()),
-       (1, 1.01, 51, 51, 51, 21, NOW());
-
 INSERT INTO tag (name)
 VALUES ('first_tag'),
        ('second_tag'),
@@ -145,23 +140,12 @@ VALUES (1, 'First plant of Default User''s first Garden', 1, NULL, 'Plant One', 
        (10, 'Tenth plant of First User''s first Garden', 1, NULL, 'Plant Ten', NULL),
        (NULL, 'First plant of Second User''s first Garden', 2, NULL, 'Star Fruit', NULL);
 
-INSERT INTO arduino_data_point (ATMOSPHERE_ATM, HUMIDITY_PERCENT, LIGHT_PERCENT, MOISTURE_PERCENT, TEMP_CELSIUS, GARDEN_ID, ID, TIME)
-VALUES (1.0, 60.0, 90.0, 35.0, 20.0, 1, 2, '2024-01-02 11:20:00');
-
-INSERT INTO arduino_data_point (ATMOSPHERE_ATM, HUMIDITY_PERCENT, LIGHT_PERCENT, MOISTURE_PERCENT, TEMP_CELSIUS, GARDEN_ID, ID, TIME)
-VALUES (100.0, 50.0, 05.0, 30.0, 20.0, 1, 1, '2024-01-10 11:20:00');
-
-INSERT INTO arduino_data_point (ATMOSPHERE_ATM, HUMIDITY_PERCENT, LIGHT_PERCENT, MOISTURE_PERCENT, TEMP_CELSIUS, GARDEN_ID, ID, TIME)
-VALUES (1.0, 30.0, 80.0, 30.0, 20.0, 1, 3, '2024-01-03 11:20:00');
-
-INSERT INTO arduino_data_point (ATMOSPHERE_ATM, HUMIDITY_PERCENT, LIGHT_PERCENT, MOISTURE_PERCENT, TEMP_CELSIUS, GARDEN_ID, ID, TIME)
-VALUES (1.0, 10.0, 70.0, 40.0, 20.0, 1, 4, '2024-01-04 11:20:00');
-
-INSERT INTO arduino_data_point (ATMOSPHERE_ATM, HUMIDITY_PERCENT, LIGHT_PERCENT, MOISTURE_PERCENT, TEMP_CELSIUS, GARDEN_ID, ID, TIME)
-VALUES (1.0, 55.0, 20.0, 30.0, 20.0, 1, 5, '2024-01-05 11:20:00');
-
-INSERT INTO arduino_data_point (ATMOSPHERE_ATM, HUMIDITY_PERCENT, LIGHT_PERCENT, MOISTURE_PERCENT, TEMP_CELSIUS, GARDEN_ID, ID, TIME)
-VALUES (1.0, 59.0, 47.0, 70.0, 20.0, 1, 6, '2024-01-06 11:20:00');
-
-INSERT INTO arduino_data_point (ATMOSPHERE_ATM, HUMIDITY_PERCENT, LIGHT_PERCENT, MOISTURE_PERCENT, TEMP_CELSIUS, GARDEN_ID, ID, TIME)
-VALUES (1.0, 90.0, 43.0, 30.0, 20.0, 1, 7, '2024-01-07 11:20:00');
+INSERT INTO arduino_data_point (atmosphere_atm, humidity_percent, light_percent, moisture_percent, temp_celsius,
+                                garden_id, id, time)
+VALUES (1.0, 50.0, 05.0, 30.0, 20.0, 1, 1, '2024-01-10 11:20:00'),
+       (1.0, 60.0, 90.0, 35.0, 20.0, 1, 2, '2024-01-02 11:20:00'),
+       (1.0, 30.0, 80.0, 30.0, 20.0, 1, 3, '2024-01-03 11:20:00'),
+       (1.0, 10.0, 70.0, 40.0, 20.0, 1, 4, '2024-01-04 11:20:00'),
+       (1.0, 55.0, 20.0, 30.0, 20.0, 1, 5, '2024-01-05 11:20:00'),
+       (1.0, 59.0, 47.0, 70.0, 20.0, 1, 6, '2024-01-06 11:20:00'),
+       (1.0, 90.0, 43.0, 30.0, 20.0, 1, 7, '2024-01-07 11:20:00');
