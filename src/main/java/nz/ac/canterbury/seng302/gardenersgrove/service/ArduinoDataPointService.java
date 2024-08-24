@@ -31,7 +31,7 @@ public class ArduinoDataPointService {
      * @param garden The garden to the most recent sensor reading of.
      * @return The data reading.
      */
-    public ArduinoDataPoint lastPointFromGarden(Garden garden) {
+    public ArduinoDataPoint getMostRecentArduinoDataPoint(Garden garden) {
         return dataPointRepository.findFirstByGardenOrderByTime(garden);
     }
 }

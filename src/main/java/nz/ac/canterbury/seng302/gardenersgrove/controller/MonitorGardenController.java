@@ -27,23 +27,24 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_G
 public class MonitorGardenController extends NavBar {
     private final UserService userService;
     private final GardenService gardenService;
-    private final ArduinoDataPointService dataPointService;
+    private final ArduinoDataPointService arduinoDataPointService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
      *
      * @param gardenService A Garden database access object.
      * @param userService   A User database access object.
+     * @param arduinoDataPointService A arduinoDataPointService database access object.
      */
     @Autowired
     public MonitorGardenController(
             UserService userService,
             GardenService gardenService,
-            ArduinoDataPointService dataPointService
+            ArduinoDataPointService arduinoDataPointService
     ) {
         this.userService = userService;
         this.gardenService = gardenService;
-        this.dataPointService = dataPointService;
+        this.arduinoDataPointService = arduinoDataPointService;
     }
 
     /**
@@ -51,6 +52,7 @@ public class MonitorGardenController extends NavBar {
      *
      * @param gardenId The id of the garden being viewed
      * @param model    Puts the data into the template to be viewed
+     *
      * @return Thymeleaf html template of the monitor garden page.
      */
     @GetMapping(MONITOR_GARDEN_URI_STRING)
@@ -77,7 +79,7 @@ public class MonitorGardenController extends NavBar {
         if (garden.getArduinoId() == null) {
             deviceStatus = "NOT_LINKED";
         } else {
-            lastDataPoint = dataPointService.lastPointFromGarden(garden);
+            lastDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
             if (lastDataPoint == null) {
                 deviceStatus = "NO_DATA";
             } else {
@@ -90,6 +92,7 @@ public class MonitorGardenController extends NavBar {
             }
         }
 
+        model.addAttribute("gardenStats", arduinoDataPointService.getMostRecentArduinoDataPoint(garden));
         model.addAttribute("garden", garden);
         model.addAttribute("owner", garden.getOwner() == currentUser);
         model.addAttribute("deviceStatus", deviceStatus);
