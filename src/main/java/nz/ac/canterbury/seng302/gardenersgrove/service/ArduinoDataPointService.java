@@ -16,6 +16,10 @@ public class ArduinoDataPointService {
 
     private final ArduinoDataPointRepository dataPointRepository;
 
+    private static final int HOURS_IN_BLOCK = 6;
+    private static final int HOURS_IN_DAY = 24;
+
+
     @Autowired
     public ArduinoDataPointService(ArduinoDataPointRepository dataPointRepository) {
         this.dataPointRepository = dataPointRepository;
@@ -69,11 +73,10 @@ public class ArduinoDataPointService {
 
         for (int i = 0; i < arduinoDataPoints.size(); i++) {
             ArduinoDataPoint arduinoDataPoint = arduinoDataPoints.get(i);
-            int readingHour = arduinoDataPoint.getTime().getHour();
 
             if (i > 0) previousPoint = arduinoDataPoints.get(i - 1);
 
-            if (changeBlock(readingHour, previousPoint.getTime().getHour())) {
+            if (changeQuarterDayBlock(arduinoDataPoint.getTime(), previousPoint.getTime())) {
                 blocks.add(currentBlock);
                 currentBlock.clear();
             }
@@ -100,12 +103,14 @@ public class ArduinoDataPointService {
     }
 
     /**
-     * Given a list of data points returns the average of each colum in the data point
+     * Given a list of data points returns the average results for each sensor value in order:
+     * temperature, humidity, atmosphere, light, moisture
      *
      * @param arduinoDataPoints A list of data points to average.
-     * @return A list of average values.
+     * @return A list of size 5 containing average values for each sensor in order:
+     * temperature, humidity, atmosphere, light, moisture
      */
-    private List<Double> getAverageForBlock(List<ArduinoDataPoint> arduinoDataPoints) {
+    public static List<Double> getAverageForBlock(List<ArduinoDataPoint> arduinoDataPoints) {
         int dataSize = arduinoDataPoints.size();
         if (dataSize == 0) {
             return new ArrayList<>(Arrays.asList(null, null, null, null, null));
@@ -114,29 +119,39 @@ public class ArduinoDataPointService {
         double tempSum = 0.0, moistureSum = 0.0, atmosphereSum = 0.0, lightSum = 0.0, humiditySum = 0.0;
         for (ArduinoDataPoint arduinoDataPoint : arduinoDataPoints) {
             tempSum += arduinoDataPoint.getTempCelsius();
-            moistureSum += arduinoDataPoint.getMoisturePercent();
+            humiditySum += arduinoDataPoint.getHumidityPercent();
             atmosphereSum += arduinoDataPoint.getAtmosphereAtm();
             lightSum += arduinoDataPoint.getLightPercent();
-            humiditySum += arduinoDataPoint.getHumidityPercent();
+            moistureSum += arduinoDataPoint.getMoisturePercent();
         }
         return new ArrayList<>(Arrays.asList(
                 tempSum / dataSize,
-                moistureSum / dataSize,
+                humiditySum / dataSize,
                 atmosphereSum / dataSize,
                 lightSum / dataSize,
-                humiditySum / dataSize
+                moistureSum / dataSize
         ));
     }
 
     /**
-     * Given the hour when the current point was recorded and the hour recorded of the previous point if a new block
-     * needs create (0-5, 6-11. 12-17, 18-23) return true
+     * Check if the change in times are in a new quarter day block
+     * This is for checking how distribute data over each quarter of a day.
      *
-     * @param currentHour  The hour the current point was recorded
-     * @param previousHour The hour the previous point was recorded
-     * @return Whether a new block has been reached or not
+     * @param currentDate  The date tested against
+     * @param previousDate Previous date in
+     * @return Whether a new block has been reached or not and the previous date
+     * is not more than the current data
      */
-    private boolean changeBlock(int currentHour, int previousHour) {
-        return currentHour % 6 == 0 && Math.abs(currentHour - (previousHour % 22)) == 1;
+    public static boolean changeQuarterDayBlock(LocalDateTime currentDate, LocalDateTime previousDate) {
+        if (currentDate.isBefore(previousDate)) return false;
+        if (currentDate.getDayOfYear() != previousDate.getDayOfYear()) return true;
+
+        // Check hours in a different block
+        for (int threshold = HOURS_IN_BLOCK - 1; threshold < HOURS_IN_DAY; threshold += HOURS_IN_BLOCK) {
+            if (previousDate.getHour() <= threshold) {
+                return currentDate.getHour() > threshold;
+            }
+        }
+        return false;
     }
 }
