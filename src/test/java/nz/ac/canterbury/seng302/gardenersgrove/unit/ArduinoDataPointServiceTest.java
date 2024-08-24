@@ -4,21 +4,32 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 class ArduinoDataPointServiceTest {
+
+    private static Garden garden;
+
+    @BeforeAll
+    static void setUp() {
+        garden = new Garden(
+                new User("", "", "", "", ""),
+                "", "",
+                new Location("", ""),
+                1f, true);
+    }
 
     @ParameterizedTest
     @CsvSource({
@@ -35,7 +46,7 @@ class ArduinoDataPointServiceTest {
         LocalDateTime currentDateTime = LocalDateTime.parse(currentDateTimeStr, formatter);
         LocalDateTime previousDateTime = LocalDateTime.parse(previousDateTimeStr, formatter);
 
-        boolean result = ArduinoDataPointService.changeQuarterDayBlock(currentDateTime, previousDateTime);
+        boolean result = ArduinoGraphResults.changeQuarterDayBlock(currentDateTime, previousDateTime);
 
         Assertions.assertTrue(result);
     }
@@ -53,64 +64,79 @@ class ArduinoDataPointServiceTest {
         LocalDateTime currentDateTime = LocalDateTime.parse(currentDateTimeStr, formatter);
         LocalDateTime previousDateTime = LocalDateTime.parse(previousDateTimeStr, formatter);
 
-        boolean result = ArduinoDataPointService.changeQuarterDayBlock(currentDateTime, previousDateTime);
+        boolean result = ArduinoGraphResults.changeQuarterDayBlock(currentDateTime, previousDateTime);
 
         Assertions.assertFalse(result);
     }
 
-    @ParameterizedTest
-    @MethodSource("provideTestCases")
-    void testGetAverageForBlock(List<ArduinoDataPoint> input, List<Double> expected) {
-        List<Double> actual = ArduinoDataPointService.getAverageForBlock(input);
-        Assertions.assertEquals(expected.size(), actual.size());
-        for (int i = 0; i < actual.size(); i++) {
-            if (expected.get(i) == null) {
-                Assertions.assertNull(actual.get(i));
-            } else {
-                Assertions.assertEquals(expected.get(i), actual.get(i), 0.01);
-            }
-        }
+    @Test
+    void testGetAverageForBlock_allNull() {
+        ArduinoDataBlock actual = ArduinoGraphResults.getAverageForBlock(new ArrayList<>());
+
+        Assertions.assertNull(actual.getTemperatureCelsiusAvg());
+        Assertions.assertNull(actual.getHumidityPercentageAvg());
+        Assertions.assertNull(actual.getAtmosphereAtmAvg());
+        Assertions.assertNull(actual.getLightLevelPercentageAvg());
+        Assertions.assertNull(actual.getMoisturePercentageAvg());
     }
 
-    // MethodSource providing test cases
-    private static Stream<Arguments> provideTestCases() {
-        Garden garden = new Garden(
-                new User("", "", "", "", ""),
-                "", "",
-                new Location("", ""),
-                1f, true);
-        return Stream.of(
-                // Test case 1: Empty list
-                org.junit.jupiter.params.provider.Arguments.of(
-                        new ArrayList<ArduinoDataPoint>(),
-                        Arrays.asList(null, null, null, null, null)
-                ),
-                // Same Readings
-                org.junit.jupiter.params.provider.Arguments.of(
-                        Arrays.asList(
-                                new ArduinoDataPoint(garden, LocalDateTime.now(), 30d, 40d, 0.9d, 60d, 70d),
-                                new ArduinoDataPoint(garden, LocalDateTime.now(), 30d, 40d, 0.9d, 60d, 70d)
-                        ),
-                        Arrays.asList(30d, 40d, 0.9d, 60d, 70d)
-                ),
-                // Different Readings
-                org.junit.jupiter.params.provider.Arguments.of(
-                        Arrays.asList(
-                                new ArduinoDataPoint(garden, LocalDateTime.now(), 30d, 40d, 1.1d, 60d, 80d),
-                                new ArduinoDataPoint(garden, LocalDateTime.now(), 10d, 20d, 0.9d, 20d, 20d)
-                                ),
-                        Arrays.asList(20d, 30d, 1.0d, 40d, 50d)
-                ),
-                // Mix of Null Values included
-                org.junit.jupiter.params.provider.Arguments.of(
-                        Arrays.asList(
-                                new ArduinoDataPoint(garden, LocalDateTime.now(), null, null, null, 30d, 20d),
-                                new ArduinoDataPoint(garden, LocalDateTime.now(), 10d, null, 0.9d, 20d, 20d),
-                                new ArduinoDataPoint(garden, LocalDateTime.now(), 20d, null, 0.9d, 10d, 20d)
-                        ),
-                        Arrays.asList(15d, null, 0.9d, 20d, 20d)
-                )
+    @Test
+    void testGetAverageForBlock_sameReadings() {
+        List<ArduinoDataPoint> arduinoDataPointsInput = Arrays.asList(
+                new ArduinoDataPoint(garden, LocalDateTime.now(), 30d, 40d, 0.9d, 60d, 70d),
+                new ArduinoDataPoint(garden, LocalDateTime.now(), 30d, 40d, 0.9d, 60d, 70d)
         );
+        ArduinoDataBlock expected = new ArduinoDataBlock(LocalDateTime.now(), LocalDateTime.now(),
+                30d, 40d, 0.9d,
+                60d, 70d);
+
+        ArduinoDataBlock actual = ArduinoGraphResults.getAverageForBlock(arduinoDataPointsInput);
+
+        Assertions.assertEquals(expected.getTemperatureCelsiusAvg(), actual.getTemperatureCelsiusAvg(), 0.0001);
+        Assertions.assertEquals(expected.getHumidityPercentageAvg(), actual.getHumidityPercentageAvg(), 0.0001);
+        Assertions.assertEquals(expected.getAtmosphereAtmAvg(), actual.getAtmosphereAtmAvg(), 0.0001);
+        Assertions.assertEquals(expected.getLightLevelPercentageAvg(), actual.getLightLevelPercentageAvg(), 0.0001);
+        Assertions.assertEquals(expected.getMoisturePercentageAvg(), actual.getMoisturePercentageAvg(), 0.0001);
+    }
+
+    @Test
+    void testGetAverageForBlock_differentReadings() {
+        List<ArduinoDataPoint> arduinoDataPointsInput = Arrays.asList(
+                new ArduinoDataPoint(garden, LocalDateTime.now(), 30d, 40d, 1.1d, 60d, 80d),
+                new ArduinoDataPoint(garden, LocalDateTime.now(), 10d, 20d, 0.9d, 20d, 20d)
+        );
+        ArduinoDataBlock expected = new ArduinoDataBlock(LocalDateTime.now(), LocalDateTime.now(),
+                20d, 30d, 1.0d, 40d,
+                50d);
+
+        ArduinoDataBlock actual = ArduinoGraphResults.getAverageForBlock(arduinoDataPointsInput);
+
+        Assertions.assertEquals(expected.getTemperatureCelsiusAvg(), actual.getTemperatureCelsiusAvg(), 0.0001);
+        Assertions.assertEquals(expected.getHumidityPercentageAvg(), actual.getHumidityPercentageAvg(), 0.0001);
+        Assertions.assertEquals(expected.getAtmosphereAtmAvg(), actual.getAtmosphereAtmAvg(), 0.0001);
+        Assertions.assertEquals(expected.getLightLevelPercentageAvg(), actual.getLightLevelPercentageAvg(), 0.0001);
+        Assertions.assertEquals(expected.getMoisturePercentageAvg(), actual.getMoisturePercentageAvg(), 0.0001);
+    }
+
+    @Test
+    void testGetAverageForBlock_mixedNullValues() {
+        List<ArduinoDataPoint> arduinoDataPointsInput = Arrays.asList(
+                new ArduinoDataPoint(garden, LocalDateTime.now(), null, null, null, 30d, 20d),
+                new ArduinoDataPoint(garden, LocalDateTime.now(), 10d, null, 0.9d, 20d, 20d),
+                new ArduinoDataPoint(garden, LocalDateTime.now(), 20d, null, 0.9d, 10d, 20d)
+        );
+        ArduinoDataBlock expected = new ArduinoDataBlock(LocalDateTime.now(), LocalDateTime.now()
+                ,15d, null, 0.9d,
+                20d, 20d);
+
+
+        ArduinoDataBlock actual = ArduinoGraphResults.getAverageForBlock(arduinoDataPointsInput);
+
+        Assertions.assertEquals(expected.getTemperatureCelsiusAvg(), actual.getTemperatureCelsiusAvg(), 0.0001);
+        Assertions.assertNull(actual.getHumidityPercentageAvg());
+        Assertions.assertEquals(expected.getAtmosphereAtmAvg(), actual.getAtmosphereAtmAvg(), 0.0001);
+        Assertions.assertEquals(expected.getLightLevelPercentageAvg(), actual.getLightLevelPercentageAvg(), 0.0001);
+        Assertions.assertEquals(expected.getMoisturePercentageAvg(), actual.getMoisturePercentageAvg(), 0.0001);
     }
 
 }
