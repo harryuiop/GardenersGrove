@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
  * This is used to plot a point on a graph.
  */
 public class ArduinoDataBlock {
-    private final LocalDateTime startTime;
     private final LocalDateTime endTime;
     private final Double temperatureCelsiusAvg;
     private final Double humidityPercentageAvg;
@@ -27,7 +26,6 @@ public class ArduinoDataBlock {
     public ArduinoDataBlock(LocalDateTime startTime, LocalDateTime endTime, Double temperatureCelsiusAvg,
                             Double humidityPercentageAvg, Double atmosphereAtmAvg,
                             Double lightLevelPercentageAvg, Double moisturePercentageAvg) {
-        this.startTime = startTime;
         this.endTime = endTime;
         this.temperatureCelsiusAvg = temperatureCelsiusAvg;
         this.humidityPercentageAvg = humidityPercentageAvg;
@@ -40,17 +38,12 @@ public class ArduinoDataBlock {
      * Null constructor, ie: no data in block.
      */
     public ArduinoDataBlock() {
-        this.startTime = null;
         this.endTime = null;
         this.temperatureCelsiusAvg = null;
         this.humidityPercentageAvg = null;
         this.atmosphereAtmAvg = null;
         this.lightLevelPercentageAvg = null;
         this.moisturePercentageAvg = null;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
     }
 
     public LocalDateTime getEndTime() {

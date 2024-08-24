@@ -6,7 +6,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class ArduinoDataPointServiceTest {
+class ArduinoGraphResultsUnitTest {
 
     private static Garden garden;
 
@@ -70,7 +70,7 @@ class ArduinoDataPointServiceTest {
     }
 
     @Test
-    void testGetAverageForBlock_allNull() {
+    public void testGetAverageForBlock_allNull() {
         ArduinoDataBlock actual = ArduinoGraphResults.getAverageForBlock(new ArrayList<>());
 
         Assertions.assertNull(actual.getTemperatureCelsiusAvg());
@@ -139,4 +139,33 @@ class ArduinoDataPointServiceTest {
         Assertions.assertEquals(expected.getMoisturePercentageAvg(), actual.getMoisturePercentageAvg(), 0.0001);
     }
 
+    @Test
+    void testAverageDataPointsOverWeek_allPointsIncluded() {
+        // Set Up, add data points every 30 minutes for a month
+        List<ArduinoDataPoint> arduinoDataPointsInput = new ArrayList<>();
+        LocalDateTime startTime = LocalDateTime.of(2024, 8, 17, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2024, 8, 24, 14, 30);
+        LocalDateTime currentTime = startTime;
+
+        while (currentTime.isBefore(endTime)) {
+            arduinoDataPointsInput.add(new ArduinoDataPoint(
+                    garden,
+                    currentTime,
+                    30d,
+                    40d,
+                    0.9d,
+                    60d,
+                    70d
+            ));
+            currentTime = currentTime.plusMinutes(30);
+        }
+
+//        List<ArduinoDataBlock> actual = new ArduinoGraphResults(arduinoDataPointsInput).averageDataPointsOverWeek();
+//        Assertions.assertEquals(30, actual.size());
+//        Assertions.assertEquals(30, actual.get(0).getTemperatureCelsiusAvg(), 0.0001);
+//        for (ArduinoDataBlock arduinoDataBlock: actual) {
+//            System.out.println(arduinoDataBlock.getStartTime() + " " + arduinoDataBlock.getEndTime());
+//        }
+//        //Assertions.fail();
+    }
 }

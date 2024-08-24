@@ -96,13 +96,13 @@ public class TemperatureMonitoringFeature {
 
     @When("I choose to see a graph of the temperature in Degree Celsius over the last {int} days")
     public void iChooseToSeeAGraphOfTheTemperatureInDegreeCelsiusOverTheLastDays(int days) {
-        arduinoDataPoints = arduinoDataPointService.getDataPointsOverDays(gardenId, days);
+//        arduinoDataPoints = arduinoDataPointService.getDataPointsOverDays(gardenId, days);
     }
 
     @Then("I see a a display of results for the average temperature for the night, morning, afternoon, and evening of each day.")
     public void iSeeAADisplayOfResultsForTheAverageTemperatureForTheNightMorningAfternoonOfEachDay() {
         // Average 7 days function on arduinoPoints
-        List<ArduinoDataBlock> averagedDataPointsOverWeek = new ArduinoGraphResults(arduinoDataPoints).averageDataPointsOverWeek();
+//        List<ArduinoDataBlock> averagedDataPointsOverWeek = new ArduinoGraphResults(arduinoDataPoints).averageDataPointsOverWeek();
 //        List<Double> temperatureDataOverWeek = averagedDataPointsOverWeek.get(0);
 //        Assertions.assertTrue(28 <= temperatureDataOverWeek.size() && temperatureDataOverWeek.size() <= 32);
 //        Assertions.assertEquals(20, temperatureDataOverWeek.get(0));

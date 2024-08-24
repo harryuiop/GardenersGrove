@@ -2,13 +2,12 @@ package nz.ac.canterbury.seng302.gardenersgrove.service;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -48,7 +47,51 @@ public class ArduinoDataPointService {
      * @param days     The number of days worth of data I want
      * @return The data points for the garden after the given day
      */
-    public List<ArduinoDataPoint> getDataPointsOverDays(Long gardenId, int days) {
+    private List<ArduinoDataPoint> getDataPointsOverDays(Long gardenId, int days) {
         return dataPointRepository.getArduinoDataPointOverDays(gardenId, LocalDateTime.now().minusDays(days).toLocalDate().atTime(0, 0, 0), LocalDateTime.now());
     }
+
+    /**
+     * Retrieve results to send to graph for a week view
+     * @param gardenId The garden I want the data points from
+     * @param accessTime DateTime results are requested
+     * @return Results formatted to be in graph
+     */
+    public List<List<Double>> getWeekGraphData(Long gardenId, LocalDateTime accessTime) {
+        int daysInWeek = 7;
+        List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInWeek);
+        List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
+                .averageDataIntoBlocks(ArduinoGraphResults::changeQuarterDayBlock);
+        return ArduinoGraphResults.formatResultsForWeek(arduinoDataBlocks, accessTime);
+    }
+
+    /**
+     * Retrieve results to send to graph for a day view
+     *
+     * @param gardenId The garden I want the data points from
+     * @param accessTime DateTime results are requested
+     * @return Results formatted to be in graph
+     */
+    public List<List<Double>> getDayGraphData(Long gardenId, LocalDateTime accessTime) {
+        List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, 0);
+        List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
+                .averageDataIntoBlocks(ArduinoGraphResults::changeHalfHourBlock);
+        return ArduinoGraphResults.formatResultsForDay(arduinoDataBlocks, accessTime);
+    }
+
+    /**
+     * Retrieve results to send to graph for a month view
+     *
+     * @param gardenId The garden I want the data points from
+     * @param accessTime DateTime results are requested
+     * @return Results formatted to be in graph
+     */
+    public List<List<Double>> getMonthGraphData(Long gardenId, LocalDateTime accessTime) {
+        int daysInMonth = 30;
+        List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInMonth);
+        List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
+                .averageDataIntoBlocks(ArduinoGraphResults::changeDayBlock);
+        return ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocks, accessTime);
+    }
+
 }
