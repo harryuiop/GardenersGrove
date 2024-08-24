@@ -39,7 +39,7 @@
     </div>
 
     <div class="row">
-        <div class="col bg-white rounded m-4 p-3 shadow-sm">
+        <div th:if="${gardenStats} != null" class="col bg-white rounded m-4 p-3 shadow-sm">
             <div class="d-flex justify-content-between flex-column flex-md-row">
                 <div class="container w-100 text-center align-content-center">
                     <button onclick="makeActive('Temperature')" id="Temperature" class="btn btn-stats-bar-active btn-no-bold m-0 lead"><i class="bi bi-thermometer-half"></i> <span th:text="'Temperature: '+ ${gardenStats.getTempCelsius()} +'°C'"></span></button>
