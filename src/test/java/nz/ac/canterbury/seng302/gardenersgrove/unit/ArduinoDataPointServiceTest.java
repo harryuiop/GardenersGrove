@@ -100,9 +100,16 @@ class ArduinoDataPointServiceTest {
                                 new ArduinoDataPoint(garden, LocalDateTime.now(), 10d, 20d, 0.9d, 20d, 20d)
                                 ),
                         Arrays.asList(20d, 30d, 1.0d, 40d, 50d)
-                )
+                ),
                 // Mix of Null Values included
-                // TODO
+                org.junit.jupiter.params.provider.Arguments.of(
+                        Arrays.asList(
+                                new ArduinoDataPoint(garden, LocalDateTime.now(), null, null, null, 30d, 20d),
+                                new ArduinoDataPoint(garden, LocalDateTime.now(), 10d, null, 0.9d, 20d, 20d),
+                                new ArduinoDataPoint(garden, LocalDateTime.now(), 20d, null, 0.9d, 10d, 20d)
+                        ),
+                        Arrays.asList(15d, null, 0.9d, 20d, 20d)
+                )
         );
     }
 

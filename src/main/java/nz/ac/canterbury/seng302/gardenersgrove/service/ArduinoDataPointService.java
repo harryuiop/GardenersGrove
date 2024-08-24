@@ -112,24 +112,39 @@ public class ArduinoDataPointService {
      */
     public static List<Double> getAverageForBlock(List<ArduinoDataPoint> arduinoDataPoints) {
         int dataSize = arduinoDataPoints.size();
-        if (dataSize == 0) {
-            return new ArrayList<>(Arrays.asList(null, null, null, null, null));
-        }
+        if (dataSize == 0) return new ArrayList<>(Arrays.asList(null, null, null, null, null));
 
         double tempSum = 0.0, moistureSum = 0.0, atmosphereSum = 0.0, lightSum = 0.0, humiditySum = 0.0;
+        int tempCount = 0, moistureCount = 0, atmosphereCount = 0, lightCount = 0, humidityCount = 0;
         for (ArduinoDataPoint arduinoDataPoint : arduinoDataPoints) {
-            tempSum += arduinoDataPoint.getTempCelsius();
-            humiditySum += arduinoDataPoint.getHumidityPercent();
-            atmosphereSum += arduinoDataPoint.getAtmosphereAtm();
-            lightSum += arduinoDataPoint.getLightPercent();
-            moistureSum += arduinoDataPoint.getMoisturePercent();
+            if (arduinoDataPoint.getTempCelsius() != null) {
+                tempSum += arduinoDataPoint.getTempCelsius();
+                tempCount += 1;
+            }
+            if (arduinoDataPoint.getHumidityPercent() != null) {
+                humiditySum += arduinoDataPoint.getHumidityPercent();
+                humidityCount += 1;
+            }
+            if (arduinoDataPoint.getAtmosphereAtm() != null) {
+                atmosphereSum += arduinoDataPoint.getAtmosphereAtm();
+                atmosphereCount += 1;
+            }
+            if (arduinoDataPoint.getLightPercent() != null) {
+                lightSum += arduinoDataPoint.getLightPercent();
+                lightCount += 1;
+            }
+            if (arduinoDataPoint.getMoisturePercent() != null) {
+                moistureSum += arduinoDataPoint.getMoisturePercent();
+                moistureCount += 1;
+            }
         }
+
         return new ArrayList<>(Arrays.asList(
-                tempSum / dataSize,
-                humiditySum / dataSize,
-                atmosphereSum / dataSize,
-                lightSum / dataSize,
-                moistureSum / dataSize
+                tempCount > 0 ? tempSum / tempCount : null,
+                humidityCount > 0 ? humiditySum / humidityCount : null,
+                atmosphereCount > 0 ? atmosphereSum / atmosphereCount : null,
+                lightCount > 0 ? lightSum / lightCount : null,
+                moistureCount > 0 ? moistureSum / moistureCount : null
         ));
     }
 
