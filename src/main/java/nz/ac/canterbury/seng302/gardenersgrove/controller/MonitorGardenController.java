@@ -69,14 +69,31 @@ public class MonitorGardenController extends NavBar {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
-        ArduinoDataPoint lastDataPoint = dataPointService.lastPointFromGarden(garden);
-        Long minutesSinceLastReading = lastDataPoint == null ? null
-                : Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs().toMinutes();
+
+        String deviceStatus;
+        ArduinoDataPoint lastDataPoint;
+        Long timeSinceLastReading = null;
+
+        if (garden.getArduinoId() == null) {
+            deviceStatus = "NOT_LINKED";
+        } else {
+            lastDataPoint = dataPointService.lastPointFromGarden(garden);
+            if (lastDataPoint == null) {
+                deviceStatus = "NO_DATA";
+            } else {
+                timeSinceLastReading = Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs().toMinutes();
+                if (timeSinceLastReading <= 5) {
+                    deviceStatus = "UP_TO_DATE";
+                } else {
+                    deviceStatus = "OUT_OF_DATE";
+                }
+            }
+        }
 
         model.addAttribute("garden", garden);
         model.addAttribute("owner", garden.getOwner() == currentUser);
-        model.addAttribute("connected", garden.getArduinoId() != null);
-        model.addAttribute("timeSinceLastReading", minutesSinceLastReading);
+        model.addAttribute("deviceStatus", deviceStatus);
+        model.addAttribute("timeSinceLastReading", timeSinceLastReading);
         return "gardenMonitoring";
     }
 
