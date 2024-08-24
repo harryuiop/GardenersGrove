@@ -35,6 +35,7 @@ class ArduinoGraphResultsUnitTest {
     @CsvSource({
             "2024-08-23T10:30, 2024-08-22T10:30", // Different day same time
             "2024-08-23T10:30, 2024-08-19T10:30", // Different day same time
+            "2024-01-01T10:30, 2023-01-01T10:30",
             "2024-08-23T06:00, 2024-08-23T05:59",
             "2024-08-23T12:01, 2024-08-23T05:01",
             "2024-08-23T12:01, 2024-08-23T06:01",
@@ -53,8 +54,6 @@ class ArduinoGraphResultsUnitTest {
 
     @ParameterizedTest
     @CsvSource({
-            "2024-08-23T10:30, 2024-08-23T10:31", // Future
-            "2024-08-23T10:30, 2024-08-25T09:31", // Future
             "2024-08-23T06:13, 2024-08-23T06:00",
             "2024-08-23T07:00, 2024-08-23T06:00",
             "2024-08-23T17:00, 2024-08-23T15:01"
@@ -68,6 +67,78 @@ class ArduinoGraphResultsUnitTest {
 
         Assertions.assertFalse(result);
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "2024-01-01T00:00, 2023-01-01T00:00",
+            "2024-08-23T10:30, 2024-08-22T10:31",
+            "2024-08-23T10:30, 2023-08-23T10:30",
+            "2024-08-23T06:13, 2024-05-23T06:00",
+            "2024-08-23T00:00, 2024-08-22T23:59"
+    })
+    void changeDayBlock_returnTrue(String currentDateTimeStr, String previousDateTimeStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime currentDateTime = LocalDateTime.parse(currentDateTimeStr, formatter);
+        LocalDateTime previousDateTime = LocalDateTime.parse(previousDateTimeStr, formatter);
+
+        boolean result = ArduinoGraphResults.changeDayBlock(currentDateTime, previousDateTime);
+
+        Assertions.assertTrue(result);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "2024-01-01T00:00, 2024-01-01T00:00",
+            "2024-08-23T06:13, 2024-08-23T06:00",
+            "2024-08-23T23:59, 2024-08-23T00:00"
+    })
+    void changeDayBlock_returnFalse(String currentDateTimeStr, String previousDateTimeStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime currentDateTime = LocalDateTime.parse(currentDateTimeStr, formatter);
+        LocalDateTime previousDateTime = LocalDateTime.parse(previousDateTimeStr, formatter);
+
+        boolean result = ArduinoGraphResults.changeDayBlock(currentDateTime, previousDateTime);
+
+        Assertions.assertFalse(result);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "2024-01-02T00:00, 2023-01-01T23:59",
+            "2024-01-02T00:30, 2024-01-02T00:00",
+            "2024-08-23T10:30, 2024-08-23T10:29",
+            "2024-01-01T10:30, 2023-01-01T10:30",
+            "2024-08-23T10:30, 2023-08-23T09:30",
+            "2024-08-23T06:00, 2024-05-23T05:59",
+            "2024-08-23T00:45, 2024-08-23T00:27"
+    })
+    void changeHalfHourBlock_returnTrue(String currentDateTimeStr, String previousDateTimeStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime currentDateTime = LocalDateTime.parse(currentDateTimeStr, formatter);
+        LocalDateTime previousDateTime = LocalDateTime.parse(previousDateTimeStr, formatter);
+
+        boolean result = ArduinoGraphResults.changeHalfHourBlock(currentDateTime, previousDateTime);
+
+        Assertions.assertTrue(result);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "2024-01-02T00:29, 2024-01-02T00:00",
+            "2024-01-02T00:15, 2024-01-02T00:11",
+            "2024-01-02T05:59, 2024-01-02T05:30",
+            "2024-01-02T05:39, 2024-01-02T05:34",
+    })
+    void changeHalfHourBlock_returnFalse(String currentDateTimeStr, String previousDateTimeStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime currentDateTime = LocalDateTime.parse(currentDateTimeStr, formatter);
+        LocalDateTime previousDateTime = LocalDateTime.parse(previousDateTimeStr, formatter);
+
+        boolean result = ArduinoGraphResults.changeHalfHourBlock(currentDateTime, previousDateTime);
+
+        Assertions.assertFalse(result);
+    }
+
 
     @Test
     public void testGetAverageForBlock_allNull() {

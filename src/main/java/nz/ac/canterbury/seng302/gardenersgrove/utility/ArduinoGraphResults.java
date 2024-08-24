@@ -62,6 +62,7 @@ public class ArduinoGraphResults {
 
     /**
      * Create a data block of sensor averages given all readings in that block.
+     * Current Date must be after previous date.
      *
      * @param pointsInBlock All arduino points within block
      * @return Block which contain averages for each sensor and time period.
@@ -109,13 +110,14 @@ public class ArduinoGraphResults {
     /**
      * Check if the change in times are in a new quarter day block
      * This is for checking how distribute data over each quarter of a day.
+     * Current Date must be after previous date.
      *
      * @param currentDate  The date tested against
      * @param previousDate Previous date in
      * @return Whether a new block has been reached
      */
     public static boolean changeQuarterDayBlock(LocalDateTime currentDate, LocalDateTime previousDate) {
-        if (currentDate.getDayOfYear() != previousDate.getDayOfYear()) return true;
+        if (changeDayBlock(currentDate, previousDate)) return true;
 
         // Check hours in a different block
         for (int threshold = HOURS_IN_BLOCK - 1; threshold < HOURS_IN_DAY; threshold += HOURS_IN_BLOCK) {
@@ -128,13 +130,15 @@ public class ArduinoGraphResults {
 
     /**
      * Check if the change in times are a different day.
+     * Current Date must be after previous date.
      *
      * @param currentDate  The date tested against
      * @param previousDate Previous date in
      * @return Whether a new block has been reached
      */
     public static boolean changeDayBlock(LocalDateTime currentDate, LocalDateTime previousDate) {
-        return currentDate.getDayOfYear() != previousDate.getDayOfYear();
+        return currentDate.getDayOfYear() != previousDate.getDayOfYear() ||
+                currentDate.getYear() != previousDate.getYear();
     }
 
     /**
@@ -146,7 +150,7 @@ public class ArduinoGraphResults {
      */
     public static boolean changeHalfHourBlock(LocalDateTime currentDate, LocalDateTime previousDate) {
         if (currentDate.getHour() != previousDate.getHour()
-                || currentDate.getDayOfYear() != previousDate.getDayOfYear()) return true;
+                || changeDayBlock(currentDate, previousDate)) return true;
 
         int currentDateMinutes = currentDate.getMinute();
         int previousDateMinutes = previousDate.getMinute();
