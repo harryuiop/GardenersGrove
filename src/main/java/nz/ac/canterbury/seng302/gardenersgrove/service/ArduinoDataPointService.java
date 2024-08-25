@@ -45,10 +45,12 @@ public class ArduinoDataPointService {
      *
      * @param gardenId The garden I want the data points from
      * @param days     The number of days worth of data I want
+     * @param accessTime Time data is accessed.
      * @return The data points for the garden after the given day
      */
-    private List<ArduinoDataPoint> getDataPointsOverDays(Long gardenId, int days) {
-        return dataPointRepository.getArduinoDataPointOverDays(gardenId, LocalDateTime.now().minusDays(days).toLocalDate().atTime(0, 0, 0), LocalDateTime.now());
+    private List<ArduinoDataPoint> getDataPointsOverDays(Long gardenId, int days, LocalDateTime accessTime) {
+        return dataPointRepository.getArduinoDataPointOverDays(gardenId,
+                accessTime.minusDays(days).toLocalDate().atTime(0, 0, 0), accessTime);
     }
 
     /**
@@ -59,7 +61,7 @@ public class ArduinoDataPointService {
      */
     public List<List<Double>> getWeekGraphData(Long gardenId, LocalDateTime accessTime) {
         int daysInWeek = 7;
-        List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInWeek);
+        List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInWeek, accessTime);
         List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
                 .averageDataIntoBlocks(ArduinoGraphResults::changeQuarterDayBlock);
         return ArduinoGraphResults.formatResultsForWeek(arduinoDataBlocks, accessTime);
@@ -73,7 +75,8 @@ public class ArduinoDataPointService {
      * @return Results formatted to be in graph
      */
     public List<List<Double>> getDayGraphData(Long gardenId, LocalDateTime accessTime) {
-        List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, 0);
+        List<ArduinoDataPoint> arduinoDataPoints = dataPointRepository.getArduinoDataPointOverDays(gardenId,
+                accessTime.minusDays(1), accessTime);
         List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
                 .averageDataIntoBlocks(ArduinoGraphResults::changeHalfHourBlock);
         return ArduinoGraphResults.formatResultsForDay(arduinoDataBlocks, accessTime);
@@ -88,7 +91,7 @@ public class ArduinoDataPointService {
      */
     public List<List<Double>> getMonthGraphData(Long gardenId, LocalDateTime accessTime) {
         int daysInMonth = 30;
-        List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInMonth);
+        List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInMonth, accessTime);
         List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
                 .averageDataIntoBlocks(ArduinoGraphResults::changeDayBlock);
         return ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocks, accessTime);

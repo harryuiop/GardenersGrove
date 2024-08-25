@@ -44,6 +44,8 @@ public class ArduinoGraphResults {
         List<List<ArduinoDataPoint>> blocks = new ArrayList<>();
         List<ArduinoDataPoint> currentBlock = new ArrayList<>();
 
+        if (arduinoDataPoints.isEmpty()) return new ArrayList<>();
+
         ArduinoDataPoint previousPoint = arduinoDataPoints.get(0);
 
         for (int i = 0; i < arduinoDataPoints.size(); i++) {
@@ -184,7 +186,7 @@ public class ArduinoGraphResults {
      */
     public static List<List<Double>> formatResultsForDay(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
         int size = accessDate.getHour() * 2 + accessDate.getMinute() / MINUTES_IN_HALF_HOUR + 1;
-        LocalDateTime startTime = accessDate.toLocalDate().atTime(0, MINUTES_IN_HALF_HOUR, 0);
+        LocalDateTime startTime = accessDate.minusDays(1).plusMinutes(MINUTES_IN_HALF_HOUR);
 
         return formatResultsGeneric(filterBlocksInTimeFrame(arduinoDataBlocks, startTime.minusMinutes(MINUTES_IN_HALF_HOUR), accessDate),
                 size, startTime, Duration.ofMinutes(MINUTES_IN_HALF_HOUR));
