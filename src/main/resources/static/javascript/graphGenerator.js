@@ -6,21 +6,18 @@ const fahrenheitButton = document.getElementById("fahrenheit-btn");
 const celsiusButton = document.getElementById("celsius-btn");
 const temperatureGraphContainer = document.getElementById("temperature-graphs");
 const tempMonthResults = JSON.parse(document.getElementById("temp-graph-month").dataset.results);
-// const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
+const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
 const tempDayResults = JSON.parse(document.getElementById("temp-graph-day").dataset.results);
 
+console.log(JSON.parse(document.getElementById("temp-graph-week").dataset.labels))
 
-console.log(document.getElementById("temp-graph-month").dataset.labels);
+
 const monthLabels = JSON.parse(document.getElementById("temp-graph-month").dataset.labels);
 const dayLabels = JSON.parse(document.getElementById("temp-graph-day").dataset.labels);
-
+const weekLabels = JSON.parse(document.getElementById("temp-graph-week").dataset.labels);
 
 const GRAPH_COLOR = 'rgb(75, 192, 192)';
 const WEEK_GRAPH_COLORS = ['rgb(44, 62, 80)', 'rgb(241, 196, 15)', 'rgb(52, 152, 219)', 'rgb(231, 76, 60)'];
-
-const DAYS_IN_WEEK = 7;
-const MONTH_STRINGS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const DAY_STRINGS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 // Graph Type enum, used for labelling.
 const GraphType = Object.freeze({
@@ -61,8 +58,9 @@ function renderTemperatureGraphs() {
     createGraph(convertedMonthResults,"temp-graph-month", `Temperature (${temperatureUnit})`,
         GraphType.MONTH, monthLabels);
 
-    // const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    // createGraph(convertedWeeklyResults,"temp-graph-week", `Temperature (${temperatureUnit})`, GraphType.WEEK);
+    const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
+    createGraph(convertedWeeklyResults,"temp-graph-week", `Temperature (${temperatureUnit})`,
+        GraphType.WEEK, weekLabels);
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
     createGraph(convertedDayResults,"temp-graph-day", `Temperature (${temperatureUnit})`,
@@ -80,7 +78,7 @@ function convertCelsiusToFahrenheit(celsiusInput) {
  * Get graph information for a single day graph.
  * Readings each 30 minutes.
  *
- * @param sensorName Name of sensor used, e.g Temperature
+ * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
  * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
@@ -129,42 +127,52 @@ function getMonthGraphInformation(sensorName, data, timeLabels) {
  * Get graph information for a week graph.
  * Four readings per day (total 28 readings).
  *
- * @param sensorName Name of sensor used, e.g Temperature
+ * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
+ * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
-function getWeekGraphInformation(sensorName, data) {
-    const timeLabels = [];
-    const currentDay = new Date();
-    currentDay.setDate(currentDay.getDate() - DAYS_IN_WEEK - 1);
-    for (let i = 1; i < DAYS_IN_WEEK + 1; i++) {
-        const newDay = new Date(currentDay);
-        newDay.setDate(currentDay.getDate() + i);
-        timeLabels.push(`${DAY_STRINGS[newDay.getDay()]}, ${newDay.getDate()} ${MONTH_STRINGS[newDay.getMonth()]}`);
+function getWeekGraphInformation(sensorName, data, timeLabels) {
+    const [nightData, morningData, afternoonData, eveningData] = [[], [], [], []];
+    for (let i = 0; i < data.length; i++) {
+        switch ((i + 1) % 4) {
+            case 1:
+                nightData.push(timeLabels[i]);
+                break;
+            case 2:
+                morningData.push(timeLabels[i]);
+                break;
+            case 3:
+                afternoonData.push(timeLabels[i]);
+                break;
+            default:
+                eveningData.push(timeLabels[i]);
+        }
     }
+
     return [
         {
             labels: timeLabels,
             datasets: [{
                 label: `Night (12:00am - 5:59am)`,
-                data: data.slice(0, 7),
+                data: nightData,
                 borderColor: WEEK_GRAPH_COLORS[0],
                 tension: 0.1
             }, {
                 label: `Morning (6:00am - 11:59am)`,
-                data: data.slice(7, 14),
+                data: morningData,
                 borderColor: WEEK_GRAPH_COLORS[1],
                 tension: 0.1
             },
             {
                 label: `Afternoon (12:00pm - 5:59pm)`,
-                data: data.slice(14, 21),
+                data: afternoonData,
                 borderColor: WEEK_GRAPH_COLORS[2],
                 tension: 0.1
             },
             {
                 label: `Evening (6:00pm - 11:59pm)`,
-                data: data.slice(21, 28),
+                data: eveningData,
                 borderColor: WEEK_GRAPH_COLORS[3],
                 tension: 0.1
             }
@@ -182,13 +190,11 @@ function getWeekGraphInformation(sensorName, data) {
  */
 function createGraph(data, graphId, sensorName, graphType, timeLabels) {
     if (!data || data.length === 0){
-        console.log(data)
-        console.error("No data points given")
+        console.error("No data points given for data:", data);
         return;
     }
 
     // Get graph information
-    let [dataObject, xLabel, yLabel] = [{}, '', ''];
     switch (graphType) {
         case GraphType.DAY:
             [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
@@ -200,10 +206,8 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             [dataObject, xLabel, yLabel] = getMonthGraphInformation(sensorName, data, timeLabels);
             break;
         default:
-            [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data);
+            [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
     }
-
-    console.log(dataObject);
 
     var myChart = new Chart(document.getElementById(graphId),
         {

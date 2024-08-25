@@ -273,7 +273,8 @@ public class ArduinoGraphResults {
                 }
             }
 
-            labels.add('"' + getLabelForDate(dateToCheck, labelType) + '"');
+            String labelToAdd = '"' + getLabelForDate(dateToCheck, labelType) + '"';
+            if (!labels.contains(labelToAdd)) labels.add(labelToAdd);
 
             dateToCheck = dateToCheck.plus(durationStep);
         }
@@ -303,8 +304,8 @@ public class ArduinoGraphResults {
             case MONTH ->
                     MONTH_STRINGS[dateToFormat.getMonth().getValue() - 1] + " " + dateToFormat.getDayOfMonth();
             case WEEK ->
-                    MONTH_STRINGS[dateToFormat.getMonth().getValue() - 1] + " " + dateToFormat.getDayOfMonth()
-                            + " " + DAY_STRINGS[dateToFormat.getDayOfWeek().getValue() - 1];
+                MONTH_STRINGS[dateToFormat.getMonth().getValue() - 1] + " " + dateToFormat.getDayOfMonth()
+                        + " " + DAY_STRINGS[dateToFormat.getDayOfWeek().getValue() - 1];
             default -> throw new IllegalArgumentException("Unknown label type: " + labelType);
         };
     }
