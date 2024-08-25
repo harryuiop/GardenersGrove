@@ -4,17 +4,20 @@
 
 const fahrenheitButton = document.getElementById("fahrenheit-btn");
 const celsiusButton = document.getElementById("celsius-btn");
+
+// Containers
 const temperatureGraphContainer = document.getElementById("temperature-graphs");
+
+// Data
 const tempMonthResults = JSON.parse(document.getElementById("temp-graph-month").dataset.results);
 const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
 const tempDayResults = JSON.parse(document.getElementById("temp-graph-day").dataset.results);
 
-console.log(JSON.parse(document.getElementById("temp-graph-week").dataset.labels))
-
-
-const monthLabels = JSON.parse(document.getElementById("temp-graph-month").dataset.labels);
-const dayLabels = JSON.parse(document.getElementById("temp-graph-day").dataset.labels);
-const weekLabels = JSON.parse(document.getElementById("temp-graph-week").dataset.labels);
+// Labels
+const labelDataSet = document.getElementById("display-graphs").dataset;
+const monthLabels = JSON.parse(labelDataSet.monthLabels);
+const dayLabels = JSON.parse(labelDataSet.dayLabels);
+const weekLabels = JSON.parse(labelDataSet.weekLabels);
 
 const GRAPH_COLOR = 'rgb(75, 192, 192)';
 const WEEK_GRAPH_COLORS = ['rgb(44, 62, 80)', 'rgb(241, 196, 15)', 'rgb(52, 152, 219)', 'rgb(231, 76, 60)'];

@@ -77,9 +77,9 @@ public class MonitorGardenController extends NavBar {
         FormattedGraphData weekData = arduinoDataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
         FormattedGraphData monthData = arduinoDataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
 
-        model.addAttribute("averageDayTemp", dayData);
-        model.addAttribute("averageWeekTemp", weekData);
-        model.addAttribute("averageMonthTemp", monthData);
+        model.addAttribute("graphDay", dayData);
+        model.addAttribute("graphWeek", weekData);
+        model.addAttribute("graphMonth", monthData);
 
         return "gardenMonitoring";
     }
