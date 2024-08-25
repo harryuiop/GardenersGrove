@@ -24,7 +24,8 @@ public class ArduinoGraphResults {
 
 
     /**
-     * @param arduinoDataPoints List of arduino data readings over any period of time.
+     * @param arduinoDataPoints List of arduino data readings over any period of time,
+     *                          in ascending order by time.
      */
     public ArduinoGraphResults(List<ArduinoDataPoint> arduinoDataPoints) {
         this.arduinoDataPoints = arduinoDataPoints;
@@ -37,7 +38,7 @@ public class ArduinoGraphResults {
      * @param blockChangeCondition conditional method to check if change in time warrants a new
      *                             block construction.
      * @return List of Blocks which contain averages for each sensor and time period.
-     * (each 6 hours for last 7 days).
+     * Note this is ascending order by time.
      */
     public List<ArduinoDataBlock> averageDataIntoBlocks(BiPredicate<LocalDateTime, LocalDateTime> blockChangeCondition) {
         List<List<ArduinoDataPoint>> blocks = new ArrayList<>();
@@ -97,7 +98,6 @@ public class ArduinoGraphResults {
         }
 
         return new ArduinoDataBlock(
-                pointsInBlock.get(0).getTime(),
                 pointsInBlock.get(pointsInBlock.size() - 1).getTime(),
                 tempCount > 0 ? tempSum / tempCount : null,
                 humidityCount > 0 ? humiditySum / humidityCount : null,
@@ -113,7 +113,7 @@ public class ArduinoGraphResults {
      * Current Date must be after previous date.
      *
      * @param currentDate  The date tested against
-     * @param previousDate Previous date in
+     * @param previousDate Previous date tested against
      * @return Whether a new block has been reached
      */
     public static boolean changeQuarterDayBlock(LocalDateTime currentDate, LocalDateTime previousDate) {
@@ -133,7 +133,7 @@ public class ArduinoGraphResults {
      * Current Date must be after previous date.
      *
      * @param currentDate  The date tested against
-     * @param previousDate Previous date in
+     * @param previousDate Previous date tested against
      * @return Whether a new block has been reached
      */
     public static boolean changeDayBlock(LocalDateTime currentDate, LocalDateTime previousDate) {
@@ -145,7 +145,7 @@ public class ArduinoGraphResults {
      * Check if the change in times are in a new 1/48th of a day (ie: new half hour).
      *
      * @param currentDate  The date tested against
-     * @param previousDate Previous date in
+     * @param previousDate Previous date tested against
      * @return Whether a new block has been reached
      */
     public static boolean changeHalfHourBlock(LocalDateTime currentDate, LocalDateTime previousDate) {
@@ -154,42 +154,47 @@ public class ArduinoGraphResults {
 
         int currentDateMinutes = currentDate.getMinute();
         int previousDateMinutes = previousDate.getMinute();
-        return (currentDateMinutes < 30 && previousDateMinutes >= 30)
-                || (currentDateMinutes >= 30 && previousDateMinutes < 30);
+        return (currentDateMinutes < MINUTES_IN_HALF_HOUR && previousDateMinutes >= MINUTES_IN_HALF_HOUR)
+                || (currentDateMinutes >= MINUTES_IN_HALF_HOUR && previousDateMinutes < MINUTES_IN_HALF_HOUR);
     }
 
     /**
      * Format results to send to graph for a week view
+     * Time accessed must be greater than arduino data blocks.
      *
      * @param arduinoDataBlocks processed arduino data blocks
-     * @param accessDate DateTime results are requested
+     * @param accessDate DateTime results are requested in ascending order by time
      * @return Results formatted to be in graph
      */
     public static List<List<Double>> formatResultsForWeek(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
         int size = DAYS_IN_WEEK * (HOURS_IN_DAY / HOURS_IN_BLOCK) + (accessDate.getHour() / HOURS_IN_BLOCK);
         LocalDateTime startTime = accessDate.minusDays(DAYS_IN_WEEK).toLocalDate().atTime(HOURS_IN_BLOCK, 0, 0);
 
-        return formatResultsGeneric(arduinoDataBlocks, size, startTime, Duration.ofHours(HOURS_IN_BLOCK));
+        return formatResultsGeneric(filterBlocksInTimeFrame(arduinoDataBlocks, startTime.minusHours(HOURS_IN_BLOCK), accessDate),
+                size, startTime, Duration.ofHours(HOURS_IN_BLOCK));
     }
 
     /**
      * Format results to send to graph for a day view
+     * Time accessed must be greater than arduino data blocks.
      *
      * @param arduinoDataBlocks processed arduino data blocks
-     * @param accessDate DateTime results are requested
+     * @param accessDate DateTime results are requested in ascending order by time
      * @return Results formatted to be in graph
      */
     public static List<List<Double>> formatResultsForDay(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
         int size = accessDate.getHour() * 2 + accessDate.getMinute() / MINUTES_IN_HALF_HOUR + 1;
         LocalDateTime startTime = accessDate.toLocalDate().atTime(0, MINUTES_IN_HALF_HOUR, 0);
 
-        return formatResultsGeneric(arduinoDataBlocks, size, startTime, Duration.ofMinutes(MINUTES_IN_HALF_HOUR));
+        return formatResultsGeneric(filterBlocksInTimeFrame(arduinoDataBlocks, startTime.minusMinutes(MINUTES_IN_HALF_HOUR), accessDate),
+                size, startTime, Duration.ofMinutes(MINUTES_IN_HALF_HOUR));
     }
 
     /**
      * Format results to send to graph for a month view
+     * Time accessed must be greater than arduino data blocks.
      *
-     * @param arduinoDataBlocks processed arduino data blocks
+     * @param arduinoDataBlocks processed arduino data blocks in ascending order by time
      * @param accessDate DateTime results are requested
      * @return Results formatted to be in graph
      */
@@ -197,13 +202,15 @@ public class ArduinoGraphResults {
         int size = DAYS_IN_MONTH + 1;
         LocalDateTime startTime = accessDate.toLocalDate().minusDays(DAYS_IN_MONTH).atTime(0, 0, 0);
 
-        return formatResultsGeneric(arduinoDataBlocks, size, startTime, Duration.ofDays(1));
+        return formatResultsGeneric(filterBlocksInTimeFrame(arduinoDataBlocks, startTime.minusDays(1), accessDate),
+                size, startTime, Duration.ofDays(1));
     }
+
 
     /**
      * Helper function to format results, avoiding code duplication.
      *
-     * @param arduinoDataBlocks List of Arduino Data Blocks
+     * @param arduinoDataBlocks List of Arduino Data Blocks in ascending time order
      * @param size Expected number of graph points, this is not necessarily equal to
      *            data blocks size (due to possible null values)
      * @param startTime Beginning of search time
@@ -211,7 +218,9 @@ public class ArduinoGraphResults {
      * @return Results formatted to be in graph
      */
     private static List<List<Double>> formatResultsGeneric(List<ArduinoDataBlock> arduinoDataBlocks,
-                                                           int size, LocalDateTime startTime, TemporalAmount durationStep) {
+                                                           int size, LocalDateTime startTime,
+                                                           TemporalAmount durationStep) {
+
         if (arduinoDataBlocks.isEmpty()) return new ArrayList<>();
 
         List<List<Double>> resultList = new ArrayList<>();
@@ -221,12 +230,16 @@ public class ArduinoGraphResults {
 
         LocalDateTime dateToCheck = startTime;
         int arduinoIndex = 0;
+
+        LocalDateTime minDateTime = dateToCheck.minus(durationStep);
         for (int i = 0; i < size; i++) {
 
             // Only update if the block is contained in time period
             // For example, if arduino is disconnected for a block period, the result will be null
             if (arduinoIndex < arduinoDataBlocks.size() &&
-                    arduinoDataBlocks.get(arduinoIndex).getEndTime().isBefore(dateToCheck)) {
+                    arduinoDataBlocks.get(arduinoIndex).getEndTime().isBefore(dateToCheck) &&
+                    arduinoDataBlocks.get(arduinoIndex).getEndTime().isAfter(minDateTime)
+            ) {
 
                 ArduinoDataBlock arduinoDataBlock = arduinoDataBlocks.get(arduinoIndex);
 
@@ -242,8 +255,24 @@ public class ArduinoGraphResults {
                     resultList.get(j).add(null);
                 }
             }
+
             dateToCheck = dateToCheck.plus(durationStep);
         }
         return resultList;
+    }
+
+    /**
+     * Ensure all Data Blocks are within a timeframe.
+     *
+     * @param arduinoBlocks All arduino blocks
+     * @param startFrame Time all arduino blocks must be after
+     * @param endFrame Time all arduino blocks must be before
+     * @return Arduino blocks within time frame.
+     */
+    private static List<ArduinoDataBlock> filterBlocksInTimeFrame(List<ArduinoDataBlock> arduinoBlocks,
+                                                                  LocalDateTime startFrame, LocalDateTime endFrame) {
+        return arduinoBlocks.stream()
+                .filter(block -> block.getEndTime().isBefore(endFrame) && block.getEndTime().isAfter(startFrame))
+                .toList();
     }
 }

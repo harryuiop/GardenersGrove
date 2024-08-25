@@ -141,7 +141,7 @@ class ArduinoGraphResultsUnitTest {
 
 
     @Test
-    public void testGetAverageForBlock_allNull() {
+    void testGetAverageForBlock_allNull() {
         ArduinoDataBlock actual = ArduinoGraphResults.getAverageForBlock(new ArrayList<>());
 
         Assertions.assertNull(actual.getTemperatureCelsiusAvg());
@@ -157,7 +157,7 @@ class ArduinoGraphResultsUnitTest {
                 new ArduinoDataPoint(garden, LocalDateTime.now(), 30d, 40d, 0.9d, 60d, 70d),
                 new ArduinoDataPoint(garden, LocalDateTime.now(), 30d, 40d, 0.9d, 60d, 70d)
         );
-        ArduinoDataBlock expected = new ArduinoDataBlock(LocalDateTime.now(), LocalDateTime.now(),
+        ArduinoDataBlock expected = new ArduinoDataBlock(LocalDateTime.now(),
                 30d, 40d, 0.9d,
                 60d, 70d);
 
@@ -176,7 +176,7 @@ class ArduinoGraphResultsUnitTest {
                 new ArduinoDataPoint(garden, LocalDateTime.now(), 30d, 40d, 1.1d, 60d, 80d),
                 new ArduinoDataPoint(garden, LocalDateTime.now(), 10d, 20d, 0.9d, 20d, 20d)
         );
-        ArduinoDataBlock expected = new ArduinoDataBlock(LocalDateTime.now(), LocalDateTime.now(),
+        ArduinoDataBlock expected = new ArduinoDataBlock(LocalDateTime.now(),
                 20d, 30d, 1.0d, 40d,
                 50d);
 
@@ -196,7 +196,7 @@ class ArduinoGraphResultsUnitTest {
                 new ArduinoDataPoint(garden, LocalDateTime.now(), 10d, null, 0.9d, 20d, 20d),
                 new ArduinoDataPoint(garden, LocalDateTime.now(), 20d, null, 0.9d, 10d, 20d)
         );
-        ArduinoDataBlock expected = new ArduinoDataBlock(LocalDateTime.now(), LocalDateTime.now()
+        ArduinoDataBlock expected = new ArduinoDataBlock(LocalDateTime.now()
                 ,15d, null, 0.9d,
                 20d, 20d);
 
@@ -208,35 +208,5 @@ class ArduinoGraphResultsUnitTest {
         Assertions.assertEquals(expected.getAtmosphereAtmAvg(), actual.getAtmosphereAtmAvg(), 0.0001);
         Assertions.assertEquals(expected.getLightLevelPercentageAvg(), actual.getLightLevelPercentageAvg(), 0.0001);
         Assertions.assertEquals(expected.getMoisturePercentageAvg(), actual.getMoisturePercentageAvg(), 0.0001);
-    }
-
-    @Test
-    void testAverageDataPointsOverWeek_allPointsIncluded() {
-        // Set Up, add data points every 30 minutes for a month
-        List<ArduinoDataPoint> arduinoDataPointsInput = new ArrayList<>();
-        LocalDateTime startTime = LocalDateTime.of(2024, 8, 17, 0, 0);
-        LocalDateTime endTime = LocalDateTime.of(2024, 8, 24, 14, 30);
-        LocalDateTime currentTime = startTime;
-
-        while (currentTime.isBefore(endTime)) {
-            arduinoDataPointsInput.add(new ArduinoDataPoint(
-                    garden,
-                    currentTime,
-                    30d,
-                    40d,
-                    0.9d,
-                    60d,
-                    70d
-            ));
-            currentTime = currentTime.plusMinutes(30);
-        }
-
-//        List<ArduinoDataBlock> actual = new ArduinoGraphResults(arduinoDataPointsInput).averageDataPointsOverWeek();
-//        Assertions.assertEquals(30, actual.size());
-//        Assertions.assertEquals(30, actual.get(0).getTemperatureCelsiusAvg(), 0.0001);
-//        for (ArduinoDataBlock arduinoDataBlock: actual) {
-//            System.out.println(arduinoDataBlock.getStartTime() + " " + arduinoDataBlock.getEndTime());
-//        }
-//        //Assertions.fail();
     }
 }

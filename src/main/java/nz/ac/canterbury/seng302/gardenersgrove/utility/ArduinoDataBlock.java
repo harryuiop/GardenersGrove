@@ -15,7 +15,6 @@ public class ArduinoDataBlock {
     private final Double moisturePercentageAvg;
 
     /**
-     * @param startTime Time of oldest arduino reading
      * @param endTime Time of newest arduino reading
      * @param temperatureCelsiusAvg Average of Temperature of block time period
      * @param humidityPercentageAvg Average of Humidity of block time period
@@ -23,7 +22,7 @@ public class ArduinoDataBlock {
      * @param lightLevelPercentageAvg Average of Light Level of block time period
      * @param moisturePercentageAvg Average of Moisture of block time period
      */
-    public ArduinoDataBlock(LocalDateTime startTime, LocalDateTime endTime, Double temperatureCelsiusAvg,
+    public ArduinoDataBlock(LocalDateTime endTime, Double temperatureCelsiusAvg,
                             Double humidityPercentageAvg, Double atmosphereAtmAvg,
                             Double lightLevelPercentageAvg, Double moisturePercentageAvg) {
         this.endTime = endTime;
