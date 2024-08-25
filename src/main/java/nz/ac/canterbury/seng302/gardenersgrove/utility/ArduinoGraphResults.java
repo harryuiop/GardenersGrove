@@ -185,7 +185,7 @@ public class ArduinoGraphResults {
      * @return Results formatted to be in graph
      */
     public static List<List<Double>> formatResultsForDay(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
-        int size = accessDate.getHour() * 2 + accessDate.getMinute() / MINUTES_IN_HALF_HOUR + 1;
+        int size = HOURS_IN_DAY * 2;
         LocalDateTime startTime = accessDate.minusDays(1).plusMinutes(MINUTES_IN_HALF_HOUR);
 
         return formatResultsGeneric(filterBlocksInTimeFrame(arduinoDataBlocks, startTime.minusMinutes(MINUTES_IN_HALF_HOUR), accessDate),

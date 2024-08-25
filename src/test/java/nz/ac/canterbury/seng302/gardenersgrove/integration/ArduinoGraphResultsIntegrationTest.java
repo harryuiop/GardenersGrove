@@ -115,20 +115,16 @@ class ArduinoGraphResultsIntegrationTest {
 
         accessTime = LocalDateTime.of(2023, 1, 1, 10, 0);
 
-        System.out.print("access time");
-        System.out.println(accessTime);
-        System.out.print("access time");
-
-
         List<List<Double>> formattedResults = ArduinoGraphResults.formatResultsForDay(arduinoDataBlocksInput, accessTime);
 
         List<List<Double>> expected = Arrays.asList(
-                Arrays.asList(null, null, null, null, null, null, null, null, 30.0, 30.0, null, null, null, null, null, 30.0, null, null, null, null, null),
-                Arrays.asList(null, null, null, null, null, null, null, null, 40.0, 40.0, null, null, null, null, null, 40.0, null, null, null, null, null),
-                Arrays.asList(null, null, null, null, null, null, null, null, 0.9, 0.9, null, null, null, null, null, 0.9, null, null, null, null, null),
-                Arrays.asList(null, null, null, null, null, null, null, null, 60.0, 60.0, null, null, null, null, null, 60.0, null, null, null, null, null),
-                Arrays.asList(null, null, null, null, null, null, null, null, 70.0, 70.0, null, null, null, null, null, 70.0, null, null, null, null, null)
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 30.0, 30.0, null, null, null, null, null, 30.0, null, null, null, null),
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 40.0, 40.0, null, null, null, null, null, 40.0, null, null, null, null),
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0.9, 0.9, null, null, null, null, null, 0.9, null, null, null, null),
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 60.0, 60.0, null, null, null, null, null, 60.0, null, null, null, null),
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 70.0, 70.0, null, null, null, null, null, 70.0, null, null, null, null)
         );
+
 
         Assertions.assertEquals(expected, formattedResults);
     }
@@ -149,12 +145,13 @@ class ArduinoGraphResultsIntegrationTest {
         List<List<Double>> formattedResults = ArduinoGraphResults.formatResultsForDay(arduinoDataBlocksInput, accessTime);
 
         List<List<Double>> expected = Arrays.asList(
-                Arrays.asList(null, null, null, null, null, null, null, null, 30.0, null, null, null, null, null, null, 30.0),
-                Arrays.asList(null, null, null, null, null, null, null, null, 40.0, null, null, null, null, null, null, 40.0),
-                Arrays.asList(null, null, null, null, null, null, null, null, 0.9, null, null, null, null, null, null, 0.9),
-                Arrays.asList(null, null, null, null, null, null, null, null, 60.0, null, null, null, null, null, null, 60.0),
-                Arrays.asList(null, null, null, null, null, null, null, null, 70.0, null, null, null, null, null, null, 70.0)
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 30.0, null, null, null, null, null, null, 30.0),
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 40.0, null, null, null, null, null, null, 40.0),
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0.9, null, null, null, null, null, null, 0.9),
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 60.0, null, null, null, null, null, null, 60.0),
+                Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 70.0, null, null, null, null, null, null, 70.0)
         );
+
 
         Assertions.assertEquals(expected, formattedResults);
     }
