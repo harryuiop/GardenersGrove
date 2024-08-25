@@ -217,6 +217,7 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             type: 'line',
             data: dataObject,
             options: {
+                responsive: true,
                 maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
