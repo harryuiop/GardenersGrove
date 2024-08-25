@@ -22,6 +22,20 @@ public class ArduinoGraphResults {
     private static final int DAYS_IN_MONTH = 30;
     private static final int NUM_SENSORS = 5;
 
+    private static final String[] MONTH_STRINGS = {
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    };
+
+    private static final String[] DAY_STRINGS = {
+            "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+    };
+
+    private enum LabelType {
+        DAY,
+        MONTH,
+        WEEK
+    }
+
 
     /**
      * @param arduinoDataPoints List of arduino data readings over any period of time,
@@ -168,12 +182,12 @@ public class ArduinoGraphResults {
      * @param accessDate DateTime results are requested in ascending order by time
      * @return Results formatted to be in graph
      */
-    public static List<List<Double>> formatResultsForWeek(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
+    public static FormattedGraphData formatResultsForWeek(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
         int size = DAYS_IN_WEEK * (HOURS_IN_DAY / HOURS_IN_BLOCK) + (accessDate.getHour() / HOURS_IN_BLOCK);
         LocalDateTime startTime = accessDate.minusDays(DAYS_IN_WEEK).toLocalDate().atTime(HOURS_IN_BLOCK, 0, 0);
 
         return formatResultsGeneric(filterBlocksInTimeFrame(arduinoDataBlocks, startTime.minusHours(HOURS_IN_BLOCK), accessDate),
-                size, startTime, Duration.ofHours(HOURS_IN_BLOCK));
+                size, startTime, Duration.ofHours(HOURS_IN_BLOCK), LabelType.WEEK);
     }
 
     /**
@@ -184,12 +198,12 @@ public class ArduinoGraphResults {
      * @param accessDate DateTime results are requested in ascending order by time
      * @return Results formatted to be in graph
      */
-    public static List<List<Double>> formatResultsForDay(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
+    public static FormattedGraphData formatResultsForDay(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
         int size = HOURS_IN_DAY * 2;
         LocalDateTime startTime = accessDate.minusDays(1).plusMinutes(MINUTES_IN_HALF_HOUR);
 
         return formatResultsGeneric(filterBlocksInTimeFrame(arduinoDataBlocks, startTime.minusMinutes(MINUTES_IN_HALF_HOUR), accessDate),
-                size, startTime, Duration.ofMinutes(MINUTES_IN_HALF_HOUR));
+                size, startTime, Duration.ofMinutes(MINUTES_IN_HALF_HOUR), LabelType.DAY);
     }
 
     /**
@@ -200,12 +214,12 @@ public class ArduinoGraphResults {
      * @param accessDate DateTime results are requested
      * @return Results formatted to be in graph
      */
-    public static List<List<Double>> formatResultsForMonth(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
+    public static FormattedGraphData formatResultsForMonth(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
         int size = DAYS_IN_MONTH + 1;
         LocalDateTime startTime = accessDate.toLocalDate().minusDays(DAYS_IN_MONTH).atTime(0, 0, 0);
 
         return formatResultsGeneric(filterBlocksInTimeFrame(arduinoDataBlocks, startTime.minusDays(1), accessDate),
-                size, startTime, Duration.ofDays(1));
+                size, startTime, Duration.ofDays(1), LabelType.MONTH);
     }
 
 
@@ -214,21 +228,22 @@ public class ArduinoGraphResults {
      *
      * @param arduinoDataBlocks List of Arduino Data Blocks in ascending time order
      * @param size Expected number of graph points, this is not necessarily equal to
-     *            data blocks size (due to possible null values)
+     *            data blocks size (due to possible null values), > 0
      * @param startTime Beginning of search time
      * @param durationStep Expected time increase per block
+     * @param labelType Type of label to correctly format
      * @return Results formatted to be in graph
      */
-    private static List<List<Double>> formatResultsGeneric(List<ArduinoDataBlock> arduinoDataBlocks,
+    private static FormattedGraphData formatResultsGeneric(List<ArduinoDataBlock> arduinoDataBlocks,
                                                            int size, LocalDateTime startTime,
-                                                           TemporalAmount durationStep) {
-
-        if (arduinoDataBlocks.isEmpty()) return new ArrayList<>();
+                                                           TemporalAmount durationStep, LabelType labelType) {
 
         List<List<Double>> resultList = new ArrayList<>();
         for (int j = 0; j < NUM_SENSORS; j++) {
             resultList.add(new ArrayList<>());
         }
+
+        List<String> labels = new ArrayList<>();
 
         LocalDateTime dateToCheck = startTime;
         int arduinoIndex = 0;
@@ -258,9 +273,11 @@ public class ArduinoGraphResults {
                 }
             }
 
+            labels.add('"' + getLabelForDate(dateToCheck, labelType) + '"');
+
             dateToCheck = dateToCheck.plus(durationStep);
         }
-        return resultList;
+        return new FormattedGraphData(resultList, labels);
     }
 
     /**
@@ -276,5 +293,19 @@ public class ArduinoGraphResults {
         return arduinoBlocks.stream()
                 .filter(block -> block.getEndTime().isBefore(endFrame) && block.getEndTime().isAfter(startFrame))
                 .toList();
+    }
+
+    private static String getLabelForDate(LocalDateTime dateToFormat, LabelType labelType) {
+        return switch (labelType) {
+            case DAY ->
+                DAY_STRINGS[dateToFormat.getDayOfWeek().getValue() - 1] + " " +
+                        dateToFormat.getHour() + ":" + dateToFormat.getMinute();
+            case MONTH ->
+                    MONTH_STRINGS[dateToFormat.getMonth().getValue() - 1] + " " + dateToFormat.getDayOfMonth();
+            case WEEK ->
+                    MONTH_STRINGS[dateToFormat.getMonth().getValue() - 1] + " " + dateToFormat.getDayOfMonth()
+                            + " " + DAY_STRINGS[dateToFormat.getDayOfWeek().getValue() - 1];
+            default -> throw new IllegalArgumentException("Unknown label type: " + labelType);
+        };
     }
 }

@@ -4,6 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +60,7 @@ public class ArduinoDataPointService {
      * @param accessTime DateTime results are requested
      * @return Results formatted to be in graph
      */
-    public List<List<Double>> getWeekGraphData(Long gardenId, LocalDateTime accessTime) {
+    public FormattedGraphData getWeekGraphData(Long gardenId, LocalDateTime accessTime) {
         int daysInWeek = 7;
         List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInWeek, accessTime);
         List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
@@ -74,7 +75,7 @@ public class ArduinoDataPointService {
      * @param accessTime DateTime results are requested
      * @return Results formatted to be in graph
      */
-    public List<List<Double>> getDayGraphData(Long gardenId, LocalDateTime accessTime) {
+    public FormattedGraphData getDayGraphData(Long gardenId, LocalDateTime accessTime) {
         List<ArduinoDataPoint> arduinoDataPoints = dataPointRepository.getArduinoDataPointOverDays(gardenId,
                 accessTime.minusDays(1), accessTime);
         List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
@@ -89,7 +90,7 @@ public class ArduinoDataPointService {
      * @param accessTime DateTime results are requested
      * @return Results formatted to be in graph
      */
-    public List<List<Double>> getMonthGraphData(Long gardenId, LocalDateTime accessTime) {
+    public FormattedGraphData getMonthGraphData(Long gardenId, LocalDateTime accessTime) {
         int daysInMonth = 30;
         List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInMonth, accessTime);
         List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)

@@ -11,6 +11,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -44,11 +45,11 @@ public class TemperatureMonitoringFeature {
     private Authentication auth;
 
     private Long gardenId;
-    private List<List<Double>> formattedWeekResults;
+    private FormattedGraphData formattedWeekResults;
 
-    private List<List<Double>> formattedDayResults;
+    private FormattedGraphData formattedDayResults;
 
-    private List<List<Double>> formattedMonthResults;
+    private FormattedGraphData formattedMonthResults;
 
 
     @Given("I have a logged in user with a monitored garden")
@@ -127,7 +128,7 @@ public class TemperatureMonitoringFeature {
                         70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, null
                 )
         );
-        Assertions.assertEquals(expected, formattedWeekResults);
+        Assertions.assertEquals(expected, formattedWeekResults.getSensorReadings());
 
     }
 
@@ -146,7 +147,7 @@ public class TemperatureMonitoringFeature {
                 Arrays.asList(60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 Arrays.asList(70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
         );
-        Assertions.assertEquals(expected, formattedDayResults);
+        Assertions.assertEquals(expected, formattedDayResults.getSensorReadings());
     }
 
     @When("I choose to see a graph of the temperature in Degree Celsius over the last thirty days")
@@ -175,6 +176,6 @@ public class TemperatureMonitoringFeature {
                         null, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, null
                 )
         );
-        Assertions.assertEquals(expected, formattedMonthResults);
+        Assertions.assertEquals(expected, formattedMonthResults.getSensorReadings());
     }
 }

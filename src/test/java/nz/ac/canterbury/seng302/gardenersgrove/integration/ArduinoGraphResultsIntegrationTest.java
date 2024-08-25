@@ -6,6 +6,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -115,7 +116,7 @@ class ArduinoGraphResultsIntegrationTest {
 
         accessTime = LocalDateTime.of(2023, 1, 1, 10, 0);
 
-        List<List<Double>> formattedResults = ArduinoGraphResults.formatResultsForDay(arduinoDataBlocksInput, accessTime);
+        FormattedGraphData formattedResults = ArduinoGraphResults.formatResultsForDay(arduinoDataBlocksInput, accessTime);
 
         List<List<Double>> expected = Arrays.asList(
                 Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 30.0, 30.0, null, null, null, null, null, 30.0, null, null, null, null),
@@ -126,7 +127,7 @@ class ArduinoGraphResultsIntegrationTest {
         );
 
 
-        Assertions.assertEquals(expected, formattedResults);
+        Assertions.assertEquals(expected, formattedResults.getSensorReadings());
     }
 
     @Test
@@ -142,7 +143,7 @@ class ArduinoGraphResultsIntegrationTest {
 
         accessTime = LocalDateTime.of(2023, 1, 1, 7, 33);
 
-        List<List<Double>> formattedResults = ArduinoGraphResults.formatResultsForDay(arduinoDataBlocksInput, accessTime);
+        FormattedGraphData formattedResults = ArduinoGraphResults.formatResultsForDay(arduinoDataBlocksInput, accessTime);
 
         List<List<Double>> expected = Arrays.asList(
                 Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 30.0, null, null, null, null, null, null, 30.0),
@@ -153,7 +154,7 @@ class ArduinoGraphResultsIntegrationTest {
         );
 
 
-        Assertions.assertEquals(expected, formattedResults);
+        Assertions.assertEquals(expected, formattedResults.getSensorReadings());
     }
 
     @Test
@@ -169,7 +170,7 @@ class ArduinoGraphResultsIntegrationTest {
 
         accessTime = LocalDateTime.of(2023, 1, 6, 7, 33);
 
-        List<List<Double>> formattedResults = ArduinoGraphResults.formatResultsForWeek(arduinoDataBlocksInput, accessTime);
+        FormattedGraphData formattedResults = ArduinoGraphResults.formatResultsForWeek(arduinoDataBlocksInput, accessTime);
 
         List<List<Double>> expected = Arrays.asList(
                 Arrays.asList(null, null, null, null, null, null, null, null, 30.0, 30.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 30.0, null, null, null, null),
@@ -179,7 +180,7 @@ class ArduinoGraphResultsIntegrationTest {
                 Arrays.asList(null, null, null, null, null, null, null, null, 70.0, 70.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 70.0, null, null, null, null)
         );
 
-        Assertions.assertEquals(expected, formattedResults);
+        Assertions.assertEquals(expected, formattedResults.getSensorReadings());
     }
 
     @Test
@@ -197,7 +198,7 @@ class ArduinoGraphResultsIntegrationTest {
 
         accessTime = LocalDateTime.of(2023, 1, 7, 7, 33);
 
-        List<List<Double>> formattedResults = ArduinoGraphResults.formatResultsForWeek(arduinoDataBlocksInput, accessTime);
+        FormattedGraphData formattedResults = ArduinoGraphResults.formatResultsForWeek(arduinoDataBlocksInput, accessTime);
 
         List<List<Double>> expected = Arrays.asList(
                 Arrays.asList(null, null, null, null, 30.0, 30.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 30.0, null, null, null, null, null, null, null, null),
@@ -207,7 +208,7 @@ class ArduinoGraphResultsIntegrationTest {
                 Arrays.asList(null, null, null, null, 70.0, 70.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 70.0, null, null, null, null, null, null, null, null)
         );
 
-        Assertions.assertEquals(expected, formattedResults);
+        Assertions.assertEquals(expected, formattedResults.getSensorReadings());
     }
 
     @Test
@@ -223,7 +224,7 @@ class ArduinoGraphResultsIntegrationTest {
 
         accessTime = LocalDateTime.of(2023, 1, 6, 7, 33);
 
-        List<List<Double>> formattedResults = ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocksInput, accessTime);
+        FormattedGraphData formattedResults = ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocksInput, accessTime);
 
         List<List<Double>> expected = Arrays.asList(
                 Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 30.0, null, null, null, null, 30.0, null, null, null, 30.0),
@@ -233,7 +234,7 @@ class ArduinoGraphResultsIntegrationTest {
                 Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 70.0, null, null, null, null, 70.0, null, null, null, 70.0)
         );
 
-        Assertions.assertEquals(expected, formattedResults);
+        Assertions.assertEquals(expected, formattedResults.getSensorReadings());
     }
 
     @Test
@@ -249,7 +250,7 @@ class ArduinoGraphResultsIntegrationTest {
 
         accessTime = LocalDateTime.of(2023, 1, 6, 7, 33);
 
-        List<List<Double>> formattedResults = ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocksInput, accessTime);
+        FormattedGraphData formattedResults = ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocksInput, accessTime);
 
         List<List<Double>> expected = Arrays.asList(
                 Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 30.0, null, null, null, 30.0),
@@ -259,6 +260,6 @@ class ArduinoGraphResultsIntegrationTest {
                 Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 70.0, null, null, null, 70.0)
         );
 
-        Assertions.assertEquals(expected, formattedResults);
+        Assertions.assertEquals(expected, formattedResults.getSensorReadings());
     }
 }
