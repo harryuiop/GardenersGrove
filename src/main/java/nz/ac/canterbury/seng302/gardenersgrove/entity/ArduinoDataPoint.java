@@ -46,7 +46,6 @@ public class ArduinoDataPoint {
     }
 
     public ArduinoDataPoint() {
-
     }
 
     public Long getId() {
@@ -80,5 +79,4 @@ public class ArduinoDataPoint {
     public double getMoisturePercent() {
         return moisturePercent;
     }
-
 }

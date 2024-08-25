@@ -124,6 +124,10 @@ public class Garden {
         return location.toString();
     }
 
+    public String getArduinoId() {
+        return arduinoId;
+    }
+
     public Float getSize() {
         return size;
     }
