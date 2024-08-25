@@ -74,6 +74,8 @@ public class ArduinoGraphResults {
             currentBlock.add(arduinoDataPoint);
         }
 
+        if (!currentBlock.isEmpty()) blocks.add(currentBlock);
+
         return blocks.stream().map(ArduinoGraphResults::getAverageForBlock).toList();
     }
 
@@ -87,6 +89,8 @@ public class ArduinoGraphResults {
     public static ArduinoDataBlock getAverageForBlock(List<ArduinoDataPoint> pointsInBlock) {
         int dataSize = pointsInBlock.size();
         if (dataSize == 0) return new ArduinoDataBlock();
+
+        System.out.println(pointsInBlock.stream().map(a->a.getTempCelsius()).toList());
 
         double tempSum = 0.0, moistureSum = 0.0, atmosphereSum = 0.0, lightSum = 0.0, humiditySum = 0.0;
         int tempCount = 0, moistureCount = 0, atmosphereCount = 0, lightCount = 0, humidityCount = 0;

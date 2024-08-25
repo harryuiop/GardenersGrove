@@ -63,8 +63,10 @@ public class ArduinoDataPointService {
     public FormattedGraphData getWeekGraphData(Long gardenId, LocalDateTime accessTime) {
         int daysInWeek = 7;
         List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInWeek, accessTime);
+
         List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
                 .averageDataIntoBlocks(ArduinoGraphResults::changeQuarterDayBlock);
+
         return ArduinoGraphResults.formatResultsForWeek(arduinoDataBlocks, accessTime);
     }
 
@@ -78,8 +80,10 @@ public class ArduinoDataPointService {
     public FormattedGraphData getDayGraphData(Long gardenId, LocalDateTime accessTime) {
         List<ArduinoDataPoint> arduinoDataPoints = dataPointRepository.getArduinoDataPointOverDays(gardenId,
                 accessTime.minusDays(1), accessTime);
+
         List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
                 .averageDataIntoBlocks(ArduinoGraphResults::changeHalfHourBlock);
+
         return ArduinoGraphResults.formatResultsForDay(arduinoDataBlocks, accessTime);
     }
 
@@ -93,8 +97,10 @@ public class ArduinoDataPointService {
     public FormattedGraphData getMonthGraphData(Long gardenId, LocalDateTime accessTime) {
         int daysInMonth = 30;
         List<ArduinoDataPoint> arduinoDataPoints = getDataPointsOverDays(gardenId, daysInMonth, accessTime);
+
         List<ArduinoDataBlock> arduinoDataBlocks = new ArduinoGraphResults(arduinoDataPoints)
                 .averageDataIntoBlocks(ArduinoGraphResults::changeDayBlock);
+
         return ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocks, accessTime);
     }
 

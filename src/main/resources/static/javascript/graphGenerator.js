@@ -140,16 +140,16 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
     for (let i = 0; i < data.length; i++) {
         switch ((i + 1) % 4) {
             case 1:
-                nightData.push(timeLabels[i]);
+                nightData.push(data[i]);
                 break;
             case 2:
-                morningData.push(timeLabels[i]);
+                morningData.push(data[i]);
                 break;
             case 3:
-                afternoonData.push(timeLabels[i]);
+                afternoonData.push(data[i]);
                 break;
             default:
-                eveningData.push(timeLabels[i]);
+                eveningData.push(data[i]);
         }
     }
 
