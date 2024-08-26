@@ -20,13 +20,6 @@ public class FormattedGraphData {
         this.labels = labels;
     }
 
-    /**
-     * Graph with no readings, all graphs must have
-     */
-    public FormattedGraphData() {
-        this.labels = labels;
-    }
-
     public List<List<Double>> getSensorReadings() {
         return sensorReadings;
     }
