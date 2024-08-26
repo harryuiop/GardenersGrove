@@ -9,9 +9,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
-import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,11 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
@@ -105,9 +98,8 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("owner", garden.getOwner() == currentUser);
         model.addAttribute("deviceStatus", deviceStatus);
         model.addAttribute("timeSinceLastReading", timeSinceLastReading);
-        model.addAttribute("gardenStats", arduinoDataPointService.getMostRecentArduinoDataPoint(gardenId));
+        model.addAttribute("gardenStats", arduinoDataPointService.getMostRecentArduinoDataPoint(garden));
         model.addAttribute("garden", optionalGarden.get());
-        model.addAttribute("owner", owner);
         model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
 
         // Add Graph Data
