@@ -44,7 +44,6 @@ public class ViewGardenController extends NavBar {
     private final TagService tagService;
     private final ErrorChecker errorChecker;
     private final WeatherService weatherService;
-    private final TemperatureService temperatureService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -58,7 +57,7 @@ public class ViewGardenController extends NavBar {
     @Autowired
     public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService,
                                 TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker,
-                                WeatherService weatherService, TemperatureService temperatureService) {
+                                WeatherService weatherService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
@@ -66,7 +65,6 @@ public class ViewGardenController extends NavBar {
         this.tagService = tagService;
         this.weatherService = weatherService;
         this.errorChecker = errorChecker;
-        this.temperatureService = temperatureService;
     }
 
     /**
@@ -119,8 +117,6 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("isRainy", weatherService.isRainy(weatherData));
         model.addAttribute("popupClosed", cookies);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MMM yyyy"));
-        model.addAttribute("tempGraphData", temperatureService.getGraphData(5));
-        model.addAttribute("tempGraphLabel", "1,2,3,4,5,6");
         return "viewGarden";
     }
 
