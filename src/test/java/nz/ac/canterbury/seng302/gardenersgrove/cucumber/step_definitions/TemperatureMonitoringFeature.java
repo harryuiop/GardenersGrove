@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -109,73 +110,90 @@ public class TemperatureMonitoringFeature {
                 LocalDateTime.of(2024, 1, 10, 0, 0));
     }
 
+    // AC3
     @Then("I see a a display of results for the average temperature for the night, morning, afternoon, and evening of each day.")
     public void iSeeAADisplayOfResultsForTheAverageTemperatureForTheNightMorningAfternoonOfEachDay() {
-        List<List<Double>> expected = Arrays.asList(
-                Arrays.asList(
-                        30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, null
-                ),
-                Arrays.asList(
-                        40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, null
-                ),
-                Arrays.asList(
-                        1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, null
-                ),
-                Arrays.asList(
-                        60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, null
-                ),
-                Arrays.asList(
-                        70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, null
-                )
+        List<List<Double>> expectedData = Arrays.asList(
+                Arrays.asList(30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0),
+                Arrays.asList(40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0),
+                Arrays.asList(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
+                Arrays.asList(60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0),
+                Arrays.asList(70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0)
         );
-        Assertions.assertEquals(expected, formattedWeekResults.getSensorReadings());
 
+        List<String> expectedLabels = Arrays.asList(
+                "\"Jan 3 Wed\"", "\"Jan 4 Thu\"", "\"Jan 5 Fri\"", "\"Jan 6 Sat\"", "\"Jan 7 Sun\"",
+                "\"Jan 8 Mon\"", "\"Jan 9 Tue\"", "\"Jan 10 Wed\""
+        );
+
+        Assertions.assertEquals(expectedData, formattedWeekResults.getSensorReadings());
+        Assertions.assertEquals(expectedLabels, formattedWeekResults.getLabels());
     }
 
+    // AC2
     @When("I choose to see a graph of the temperature in Degree Celsius over the last day")
     public void iChooseToSeeAGraphOfTheTemperatureInDegreeCelsiusOverTheLastDay() {
         formattedDayResults = arduinoDataPointService.getDayGraphData(gardenId,
                 LocalDateTime.of(2024, 1, 10, 12, 0));
     }
 
+    // AC2
     @Then("I see a a display of results for the average temperature for each half hour of that day.")
     public void iSeeAADisplayOfResultsForTheAverageTemperatureForEachHalfHourOfThatDay() {
-        List<List<Double>> expected = Arrays.asList(
-                Arrays.asList(30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
-                Arrays.asList(40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
-                Arrays.asList(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
-                Arrays.asList(60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
-                Arrays.asList(70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+        List<List<Double>> expectedData = Arrays.asList(
+                Arrays.asList(30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                Arrays.asList(40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                Arrays.asList(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                Arrays.asList(60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                Arrays.asList(70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
         );
-        Assertions.assertEquals(expected, formattedDayResults.getSensorReadings());
+
+        List<String> expectedLabels = Arrays.asList(
+                "\"Tue 12:30\"", "\"Tue 13:0\"", "\"Tue 13:30\"", "\"Tue 14:0\"", "\"Tue 14:30\"",
+                "\"Tue 15:0\"", "\"Tue 15:30\"", "\"Tue 16:0\"", "\"Tue 16:30\"", "\"Tue 17:0\"",
+                "\"Tue 17:30\"", "\"Tue 18:0\"", "\"Tue 18:30\"", "\"Tue 19:0\"", "\"Tue 19:30\"",
+                "\"Tue 20:0\"", "\"Tue 20:30\"", "\"Tue 21:0\"", "\"Tue 21:30\"", "\"Tue 22:0\"",
+                "\"Tue 22:30\"", "\"Tue 23:0\"", "\"Tue 23:30\"", "\"Wed 0:0\"", "\"Wed 0:30\"",
+                "\"Wed 1:0\"", "\"Wed 1:30\"", "\"Wed 2:0\"", "\"Wed 2:30\"", "\"Wed 3:0\"",
+                "\"Wed 3:30\"", "\"Wed 4:0\"", "\"Wed 4:30\"", "\"Wed 5:0\"", "\"Wed 5:30\"",
+                "\"Wed 6:0\"", "\"Wed 6:30\"", "\"Wed 7:0\"", "\"Wed 7:30\"", "\"Wed 8:0\"",
+                "\"Wed 8:30\"", "\"Wed 9:0\"", "\"Wed 9:30\"", "\"Wed 10:0\"", "\"Wed 10:30\"",
+                "\"Wed 11:0\"", "\"Wed 11:30\"", "\"Wed 12:0\""
+        );
+
+        Assertions.assertEquals(expectedData, formattedDayResults.getSensorReadings());
+        Assertions.assertEquals(expectedLabels, formattedDayResults.getLabels());
     }
 
+    // AC4
     @When("I choose to see a graph of the temperature in Degree Celsius over the last thirty days")
     public void iChooseToSeeAGraphOfTheTemperatureInDegreeCelsiusOverTheLastThirtyDays() {
         formattedMonthResults = arduinoDataPointService.getMonthGraphData(gardenId,
                 LocalDateTime.of(2024, 1, 10, 0, 0));
     }
 
-
+    // AC4
     @Then("I see a a display of the results for the average temperature for each day.")
     public void iSeeAADisplayOfTheResultsForTheAverageTemperatureForEachDay() {
-        List<List<Double>> expected = Arrays.asList(
-                Arrays.asList(
-                        null, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, null
-                ),
-                Arrays.asList(
-                        null, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, null
-                ),
-                Arrays.asList(
-                        null, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, null
-                ),
-                Arrays.asList(
-                        null, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, null
-                ),
-                Arrays.asList(
-                        null, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, null
-                )
+        List<List<Double>> expectedData = Arrays.asList(
+                Arrays.asList(30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, null),
+                Arrays.asList(40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, null),
+                Arrays.asList(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, null),
+                Arrays.asList(60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, null),
+                Arrays.asList(70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, 70.0, null)
         );
-        Assertions.assertEquals(expected, formattedMonthResults.getSensorReadings());
+
+        List<String> expectedLabels = Arrays.asList(
+                "\"Dec 11\"", "\"Dec 12\"", "\"Dec 13\"", "\"Dec 14\"", "\"Dec 15\"",
+                "\"Dec 16\"", "\"Dec 17\"", "\"Dec 18\"", "\"Dec 19\"", "\"Dec 20\"",
+                "\"Dec 21\"", "\"Dec 22\"", "\"Dec 23\"", "\"Dec 24\"", "\"Dec 25\"",
+                "\"Dec 26\"", "\"Dec 27\"", "\"Dec 28\"", "\"Dec 29\"", "\"Dec 30\"",
+                "\"Dec 31\"", "\"Jan 1\"", "\"Jan 2\"", "\"Jan 3\"", "\"Jan 4\"",
+                "\"Jan 5\"", "\"Jan 6\"", "\"Jan 7\"", "\"Jan 8\"", "\"Jan 9\"",
+                "\"Jan 10\""
+        );
+
+        Assertions.assertEquals(expectedData, formattedMonthResults.getSensorReadings());
+        Assertions.assertEquals(expectedLabels, formattedMonthResults.getLabels());
     }
 }
