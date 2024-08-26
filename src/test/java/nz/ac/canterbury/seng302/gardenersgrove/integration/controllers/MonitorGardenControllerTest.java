@@ -80,6 +80,7 @@ class MonitorGardenControllerTest {
         garden.setArduinoId("127.0.0.1");
         ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.now(), 1.0, 1.0, 1.0, 1.0, 1.0);
         arduinoDataPointRepository.save(arduinoDataPoint);
+        gardenRepository.save(garden);
 
         mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
                 .andExpect(MockMvcResultMatchers.model().attribute("deviceStatus", "UP_TO_DATE"));
