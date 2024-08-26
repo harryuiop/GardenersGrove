@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
@@ -31,14 +32,13 @@ public class ArduinoDataPointService {
     }
 
     /**
-     * Takes in a list of all ArduinoDataPoints objects attached to a garden and returns the most
-     * recent datapoint based on date element
+     * Get a garden's most recent data reading from the Arduino.
      *
-     * @param gardenId A list of datapoints attached to a garden inside the database
-     * @return The most recent data point
+     * @param garden The garden to the most recent sensor reading of.
+     * @return The data reading.
      */
-    public ArduinoDataPoint getMostRecentArduinoDataPoint(Long gardenId) {
-        return dataPointRepository.getGardenArduinoStats(gardenId).getFirst();
+    public ArduinoDataPoint getMostRecentArduinoDataPoint(Garden garden) {
+        return dataPointRepository.findFirstByGardenOrderByTime(garden);
     }
 
     /**

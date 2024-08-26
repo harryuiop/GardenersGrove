@@ -21,4 +21,6 @@ public interface ArduinoDataPointRepository extends CrudRepository<ArduinoDataPo
 
     @Query("SELECT a FROM ArduinoDataPoint a WHERE a.garden.id=?1 and a.time >= ?2 and a.time <= ?3 ORDER BY PARSEDATETIME(a.time, 'yyyy-MM-dd HH:mm:ss') ASC")
     List<ArduinoDataPoint> getArduinoDataPointOverDays(Long gardenId, LocalDateTime startDateRange, LocalDateTime endDataRange);
+
+    ArduinoDataPoint findFirstByGardenOrderByTime(Garden garden);
 }

@@ -11,12 +11,26 @@
         <div class="col d-flex justify-content-between align-items-center mx-4 p-0">
             <h2 class="text-break" th:text="${garden.getName()}"></h2>
 
-            <div th:if="${connected}" class="alert alert-success">
-                <i class="bi bi-link"></i>Garden Connected
-            </div>
-            <div th:unless="${connected}" class="alert alert-warning">
-                No Device Found
-            </div>
+            <th:block th:switch="${deviceStatus}">
+                <div th:case="'UP_TO_DATE'" class="alert alert-success">
+                    <i class="bi bi-link"></i> Device linked to garden! The last update was received
+                    <span th:text="${timeSinceLastReading}"></span>
+                    minutes ago.
+                </div>
+                <div th:case="'OUT_OF_DATE'" class="alert alert-warning">
+                    <i class="bi bi-cloud-slash"></i> Device linked to garden!
+                    The last update was received
+                    <span th:text="${timeSinceLastReading}"></span>
+                    minutes ago, you may want to check the device is connected to the internet!
+                </div>
+                <div th:case="'NO_DATA'" class="alert alert-warning">
+                    <i class="bi bi-cloud-slash"></i> Device linked to garden! No data available
+                </div>
+                <div th:case="'NOT_LINKED'" class="alert alert-danger">
+                    <i class="bi bi-cloud-slash"></i>
+                    There is no device linked to this garden
+                </div>
+            </th:block>
         </div>
     </div>
 
@@ -25,7 +39,7 @@
     </div>
 
     <div class="row">
-        <div class="col bg-white rounded m-4 p-3 shadow-sm">
+        <div th:if="${gardenStats} != null" class="col bg-white rounded m-4 p-3 shadow-sm">
             <div class="d-flex justify-content-between flex-column flex-md-row">
                 <div class="container w-100 text-center align-content-center">
                     <button onclick="makeActive('Temperature')" id="Temperature" class="btn btn-stats-bar-active btn-no-bold m-0 lead"><i class="bi bi-thermometer-half"></i> <span th:text="'Temperature: '+ ${gardenStats.getTempCelsius()} +'°C'"></span></button>
