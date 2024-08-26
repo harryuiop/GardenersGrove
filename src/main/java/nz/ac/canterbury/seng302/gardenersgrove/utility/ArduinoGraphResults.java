@@ -27,7 +27,7 @@ public class ArduinoGraphResults {
     };
 
     private static final String[] DAY_STRINGS = {
-            "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+            "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
     };
 
     private enum LabelType {
@@ -75,11 +75,6 @@ public class ArduinoGraphResults {
         }
 
         if (!currentBlock.isEmpty()) blocks.add(currentBlock);
-
-        System.out.println("RAHHH");
-        for (List<ArduinoDataPoint> arduinoDataPoints1: blocks) {
-            System.out.println(arduinoDataPoints1.stream().map(a -> a.getTempCelsius()).toList());
-        }
 
         return blocks.stream().map(ArduinoGraphResults::getAverageForBlock).toList();
     }
@@ -223,7 +218,7 @@ public class ArduinoGraphResults {
      */
     public static FormattedGraphData formatResultsForMonth(List<ArduinoDataBlock> arduinoDataBlocks, LocalDateTime accessDate) {
         int size = DAYS_IN_MONTH + 1;
-        LocalDateTime startTime = accessDate.toLocalDate().minusDays(DAYS_IN_MONTH).atTime(0, 0, 0);
+        LocalDateTime startTime = accessDate.toLocalDate().minusDays(DAYS_IN_MONTH).atTime(23, 59, 59);
 
         return formatResultsGeneric(filterBlocksInTimeFrame(arduinoDataBlocks, startTime.minusDays(1), accessDate),
                 size, startTime, Duration.ofDays(1), LabelType.MONTH);
@@ -236,13 +231,13 @@ public class ArduinoGraphResults {
      * @param arduinoDataBlocks List of Arduino Data Blocks in ascending time order
      * @param size Expected number of graph points, this is not necessarily equal to
      *            data blocks size (due to possible null values), > 0
-     * @param startTime Beginning of search time
+     * @param dateToCheck Beginning of search time
      * @param durationStep Expected time increase per block
      * @param labelType Type of label to correctly format
      * @return Results formatted to be in graph
      */
     private static FormattedGraphData formatResultsGeneric(List<ArduinoDataBlock> arduinoDataBlocks,
-                                                           int size, LocalDateTime startTime,
+                                                           int size, LocalDateTime dateToCheck,
                                                            TemporalAmount durationStep, LabelType labelType) {
 
         List<List<Double>> resultList = new ArrayList<>();
@@ -252,9 +247,7 @@ public class ArduinoGraphResults {
 
         List<String> labels = new ArrayList<>();
 
-        LocalDateTime dateToCheck = startTime;
         int arduinoIndex = 0;
-
         LocalDateTime minDateTime = dateToCheck.minus(durationStep);
         for (int i = 0; i < size; i++) {
 
