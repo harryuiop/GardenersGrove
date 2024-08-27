@@ -39,13 +39,13 @@
         </div>
         <div class="container mt-5">
           <div class="row">
-            <div class="col-md-6 col-sm-12 mb-4 column-center">
+            <div class="col-md-6 col-sm-12 mb-4 column-center" style="min-width: 29rem">
               <div>
                 <h3 class="column-center" style="color: #477641">My Friends</h3>
-                <div class="scroll-div">
+                <div class="scroll-div" style="min-width: 35rem">
                   <table
                     class="table table-borderless"
-                    style="background-color: #efefec"
+                    style="background-color: #efefec;"
                   >
                     <tbody>
                       <tr th:each="friend : ${friends}">
@@ -55,7 +55,7 @@
                           th:id="'remove-' + ${friend.getId()}"
                         >
                           <td style="background-color: #efefec;">
-                            <div class="card card-container mb-1 shadow">
+                            <div class="card mb-1 shadow">
                               <div class="card-body">
                                 <div class="container-fluid">
                                   <div class="row">
@@ -229,7 +229,7 @@
                     <tr th:each="request : ${outgoing}">
                       <form method="post" th:action="@{${manageFriendsUri}}">
                         <td style="background-color: #efefec">
-                          <div class="card card-container mb-1 shadow">
+                          <div class="card mb-1 shadow">
                             <div class="card-body ">
                               <div class="container-fluid">
                                 <div class="row">
