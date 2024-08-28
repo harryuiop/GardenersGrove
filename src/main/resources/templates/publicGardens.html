@@ -13,7 +13,7 @@
                 aria-label="Search for public gardens"
                 autocomplete="off"
                 class="form-control rounded"
-                id="gardenName"
+                id="search-bar"
                 placeholder="Search for gardens"
                 th:name="searchParameter"
                 type="text"
@@ -22,11 +22,12 @@
         <button
                 class="input-group-text border-0"
                 id="search-addon"
-                th:for="gardenName"
+                th:for="search-bar"
                 type="submit"
         >
             <i class="bi bi-search" style="color: black"></i>
         </button>
+          <div id="autocomplete-list" class="dropdown-menu w-100 shadow"></div>
     </div>
 </form>
 <div th:if="${numberOfResults > 0}">
@@ -79,4 +80,8 @@
     <h3>No gardens match your search</h3>
 </div>
 </body>
+  <script
+    type="text/javascript"
+    th:src="@{/javascript/searchGardensAutocomplete.js}"
+  ></script>
 </html>
