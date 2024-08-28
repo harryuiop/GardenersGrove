@@ -45,7 +45,9 @@ function renderAutocomplete(suggestions) {
         let primaryTextElement = document.createElement("div");
         primaryTextElement.classList.add("primary-text");
 
-        primaryTextElement.innerHTML = item;
+        let suggestionItem = item;
+
+        primaryTextElement.innerHTML = suggestionItem;
 
         suggestionElement.appendChild(primaryTextElement);
         autocompleteList.appendChild(suggestionElement);
