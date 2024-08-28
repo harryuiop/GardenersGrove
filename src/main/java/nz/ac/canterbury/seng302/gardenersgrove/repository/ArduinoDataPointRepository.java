@@ -17,4 +17,6 @@ public interface ArduinoDataPointRepository extends CrudRepository<ArduinoDataPo
 
     @Query("SELECT a FROM ArduinoDataPoint a WHERE a.garden.id=?1")
     List<ArduinoDataPoint> findAllByGardenId(Long id);
+
+    ArduinoDataPoint findFirstByGardenOrderByTime(Garden garden);
 }

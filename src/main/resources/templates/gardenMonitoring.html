@@ -1,37 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="~{fragments/importFragment :: headerfiles}"><title>Gardeners' Grove</title></head>
+<head th:insert="~{fragments/importFragment :: headerfiles}">
+    <title>Gardeners' Grove</title>
+</head>
 
 <body class="bg">
-<div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
-    <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
+<nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
+<div>
+    <div class="row">
+        <div class="col d-flex justify-content-between align-items-center mx-4 p-0">
+            <h2 class="text-break" th:text="${garden.getName()}"></h2>
 
-    <div class="d-flex justify-content-center mt-5 w-100 mb-5">
-        <div class="content">
-            <div class="container">
-                <div class="row justify-content-between">
-                    <div class="col-auto">
-                        <h2 class="text-break" th:text="${garden.getName()}"></h2>
-                    </div>
-                    <div class="col-auto">
-                        <div th:if="${connected}" class="alert alert-success">
-                            <i class="bi bi-link"></i> Garden Connected
-                        </div>
-                        <div th:unless="${connected}" class="alert alert-warning">
-                            No Device Found
-                        </div>
-                    </div>
+            <th:block th:switch="${deviceStatus}">
+                <div th:case="'UP_TO_DATE'" class="alert alert-success">
+                    <i class="bi bi-link"></i> Device linked to garden! The last update was received
+                    <span th:text="${timeSinceLastReading}"></span>
+                    minutes ago.
                 </div>
-                <div class="row">
-                    <div class="container">
-                        <div id="currentStats">
+                <div th:case="'OUT_OF_DATE'" class="alert alert-warning">
+                    <i class="bi bi-cloud-slash"></i> Device linked to garden!
+                    The last update was received
+                    <span th:text="${timeSinceLastReading}"></span>
+                    minutes ago, you may want to check the device is connected to the internet!
+                </div>
+                <div th:case="'NO_DATA'" class="alert alert-warning">
+                    <i class="bi bi-cloud-slash"></i> Device linked to garden! No data available
+                </div>
+                <div th:case="'NOT_LINKED'" class="alert alert-danger">
+                    <i class="bi bi-cloud-slash"></i>
+                    There is no device linked to this garden
+                </div>
+            </th:block>
+        </div>
+    </div>
 
-                        </div>
-                    </div>
+    <div class="ms-3">
+        <h6 class="m-0 lead">Current Statistics</h6>
+    </div>
+
+    <div class="row">
+        <div th:if="${gardenStats} != null" class="col bg-white rounded m-4 p-3 shadow-sm">
+            <div class="d-flex justify-content-between flex-column flex-md-row">
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Temperature')" id="Temperature" class="btn btn-stats-bar-active btn-no-bold m-0 lead"><i class="bi bi-thermometer-half"></i> <span th:text="'Temperature: '+ ${gardenStats.getTempCelsius()} +'°C'"></span></button>
+                </div>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0"><i class="bi bi-moisture"></i> <span th:text="'Soil Moisture: '+ ${gardenStats.getMoisturePercent()} +'%'"></span></button>
+                </div>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Light')" id="Light" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-brightness-high"></i> <span th:text="'Light: '+ ${gardenStats.getLightPercent()} +'%'"></span></button>
+                </div>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Pressure')" id="Pressure" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-speedometer"></i> <span th:text="'Air Pressure: '+ ${gardenStats.getAtmosphereAtm()} +'atm'"></span></button>
+                </div>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Humidity')" id="Humidity" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-droplet-half"></i> <span th:text="'Humidity: '+ ${gardenStats.getHumidityPercent()} +'%'"></span></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 </body>
+<script>
+    function makeActive(buttonId) {
+        const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
+        const button = document.getElementById(buttonId);
+
+        button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead'
+
+        allButtons.forEach( allButtonsItem => {
+            if (allButtonsItem !== buttonId) {
+                document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
+                }
+            }
+        )
+    }
+</script>
 </html>

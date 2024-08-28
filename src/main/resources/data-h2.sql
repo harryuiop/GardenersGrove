@@ -104,6 +104,12 @@ VALUES (1, 'Default User''s first Garden', 'The first garden created.', 1, 2, TR
        (24, 'Second User''s Second Garden', 'This description needs to be edited first as it is not verified', 2, 0.5,
         FALSE, FALSE, NOW());
 
+UPDATE garden
+SET arduino_id = '127.0.0.1'
+WHERE id = 1;
+UPDATE garden
+SET arduino_id = '127.0.0.2'
+WHERE id = 2;
 
 INSERT INTO tag (name)
 VALUES ('first_tag'),
@@ -133,3 +139,13 @@ VALUES (1, 'First plant of Default User''s first Garden', 1, NULL, 'Plant One', 
        (9, 'Ninth plant of First User''s first Garden', 1, NULL, 'Plant Nine', NULL),
        (10, 'Tenth plant of First User''s first Garden', 1, NULL, 'Plant Ten', NULL),
        (NULL, 'First plant of Second User''s first Garden', 2, NULL, 'Star Fruit', NULL);
+
+INSERT INTO arduino_data_point (atmosphere_atm, humidity_percent, light_percent, moisture_percent, temp_celsius,
+                                garden_id, id, time)
+VALUES (1.0, 50.0, 05.0, 30.0, 20.0, 1, 1, '2024-01-10 11:20:00'),
+       (1.0, 60.0, 90.0, 35.0, 20.0, 1, 2, '2024-01-02 11:20:00'),
+       (1.0, 30.0, 80.0, 30.0, 20.0, 1, 3, '2024-01-03 11:20:00'),
+       (1.0, 10.0, 70.0, 40.0, 20.0, 1, 4, '2024-01-04 11:20:00'),
+       (1.0, 55.0, 20.0, 30.0, 20.0, 1, 5, '2024-01-05 11:20:00'),
+       (1.0, 59.0, 47.0, 70.0, 20.0, 1, 6, '2024-01-06 11:20:00'),
+       (1.0, 90.0, 43.0, 30.0, 20.0, 1, 7, '2024-01-07 11:20:00');
