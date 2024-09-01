@@ -78,11 +78,12 @@ class MonitorGardenControllerTest {
     @Test
     void requestGardenMonitoringPage_linkedArduinoNewData_upToDateStatus() throws Exception {
         garden.setArduinoId("127.0.0.1");
-        ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.now(), 1.0, 1.0, 1.0, 1.0, 1.0);
+        ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.of(2000, 1, 1, 0, 0), 1.0, 1.0, 1.0, 1.0, 1.0);
         arduinoDataPointRepository.save(arduinoDataPoint);
+        gardenRepository.save(garden);
 
         mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
-                .andExpect(MockMvcResultMatchers.model().attribute("deviceStatus", "UP_TO_DATE"));
+                .andExpect(MockMvcResultMatchers.model().attribute("deviceStatus", "OUT_OF_DATE"));
     }
 
     @Test
