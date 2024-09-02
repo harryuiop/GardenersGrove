@@ -8,14 +8,15 @@ import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
@@ -97,6 +98,19 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("owner", garden.getOwner() == currentUser);
         model.addAttribute("deviceStatus", deviceStatus);
         model.addAttribute("timeSinceLastReading", timeSinceLastReading);
+        model.addAttribute("gardenStats", arduinoDataPointService.getMostRecentArduinoDataPoint(garden));
+        model.addAttribute("garden", optionalGarden.get());
+        model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
+
+        // Add Graph Data
+        FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId, LocalDateTime.now());
+        FormattedGraphData weekData = arduinoDataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
+        FormattedGraphData monthData = arduinoDataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
+
+        model.addAttribute("graphDay", dayData);
+        model.addAttribute("graphWeek", weekData);
+        model.addAttribute("graphMonth", monthData);
+
         return "gardenMonitoring";
     }
 

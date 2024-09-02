@@ -58,8 +58,63 @@
                 </div>
             </div>
         </div>
+
+        <div id="display-graphs" th:attr="data-day-labels=${graphDay.getLabels()},
+                                          data-month-labels=${graphMonth.getLabels()},
+                                          data-week-labels=${graphWeek.getLabels()}"
+        >
+            <!-- Temperature -->
+            <div class="sensor-data m-4" id="temperature-data">
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-toggle-selected" id="celsius-btn"
+                                style="
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                "
+                                onclick="changeTemperatureUnit('c')">
+                            Celsius
+                        </button>
+                        <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
+                                style="
+                        border-top-left-radius: 0;
+                        border-bottom-left-radius: 0;
+                    "
+                                onclick="changeTemperatureUnit('f')">
+                            Fahrenheit
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row" id="temperature-graphs" data-units="c">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-6 mt-3 col-sx-8">
+                                <h5 class="text-break text-center">Temperature Today</h5>
+                                <canvas id="temp-graph-day"
+                                        th:attr="data-results=${graphDay.getTemperature()}">
+                                </canvas>
+                            </div>
+                            <div class="col-lg-6 mt-3 col-sx-8">
+                                <h5 class="text-break text-center">Temperature Last 30 Days</h5>
+                                <canvas id="temp-graph-month"
+                                        th:attr="data-results=${graphMonth.getTemperature()}">
+                                </canvas>
+                            </div>
+                            <div class="col-lg-6 mt-3 col-sx-8">
+                                <h5 class="text-break text-center">Temperature Last 7 Days</h5>
+                                <canvas id="temp-graph-week"
+                                        th:attr="data-results=${graphWeek.getTemperature()}">
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
 </body>
 <script>
     function makeActive(buttonId) {
