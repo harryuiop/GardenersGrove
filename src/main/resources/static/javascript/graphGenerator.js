@@ -2,8 +2,6 @@
  * Generator and manager for Graphs for all sensors in garden monitoring page.
  */
 
-require('dotenv').config();
-
 // Used for sending rest requests to deployed application
 const possible_deployments = ['test', 'prod'];
 const deployment = window.location.pathname.split('/')[1];
@@ -110,7 +108,6 @@ function changeTemperatureUnit(unit) {
         temperatureGraphContainer.setAttribute("data-units", "f");
     }
     renderTemperatureGraphs();
-
 }
 
 function renderTemperatureGraphs() {
