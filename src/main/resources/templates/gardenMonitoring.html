@@ -107,6 +107,14 @@
                                         th:attr="data-results=${graphWeek.getTemperature()}">
                                 </canvas>
                             </div>
+
+                            <div class="col-lg-6 mt-3 col-sx-8">
+                                <h5 class="text-break text-center">Pressure Today</h5>
+                                <canvas id="pressure-graph-day"
+                                        th:attr="data-results=${graphDay.getAtmosphere()}">
+                                </canvas>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -120,6 +128,7 @@
     function makeActive(buttonId) {
         const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
         const button = document.getElementById(buttonId);
+        console.log(button)
 
         button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead'
 

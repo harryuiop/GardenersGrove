@@ -12,6 +12,7 @@ const temperatureGraphContainer = document.getElementById("temperature-graphs");
 const tempMonthResults = JSON.parse(document.getElementById("temp-graph-month").dataset.results);
 const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
 const tempDayResults = JSON.parse(document.getElementById("temp-graph-day").dataset.results);
+console.log("Temperature data:", tempDayResults);
 
 // Labels
 const labelDataSet = document.getElementById("display-graphs").dataset;
@@ -33,6 +34,7 @@ const GraphType = Object.freeze({
  */
 window.onload = function() {
     renderTemperatureGraphs();
+    renderPressureGraph();
 }
 
 /**
@@ -50,6 +52,7 @@ function changeTemperatureUnit(unit) {
         temperatureGraphContainer.setAttribute("data-units", "f");
     }
     renderTemperatureGraphs();
+    renderPressureGraph();
 
 }
 
@@ -68,6 +71,28 @@ function renderTemperatureGraphs() {
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
     createGraph(convertedDayResults,"temp-graph-day", `Temperature (${temperatureUnit})`,
         GraphType.DAY, dayLabels);
+}
+
+const renderPressureGraph = () => {
+
+    const pressureData = JSON.parse(document.getElementById("temp-graph-day").dataset.results)
+
+    if (!pressureData) {
+        console.error("No data found for pressure graph.");
+        return;
+    }
+
+    console.log("Pressure data:", pressureData);
+
+    let pressureDayResults;
+    try {
+        pressureDayResults = JSON.parse(pressureData);
+    } catch (e) {
+        console.error("Error parsing JSON data for pressure graph:", e);
+        return;
+    }
+
+    createGraph(pressureDayResults, "pressure-graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
 }
 
 
