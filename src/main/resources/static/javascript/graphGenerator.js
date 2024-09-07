@@ -12,7 +12,7 @@ const temperatureGraphContainer = document.getElementById("temperature-graphs");
 const tempMonthResults = JSON.parse(document.getElementById("temp-graph-month").dataset.results);
 const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
 const tempDayResults = JSON.parse(document.getElementById("temp-graph-day").dataset.results);
-console.log("Temperature data:", tempDayResults);
+console.log("Temperature data:", tempMonthResults);
 
 // Labels
 const labelDataSet = document.getElementById("display-graphs").dataset;
@@ -75,24 +75,21 @@ function renderTemperatureGraphs() {
 
 const renderPressureGraph = () => {
 
-    const pressureData = JSON.parse(document.getElementById("temp-graph-day").dataset.results)
 
-    if (!pressureData) {
-        console.error("No data found for pressure graph.");
-        return;
-    }
-
-    console.log("Pressure data:", pressureData);
-
-    let pressureDayResults;
+    let pressureMonthData;
     try {
-        pressureDayResults = JSON.parse(pressureData);
+        pressureMonthData = JSON.parse(document.getElementById("pressure-graph-month").dataset.results);
+        console.log("Pressure data:", pressureMonthData);
+        if (!pressureMonthData) {
+            console.error("No data found for pressure graph.");
+            return;
+        }
     } catch (e) {
         console.error("Error parsing JSON data for pressure graph:", e);
         return;
     }
 
-    createGraph(pressureDayResults, "pressure-graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
+    createGraph(pressureMonthData, "pressure-graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
 }
 
 
