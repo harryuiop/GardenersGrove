@@ -2,17 +2,21 @@
  * Generator and manager for Graphs for all sensors in garden monitoring page.
  */
 
+require('dotenv').config();
+
+// Used for sending rest requests to deployed application
+const possible_deployments = ['test', 'prod'];
+const deployment = window.location.pathname.split('/')[1];
+const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
+const gardenId = deployment !== undefined && possible_deployments.includes(deployment)
+    ? window.location.pathname.split('/')[3]
+    : window.location.pathname.split('/')[2];
+
 const fahrenheitButton = document.getElementById("fahrenheit-btn");
 const celsiusButton = document.getElementById("celsius-btn");
 
 // Containers
 const temperatureGraphContainer = document.getElementById("temperature-graphs");
-
-// Data
-const tempMonthResults = JSON.parse(document.getElementById("temp-graph-month").dataset.results);
-const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
-const tempDayResults = JSON.parse(document.getElementById("temp-graph-day").dataset.results);
-console.log("Temperature data:", tempMonthResults);
 
 // Labels
 const labelDataSet = document.getElementById("display-graphs").dataset;
@@ -28,14 +32,68 @@ const GraphType = Object.freeze({
     MONTH: 0, WEEK: 1, DAY: 2
 });
 
+
+/**
+ * Fetch data from server to get sensor data by period and data type.
+ * @param period terms of the data to fetch e.g. month, week, day
+ * @param dataType types of data such as temperature, pressure, humidity
+ * @returns {Promise<any>} data fetched from server
+ */
+const fetchData = (period, dataType) => {
+    return fetch(`${baseUri}/sensor-data/${period}/${gardenId}/${dataType}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            return json.data;
+        });
+}
+
+// Data variable declarations
+let tempMonthResults = undefined;
+let tempWeeklyResults = undefined;
+let tempDayResults = undefined;
+let atmosphereMonthResults = undefined;
+let atmosphereWeeklyResults = undefined;
+let atmosphereDayResults = undefined;
+let moistureMonthResults = undefined;
+let moistureWeeklyResults = undefined;
+let moistureDayResults = undefined;
+let lightMonthResults = undefined;
+let lightWeeklyResults = undefined;
+let lightDayResults = undefined;
+let humidityMonthResults = undefined;
+let humidityWeeklyResults = undefined;
+let humidityDayResults = undefined;
+
 /**
  * Render all graphs on page load.
  * Manage what graphs are shown / hidden.
  */
-window.onload = function() {
+window.onload = async function() {
+    // Data initialization
+    tempMonthResults = await fetchData("month", "temperature");
+    tempWeeklyResults = await fetchData("week", "temperature");
+    tempDayResults = await fetchData("day", "temperature");
+    atmosphereMonthResults = await fetchData("month", "atmosphere");
+    atmosphereWeeklyResults = await fetchData("week", "atmosphere");
+    atmosphereDayResults = await fetchData("day", "atmosphere");
+    moistureMonthResults = await fetchData("month", "moisture");
+    moistureWeeklyResults = await fetchData("week", "moisture");
+    moistureDayResults = await fetchData("day", "moisture");
+    lightMonthResults = await fetchData("month", "light");
+    lightWeeklyResults = await fetchData("week", "light");
+    lightDayResults = await fetchData("day", "light");
+    humidityMonthResults = await fetchData("month", "humidity");
+    humidityWeeklyResults = await fetchData("week", "humidity");
+    humidityDayResults = await fetchData("day", "humidity");
+
     renderTemperatureGraphs();
-    renderPressureGraph();
 }
+
 
 /**
  * Change temperature unit to Fahrenheit or Celsius AND update graph
@@ -52,7 +110,6 @@ function changeTemperatureUnit(unit) {
         temperatureGraphContainer.setAttribute("data-units", "f");
     }
     renderTemperatureGraphs();
-    renderPressureGraph();
 
 }
 
@@ -74,22 +131,9 @@ function renderTemperatureGraphs() {
 }
 
 const renderPressureGraph = () => {
-
-
-    let pressureMonthData;
-    try {
-        pressureMonthData = JSON.parse(document.getElementById("pressure-graph-month").dataset.results);
-        console.log("Pressure data:", pressureMonthData);
-        if (!pressureMonthData) {
-            console.error("No data found for pressure graph.");
-            return;
-        }
-    } catch (e) {
-        console.error("Error parsing JSON data for pressure graph:", e);
-        return;
-    }
-
-    createGraph(pressureMonthData, "pressure-graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
+    createGraph(atmosphereMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
+    createGraph(atmosphereWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels);
+    createGraph(atmosphereDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
 }
 
 
