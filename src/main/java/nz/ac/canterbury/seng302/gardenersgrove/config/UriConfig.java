@@ -34,6 +34,9 @@ public class UriConfig {
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
     public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup/{gardenId}/{deployed}";
     public static final String ARDUINO_SENSOR_DATA = "/sensor-data";
+    public static final String SENSOR_DATA_RESPONSE_MONTH = "/sensor-data-month/{gardenId}/{dataType}";
+    public static final String SENSOR_DATA_RESPONSE_WEEK = "/sensor-data-week/{gardenId}/{dataType}";
+    public static final String SENSOR_DATA_RESPONSE_DAY = "/sensor-data-day/{gardenId}/{dataType}";
 
 
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
@@ -47,6 +50,10 @@ public class UriConfig {
     private static final UriTemplate UPLOAD_PLANT_IMAGE_URI = new UriTemplate(UPLOAD_PLANT_IMAGE_URI_STRING);
     private static final UriTemplate MAKE_GARDEN_PUBLIC_URI = new UriTemplate(MAKE_GARDEN_PUBLIC_STRING);
     private static final UriTemplate SET_WEATHER_POPUP_ALERT_COOKIES_URI = new UriTemplate(SET_WEATHER_POPUP_ALERT_COOKIES);
+    private static final UriTemplate SENSOR_DATA_RESPONSE_MONTH_URI = new UriTemplate(SENSOR_DATA_RESPONSE_MONTH);
+    private static final UriTemplate SENSOR_DATA_RESPONSE_WEEK_URI = new UriTemplate(SENSOR_DATA_RESPONSE_WEEK);
+    private static final UriTemplate SENSOR_DATA_RESPONSE_DAY_URI = new UriTemplate(SENSOR_DATA_RESPONSE_DAY);
+
 
     private UriConfig() {
         throw new IllegalStateException("Utility class");
@@ -135,18 +142,25 @@ public class UriConfig {
     public static URI sendCookiesForWeatherAdvicePopup(long gardenId, int deployed) {
         return SET_WEATHER_POPUP_ALERT_COOKIES_URI.expand(gardenId, deployed);
     }
-
     public static URI viewAllGardensUri() {
         return URI.create(VIEW_ALL_GARDENS_URI_STRING);
     }
     public static URI makeGardenPublicUri(long gardenId) {
         return MAKE_GARDEN_PUBLIC_URI.expand(gardenId);
     }
-
     public static URI browsePublicGardensUri() {
         return URI.create(BROWSE_PUBLIC_GARDENS_URI_STRING);
     }
     public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
     public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
+    public static URI sensorDataResonseUri(long gardenId, String sensorType) {
+        return SENSOR_DATA_RESPONSE_MONTH_URI.expand(gardenId, sensorType);
+    }
+    public static URI sensorDataResonseWeekUri(long gardenId, String sensorType) {
+        return SENSOR_DATA_RESPONSE_WEEK_URI.expand(gardenId, sensorType);
+    }
+    public static URI sensorDataResonseDayUri(long gardenId, String sensorType) {
+        return SENSOR_DATA_RESPONSE_DAY_URI.expand(gardenId, sensorType);
+    }
 
 }
