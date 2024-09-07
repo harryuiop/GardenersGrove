@@ -9,9 +9,10 @@
 <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
 
 <!-- Searching -->
-<form class="d-flex justify-content-center">
-  <div class="d-flex justify-content-center align-items-center mt-5">
-    <div class="input-group rounded">
+<form class="d-flex flex-column align-items-center mt-5">
+  <div class="d-flex justify-content-center align-items-center">
+    <!-- Search Input -->
+    <div class="input-group rounded mx-2">
       <input
               aria-describedby="search-public-gardens"
               aria-label="Search for public gardens"
@@ -24,7 +25,8 @@
       />
     </div>
 
-    <div class="mx-2 input-group d-flex flex-nowrap">
+    <!-- Tag Input -->
+    <div class="input-group d-flex flex-nowrap mx-2">
       <div class="input-group-prepend">
         <div class="input-group-text"
              style="
@@ -35,13 +37,14 @@
       </div>
       <div>
         <input type="text" class="form-control" placeholder="Add tag to search" id="tagName" th:name="tagName"
-               data-cy="tagName" style="border-radius: 0" th:classappend="${tagErrors} ? 'border border-danger'" autofocus>
+               data-cy="tagName" style="border-radius: 0" autofocus>
         <div id="autocomplete-list" class="dropdown-menu w-40 shadow inputStyle"></div>
       </div>
       <div class="input-group-append">
         <button class="btn btn-confirm"
                 id="tag-submit"
-                type="submit"
+                type="button"
+                onclick="submitTagToSearch()"
                 style="
                              border-top-left-radius: 0;
                              border-bottom-left-radius: 0;
@@ -51,8 +54,9 @@
       </div>
     </div>
 
+    <!-- Search Button -->
     <button
-            class="btn btn-edit d-flex align-items-center"
+            class="btn btn-edit d-flex align-items-center mx-2"
             id="search-addon"
             th:for="search-bar"
             type="submit"
@@ -61,17 +65,18 @@
     </button>
   </div>
 
+  <!-- Error Message -->
+  <p id="tag-error-message" class="error message mt-1"></p>
+
+
+  <!-- Display Tags -->
+  <div class="display-tags d-flex flex-wrap justify-content-center">
+    <span id="tags-container"></span>
+  </div>
+
 </form>
-<p class="error message" th:text="${tagErrors}"></p>
-<!--      <div class="display-tags">-->
-<!--        <span>-->
-<!--            <span class="tag-text">#cool</span>-->
-<!--        </span>-->
-<!--        <span th:each="tag, iterStat : ${tags}">-->
-<!--            <span class="tag-text" th:text="'#' + ${tag.getName()}"></span>-->
-<!--            <span th:if="${!iterStat.last}">&nbsp;&nbsp;&nbsp;</span>-->
-<!--        </span>-->
-<!--      </div>-->
+
+
 
 <div th:if="${numberOfResults > 0}">
   <div class="d-flex flex-column justify-content-center align-items-center">
@@ -159,8 +164,7 @@
   <h3>No gardens match your search</h3>
 </div>
 </body>
-<script
-        type="text/javascript"
-        th:src="@{/javascript/tagAutocomplete.js}"
-></script>
+<script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/tagSearch.js}"></script>
+
 </html>
