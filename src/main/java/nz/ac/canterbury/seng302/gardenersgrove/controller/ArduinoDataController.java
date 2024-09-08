@@ -79,24 +79,21 @@ public class ArduinoDataController {
                 case "month" -> formattedData = dataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
                 case "week" -> formattedData = dataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
                 case "day" -> formattedData = dataPointService.getDayGraphData(gardenId, LocalDateTime.now());
+                default -> throw new AssertionError();
             }
-
-            // check formattedData is not null
-            assert formattedData != null;
-
+            
             switch (dataType) {
                 case "temperature" -> data = formattedData.getTemperature();
                 case "humidity" -> data = formattedData.getHumidity();
                 case "atmosphere" -> data = formattedData.getAtmosphere();
                 case "light" -> data = formattedData.getLight();
                 case "moisture" -> data = formattedData.getMoisture();
+                default -> throw new AssertionError();
             }
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
-            // check data is not null
-            assert data != null;
 
             String json = objectMapper.writeValueAsString(Map.of("data", data));
             response.getWriter().write(json);
