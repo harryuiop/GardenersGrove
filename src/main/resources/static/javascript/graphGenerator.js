@@ -51,21 +51,14 @@ const fetchData = (period, dataType) => {
 }
 
 // Data variable declarations
-let tempMonthResults = undefined;
-let tempWeeklyResults = undefined;
-let tempDayResults = undefined;
-let atmosphereMonthResults = undefined;
-let atmosphereWeeklyResults = undefined;
-let atmosphereDayResults = undefined;
-let moistureMonthResults = undefined;
-let moistureWeeklyResults = undefined;
-let moistureDayResults = undefined;
-let lightMonthResults = undefined;
-let lightWeeklyResults = undefined;
-let lightDayResults = undefined;
-let humidityMonthResults = undefined;
-let humidityWeeklyResults = undefined;
-let humidityDayResults = undefined;
+let tempMonthResults, tempWeeklyResults, tempDayResults;
+let atmosphereMonthResults, atmosphereWeeklyResults, atmosphereDayResults;
+let moistureMonthResults, moistureWeeklyResults, moistureDayResults;
+let lightMonthResults, lightWeeklyResults, lightDayResults;
+let humidityMonthResults, humidityWeeklyResults, humidityDayResults;
+
+// graph declarations
+let monthGraph, weekGraph, dayGraph;
 
 /**
  * Render all graphs on page load.
@@ -110,35 +103,56 @@ function changeTemperatureUnit(unit) {
     renderTemperatureGraphs();
 }
 
+
+const changeGraphTitle  = (monthTitle, weekTitle, dayTitle) => {
+    document.getElementById("month-title").innerHTML = monthTitle;
+    document.getElementById("week-title").innerHTML = weekTitle;
+    document.getElementById("day-title").innerHTML = dayTitle;
+}
+
+
+const destroyGraphs = () => {
+    if(monthGraph) {
+        monthGraph.destroy();
+        weekGraph.destroy();
+        dayGraph.destroy();
+    }
+}
+
 function renderTemperatureGraphs() {
 
-    document.getElementById("month-title").innerHTML = "Temperature Last 30 Days";
-    document.getElementById("week-title").innerHTML = "Temperature Last 7 Days";
-    document.getElementById("day-title").innerHTML = "Temperature Today";
+    changeGraphTitle("Temperature Last 30 Days", "Temperature Last 7 Days", "Temperature Today");
+
+    // reset graphs
+    destroyGraphs();
 
     const isCelsius = temperatureGraphContainer.dataset.units === 'c';
     const temperatureUnit = isCelsius ? '°C' : '°F';
 
     const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedMonthResults,"graph-month", `Temperature (${temperatureUnit})`,
+    monthGraph = createGraph(convertedMonthResults,"graph-month", `Temperature (${temperatureUnit})`,
         GraphType.MONTH, monthLabels);
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedWeeklyResults,"graph-week", `Temperature (${temperatureUnit})`,
+    weekGraph = createGraph(convertedWeeklyResults,"graph-week", `Temperature (${temperatureUnit})`,
         GraphType.WEEK, weekLabels);
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedDayResults,"graph-day", `Temperature (${temperatureUnit})`,
+    dayGraph = createGraph(convertedDayResults,"graph-day", `Temperature (${temperatureUnit})`,
         GraphType.DAY, dayLabels);
 }
 
+
 const renderPressureGraph = () => {
-    document.getElementById("month-title").innerHTML = "Pressure Last 30 Days";
-    document.getElementById("week-title").innerHTML = "Pressure Last 7 Days";
-    document.getElementById("day-title").innerHTML = "Pressure Today";
-    createGraph(atmosphereMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
-    createGraph(atmosphereWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels);
-    createGraph(atmosphereDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
+
+    changeGraphTitle("Pressure Last 30 Days", "Pressure Last 7 Days", "Pressure Today");``
+
+    // reset graphs
+    destroyGraphs();
+
+    monthGraph = createGraph(atmosphereMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
+    weekGraph = createGraph(atmosphereWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels);
+    dayGraph = createGraph(atmosphereDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
 }
 
 
@@ -254,6 +268,7 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
         }, "Time (Day)", sensorName]
 }
 
+
 /**
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
@@ -283,7 +298,7 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
     }
 
-    var myChart = new Chart(document.getElementById(graphId),
+    return new Chart(document.getElementById(graphId),
         {
             type: 'line',
             data: dataObject,

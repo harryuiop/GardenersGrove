@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.format.DateTimeFormatter;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.ARDUINO_SENSOR_DATA;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.SENSOR_DATA_RESPONSE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -129,5 +128,28 @@ public class ArduinoDataControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString().contains("data"));
+    }
+
+
+    @Test
+    void send_request_invalid_termPathValue_response_NotFound() throws Exception {
+        String term = "invalid";
+        long gardenId = 1;
+        String dataType = "temperature";
+
+        mockMvc.perform(MockMvcRequestBuilders.get(UriConfig.sensorDataResponseUri(term, gardenId, dataType)))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    void send_request_invalid_dataTypePathValue_response_NotFound() throws Exception {
+        String term = "day";
+        long gardenId = 1;
+        String dataType = "invalid";
+
+        mockMvc.perform(MockMvcRequestBuilders.get(UriConfig.sensorDataResponseUri(term, gardenId, dataType)))
+                .andExpect(status().isNotFound());
+
     }
 }

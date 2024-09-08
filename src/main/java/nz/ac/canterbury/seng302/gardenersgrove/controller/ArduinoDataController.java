@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -79,16 +80,16 @@ public class ArduinoDataController {
                 case "month" -> formattedData = dataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
                 case "week" -> formattedData = dataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
                 case "day" -> formattedData = dataPointService.getDayGraphData(gardenId, LocalDateTime.now());
-                default -> throw new AssertionError();
+                default -> throw new InvalidParameterException();
             }
-            
+
             switch (dataType) {
                 case "temperature" -> data = formattedData.getTemperature();
                 case "humidity" -> data = formattedData.getHumidity();
                 case "atmosphere" -> data = formattedData.getAtmosphere();
                 case "light" -> data = formattedData.getLight();
                 case "moisture" -> data = formattedData.getMoisture();
-                default -> throw new AssertionError();
+                default -> throw new InvalidParameterException();
             }
 
             response.setContentType("application/json");
@@ -99,9 +100,10 @@ public class ArduinoDataController {
             response.getWriter().write(json);
 
         } catch (IOException e) {
-            // in case any unexpected error occurs
+            // in case an exception happens during execution of writeValueAsString and getWriter methods
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        } catch (AssertionError assertionError) {
+        } catch (InvalidParameterException invalidParameterException) {
+            // Wrong path variable values provided
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
 
