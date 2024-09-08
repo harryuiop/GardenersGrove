@@ -86,35 +86,24 @@
                     </div>
                 </div>
 
-                <div class="row" id="temperature-graphs" data-units="c">
+                <div class="row" id="graphs" data-units="c">
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-6 mt-3 col-sx-8">
-                                <h5 class="text-break text-center">Temperature Today</h5>
-                                <canvas id="temp-graph-day"
-                                        th:attr="data-results=${graphDay.getTemperature()}">
-                                </canvas>
+                                <h5 class="text-break text-center"
+                                    id="daily-title"></h5>
+                                <canvas id="graph-day"></canvas>
                             </div>
                             <div class="col-lg-6 mt-3 col-sx-8">
-                                <h5 class="text-break text-center">Temperature Last 30 Days</h5>
-                                <canvas id="temp-graph-month"
-                                        th:attr="data-results=${graphMonth.getTemperature()}">
-                                </canvas>
+                                <h5 class="text-break text-center"
+                                    id="month-title"></h5>
+                                <canvas id="graph-month"></canvas>
                             </div>
                             <div class="col-lg-6 mt-3 col-sx-8">
-                                <h5 class="text-break text-center">Temperature Last 7 Days</h5>
-                                <canvas id="temp-graph-week"
-                                        th:attr="data-results=${graphWeek.getTemperature()}">
-                                </canvas>
+                                <h5 class="text-break text-center"
+                                    id="week-title"></h5>
+                                <canvas id="graph-week"></canvas>
                             </div>
-
-                            <div class="col-lg-6 mt-3 col-sx-8">
-                                <h5 class="text-break text-center">Pressure Today</h5>
-                                <canvas id="pressure-graph-month"
-                                        th:attr="data-results=${graphMonth.getAtmosphere()}">
-                                </canvas>
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -130,7 +119,7 @@
         const button = document.getElementById(buttonId);
         console.log(button)
 
-        button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead'
+        button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead';
 
         allButtons.forEach( allButtonsItem => {
             if (allButtonsItem !== buttonId) {
@@ -138,6 +127,17 @@
                 }
             }
         )
+
+        switch (buttonId){
+            case "Temperature":
+                renderTemperatureGraphs();
+                break;
+            case "Pressure":
+                renderPressureGraph();
+                break;
+        }
+
+
     }
 </script>
 </html>

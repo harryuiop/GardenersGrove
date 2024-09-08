@@ -14,7 +14,7 @@ const fahrenheitButton = document.getElementById("fahrenheit-btn");
 const celsiusButton = document.getElementById("celsius-btn");
 
 // Containers
-const temperatureGraphContainer = document.getElementById("temperature-graphs");
+const temperatureGraphContainer = document.getElementById("graphs");
 
 // Labels
 const labelDataSet = document.getElementById("display-graphs").dataset;
@@ -115,15 +115,15 @@ function renderTemperatureGraphs() {
     const temperatureUnit = isCelsius ? '°C' : '°F';
 
     const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedMonthResults,"temp-graph-month", `Temperature (${temperatureUnit})`,
+    createGraph(convertedMonthResults,"graph-month", `Temperature (${temperatureUnit})`,
         GraphType.MONTH, monthLabels);
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedWeeklyResults,"temp-graph-week", `Temperature (${temperatureUnit})`,
+    createGraph(convertedWeeklyResults,"graph-week", `Temperature (${temperatureUnit})`,
         GraphType.WEEK, weekLabels);
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedDayResults,"temp-graph-day", `Temperature (${temperatureUnit})`,
+    createGraph(convertedDayResults,"graph-day", `Temperature (${temperatureUnit})`,
         GraphType.DAY, dayLabels);
 }
 
