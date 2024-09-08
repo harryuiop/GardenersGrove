@@ -5,10 +5,11 @@
 
 const tagContainer = document.getElementById("tags-container");
 const tagErrorMessage = document.getElementById("tag-error-message");
+const gardenInputField = document.getElementById("garden-input");
+const searchButton = document.getElementById("search-addon");
 
 /**
  * On user adding tag, queries database if tag exists via rest request.
- * TODO: Handle enter error (submits entire form).
  */
 function submitTagToSearch() {
     const addedTag = tagField.value;
@@ -29,6 +30,26 @@ function submitTagToSearch() {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
+
+/**
+ * Submit form on enter if user on garden input field.
+ */
+gardenInputField.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        searchButton.click();
+    }
+});
+
+/**
+ * Prevent form from submitting on enter if user is on tag input field.
+ * Sub
+ */
+tagField.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        submitTagToSearch();
+    }
+});
 
 /**
  * Handle a tag being submitted

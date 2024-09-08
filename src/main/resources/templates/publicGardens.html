@@ -9,7 +9,7 @@
 <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
 
 <!-- Searching -->
-<form class="d-flex flex-column align-items-center mt-5">
+<form id="search-form" class="d-flex flex-column align-items-center mt-5">
   <div class="d-flex justify-content-center align-items-center">
     <!-- Search Input -->
     <div class="input-group rounded mx-2">
@@ -21,6 +21,7 @@
               placeholder="Search for gardens"
               th:name="searchParameter"
               type="text"
+              id="garden-input"
               th:value="${gardenSearchSearch}"
       />
     </div>
@@ -67,7 +68,6 @@
 
   <!-- Error Message -->
   <p id="tag-error-message" class="error message mt-1"></p>
-
 
   <!-- Display Tags -->
   <div class="display-tags d-flex flex-wrap justify-content-center">
@@ -165,6 +165,6 @@
 </div>
 </body>
 <script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
-<script type="text/javascript" th:src="@{/javascript/tagSearch.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/browseSearch.js}"></script>
 
 </html>
