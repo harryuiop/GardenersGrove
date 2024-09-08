@@ -9,10 +9,10 @@
 <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
 
 <!-- Searching -->
-<form id="search-form" class="d-flex flex-column align-items-center mt-5">
-  <div class="d-flex justify-content-center align-items-center">
+<form id="search-form" class="row justify-content-center align-items-center mt-5 p-3 p-lg-0">
+  <div class="col-lg-4 col-12 mb-2 text-center">
     <!-- Search Input -->
-    <div class="input-group rounded mx-2">
+    <div class="input-group rounded">
       <input
               aria-describedby="search-public-gardens"
               aria-label="Search for public gardens"
@@ -25,9 +25,11 @@
               th:value="${gardenSearchSearch}"
       />
     </div>
+  </div>
 
     <!-- Tag Input -->
-    <div class="input-group d-flex flex-nowrap mx-2">
+  <div class="col-lg-4 col-12 mb-2 text-center">
+    <div class="input-group d-flex flex-nowrap">
       <div class="input-group-prepend">
         <div class="input-group-text"
              style="
@@ -53,11 +55,10 @@
         >+
         </button>
       </div>
-    </div>
 
     <!-- Search Button -->
     <button
-            class="btn btn-edit d-flex align-items-center mx-2"
+            class="btn btn-edit d-flex align-items-center mx-3"
             id="search-addon"
             th:for="search-bar"
             type="submit"
@@ -65,9 +66,10 @@
       <span class="d-flex align-items-center">Search<i class="mx-2 bi bi-search"></i></span>
     </button>
   </div>
+  </div>
 
   <!-- Error Message -->
-  <p id="tag-error-message" class="error message mt-1"></p>
+  <p id="tag-error-message" class="error message mt-1 text-center"></p>
 
   <!-- Display Tags -->
   <div class="display-tags d-flex flex-wrap justify-content-center">
