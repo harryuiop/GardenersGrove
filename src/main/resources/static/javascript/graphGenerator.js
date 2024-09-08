@@ -111,6 +111,11 @@ function changeTemperatureUnit(unit) {
 }
 
 function renderTemperatureGraphs() {
+
+    document.getElementById("month-title").innerHTML = "Temperature Last 30 Days";
+    document.getElementById("week-title").innerHTML = "Temperature Last 7 Days";
+    document.getElementById("day-title").innerHTML = "Temperature Today";
+
     const isCelsius = temperatureGraphContainer.dataset.units === 'c';
     const temperatureUnit = isCelsius ? '°C' : '°F';
 
@@ -128,6 +133,9 @@ function renderTemperatureGraphs() {
 }
 
 const renderPressureGraph = () => {
+    document.getElementById("month-title").innerHTML = "Pressure Last 30 Days";
+    document.getElementById("week-title").innerHTML = "Pressure Last 7 Days";
+    document.getElementById("day-title").innerHTML = "Pressure Today";
     createGraph(atmosphereMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
     createGraph(atmosphereWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels);
     createGraph(atmosphereDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);

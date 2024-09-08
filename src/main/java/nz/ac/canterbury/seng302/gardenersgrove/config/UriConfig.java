@@ -148,7 +148,7 @@ public class UriConfig {
     }
     public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
     public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
-    public static URI sensorDataResonseUri(String term, long gardenId, String sensorType) {
+    public static URI sensorDataResponseUri(String term, long gardenId, String sensorType) {
         return SENSOR_DATA_RESPONSE_URI.expand(term, gardenId, sensorType);
     }
 }
