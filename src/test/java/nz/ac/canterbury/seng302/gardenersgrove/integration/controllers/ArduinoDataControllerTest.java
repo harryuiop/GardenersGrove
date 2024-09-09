@@ -1,6 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
-import nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
@@ -18,9 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.format.DateTimeFormatter;
 
@@ -93,63 +90,5 @@ public class ArduinoDataControllerTest {
                 .andExpect(status().isOk());
 
         Assertions.assertEquals(0, dataPointRepository.findAllByGardenId(gardenId).size());
-    }
-
-
-    @ParameterizedTest
-    @ValueSource(strings = {"temperature", "atmosphere", "humidity", "moisture", "light"})
-    void send_request_valid_uri_in_month(String dataType) throws Exception {
-        String term = "month";
-        long gardenId = 1;
-
-        Assertions.assertTrue(mockMvc.perform(MockMvcRequestBuilders.get(UriConfig.sensorDataResponseUri(term, gardenId, dataType)))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString().contains("data"));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"temperature", "atmosphere", "humidity", "moisture", "light"})
-    void send_request_valid_uri_in_week(String dataType) throws Exception {
-        String term = "week";
-        long gardenId = 1;
-        Assertions.assertTrue(mockMvc.perform(MockMvcRequestBuilders.get(UriConfig.sensorDataResponseUri(term, gardenId, dataType)))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString().contains("data"));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"temperature", "atmosphere", "humidity", "moisture", "light"})
-    void send_request_valid_uri_in_day(String dataType) throws Exception {
-        String term = "day";
-        long gardenId = 1;
-        Assertions.assertTrue(mockMvc.perform(MockMvcRequestBuilders.get(UriConfig.sensorDataResponseUri(term, gardenId, dataType)))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString().contains("data"));
-    }
-
-
-    @Test
-    void send_request_invalid_termPathValue_response_NotFound() throws Exception {
-        String term = "invalid";
-        long gardenId = 1;
-        String dataType = "temperature";
-
-        mockMvc.perform(MockMvcRequestBuilders.get(UriConfig.sensorDataResponseUri(term, gardenId, dataType)))
-                .andExpect(status().isNotFound());
-    }
-
-
-    @Test
-    void send_request_invalid_dataTypePathValue_response_NotFound() throws Exception {
-        String term = "day";
-        long gardenId = 1;
-        String dataType = "invalid";
-
-        mockMvc.perform(MockMvcRequestBuilders.get(UriConfig.sensorDataResponseUri(term, gardenId, dataType)))
-                .andExpect(status().isNotFound());
-
     }
 }

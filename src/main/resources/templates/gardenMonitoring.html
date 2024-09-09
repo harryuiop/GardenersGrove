@@ -60,12 +60,27 @@
         </div>
 
         <div id="display-graphs" th:attr="data-day-labels=${graphDay.getLabels()},
-                                          data-month-labels=${graphMonth.getLabels()},
-                                          data-week-labels=${graphWeek.getLabels()}"
+                                            data-month-labels=${graphMonth.getLabels()},
+                                            data-week-labels=${graphWeek.getLabels()},
+                                            data-week-temp=${graphWeek.getTemperature()},
+                                            data-day-temp=${graphDay.getTemperature()},
+                                            data-month-temp=${graphMonth.getTemperature()},
+                                            data-week-moisture=${graphWeek.getMoisture()},
+                                            data-day-moisture=${graphDay.getMoisture()},
+                                            data-month-moisture=${graphMonth.getMoisture()},
+                                            data-week-light=${graphWeek.getLight()},
+                                            data-day-light=${graphDay.getLight()},
+                                            data-month-light=${graphMonth.getLight()},
+                                            data-week-pressure=${graphWeek.getAtmosphere()},
+                                            data-day-pressure=${graphDay.getAtmosphere()},
+                                            data-month-pressure=${graphMonth.getAtmosphere()},
+                                            data-week-humidity=${graphWeek.getHumidity()},
+                                            data-day-humidity=${graphDay.getHumidity()},
+                                            data-month-humidity=${graphMonth.getHumidity()}"
         >
             <!-- Temperature -->
             <div class="sensor-data m-4" id="temperature-data">
-                <div class="row">
+                <div class="row" id="temp-units">
                     <div class="input-group mb-3">
                         <button class="btn btn-toggle-selected" id="celsius-btn"
                                 style="
@@ -113,31 +128,4 @@
 </div>
 <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
 </body>
-<script>
-    function makeActive(buttonId) {
-        const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
-        const button = document.getElementById(buttonId);
-        console.log(button)
-
-        button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead';
-
-        allButtons.forEach( allButtonsItem => {
-            if (allButtonsItem !== buttonId) {
-                document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
-                }
-            }
-        )
-
-        switch (buttonId){
-            case "Temperature":
-                renderTemperatureGraphs();
-                break;
-            case "Pressure":
-                renderPressureGraph();
-                break;
-        }
-
-
-    }
-</script>
 </html>
