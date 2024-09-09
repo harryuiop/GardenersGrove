@@ -14,7 +14,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -53,10 +52,10 @@ public class WeatherLocationTest {
     private UserService userService;
 
     @SpyBean
-    private WeatherService weatherService;
-
-    @SpyBean
     private FormValuesValidator mockFormValuesValidator;
+
+    @MockBean
+    private WeatherService mockWeatherService;
 
     @MockBean
     private Feature mockFeature;
@@ -74,12 +73,6 @@ public class WeatherLocationTest {
         this.mockFeature = Mockito.mock(Feature.class);
         Mockito.when(mapTilerGeocoding.getFirstSearchResult(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(mockFeature);
-        Mockito.when(weatherService.getWeatherData(Mockito.anyDouble(), Mockito.anyDouble()))
-                .thenReturn(mockWeatherData);
-        Mockito.when(weatherService.getWeatherAdvice(mockWeatherData))
-                .thenReturn("Have you checked on your garden today?");
-        Mockito.when(weatherService.isRainy(mockWeatherData))
-                .thenReturn(false);
 
         if (user == null) {
             user = new User(
@@ -94,7 +87,6 @@ public class WeatherLocationTest {
 
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
         Mockito.when(mockFormValuesValidator.checkProfanity(Mockito.anyString())).thenReturn(false);
-
         gardenRepository.deleteAll();
         locationService.deleteAll();
     }
@@ -111,8 +103,10 @@ public class WeatherLocationTest {
 
         // Location testing
         List<Double> expectedCoords = new ArrayList<>();
-        expectedCoords.add(-43.5168);
-        expectedCoords.add(172.5721); // Ilam coordinates
+        Double expectedLng = 172.5721;
+        Double expectedLat = -43.5168;
+        expectedCoords.add(expectedLng);
+        expectedCoords.add(expectedLat); // Ilam coordinates
         Mockito.when(mockFeature.getCenter()).thenReturn(expectedCoords);
 
         mockMvc.perform(MockMvcRequestBuilders.post(newGardenUri())
@@ -135,9 +129,10 @@ public class WeatherLocationTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("viewGarden"));
 
-        Mockito.verify(weatherService).getWeatherData(expectedCoords.getFirst(), expectedCoords.getLast());
-
-
+        System.out.println(expectedCoords);
+        assertEquals(expectedLat, garden.getLocation().getLat());
+        assertEquals(expectedLng, garden.getLocation().getLng());
+        Mockito.verify(mockWeatherService).getWeatherData(expectedLng, expectedLat);
     }
 
 }

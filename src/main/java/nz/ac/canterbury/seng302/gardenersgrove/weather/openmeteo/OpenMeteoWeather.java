@@ -93,14 +93,14 @@ public class OpenMeteoWeather implements WeatherService {
      * Gets the weather data from the API and converts the weather response
      * to a list of ForecastWeatherData objects
      *
-     * @param latitude  specified by the location of the garden
      * @param longitude specified by the location of the garden
+     * @param latitude  specified by the location of the garden
      * @return a converted weather response to a list of ForecastWeatherData objects
      * @throws InterruptedException          if the Http request send operation is interrupted
      * @throws UnableToFetchWeatherException if the server request fails or JSON parsing fails
      */
     @Override
-    public List<WeatherData> getWeatherData(double latitude, double longitude) throws InterruptedException {
+    public List<WeatherData> getWeatherData(double longitude, double latitude) throws InterruptedException {
         try {
             WeatherResponse response = objectMapper.readValue(getJsonFromApi(latitude, longitude), WeatherResponse.class);
             return convertWeatherResponse(response);
