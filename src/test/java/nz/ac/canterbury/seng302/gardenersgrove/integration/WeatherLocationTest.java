@@ -60,9 +60,6 @@ public class WeatherLocationTest {
     @MockBean
     private Feature mockFeature;
 
-    @MockBean
-    private List<WeatherData> mockWeatherData;
-
     private User user;
 
     @MockBean
