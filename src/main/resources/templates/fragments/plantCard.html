@@ -38,8 +38,8 @@
     </div>
   </div>
   <div class="card-body">
-    <h2 class="display-5" th:text="${plantName}"></h2>
-    <p class="overflow-y-auto" style="max-height: 20vh" th:text="${plantDescription}"></p>
+    <h4 class="" th:text="${plantName}" style="overflow-y: scroll; max-height: 11vh; max-width: 35vw"></h4>
+    <p class="overflow-y-auto" style="max-height: 20vh; max-width: 35vw" th:text="${plantDescription}"></p>
     <p th:if="${plantCount}">Count: <b th:text="${plantCount}"></b></p>
     <p style="font-style: italic;" th:if="${plantDate != null}" th:text="'Planted on ' + ${plantDate}"></p>
   </div>

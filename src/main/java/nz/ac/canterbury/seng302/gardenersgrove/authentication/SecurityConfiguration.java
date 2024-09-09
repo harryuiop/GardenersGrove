@@ -95,14 +95,15 @@ public class SecurityConfiguration {
                                 AntPathRequestMatcher.antMatcher("/login/**"),
                                 AntPathRequestMatcher.antMatcher("/register/**"),
                                 AntPathRequestMatcher.antMatcher("/check-email-duplication/**"),
-                                AntPathRequestMatcher.antMatcher("/logout"))
+                                AntPathRequestMatcher.antMatcher("/logout"),
+                                AntPathRequestMatcher.antMatcher("/sensor-data"))
 
                 )
 
                 .authorizeHttpRequests(request ->
                         // Allow "/", "/register", and "/login" to anyone (permitAll)
                         request
-                                .requestMatchers("/", "/register/**", "/login/**", "/check-email-duplication", "/login/reset-password/verify/{token}")
+                                .requestMatchers("/","/sensor-data", "/register/**", "/login/**", "/check-email-duplication", "/login/reset-password/verify/{token}")
                                 .permitAll()
                                 // Only allow admins to reach the "/admin" page
                                 .requestMatchers("/admin")
