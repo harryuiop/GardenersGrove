@@ -7,10 +7,11 @@
 <body class="bg">
 <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
 <div>
-    <div class="row">
-        <div class="col d-flex justify-content-between align-items-center mx-4 p-0">
+    <div class="d-flex justify-content-between flex-column flex-md-row">
+        <div class="container w-50 align-content-left">
             <h2 class="text-break" th:text="${garden.getName()}"></h2>
-
+        </div>
+        <div class="container w-150 align-content-right">
             <th:block th:switch="${deviceStatus}">
                 <div th:case="'UP_TO_DATE'" class="alert alert-success">
                     <i class="bi bi-link"></i> Device linked to garden! The last update was received
