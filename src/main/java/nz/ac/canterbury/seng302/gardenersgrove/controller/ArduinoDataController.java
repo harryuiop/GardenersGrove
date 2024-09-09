@@ -9,13 +9,14 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoJsonData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 /**
  * Controller for endpoints used by the Arduino.
  */
-@RestController
+@Controller
 public class ArduinoDataController {
     private final GardenService gardenService;
 

@@ -91,6 +91,9 @@ const destroyGraphs = () => {
     }
 }
 
+/**
+ * Destroys all graphs and render temperature graphs.
+ */
 function renderTemperatureGraphs() {
 
     const tempMonthResults = JSON.parse(graphDataSet.monthTemp);
@@ -120,7 +123,9 @@ function renderTemperatureGraphs() {
         GraphType.DAY, dayLabels);
 }
 
-
+/**
+ * Destroys all graphs and render pressure graphs.
+ */
 const renderPressureGraph = () => {
 
     const pressureMonthResults = JSON.parse(graphDataSet.monthPressure);
@@ -287,7 +292,7 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                aspectRatio: 1.55,
+                aspectRatio: 1.25,
                 scales: {
                     yAxes: [{
                         scaleLabel: {
