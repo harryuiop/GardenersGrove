@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -109,6 +110,25 @@ public class Location {
         this.lng = lngLat.get(0);
         this.lat = lngLat.get(1);
         isCoordinatesSet = true;
+    }
+
+    /**
+     * Check if the location is recognized by the API
+     * @return boolean if location has been defaulted to 0, 0
+     */
+    public boolean isLocationRecognized() {
+        return lat != 0 && lng != 0;
+    }
+
+    /**
+     * Sets the garden location to 0.0, 0.0 if the location
+     * has not been recognized by the API
+     */
+    public void setCoordinatesToZero() {
+        List<Double> zeroList = new ArrayList<>();
+        zeroList.add(0.0);
+        zeroList.add(0.0);
+        this.setLngLat(zeroList);
     }
 
     /**

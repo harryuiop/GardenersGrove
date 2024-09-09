@@ -12,9 +12,7 @@ import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -41,8 +39,6 @@ public class UserServiceIntegrationTest {
         mockRepositoryUsers = new ArrayList<>();
         mockRepositoryUsers.add(user1);
         mockRepositoryUsers.add(user2);
-
-
     }
 
     @Test
