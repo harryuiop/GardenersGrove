@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -48,6 +49,7 @@ public class ViewAllGardensController extends NavBar {
         this.updateGardensNavBar(model, gardenService, userService);
         model.addAttribute("gardenList", gardenService.getAllGardens());
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
+        model.addAttribute("owner", true);
         return "allGardens";
     }
 
@@ -63,9 +65,10 @@ public class ViewAllGardensController extends NavBar {
         logger.info("GET {}", viewAllFriendsGardensUri(friendId));
 
         this.updateGardensNavBar(model, gardenService, userService);
+        User friend = userService.getUserById(friendId);
         model.addAttribute("gardenList", gardenService.getAllFriendsGardens(friendId, userService));
         model.addAttribute("viewGardenUriString", VIEW_GARDEN_URI_STRING);
-        model.addAttribute("friendId", friendId);
+        model.addAttribute("friendName",  friend.getName());
         model.addAttribute("owner", false);
         return "allGardens";
     }
