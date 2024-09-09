@@ -2,22 +2,18 @@
  * Generator and manager for Graphs for all sensors in garden monitoring page.
  */
 
+const tempUnits = document.getElementById('temp-units');
 const fahrenheitButton = document.getElementById("fahrenheit-btn");
 const celsiusButton = document.getElementById("celsius-btn");
 
 // Containers
-const temperatureGraphContainer = document.getElementById("temperature-graphs");
-
-// Data
-const tempMonthResults = JSON.parse(document.getElementById("temp-graph-month").dataset.results);
-const tempWeeklyResults = JSON.parse(document.getElementById("temp-graph-week").dataset.results);
-const tempDayResults = JSON.parse(document.getElementById("temp-graph-day").dataset.results);
+const temperatureGraphContainer = document.getElementById("graphs");
 
 // Labels
-const labelDataSet = document.getElementById("display-graphs").dataset;
-const monthLabels = JSON.parse(labelDataSet.monthLabels);
-const dayLabels = JSON.parse(labelDataSet.dayLabels);
-const weekLabels = JSON.parse(labelDataSet.weekLabels);
+const graphDataSet = document.getElementById("display-graphs").dataset;
+const monthLabels = JSON.parse(graphDataSet.monthLabels);
+const dayLabels = JSON.parse(graphDataSet.dayLabels);
+const weekLabels = JSON.parse(graphDataSet.weekLabels);
 
 const GRAPH_COLOR = 'rgb(75, 192, 192)';
 const WEEK_GRAPH_COLORS = ['rgb(44, 62, 80)', 'rgb(241, 196, 15)', 'rgb(52, 152, 219)', 'rgb(231, 76, 60)'];
@@ -27,12 +23,41 @@ const GraphType = Object.freeze({
     MONTH: 0, WEEK: 1, DAY: 2
 });
 
+// graph declarations
+let monthGraph, weekGraph, dayGraph;
+
 /**
- * Render all graphs on page load.
- * Manage what graphs are shown / hidden.
+ * Render temperature graphs on page load.
  */
 window.onload = function() {
     renderTemperatureGraphs();
+}
+
+/**
+ * Make graphs for that sensor shown.
+ * @param buttonId Sensor selected
+ */
+function makeActive(buttonId) {
+    const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
+    const button = document.getElementById(buttonId);
+
+    button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead';
+
+    allButtons.forEach( allButtonsItem => {
+            if (allButtonsItem !== buttonId) {
+                document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
+            }
+        }
+    )
+
+    switch (buttonId){
+        case "Temperature":
+            renderTemperatureGraphs();
+            break;
+        case "Pressure":
+            renderPressureGraph();
+            break;
+    }
 }
 
 /**
@@ -50,24 +75,73 @@ function changeTemperatureUnit(unit) {
         temperatureGraphContainer.setAttribute("data-units", "f");
     }
     renderTemperatureGraphs();
-
 }
 
+const changeGraphTitle  = (monthTitle, weekTitle, dayTitle) => {
+    document.getElementById("month-title").innerHTML = monthTitle;
+    document.getElementById("week-title").innerHTML = weekTitle;
+    document.getElementById("day-title").innerHTML = dayTitle;
+}
+
+const destroyGraphs = () => {
+    if(monthGraph) {
+        monthGraph.destroy();
+        weekGraph.destroy();
+        dayGraph.destroy();
+    }
+}
+
+/**
+ * Destroys all graphs and render temperature graphs.
+ */
 function renderTemperatureGraphs() {
+
+    const tempMonthResults = JSON.parse(graphDataSet.monthTemp);
+    const tempWeeklyResults = JSON.parse(graphDataSet.weekTemp);
+    const tempDayResults = JSON.parse(graphDataSet.dayTemp);
+
+    tempUnits.style.display = "block";
+
+    changeGraphTitle("Temperature Last 30 Days", "Temperature Last 7 Days", "Temperature Today");
+
+    // reset graphs
+    destroyGraphs();
+
     const isCelsius = temperatureGraphContainer.dataset.units === 'c';
     const temperatureUnit = isCelsius ? '°C' : '°F';
 
     const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedMonthResults,"temp-graph-month", `Temperature (${temperatureUnit})`,
+    monthGraph = createGraph(convertedMonthResults,"graph-month", `Temperature (${temperatureUnit})`,
         GraphType.MONTH, monthLabels);
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedWeeklyResults,"temp-graph-week", `Temperature (${temperatureUnit})`,
+    weekGraph = createGraph(convertedWeeklyResults,"graph-week", `Temperature (${temperatureUnit})`,
         GraphType.WEEK, weekLabels);
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
-    createGraph(convertedDayResults,"temp-graph-day", `Temperature (${temperatureUnit})`,
+    dayGraph = createGraph(convertedDayResults,"graph-day", `Temperature (${temperatureUnit})`,
         GraphType.DAY, dayLabels);
+}
+
+/**
+ * Destroys all graphs and render pressure graphs.
+ */
+const renderPressureGraph = () => {
+
+    const pressureMonthResults = JSON.parse(graphDataSet.monthPressure);
+    const pressureWeeklyResults = JSON.parse(graphDataSet.weekPressure);
+    const pressureDayResults = JSON.parse(graphDataSet.dayPressure);
+
+    tempUnits.style.display = "none";
+
+    changeGraphTitle("Pressure Last 30 Days", "Pressure Last 7 Days", "Pressure Today");``
+
+    // reset graphs
+    destroyGraphs();
+
+    monthGraph = createGraph(pressureMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
+    weekGraph = createGraph(pressureWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels);
+    dayGraph = createGraph(pressureDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
 }
 
 
@@ -101,7 +175,6 @@ function getDayGraphInformation(sensorName, data, timeLabels) {
     }, "Time (Half-hourly)", sensorName];
 }
 
-
 /**
  * Get graph information for a month graph.
  * Readings each day.
@@ -124,7 +197,6 @@ function getMonthGraphInformation(sensorName, data, timeLabels) {
             }]
         }, "Time (Day)", sensorName]
 }
-
 
 /**
  * Get graph information for a week graph.
@@ -183,6 +255,7 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
         }, "Time (Day)", sensorName]
 }
 
+
 /**
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
@@ -212,13 +285,14 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
     }
 
-    var myChart = new Chart(document.getElementById(graphId),
+    return new Chart(document.getElementById(graphId),
         {
             type: 'line',
             data: dataObject,
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                aspectRatio: 1.25,
                 scales: {
                     yAxes: [{
                         scaleLabel: {

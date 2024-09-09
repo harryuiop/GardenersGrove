@@ -60,12 +60,27 @@
         </div>
 
         <div id="display-graphs" th:attr="data-day-labels=${graphDay.getLabels()},
-                                          data-month-labels=${graphMonth.getLabels()},
-                                          data-week-labels=${graphWeek.getLabels()}"
+                                            data-month-labels=${graphMonth.getLabels()},
+                                            data-week-labels=${graphWeek.getLabels()},
+                                            data-week-temp=${graphWeek.getTemperature()},
+                                            data-day-temp=${graphDay.getTemperature()},
+                                            data-month-temp=${graphMonth.getTemperature()},
+                                            data-week-moisture=${graphWeek.getMoisture()},
+                                            data-day-moisture=${graphDay.getMoisture()},
+                                            data-month-moisture=${graphMonth.getMoisture()},
+                                            data-week-light=${graphWeek.getLight()},
+                                            data-day-light=${graphDay.getLight()},
+                                            data-month-light=${graphMonth.getLight()},
+                                            data-week-pressure=${graphWeek.getAtmosphere()},
+                                            data-day-pressure=${graphDay.getAtmosphere()},
+                                            data-month-pressure=${graphMonth.getAtmosphere()},
+                                            data-week-humidity=${graphWeek.getHumidity()},
+                                            data-day-humidity=${graphDay.getHumidity()},
+                                            data-month-humidity=${graphMonth.getHumidity()}"
         >
             <!-- Temperature -->
             <div class="sensor-data m-4" id="temperature-data">
-                <div class="row">
+                <div class="row" id="temp-units">
                     <div class="input-group mb-3">
                         <button class="btn btn-toggle-selected" id="celsius-btn"
                                 style="
@@ -86,26 +101,23 @@
                     </div>
                 </div>
 
-                <div class="row" id="temperature-graphs" data-units="c">
+                <div class="row" id="graphs" data-units="c">
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-6 mt-3 col-sx-8">
-                                <h5 class="text-break text-center">Temperature Today</h5>
-                                <canvas id="temp-graph-day"
-                                        th:attr="data-results=${graphDay.getTemperature()}">
-                                </canvas>
+                            <div class="col-xl-6 col-md-12 mt-3" id="day-graph-container">
+                                <h5 class="text-break text-center"
+                                    id="day-title"></h5>
+                                <canvas id="graph-day"></canvas>
                             </div>
-                            <div class="col-lg-6 mt-3 col-sx-8">
-                                <h5 class="text-break text-center">Temperature Last 30 Days</h5>
-                                <canvas id="temp-graph-month"
-                                        th:attr="data-results=${graphMonth.getTemperature()}">
-                                </canvas>
+                            <div class="col-xl-6 col-md-12 mt-3" id="month-graph-container">
+                                <h5 class="text-break text-center"
+                                    id="month-title"></h5>
+                                <canvas id="graph-month"></canvas>
                             </div>
-                            <div class="col-lg-6 mt-3 col-sx-8">
-                                <h5 class="text-break text-center">Temperature Last 7 Days</h5>
-                                <canvas id="temp-graph-week"
-                                        th:attr="data-results=${graphWeek.getTemperature()}">
-                                </canvas>
+                            <div class="col-xl-6 col-md-12 mt-3" id="week-graph-container">
+                                <h5 class="text-break text-center"
+                                    id="week-title"></h5>
+                                <canvas id="graph-week"></canvas>
                             </div>
                         </div>
                     </div>
@@ -116,19 +128,4 @@
 </div>
 <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
 </body>
-<script>
-    function makeActive(buttonId) {
-        const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
-        const button = document.getElementById(buttonId);
-
-        button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead'
-
-        allButtons.forEach( allButtonsItem => {
-            if (allButtonsItem !== buttonId) {
-                document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
-                }
-            }
-        )
-    }
-</script>
 </html>

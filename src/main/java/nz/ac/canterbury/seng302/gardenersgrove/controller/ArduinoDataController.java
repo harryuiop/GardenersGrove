@@ -10,11 +10,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoJsonData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.ARDUINO_SENSOR_DATA;
+import org.springframework.web.bind.annotation.*;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
 /**
  * Controller for endpoints used by the Arduino.
@@ -47,9 +44,9 @@ public class ArduinoDataController {
                 dataPointService.saveDataPoint(new ArduinoDataPoint(gardenService.getGardenByArduinoId(response.getId()), response.getTime(),
                         response.getTemperatureCelsius(), response.getHumidityPercentage(), response.getAtmosphereAtm(),
                         response.getLightLevelPercentage(), response.getMoisturePercentage()));
-    }
-} catch (JsonProcessingException exception) {
-        throw new UnableToFetchWeatherException("Failed to parse JSON response from API", exception);
+            }
+        } catch (JsonProcessingException exception) {
+                throw new UnableToFetchWeatherException("Failed to parse JSON response from API", exception);
         }
     }
 }
