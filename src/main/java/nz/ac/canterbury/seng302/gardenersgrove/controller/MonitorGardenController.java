@@ -93,12 +93,29 @@ public class MonitorGardenController extends NavBar {
             }
         }
 
-        model.addAttribute("gardenStats", arduinoDataPointService.getMostRecentArduinoDataPoint(garden));
+        String tempReading = "-";
+        String moistReading = "-";
+        String lightReading = "-";
+        String pressureReading = "-";
+        String humidReading = "-";
+        ArduinoDataPoint arduinoDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
+        if (arduinoDataPoint != null) {
+            if (arduinoDataPoint.getTempCelsius() != null) tempReading = arduinoDataPoint.getTempCelsius().toString();
+            if (arduinoDataPoint.getMoisturePercent() != null) moistReading = arduinoDataPoint.getMoisturePercent().toString();
+            if (arduinoDataPoint.getLightPercent() != null) lightReading = arduinoDataPoint.getLightPercent().toString();
+            if (arduinoDataPoint.getAtmosphereAtm() != null) pressureReading = arduinoDataPoint.getAtmosphereAtm().toString();
+            if (arduinoDataPoint.getHumidityPercent() != null) humidReading = arduinoDataPoint.getHumidityPercent().toString();
+        }
+        model.addAttribute("tempReading", tempReading);
+        model.addAttribute("moistReading", moistReading);
+        model.addAttribute("lightReading", lightReading);
+        model.addAttribute("pressureReading", pressureReading);
+        model.addAttribute("humidReading", humidReading);
+
         model.addAttribute("garden", garden);
         model.addAttribute("owner", garden.getOwner() == currentUser);
         model.addAttribute("deviceStatus", deviceStatus);
         model.addAttribute("timeSinceLastReading", timeSinceLastReading);
-        model.addAttribute("gardenStats", arduinoDataPointService.getMostRecentArduinoDataPoint(garden));
         model.addAttribute("garden", optionalGarden.get());
         model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
 
