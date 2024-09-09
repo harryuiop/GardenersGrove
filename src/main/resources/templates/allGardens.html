@@ -10,7 +10,8 @@
 
       <div class="d-flex flex-column align-items-center mt-5 w-100">
                 <h2 th:if="${owner == true}" class="text-center">My Gardens</h2>
-                <h2 th:if="${owner == false}" class="text-center" th:text="${friendName} + '\'s Gardens'"></h2>
+                <h2 th:if="${owner == false && friendName.endsWith('s')}" class="text-center" th:text="${friendName} + '\' Gardens'"></h2>
+                <h2 th:if="${owner == false && !friendName.endsWith('s')}" class="text-center" th:text="${friendName} + '\'s Gardens'"></h2>
         <div
           th:each="garden: ${gardenList}"
           class="garden-item row rounded border p-5 my-3 w-75 position-relative bg-white shadow-sm"
