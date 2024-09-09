@@ -111,7 +111,7 @@ public class GardenService {
     }
 
     /**
-     * Query the entire database for total amount of public gardens
+     * Query the entire database for total number of public gardens
      *
      * @return the number of total public gardens
      */
@@ -120,19 +120,32 @@ public class GardenService {
     }
 
     /**
-     * Query the database for total amount of public gardens that match the search string
+     * Query the database for total number of public gardens that match the search string
      *
-     * @param searchParameter Search parameter
-     * @return the number of total public gardens matching the search parameter 
+     * @param searchParameter Search query
+     * @return The number of total public gardens matching the search parameter
      */
     public long countPublicGardens(String searchParameter) {
         return gardenRepository.countByIsGardenPublicTrueWithGardenNameSearch(searchParameter);
     }
 
+    /**
+     * Query the database for total number of public gardens that match the search string
+     *
+     * @param searchParameter Search query
+     * @param givenTags List of tags to query
+     * @return The number of total public gardens matching the search parameter and given tags
+     */
     public long countPublicGardens(String searchParameter, List<String> givenTags) {
         return gardenRepository.countFindByGardenPublicTrueWithSearchParameterAndTags(searchParameter, givenTags);
     }
 
+    /**
+     * Query the database for total number of public gardens that match the given tags
+     *
+     * @param givenTags List of tags to query
+     * @return The number of total public gardens matching the given tags
+     */
     public long countPublicGardens(List<String> givenTags) {
         return gardenRepository.countFindByGardenPublicTrueWithTags(givenTags);
     }
