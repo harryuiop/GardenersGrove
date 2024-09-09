@@ -1,8 +1,11 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
+import nz.ac.canterbury.seng302.gardenersgrove.controller.PublicGardensController;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,7 @@ import java.util.Optional;
 @Service
 public class GardenService {
 
+    Logger logger = LoggerFactory.getLogger(PublicGardensController.class);
     private final GardenRepository gardenRepository;
     private final UserService userService;
     private final FriendshipService friendshipService;
@@ -86,15 +90,28 @@ public class GardenService {
      * @param searchParameter Optional search parameter (plant within garden or garden itself)
      * @return The list of all public gardens that match the search string, or all public gardens if unspecified
      */
-    public List<Garden> getPageOfPublicGardens(int pageNumber, String searchParameter) {
-        if (searchParameter != null && !searchParameter.isEmpty()) {
+    public List<Garden> getPageOfPublicGardens(int pageNumber, String searchParameter, List<String> searchedTags) {
+        boolean searchParameterGiven = searchParameter != null && !searchParameter.isEmpty();
+        boolean searchedTagsGiven = !searchedTags.isEmpty();
+
+        // Given there is a string search parameter
+        if (searchParameterGiven) {
+            // Given there is a search query AND tags
+            if (searchedTagsGiven) {
+                return gardenRepository.findByGardenPublicTrueWithSearchParameterAndTags(((pageNumber - 1) * 10), searchParameter, searchedTags);
+            }
+            // Given there is a search query AND no tags
             return gardenRepository.findByGardenPublicTrueWithSearchParameter(((pageNumber - 1) * 10), searchParameter);
+        }
+        // Given there is no search query AND tags
+         if (searchedTagsGiven) {
+            return gardenRepository.findByGardenPublicTrueWithTags(((pageNumber - 1) * 10), searchedTags);
         }
         return gardenRepository.findByGardenPublicTrue((pageNumber - 1) * 10);
     }
 
     /**
-     * Querys the entire database for total amount of public gardens
+     * Query the entire database for total amount of public gardens
      *
      * @return the number of total public gardens
      */
@@ -103,13 +120,21 @@ public class GardenService {
     }
 
     /**
-     * Querys the database for total amount of public gardens that match the search string
+     * Query the database for total amount of public gardens that match the search string
      *
      * @param searchParameter Search parameter
      * @return the number of total public gardens matching the search parameter 
      */
     public long countPublicGardens(String searchParameter) {
         return gardenRepository.countByIsGardenPublicTrueWithGardenNameSearch(searchParameter);
+    }
+
+    public long countPublicGardens(String searchParameter, List<String> givenTags) {
+        return gardenRepository.countFindByGardenPublicTrueWithSearchParameterAndTags(searchParameter, givenTags);
+    }
+
+    public long countPublicGardens(List<String> givenTags) {
+        return gardenRepository.countFindByGardenPublicTrueWithTags(givenTags);
     }
 
     /**
