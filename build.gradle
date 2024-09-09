@@ -179,6 +179,7 @@ tasks.register("cucumberTestReport", JacocoReport) { // Generate a report for cu
 	}
 }
 
+
 jacocoTestReport { // Generate a report for all generated test data
 	dependsOn test, cucumber, integration
 
@@ -203,38 +204,39 @@ tasks.named("integrationTestReport").configure { finalizedBy "jacocoTestReport" 
 tasks.named("cucumberTestReport").configure { finalizedBy "jacocoTestReport" }
 
 
-// These tasks are here for specially running only sections of tests
 
-tasks.register("only-integration", Test) {
-	useJUnitPlatform()
-	filter {
-		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.integration.*"
-	}
-	testLogging {
-		events "passed", "skipped", "failed", "standardOut", "standardError"
-	}
-}
-
-tasks.register("only-cucumber", Test) {
-	testLogging.showStandardStreams = true
-	useJUnitPlatform()
-	filter {
-		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.cucumber.*"
-	}
-	testLogging {
-		events "passed", "skipped", "failed", "standardOut", "standardError"
-		exceptionFormat TestExceptionFormat.FULL
-	}
-}
-
-tasks.register("only-unit", Test) {
-	testLogging.showStandardStreams = true
-	useJUnitPlatform()
-	filter {
-		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.unit.*"
-	}
-	testLogging {
-		events "passed", "skipped", "failed", "standardOut", "standardError"
-		exceptionFormat TestExceptionFormat.FULL
-	}
-}
+//// These tasks are here for specially running only sections of tests
+//
+//tasks.register("only-integration", Test) {
+//	useJUnitPlatform()
+//	filter {
+//		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.integration.*"
+//	}
+//	testLogging {
+//		events "passed", "skipped", "failed", "standardOut", "standardError"
+//	}
+//}
+//
+//tasks.register("only-cucumber", Test) {
+//	testLogging.showStandardStreams = true
+//	useJUnitPlatform()
+//	filter {
+//		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.cucumber.*"
+//	}
+//	testLogging {
+//		events "passed", "skipped", "failed", "standardOut", "standardError"
+//		exceptionFormat TestExceptionFormat.FULL
+//	}
+//}
+//
+//tasks.register("only-unit", Test) {
+//	testLogging.showStandardStreams = true
+//	useJUnitPlatform()
+//	filter {
+//		includeTestsMatching "nz.ac.canterbury.seng302.gardenersgrove.unit.*"
+//	}
+//	testLogging {
+//		events "passed", "skipped", "failed", "standardOut", "standardError"
+//		exceptionFormat TestExceptionFormat.FULL
+//	}
+//}
