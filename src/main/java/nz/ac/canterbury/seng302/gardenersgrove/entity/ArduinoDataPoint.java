@@ -21,21 +21,21 @@ public class ArduinoDataPoint {
     private LocalDateTime time;
 
     @Column
-    private double tempCelsius;
+    private Double tempCelsius;
 
     @Column
-    private double humidityPercent;
+    private Double humidityPercent;
 
     @Column
-    private double atmosphereAtm;
+    private Double atmosphereAtm;
 
     @Column
-    private double lightPercent;
+    private Double lightPercent;
 
     @Column
-    private double moisturePercent;
+    private Double moisturePercent;
 
-    public ArduinoDataPoint(Garden garden, LocalDateTime time, double tempCelsius, double humidityPercent, double atmosphereAtm, double lightPercent, double moisturePercent) {
+    public ArduinoDataPoint(Garden garden, LocalDateTime time, Double tempCelsius, Double humidityPercent, Double atmosphereAtm, Double lightPercent, Double moisturePercent) {
         this.garden = garden;
         this.time = time;
         this.tempCelsius = tempCelsius;
@@ -46,6 +46,37 @@ public class ArduinoDataPoint {
     }
 
     public ArduinoDataPoint() {
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public Garden getGarden() {
+        return garden;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public Double getTempCelsius() {
+        return tempCelsius;
+    }
+
+    public Double getHumidityPercent() {
+        return humidityPercent;
+    }
+
+    public Double getAtmosphereAtm() {
+        return atmosphereAtm;
+    }
+
+    public Double getLightPercent() {
+        return lightPercent;
+    }
+
+    public Double getMoisturePercent() {
+        return moisturePercent;
     }
 }

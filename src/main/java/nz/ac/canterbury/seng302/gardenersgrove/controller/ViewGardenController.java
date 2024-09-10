@@ -55,7 +55,9 @@ public class ViewGardenController extends NavBar {
      * @param weatherService Object for main interactions with Open-Meteo API
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker, WeatherService weatherService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService,
+                                TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker,
+                                WeatherService weatherService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
@@ -93,7 +95,7 @@ public class ViewGardenController extends NavBar {
             model.addAttribute("tagErrors", errorMessages[0]);
         }
 
-        List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng());
+        List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLng(), garden.getLocation().getLat());
         int pastDays = weatherService.getPastDaysCount();
         int forecastedDays = weatherService.getForecastDayCount();
         List<WeatherData> shownWeatherData = weatherData.subList(pastDays, pastDays + forecastedDays);
@@ -115,7 +117,6 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("isRainy", weatherService.isRainy(weatherData));
         model.addAttribute("popupClosed", cookies);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MMM yyyy"));
-
         return "viewGarden";
     }
 

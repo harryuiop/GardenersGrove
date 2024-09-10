@@ -19,12 +19,12 @@ let previousInput = "";
  */
 streetAddressField.addEventListener('input', function() {
     clearTimeout(timer);
-    timer = setTimeout(function() {
+    timer = setTimeout(async function () {
         const inputValue = streetAddressField.value;
         if (inputValue) {
             if (inputValue !== previousInput) {
                 previousInput = inputValue;
-                updateAutocomplete(inputValue, countryField.value);
+                await updateAutocomplete(inputValue, countryField.value);
             }
         } else {
             removeAutocompleteBox();
@@ -59,7 +59,7 @@ streetAddressField.addEventListener('blur', function() {
  * @param query Input from street address search box.
  * @param country Input from country field, to find results only in specified country
  */
-function updateAutocomplete(query, country) {
+async function updateAutocomplete(query, country) {
     const deployment = window.location.pathname.split('/')[1];
     const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
     fetch(`${baseUri}/maptiler/search-results?query=${query}&country=${country}`)
@@ -121,10 +121,10 @@ function renderAutocomplete(data) {
         // Update input box on selection.
         suggestionElement.addEventListener('click', function() {
             streetAddressField.value = streetAddress;
-            if (country) countryField.value = country;
-            if (city) cityField.value = city;
-            if (suburb) suburbField.value = suburb;
-            if (postcode) postcodeField.value = postcode
+            country ? countryField.value = country : countryField.value = "";
+            city ? cityField.value = city : cityField.value = "";
+            suburb ? suburbField.value = suburb : suburbField.value = "";
+            postcode ? postcodeField.value = postcode : postcodeField.value = "";
 
             removeAutocompleteBox();
         });

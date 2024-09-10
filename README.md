@@ -7,7 +7,8 @@ Project's tech stack includes
 - [`Thymeleaf`](https://www.thymeleaf.org/),
 - [`Spring Boot Starter Mail`](https://docs.spring.io/spring-boot/reference/io/email.html),
 - [`MapTiler`](https://www.maptiler.com/cloud/geocoding/),
-- [`Open-Meteo`](https://open-meteo.com/)
+- [`Open-Meteo`](https://open-meteo.com/),
+- [`Chart.js`](https://www.chartjs.org/),
 - [`GitLab CI`](https://about.gitlab.com/).
 
 ## How to run tests

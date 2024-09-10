@@ -1,31 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="~{fragments/importFragment :: headerfiles}"><title>Gardeners' Grove</title></head>
+<head th:insert="~{fragments/importFragment :: headerfiles}">
+    <title>Gardeners' Grove</title>
+</head>
 
 <body class="bg">
-<div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
-    <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
+<nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
+<div>
+    <div class="row">
+        <div class="col d-flex justify-content-between align-items-center mx-4 p-0">
+            <h2 class="text-break" th:text="${garden.getName()}"></h2>
 
-    <div class="d-flex justify-content-center mt-5 w-100 mb-5">
-        <div class="content">
-            <div class="container">
-                <div class="row justify-content-between">
-                    <div class="col-auto">
-                        <h2 class="text-break" th:text="${garden.getName()}"></h2>
-                    </div>
-                    <div class="col-auto">
-                        <div th:if="${connected}" class="alert alert-success">
-                            <i class="bi bi-link"></i> Garden Connected
-                        </div>
-                        <div th:unless="${connected}" class="alert alert-warning">
-                            No Device Found
-                        </div>
+            <th:block th:switch="${deviceStatus}">
+                <div th:case="'UP_TO_DATE'" class="alert alert-success">
+                    <i class="bi bi-link"></i> Device linked to garden! The last update was received
+                    <span th:text="${timeSinceLastReading}"></span>
+                    minutes ago.
+                </div>
+                <div th:case="'OUT_OF_DATE'" class="alert alert-warning">
+                    <i class="bi bi-cloud-slash"></i> Device linked to garden!
+                    The last update was received
+                    <span th:text="${timeSinceLastReading}"></span>
+                    ago, you may want to check if the device is connected to the internet!
+                </div>
+                <div th:case="'NO_DATA'" class="alert alert-warning">
+                    <i class="bi bi-cloud-slash"></i> Device linked to garden! No data available
+                </div>
+                <div th:case="'NOT_LINKED'" class="alert alert-danger">
+                    <i class="bi bi-cloud-slash"></i>
+                    There is no device linked to this garden
+                </div>
+            </th:block>
+        </div>
+    </div>
+
+    <div class="ms-3">
+        <h6 class="m-0 lead">Current Statistics</h6>
+    </div>
+
+    <div class="row">
+        <div class="col bg-white rounded m-4 p-3 shadow-sm">
+            <div class="d-flex justify-content-between flex-column flex-md-row">
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Temperature')" id="Temperature" class="btn btn-stats-bar-active btn-no-bold m-0 lead"><i class="bi bi-thermometer-half"></i>
+                        <span>Temperature:&nbsp;</span><span id="current-temp-reading" th:text="${tempReading}"></span><span id="current-temp-unit">°C</span>
+                    </button>
+                </div>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0"><i class="bi bi-moisture"></i> <span th:text="'Soil Moisture: '+ ${moistReading} +'%'"></span></button>
+                </div>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Light')" id="Light" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-brightness-high"></i> <span th:text="'Light: '+ ${lightReading} +'%'"></span></button>
+                </div>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Pressure')" id="Pressure" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-speedometer"></i> <span th:text="'Air Pressure: '+ ${pressureReading} +'atm'"></span></button>
+                </div>
+                <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Humidity')" id="Humidity" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-droplet-half"></i> <span th:text="'Humidity: '+ ${humidReading} +'%'"></span></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="display-graphs" th:attr="data-day-labels=${graphDay.getLabels()},
+                                            data-month-labels=${graphMonth.getLabels()},
+                                            data-week-labels=${graphWeek.getLabels()},
+                                            data-week-temp=${graphWeek.getTemperature()},
+                                            data-day-temp=${graphDay.getTemperature()},
+                                            data-month-temp=${graphMonth.getTemperature()},
+                                            data-week-moisture=${graphWeek.getMoisture()},
+                                            data-day-moisture=${graphDay.getMoisture()},
+                                            data-month-moisture=${graphMonth.getMoisture()},
+                                            data-week-light=${graphWeek.getLight()},
+                                            data-day-light=${graphDay.getLight()},
+                                            data-month-light=${graphMonth.getLight()},
+                                            data-week-pressure=${graphWeek.getAtmosphere()},
+                                            data-day-pressure=${graphDay.getAtmosphere()},
+                                            data-month-pressure=${graphMonth.getAtmosphere()},
+                                            data-week-humidity=${graphWeek.getHumidity()},
+                                            data-day-humidity=${graphDay.getHumidity()},
+                                            data-month-humidity=${graphMonth.getHumidity()}"
+        >
+            <!-- Temperature -->
+            <div class="sensor-data m-4" id="temperature-data">
+                <div class="row" id="temp-units">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-toggle-selected" id="celsius-btn"
+                                style="
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                "
+                                onclick="changeTemperatureUnit('c')">
+                            Celsius
+                        </button>
+                        <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
+                                style="
+                        border-top-left-radius: 0;
+                        border-bottom-left-radius: 0;
+                    "
+                                onclick="changeTemperatureUnit('f')">
+                            Fahrenheit
+                        </button>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="container">
-                        <div id="currentStats">
 
+                <div class="row" id="graphs" data-units="c">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xl-6 col-md-12 mt-3" id="day-graph-container">
+                                <h5 class="text-break text-center"
+                                    id="day-title"></h5>
+                                <canvas id="graph-day"></canvas>
+                            </div>
+                            <div class="col-xl-6 col-md-12 mt-3" id="month-graph-container">
+                                <h5 class="text-break text-center"
+                                    id="month-title"></h5>
+                                <canvas id="graph-month"></canvas>
+                            </div>
+                            <div class="col-xl-6 col-md-12 mt-3" id="week-graph-container">
+                                <h5 class="text-break text-center"
+                                    id="week-title"></h5>
+                                <canvas id="graph-week"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -33,5 +128,6 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
 </body>
 </html>

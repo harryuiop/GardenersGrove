@@ -34,8 +34,6 @@ public class UriConfig {
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
     public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup/{gardenId}/{deployed}";
     public static final String ARDUINO_SENSOR_DATA = "/sensor-data";
-
-
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
     private static final UriTemplate MONITOR_GARDEN_URI = new UriTemplate(MONITOR_GARDEN_URI_STRING);
@@ -135,18 +133,15 @@ public class UriConfig {
     public static URI sendCookiesForWeatherAdvicePopup(long gardenId, int deployed) {
         return SET_WEATHER_POPUP_ALERT_COOKIES_URI.expand(gardenId, deployed);
     }
-
     public static URI viewAllGardensUri() {
         return URI.create(VIEW_ALL_GARDENS_URI_STRING);
     }
     public static URI makeGardenPublicUri(long gardenId) {
         return MAKE_GARDEN_PUBLIC_URI.expand(gardenId);
     }
-
     public static URI browsePublicGardensUri() {
         return URI.create(BROWSE_PUBLIC_GARDENS_URI_STRING);
     }
     public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
     public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
-
 }

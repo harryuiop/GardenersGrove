@@ -61,7 +61,7 @@ public class UserService {
      *
      * @param user The user to update.
      */
-    public boolean updateUser(User user) {
+    public void updateUser(User user) {
         if (
                 emailIsValid(user.getEmail()) &&
                 nameIsValid(user.getFirstName(), user.getLastName()) &&
@@ -69,9 +69,7 @@ public class UserService {
                 passwordIsValid(user.getPassword())
         ) {
             userRepository.save(user);
-            return true;
         }
-        return false;
     }
 
     /**

@@ -82,7 +82,22 @@ VALUES ('Auckland', 'New Zealand', TRUE, -36.848525309230695, 174.76215186484197
 
 INSERT INTO garden (location_id, name, description, owner_user_id, size, is_garden_public, verified_description,
                     time_created)
-VALUES (16, 'Second User''s Third Garden', NULL, 2, NULL, TRUE, TRUE, NOW()),
+VALUES (1, 'Default User''s first Garden', 'The first garden created.', 1, 2, TRUE, TRUE, NOW()),
+       (2, 'Default User''s Second Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (3, 'Default User''s Third Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (4, 'Default User''s Fourth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (5, 'Default User''s Fifth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (6, 'Default User''s Sixth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (7, 'Default User''s Seventh Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (8, 'Default User''s Eighth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (9, 'Default User''s Ninth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (10, 'Default User''s Tenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (11, 'Default User''s Eleventh Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (12, 'Default User''s Twelfth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (13, 'Default User''s Thirteenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (14, 'Default User''s Fourteenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (15, 'Default User''s Fifteenth Garden', NULL, 1, NULL, TRUE, TRUE, NOW()),
+       (16, 'Second User''s Third Garden', NULL, 2, NULL, TRUE, TRUE, NOW()),
        (17, 'Second User''s Fourth Garden', NULL, 2, NULL, TRUE, TRUE, NOW()),
        (18, 'Second User''s Fifth Garden', NULL, 2, NULL, TRUE, TRUE, NOW()),
        (19, 'Second User''s Sixth Garden', NULL, 2, NULL, TRUE, TRUE, NOW()),
@@ -103,14 +118,20 @@ VALUES (16, 'Second User''s Third Garden', NULL, 2, NULL, TRUE, TRUE, NOW()),
        (34, 'Third User''s Ninth First Garden', NULL, 3, NULL, TRUE, TRUE, NOW()),
        (35, 'Third User''s Tenth Garden', NULL, 3, NULL, TRUE, TRUE, NOW()),
        (36, 'Third User''s Eleventh Garden', 'A demonstration garden.', 3, 0.5, TRUE, TRUE, NOW()),
-       (37, 'Third User''s Twelfth Fourth', 'This description needs to be edited first as it is not verified', 3, 0.5,
-        FALSE, FALSE, NOW()),
+       (37, 'Third User''s Twelfth Fourth', 'This description needs to be edited first as it is not verified', 3, 0.5, FALSE, FALSE, NOW()),
        (38, 'Third User''s Thirteenth Garden', 'A demonstration garden.', 3, 0.5, TRUE, TRUE, NOW()),
        (39, 'Third User''s Fifteenth Garden', 'A demonstration garden.', 3, 0.5, TRUE, TRUE, NOW()),
        (39, 'Third User''s Sixteenth Garden', 'A demonstration garden.', 3, 0.5, TRUE, TRUE, NOW()),
        (39, 'Third User''s Seventeenth Garden', 'A demonstration garden.', 3, 0.5, TRUE, TRUE, NOW()),
        (39, 'Third User''s Eighteenth Garden', 'A demonstration garden.', 3, 0.5, TRUE, TRUE, NOW()),
        (39, 'Third User''s Nineteenth Garden', 'A demonstration garden.', 3, 0.5, TRUE, TRUE, NOW());
+
+UPDATE garden
+SET arduino_id = '127.0.0.1'
+WHERE id = 1;
+UPDATE garden
+SET arduino_id = '127.0.0.2'
+WHERE id = 2;
 
 INSERT INTO tag (name)
 VALUES ('first_tag'),
@@ -140,3 +161,28 @@ VALUES (1, 'First plant of Default User''s first Garden', 1, NULL, 'Plant One', 
        (9, 'Ninth plant of First User''s first Garden', 1, NULL, 'Plant Nine', NULL),
        (10, 'Tenth plant of First User''s first Garden', 1, NULL, 'Plant Ten', NULL),
        (NULL, 'First plant of Second User''s first Garden', 2, NULL, 'Star Fruit', NULL);
+
+
+INSERT INTO arduino_data_point (atmosphere_atm, humidity_percent, light_percent, moisture_percent, temp_celsius,
+                                garden_id, id, time)
+VALUES (1.0, 50.0, 05.0, 30.0, 20.0, 1, 1, '2024-01-10 11:20:00'),
+       (1.0, 60.0, 90.0, 35.0, 20.0, 1, 2, '2024-01-02 11:20:00'),
+       (1.0, 30.0, 80.0, 30.0, 20.0, 1, 3, '2024-01-03 11:20:00'),
+       (1.0, 10.0, 70.0, 40.0, 20.0, 1, 4, '2024-01-04 11:20:00'),
+       (1.0, 55.0, 20.0, 30.0, 20.0, 1, 5, '2024-01-05 11:20:00'),
+       (1.0, 59.0, 47.0, 70.0, 20.0, 1, 6, '2024-01-06 11:20:00'),
+       (1.0, 90.0, 43.0, 30.0, 20.0, 1, 7, '2024-01-07 11:20:00'),
+       (1.0, 90.0, 43.0, 30.0, 30.0, 1, 8, '2024-08-24 23:53:00'),
+       (1.0, 90.0, 43.0, 30.0, 25.0, 1, 9, '2024-08-23 08:20:00'),
+       (1.0, 90.0, 43.0, 30.0, 20.0, 1, 10, '2024-08-04 11:20:00'),
+       (1.0, 90.0, 43.0, 30.0, 20.0, 1, 11, '2024-08-25 15:20:00'),
+       (1.0, 90.0, 43.0, 30.0, 20.0, 1, 12, '2024-08-24 10:15:00'),
+       (1.0, 90.0, 43.0, 30.0, 20.0, 1, 13, '2024-08-23 19:15:00'),
+       (1.0, 90.0, 43.0, 30.0, 35.0, 1, 14, '2024-08-23 18:53:00'),
+       (1.0, 90.0, 43.0, 30.0, 15.0, 1, 15, '2024-08-04 14:53:00'),
+       (1.0, 90.0, 43.0, 30.0, 0.0, 1, 16, '2024-08-05 14:53:00'),
+       (1.0, 90.0, 43.0, 30.0, 40.0, 1, 17, '2024-08-06 19:53:00'),
+       (1.0, 90.0, 43.0, 30.0, 40.0, 1, 18, '2024-08-26 13:43:00'),
+       (1.0, 90.0, 43.0, 30.0, 30.0, 1, 19, '2024-08-26 13:13:00'),
+       (1.0, 90.0, 43.0, 30.0, 10.0, 1, 20, '2024-08-21 11:01:00');
+
