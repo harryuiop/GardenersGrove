@@ -57,22 +57,80 @@ public class MonitorGardenController extends NavBar {
      * @return Thymeleaf html template of the monitor garden page.
      */
     @GetMapping(MONITOR_GARDEN_URI_STRING)
-    public String monitorGarden(
-            @PathVariable long gardenId,
-            Model model
-    ) throws NoSuchGardenException {
+    public String monitorGarden(@PathVariable long gardenId, Model model)
+            throws NoSuchGardenException {
+
         this.updateGardensNavBar(model, gardenService, userService);
 
         User currentUser = userService.getAuthenticatedUser();
-
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty()
-                || optionalGarden.get().getOwner().getId() != currentUser.getId()
-                && !optionalGarden.get().isGardenPublic()) {
+
+        if (optionalGarden.isEmpty()) {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
 
+        boolean notOwner = garden.getOwner().getId() == currentUser.getId();
+        boolean privateGarden = !garden.isGardenPublic();
+        if (notOwner && privateGarden) {
+            throw new NoSuchGardenException(gardenId);
+        }
+
+        model.addAttribute("garden", garden);
+        model.addAttribute("owner", garden.getOwner() == currentUser);
+        model.addAttribute("garden", optionalGarden.get());
+
+        //This is where we input if the arduino is connected. Still to be implemented.
+        model.addAttribute("connected", false);
+
+        addDeviceStatusInformationToModel(model, garden);
+        addCurrentSensorReadingsToModel(model, garden);
+        addGraphDataToModel(model, gardenId);
+
+        return "gardenMonitoring";
+    }
+
+    /**
+     * Helper method to add current sensor readings to html model.
+     */
+    private void addCurrentSensorReadingsToModel(Model model, Garden garden) {
+        String tempReading = "-";
+        String moistReading = "-";
+        String lightReading = "-";
+        String pressureReading = "-";
+        String humidReading = "-";
+        ArduinoDataPoint arduinoDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
+        if (arduinoDataPoint != null) {
+            if (arduinoDataPoint.getTempCelsius() != null) tempReading = String.format("%.1f", arduinoDataPoint.getTempCelsius());
+            if (arduinoDataPoint.getMoisturePercent() != null) moistReading = String.format("%.0f", arduinoDataPoint.getMoisturePercent());
+            if (arduinoDataPoint.getLightPercent() != null) lightReading = String.format("%.0f", arduinoDataPoint.getLightPercent());
+            if (arduinoDataPoint.getAtmosphereAtm() != null) pressureReading = String.format("%.3f", arduinoDataPoint.getAtmosphereAtm());
+            if (arduinoDataPoint.getHumidityPercent() != null) humidReading = String.format("%.0f", arduinoDataPoint.getHumidityPercent());
+        }
+        model.addAttribute("tempReading", tempReading);
+        model.addAttribute("moistReading", moistReading);
+        model.addAttribute("lightReading", lightReading);
+        model.addAttribute("pressureReading", pressureReading);
+        model.addAttribute("humidReading", humidReading);
+    }
+
+    /**
+     * Helper method to add graph data to html model.
+     */
+    private void addGraphDataToModel(Model model, Long gardenId) {
+        FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId, LocalDateTime.now());
+        FormattedGraphData weekData = arduinoDataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
+        FormattedGraphData monthData = arduinoDataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
+
+        model.addAttribute("graphDay", dayData);
+        model.addAttribute("graphWeek", weekData);
+        model.addAttribute("graphMonth", monthData);
+    }
+
+    /**
+     * Add device status, and time since last reading to html model.
+     */
+    private void addDeviceStatusInformationToModel(Model model, Garden garden) {
         String deviceStatus;
         ArduinoDataPoint lastDataPoint;
         Long timeSinceLastReading = null;
@@ -92,43 +150,7 @@ public class MonitorGardenController extends NavBar {
                 }
             }
         }
-
-        String tempReading = "-";
-        String moistReading = "-";
-        String lightReading = "-";
-        String pressureReading = "-";
-        String humidReading = "-";
-        ArduinoDataPoint arduinoDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
-        if (arduinoDataPoint != null) {
-            if (arduinoDataPoint.getTempCelsius() != null) tempReading = String.format("%.1f", arduinoDataPoint.getTempCelsius());
-            if (arduinoDataPoint.getMoisturePercent() != null) moistReading = String.format("%.0f", arduinoDataPoint.getMoisturePercent());
-            if (arduinoDataPoint.getLightPercent() != null) lightReading = String.format("%.0f", arduinoDataPoint.getLightPercent());
-            if (arduinoDataPoint.getAtmosphereAtm() != null) pressureReading = String.format("%.3f", arduinoDataPoint.getAtmosphereAtm());
-            if (arduinoDataPoint.getHumidityPercent() != null) humidReading = String.format("%.0f", arduinoDataPoint.getHumidityPercent());
-        }
-        model.addAttribute("tempReading", tempReading);
-        model.addAttribute("moistReading", moistReading);
-        model.addAttribute("lightReading", lightReading);
-        model.addAttribute("pressureReading", pressureReading);
-        model.addAttribute("humidReading", humidReading);
-
-        model.addAttribute("garden", garden);
-        model.addAttribute("owner", garden.getOwner() == currentUser);
         model.addAttribute("deviceStatus", deviceStatus);
         model.addAttribute("timeSinceLastReading", timeSinceLastReading);
-        model.addAttribute("garden", optionalGarden.get());
-        model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
-
-        // Add Graph Data
-        FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId, LocalDateTime.now());
-        FormattedGraphData weekData = arduinoDataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
-        FormattedGraphData monthData = arduinoDataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
-
-        model.addAttribute("graphDay", dayData);
-        model.addAttribute("graphWeek", weekData);
-        model.addAttribute("graphMonth", monthData);
-
-        return "gardenMonitoring";
     }
-
 }
