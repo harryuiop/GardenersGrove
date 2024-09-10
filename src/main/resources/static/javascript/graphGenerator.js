@@ -5,6 +5,8 @@
 const tempUnits = document.getElementById('temp-units');
 const fahrenheitButton = document.getElementById("fahrenheit-btn");
 const celsiusButton = document.getElementById("celsius-btn");
+const currentTempUnit = document.getElementById("current-temp-unit");
+const currentTempReading = document.getElementById("current-temp-reading");
 
 // Containers
 const temperatureGraphContainer = document.getElementById("graphs");
@@ -72,18 +74,34 @@ function makeActive(buttonId) {
 }
 
 /**
- * Change temperature unit to Fahrenheit or Celsius AND update graph
+ * Change temperature unit to Fahrenheit or Celsius, update graph, update current temperature
  * @param unit c for Celsius, anything else for Fahrenheit
  */
 function changeTemperatureUnit(unit) {
+    const currentTempUnitText = currentTempUnit.innerText;
+
     if (unit === 'c') {
         celsiusButton.className = "btn btn-toggle-selected";
         fahrenheitButton.className = "btn btn-toggle-unselected";
         temperatureGraphContainer.setAttribute("data-units", "c");
+
+        // Change in unit
+        if (currentTempUnitText === "°F" && !isNaN(Number(currentTempReading.innerText))) {
+            currentTempReading.innerText = convertFahrenheitToCelsius(parseInt(currentTempReading.innerText));
+        }
+        currentTempUnit.innerText = "°C";
+
     } else {
         celsiusButton.className = "btn btn-toggle-unselected";
         fahrenheitButton.className = "btn btn-toggle-selected";
         temperatureGraphContainer.setAttribute("data-units", "f");
+
+        // Change in unit
+        if (currentTempUnitText === "°C" && !isNaN(Number(currentTempReading.innerText))) {
+            currentTempReading.innerText = convertCelsiusToFahrenheit(parseInt(currentTempReading.innerText));
+        }
+        currentTempUnit.innerText = "°F";
+
     }
     renderTemperatureGraphs();
 }
@@ -220,6 +238,10 @@ function convertCelsiusToFahrenheit(celsiusInput) {
     return celsiusInput * 1.8 + 32;
 }
 
+function convertFahrenheitToCelsius(fahrenheit) {
+    return (fahrenheit - 32) / 1.8;
+
+}
 
 /**
  * Get graph information for a single day graph.
