@@ -42,19 +42,34 @@
         <div class="col bg-white rounded m-4 p-3 shadow-sm">
             <div class="d-flex justify-content-between flex-column flex-md-row">
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Temperature')" id="Temperature" class="btn btn-stats-bar-active btn-no-bold m-0 lead"><i class="bi bi-thermometer-half"></i> <span th:text="'Temperature: '+ ${tempReading} +'°C'"></span></button>
+                    <button onclick="makeActive('Temperature')" id="Temperature" class="btn btn-stats-bar-active btn-no-bold m-0 lead">
+                        <i class="bi bi-thermometer-half"></i>
+                        <span th:text="'Temperature: '+ ${tempReading} +'°C'"></span>
+                    </button>
                 </div>
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0"><i class="bi bi-moisture"></i> <span th:text="'Soil Moisture: '+ ${moistReading} +'%'"></span></button>
+                    <button onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0">
+                        <i class="bi bi-moisture"></i>
+                        <span th:text="'Soil Moisture: '+ ${moistReading} +'%'"></span>
+                    </button>
                 </div>
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Light')" id="Light" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-brightness-high"></i> <span th:text="'Light: '+ ${lightReading} +'%'"></span></button>
+                    <button onclick="makeActive('Light')" id="Light" class="btn btn-stats-bar btn-no-bold m-0 lead">
+                        <i class="bi bi-brightness-high"></i>
+                        <span th:text="'Light: '+ ${lightReading} +'%'"></span>
+                    </button>
                 </div>
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Pressure')" id="Pressure" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-speedometer"></i> <span th:text="'Air Pressure: '+ ${pressureReading} +'atm'"></span></button>
+                    <button onclick="makeActive('Pressure')" id="Pressure" class="btn btn-stats-bar btn-no-bold m-0 lead">
+                        <i class="bi bi-speedometer"></i>
+                        <span th:text="'Air Pressure: '+ ${pressureReading} +'atm'"></span>
+                    </button>
                 </div>
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Humidity')" id="Humidity" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-droplet-half"></i> <span th:text="'Humidity: '+ ${humidReading} +'%'"></span></button>
+                    <button onclick="makeActive('Humidity')" id="Humidity" class="btn btn-stats-bar btn-no-bold m-0 lead">
+                        <i class="bi bi-droplet-half"></i>
+                        <span th:text="'Humidity: '+ ${humidReading} +'%'"></span>
+                    </button>
                 </div>
             </div>
         </div>
