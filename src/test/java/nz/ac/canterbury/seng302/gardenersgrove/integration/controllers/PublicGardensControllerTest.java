@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.browsePublicGardensUri;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,7 +65,6 @@ public class PublicGardensControllerTest {
 
     @Test
     @Transactional
-    @SuppressWarnings("unchecked")
     public void checkTagFilterReturnsTwo() throws Exception {
         tagService.saveTag("tag1", garden1);
         tagService.saveTag("tag1", garden2);
@@ -74,17 +74,17 @@ public class PublicGardensControllerTest {
             .andExpect(status().isOk())
             .andReturn();
 
-            ModelAndView modelAndView = result.getModelAndView();
-            assert modelAndView != null;
-            ModelMap modelMap = modelAndView.getModelMap();
-
-            ArrayList<String> gardens = (ArrayList<String>) modelMap.get("gardenList");
-            Assertions.assertEquals(2, gardens.size());
+        ModelAndView modelAndView = result.getModelAndView();
+        assert modelAndView != null;
+        ModelMap modelMap = modelAndView.getModelMap();
+        Object gardensObject = modelMap.get("gardenList");
+        assert gardensObject instanceof ArrayList<?>;
+        ArrayList<?> gardens = (ArrayList<?>) gardensObject;
+        Assertions.assertEquals(2, gardens.size());
     }
 
     @Test
     @Transactional
-    @SuppressWarnings("unchecked")
     public void checkMultipleTagFilterReturnsTwo() throws Exception {
         tagService.saveTag("tag2", garden2);
         tagService.saveTag("tag3", garden3);
@@ -97,14 +97,14 @@ public class PublicGardensControllerTest {
         ModelAndView modelAndView = result.getModelAndView();
         assert modelAndView != null;
         ModelMap modelMap = modelAndView.getModelMap();
-
-        ArrayList<String> gardens = (ArrayList<String>) modelMap.get("gardenList");
+        Object gardensObject = modelMap.get("gardenList");
+        assert gardensObject instanceof ArrayList<?>;
+        ArrayList<?> gardens = (ArrayList<?>) gardensObject;
         Assertions.assertEquals(2, gardens.size());
     }
 
     @Test
     @Transactional
-    @SuppressWarnings("unchecked")
     public void checkSearchParameterFilterReturnsOne() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(browsePublicGardensUri())
                         .param("searchParameter", "garden1"))
@@ -114,14 +114,14 @@ public class PublicGardensControllerTest {
         ModelAndView modelAndView = result.getModelAndView();
         assert modelAndView != null;
         ModelMap modelMap = modelAndView.getModelMap();
-
-        ArrayList<String> gardens = (ArrayList<String>) modelMap.get("gardenList");
+        Object gardensObject = modelMap.get("gardenList");
+        assert gardensObject instanceof ArrayList<?>;
+        ArrayList<?> gardens = (ArrayList<?>) gardensObject;
         Assertions.assertEquals(1, gardens.size());
     }
 
     @Test
     @Transactional
-    @SuppressWarnings("unchecked")
     public void checkSearchParameterAndTagsFilterReturnsOne() throws Exception {
         tagService.saveTag("tag1", garden1);
 
@@ -134,14 +134,14 @@ public class PublicGardensControllerTest {
         ModelAndView modelAndView = result.getModelAndView();
         assert modelAndView != null;
         ModelMap modelMap = modelAndView.getModelMap();
-
-        ArrayList<String> gardens = (ArrayList<String>) modelMap.get("gardenList");
+        Object gardensObject = modelMap.get("gardenList");
+        assert gardensObject instanceof ArrayList<?>;
+        ArrayList<?> gardens = (ArrayList<?>) gardensObject;
         Assertions.assertEquals(1, gardens.size());
     }
 
     @Test
     @Transactional
-    @SuppressWarnings("unchecked")
     public void checkSearchParameterFilterReturnsZero() throws Exception {
         tagService.saveTag("tag1", garden1);
 
@@ -153,14 +153,14 @@ public class PublicGardensControllerTest {
         ModelAndView modelAndView = result.getModelAndView();
         assert modelAndView != null;
         ModelMap modelMap = modelAndView.getModelMap();
-
-        ArrayList<String> gardens = (ArrayList<String>) modelMap.get("gardenList");
+        Object gardensObject = modelMap.get("gardenList");
+        assert gardensObject instanceof ArrayList<?>;
+        ArrayList<?> gardens = (ArrayList<?>) gardensObject;
         Assertions.assertEquals(0, gardens.size());
     }
 
     @Test
     @Transactional
-    @SuppressWarnings("unchecked")
     public void checkSearchParameterAndTagsFilterReturnsZero() throws Exception {
         tagService.saveTag("tag1", garden1);
 
@@ -173,8 +173,9 @@ public class PublicGardensControllerTest {
         ModelAndView modelAndView = result.getModelAndView();
         assert modelAndView != null;
         ModelMap modelMap = modelAndView.getModelMap();
-
-        ArrayList<String> gardens = (ArrayList<String>) modelMap.get("gardenList");
+        Object gardensObject = modelMap.get("gardenList");
+        assert gardensObject instanceof ArrayList<?>;
+        ArrayList<?> gardens = (ArrayList<?>) gardensObject;
         Assertions.assertEquals(0, gardens.size());
     }
 
