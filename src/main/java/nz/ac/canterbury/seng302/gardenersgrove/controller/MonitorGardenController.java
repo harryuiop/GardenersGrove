@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
 /**
  * Controller for the monitor garden page. For viewing statistics and live updates for a specific garden.
@@ -75,7 +76,8 @@ public class MonitorGardenController extends NavBar {
 
         String deviceStatus;
         ArduinoDataPoint lastDataPoint;
-        Long timeSinceLastReading = null;
+        long minutesSinceLastReading;
+        String timeSinceLastReading = "";
 
         if (garden.getArduinoId() == null) {
             deviceStatus = "NOT_LINKED";
@@ -84,8 +86,9 @@ public class MonitorGardenController extends NavBar {
             if (lastDataPoint == null) {
                 deviceStatus = "NO_DATA";
             } else {
-                timeSinceLastReading = Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs().toMinutes();
-                if (timeSinceLastReading <= 5) {
+                minutesSinceLastReading = Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs().toMinutes();
+                timeSinceLastReading = minutestoTimeString(minutesSinceLastReading);
+                if (minutesSinceLastReading <= 5) {
                     deviceStatus = "UP_TO_DATE";
                 } else {
                     deviceStatus = "OUT_OF_DATE";
