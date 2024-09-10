@@ -7,6 +7,14 @@ const tagContainer = document.getElementById("tags-container");
 const tagErrorMessage = document.getElementById("tag-error-message");
 const gardenInputField = document.getElementById("garden-input");
 const searchButton = document.getElementById("search-addon");
+const hiddenTagList = document.getElementById("hiddenTagList")
+
+/**
+ * Getter to grab the tags and give to the HTML page
+ */
+function getTags() {
+    return tagContainer
+}
 
 /**
  * On user adding tag, queries database if tag exists via rest request.
@@ -25,6 +33,7 @@ function submitTagToSearch() {
         })
         .then(tagExists => {
             handleTagSearchSubmit(tagExists, addedTag);
+
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -53,8 +62,8 @@ tagField.addEventListener('keydown', function(event) {
 
 /**
  * Handle a tag being submitted
- * @param tagExists If tag exists
- * @param input Tag name
+ * @param {boolean} tagExists If tag exists
+ * @param {string} input Tag name
  */
 function handleTagSearchSubmit(tagExists, input) {
     if (tagExists) {
@@ -79,7 +88,7 @@ function removeTagError() {
 
 /**
  * Add Tag to search container
- * @param tag Tag text to add
+ * @param {string} tag Tag text to add
  */
 function addTagToSearch(tag) {
     if (tagContainer.children.length === 0) {
@@ -90,6 +99,7 @@ function addTagToSearch(tag) {
     let tagElement = document.createElement("span");
     tagElement.innerHTML = "&nbsp;&nbsp; #" + tag;
     tagContainer.appendChild(tagElement);
+    hiddenTagList.value.length === 0 ? hiddenTagList.value = tag : hiddenTagList.value += ',' + tag
 }
 
 
