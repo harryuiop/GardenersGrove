@@ -66,7 +66,8 @@ function makeActive(buttonId) {
         case "Humidity":
             renderHumidityGraph();
             break;
-
+        default:
+            console.error("Graph button id is invalid");
     }
 }
 
@@ -133,6 +134,9 @@ function renderTemperatureGraphs() {
         GraphType.DAY, dayLabels);
 }
 
+/**
+ * Destroys all graphs and render Moisture graphs.
+ */
 const renderMoistureGraph = () => {
     const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture);
     const moistureWeeklyResults = JSON.parse(graphDataSet.weekMoisture);
@@ -149,6 +153,9 @@ const renderMoistureGraph = () => {
     dayGraph = createGraph(moistureDayResults, "graph-day", "Soil Moisture", GraphType.DAY, dayLabels);
 }
 
+/**
+ * Destroys all graphs and render light graphs.
+ */
 const renderLightGraph = () => {
     const lightMonthResults = JSON.parse(graphDataSet.monthLight);
     const lightWeeklyResults = JSON.parse(graphDataSet.weekLight);
@@ -187,6 +194,9 @@ const renderPressureGraph = () => {
     dayGraph = createGraph(pressureDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
 }
 
+/**
+ * Destroys all graphs and render humidity graphs.
+ */
 const renderHumidityGraph = () => {
     const humidityMonthResults = JSON.parse(graphDataSet.monthLight);
     const humidityWeeklyResults = JSON.parse(graphDataSet.weekLight);
