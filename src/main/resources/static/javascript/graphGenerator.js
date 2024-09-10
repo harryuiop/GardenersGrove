@@ -54,9 +54,20 @@ function makeActive(buttonId) {
         case "Temperature":
             renderTemperatureGraphs();
             break;
+        case "Moisture":
+            renderMoistureGraph();
+            break;
+        case "Light":
+            renderLightGraph();
+            break;
         case "Pressure":
             renderPressureGraph();
             break;
+        case "Humidity":
+            renderHumidityGraph();
+            break;
+        default:
+            console.error("Graph button id is invalid");
     }
 }
 
@@ -124,6 +135,45 @@ function renderTemperatureGraphs() {
 }
 
 /**
+ * Destroys all graphs and render Moisture graphs.
+ */
+const renderMoistureGraph = () => {
+    const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture);
+    const moistureWeeklyResults = JSON.parse(graphDataSet.weekMoisture);
+    const moistureDayResults = JSON.parse(graphDataSet.dayMoisture);
+
+    tempUnits.style.display = "none";
+    changeGraphTitle("Soil Moisture Last 30 Days", "Soil Moisture Last 7 Days", "Soil Moisture Today");
+
+    // reset graphs
+    destroyGraphs();
+
+    monthGraph = createGraph(moistureMonthResults, "graph-month", "Soil Moisture", GraphType.MONTH, monthLabels);
+    weekGraph = createGraph(moistureWeeklyResults, "graph-week", "Soil Moisture", GraphType.WEEK, weekLabels);
+    dayGraph = createGraph(moistureDayResults, "graph-day", "Soil Moisture", GraphType.DAY, dayLabels);
+}
+
+/**
+ * Destroys all graphs and render light graphs.
+ */
+const renderLightGraph = () => {
+    const lightMonthResults = JSON.parse(graphDataSet.monthLight);
+    const lightWeeklyResults = JSON.parse(graphDataSet.weekLight);
+    const lightDayResults = JSON.parse(graphDataSet.dayLight);
+
+    tempUnits.style.display = "none";
+
+    changeGraphTitle("Light Level Last 30 Days", "Light Level Last 7 Days", "Light Level Today");
+
+    // reset graphs
+    destroyGraphs();
+
+    monthGraph = createGraph(lightMonthResults, "graph-month", "Light", GraphType.MONTH, monthLabels);
+    weekGraph = createGraph(lightWeeklyResults, "graph-week", "Light", GraphType.WEEK, weekLabels);
+    dayGraph = createGraph(lightDayResults, "graph-day", "Light", GraphType.DAY, dayLabels);
+}
+
+/**
  * Destroys all graphs and render pressure graphs.
  */
 const renderPressureGraph = () => {
@@ -142,6 +192,26 @@ const renderPressureGraph = () => {
     monthGraph = createGraph(pressureMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
     weekGraph = createGraph(pressureWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels);
     dayGraph = createGraph(pressureDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
+}
+
+/**
+ * Destroys all graphs and render humidity graphs.
+ */
+const renderHumidityGraph = () => {
+    const humidityMonthResults = JSON.parse(graphDataSet.monthLight);
+    const humidityWeeklyResults = JSON.parse(graphDataSet.weekLight);
+    const humidityDayResults = JSON.parse(graphDataSet.dayLight);
+
+    tempUnits.style.display = "none";
+
+    changeGraphTitle("Humidity Last 30 Days", "Humidity Last 7 Days", "Humidity Today");
+
+    // reset graphs
+    destroyGraphs();
+
+    monthGraph = createGraph(humidityMonthResults, "graph-month", "Humidity", GraphType.MONTH, monthLabels);
+    weekGraph = createGraph(humidityWeeklyResults, "graph-week", "Humidity", GraphType.WEEK, weekLabels);
+    dayGraph = createGraph(humidityDayResults, "graph-day", "Humidity", GraphType.DAY, dayLabels);
 }
 
 
