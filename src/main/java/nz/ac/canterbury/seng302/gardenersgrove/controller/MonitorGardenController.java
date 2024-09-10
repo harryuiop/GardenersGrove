@@ -100,11 +100,11 @@ public class MonitorGardenController extends NavBar {
         String humidReading = "-";
         ArduinoDataPoint arduinoDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
         if (arduinoDataPoint != null) {
-            if (arduinoDataPoint.getTempCelsius() != null) tempReading = arduinoDataPoint.getTempCelsius().toString();
-            if (arduinoDataPoint.getMoisturePercent() != null) moistReading = arduinoDataPoint.getMoisturePercent().toString();
-            if (arduinoDataPoint.getLightPercent() != null) lightReading = arduinoDataPoint.getLightPercent().toString();
-            if (arduinoDataPoint.getAtmosphereAtm() != null) pressureReading = arduinoDataPoint.getAtmosphereAtm().toString();
-            if (arduinoDataPoint.getHumidityPercent() != null) humidReading = arduinoDataPoint.getHumidityPercent().toString();
+            if (arduinoDataPoint.getTempCelsius() != null) tempReading = String.format("%.1f", arduinoDataPoint.getTempCelsius());
+            if (arduinoDataPoint.getMoisturePercent() != null) moistReading = String.format("%.0f", arduinoDataPoint.getMoisturePercent());
+            if (arduinoDataPoint.getLightPercent() != null) lightReading = String.format("%.0f", arduinoDataPoint.getLightPercent());
+            if (arduinoDataPoint.getAtmosphereAtm() != null) pressureReading = String.format("%.3f", arduinoDataPoint.getAtmosphereAtm());
+            if (arduinoDataPoint.getHumidityPercent() != null) humidReading = String.format("%.0f", arduinoDataPoint.getHumidityPercent());
         }
         model.addAttribute("tempReading", tempReading);
         model.addAttribute("moistReading", moistReading);

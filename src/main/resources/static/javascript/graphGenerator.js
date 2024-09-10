@@ -87,7 +87,7 @@ function changeTemperatureUnit(unit) {
 
         // Change in unit
         if (currentTempUnitText === "°F" && !isNaN(Number(currentTempReading.innerText))) {
-            currentTempReading.innerText = convertFahrenheitToCelsius(parseFloat(currentTempReading.innerText));
+            currentTempReading.innerText = convertFahrenheitToCelsius(parseFloat(currentTempReading.innerText)).toFixed(1);
         }
         currentTempUnit.innerText = "°C";
 
@@ -98,7 +98,7 @@ function changeTemperatureUnit(unit) {
 
         // Change in unit
         if (currentTempUnitText === "°C" && !isNaN(Number(currentTempReading.innerText))) {
-            currentTempReading.innerText = convertCelsiusToFahrenheit(parseFloat(currentTempReading.innerText));
+            currentTempReading.innerText = convertCelsiusToFahrenheit(parseFloat(currentTempReading.innerText)).toFixed(1);
         }
         currentTempUnit.innerText = "°F";
 
