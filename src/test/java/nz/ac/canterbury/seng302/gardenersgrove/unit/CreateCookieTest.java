@@ -4,10 +4,6 @@ import jakarta.servlet.http.Cookie;
 import nz.ac.canterbury.seng302.gardenersgrove.service.CookiesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class CreateCookieTest {
 
