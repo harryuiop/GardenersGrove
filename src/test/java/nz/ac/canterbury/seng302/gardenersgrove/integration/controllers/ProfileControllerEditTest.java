@@ -49,7 +49,6 @@ class ProfileControllerEditTest {
             userRepository.save(user);
         }
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
-
     }
 
     @Test

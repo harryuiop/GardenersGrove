@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -44,26 +45,43 @@ public class PublicGardensController extends NavBar {
      * @return Thymeleaf HTML browse public gardens.
      */
     @GetMapping(BROWSE_PUBLIC_GARDENS_URI_STRING)
-    String browseGardens(@RequestParam(required = false) Integer page, @RequestParam(required = false) String searchParameter, Model model) {
-        model.addAttribute("searchParameter", searchParameter);
+    String browseGardens(@RequestParam(required = false) Integer page,
+                         @RequestParam(required = false) String searchParameter,
+                         @RequestParam(required = false) String hiddenTagName,
+                         Model model
+                        ) {
 
+        List<String> searchedTags = !StringUtils.isEmpty(hiddenTagName) ? List.of(hiddenTagName.split(",")) : List.of();
+        model.addAttribute("searchParameter", searchParameter);
         logger.info("GET {}", browsePublicGardensUri());
 
         if (page == null) {
             page = 1;
         }
         model.addAttribute("currentPage", page);
-        List<Garden> gardenList = gardenService.getPageOfPublicGardens(page, searchParameter);
+        List<Garden> gardenList = gardenService.getPageOfPublicGardens(page, searchParameter, searchedTags);
         model.addAttribute("gardenList", gardenList);
 
-        long numberOfGardens;
-        if (searchParameter != null) {
-            numberOfGardens = gardenService.countPublicGardens(searchParameter);
-        } else {
-            numberOfGardens = gardenService.countPublicGardens();
-        }
-        model.addAttribute("numberOfResults", numberOfGardens);
+        long numberOfGardens = 0;
+        boolean searchParameterGiven = searchParameter != null && !searchParameter.isEmpty();
+        boolean searchedTagsGiven = !searchedTags.isEmpty();
 
+        if (searchParameterGiven) {
+            if (searchedTagsGiven) {
+                numberOfGardens = gardenService.countPublicGardens(searchParameter, searchedTags);
+            } else {
+                numberOfGardens = gardenService.countPublicGardens(searchParameter);
+            }
+        }
+        else {
+            if (searchedTagsGiven) {
+                numberOfGardens = gardenService.countPublicGardens(searchedTags);
+            } else {
+                numberOfGardens = gardenService.countPublicGardens();
+            }
+        }
+
+        model.addAttribute("numberOfResults", numberOfGardens);
 
         int numberOfPages = (int) Math.min(5, Math.ceil((double) numberOfGardens / 10));
 
