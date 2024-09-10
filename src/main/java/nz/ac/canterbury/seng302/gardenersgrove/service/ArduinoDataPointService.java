@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -50,8 +51,10 @@ public class ArduinoDataPointService {
      * @return The data points for the garden after the given day
      */
     private List<ArduinoDataPoint> getDataPointsOverDays(Long gardenId, int days, LocalDateTime accessTime) {
-        return dataPointRepository.getArduinoDataPointOverDays(gardenId,
+        List<ArduinoDataPoint> dataPoints  = dataPointRepository.getArduinoDataPointOverDays(gardenId,
                 accessTime.minusDays(days).toLocalDate().atTime(0, 0, 0), accessTime);
+        dataPoints.sort(Comparator.comparing(ArduinoDataPoint::getTime));
+        return dataPoints;
     }
 
     /**
