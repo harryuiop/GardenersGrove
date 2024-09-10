@@ -84,7 +84,6 @@ async function updateAutocomplete(query, country) {
  * @param data Raw data from API Request.
  */
 function renderAutocomplete(data) {
-    console.log(data);
     let dataList = data.locations;
     if (!dataList || dataList.length === 0) {
         console.log("No data, or maximum number of requests in set timeframe reached");
