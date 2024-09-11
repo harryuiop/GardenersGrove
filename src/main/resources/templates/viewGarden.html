@@ -113,7 +113,7 @@
             <div class="row">
               <div class="container">
                 <div id="weatherCard">
-                  <div th:if="${garden.getLocation().isCoordinatesSet()}"
+                  <div th:if="${garden.getLocation().isLocationRecognized()}"
                        th:each="data : ${weatherData}" class="d-inline-grid">
                     <div th:insert="~{fragments/locationWeatherCard :: weatherCard}"
                          th:with="dayOfWeek=${data.date.dayOfWeek},
@@ -124,13 +124,13 @@
                            humidity=${data.humidity}">
                     </div>
                   </div>
-                  <div th:unless="${garden.getLocation().isCoordinatesSet() || !owner}" class="alert alert-warning">
+                  <div th:unless="${garden.getLocation().isLocationRecognized() || !owner}" class="alert alert-warning">
                     Location not found, please update your location to see the weather
                   </div>
                 </div>
               </div>
             </div>
-            <div th:if="${garden.getLocation().isCoordinatesSet()}" class="h-auto mt-3 rounded-4 d-flex flex-column">
+            <div th:if="${garden.getLocation().isLocationRecognized()}" class="h-auto mt-3 rounded-4 d-flex flex-column">
                     <div th:if="${popupClosed} != 'true'"
                          class="alert w-100 alert-success"
                          id="advice-message"

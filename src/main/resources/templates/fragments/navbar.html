@@ -65,8 +65,8 @@
                   style="background-color: #EFEFEC"
           >
             <li th:each="garden: ${gardens}">
-              <a class="dropdown-item" th:href="@{${viewGardenUriString}(gardenId=${garden.getId()})}">
-                <span th:text="${garden.getName()}"></span>
+              <a class="dropdown-item" th:href="@{${viewGardenUriString}(gardenId=${garden.getId()})}" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <span class = "text-truncate" th:text="${garden.getName()}"></span>
               </a>
             </li>
             <li>

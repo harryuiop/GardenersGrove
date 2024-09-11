@@ -95,7 +95,7 @@ public class ViewGardenController extends NavBar {
             model.addAttribute("tagErrors", errorMessages[0]);
         }
 
-        List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng());
+        List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLng(), garden.getLocation().getLat());
         int pastDays = weatherService.getPastDaysCount();
         int forecastedDays = weatherService.getForecastDayCount();
         List<WeatherData> shownWeatherData = weatherData.subList(pastDays, pastDays + forecastedDays);
