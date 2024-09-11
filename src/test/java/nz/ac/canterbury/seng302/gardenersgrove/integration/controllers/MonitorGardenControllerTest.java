@@ -4,14 +4,16 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDateTime;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.monitorGardenUri;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @WithMockUser(value = "1")
@@ -35,11 +38,12 @@ class MonitorGardenControllerTest {
     static boolean gardenSaved = false;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private ArduinoDataPointRepository arduinoDataPointRepository;
+    @SpyBean
+    private ArduinoDataPointService arduinoDataPointService;
 
     @BeforeEach
     void saveGarden() {
+        Mockito.reset(arduinoDataPointService);
         if (gardenSaved) {
             return;
         }
@@ -79,7 +83,8 @@ class MonitorGardenControllerTest {
     void requestGardenMonitoringPage_linkedArduinoNewData_upToDateStatus() throws Exception {
         garden.setArduinoId("127.0.0.1");
         ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.of(2000, 1, 1, 0, 0), 1.0, 1.0, 1.0, 1.0, 1.0);
-        arduinoDataPointRepository.save(arduinoDataPoint);
+        arduinoDataPointService.saveDataPoint(arduinoDataPoint);
+        Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
         gardenRepository.save(garden);
 
         mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
@@ -90,5 +95,54 @@ class MonitorGardenControllerTest {
     void requestGardenMonitoringPage_invalidGardenId_400Response() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(9999)))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    void requestGardenMonitoringPage_nullDataAll_correctStringDisplayed() throws Exception {
+        garden.setArduinoId("127.0.0.1");
+        ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.of(2000, 1, 1, 0, 0), null, null, null, null, null);
+        arduinoDataPointService.saveDataPoint(arduinoDataPoint);
+        Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
+        gardenRepository.save(garden);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.model().attribute("tempReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("moistReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("lightReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("pressureReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("humidReading", "-"));
+    }
+
+    @Test
+    void requestGardenMonitoringPage_invalidDataAll_correctStringDisplayed() throws Exception {
+        garden.setArduinoId("127.0.0.1");
+        ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.of(2000, 1, 1, 0, 0), null, null, 0d, 0d, 0d);
+        arduinoDataPointService.saveDataPoint(arduinoDataPoint);
+        Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
+        gardenRepository.save(garden);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.model().attribute("tempReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("moistReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("lightReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("pressureReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("humidReading", "-"));
+    }
+
+    @Test
+    void requestGardenMonitoringPage_validDataAll_correctStringDisplayed() throws Exception {
+        garden.setArduinoId("127.0.0.1");
+        ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.of(2000, 1, 1, 0, 0), 2.0, 2.0, 2.0, 2.0, 2.0);
+        arduinoDataPointService.saveDataPoint(arduinoDataPoint);
+        Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
+        gardenRepository.save(garden);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.model().attribute("tempReading", "2.0"))
+                .andExpect(MockMvcResultMatchers.model().attribute("moistReading", "2"))
+                .andExpect(MockMvcResultMatchers.model().attribute("lightReading", "2"))
+                .andExpect(MockMvcResultMatchers.model().attribute("pressureReading", "2.000"))
+                .andExpect(MockMvcResultMatchers.model().attribute("humidReading", "2"));
+
     }
 }

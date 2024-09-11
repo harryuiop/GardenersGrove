@@ -20,7 +20,13 @@ import java.time.Duration;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isTempConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isMoistConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isLightConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isPressureConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isHumidityConnected;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
+
 
 /**
  * Controller for the monitor garden page. For viewing statistics and live updates for a specific garden.
@@ -100,13 +106,36 @@ public class MonitorGardenController extends NavBar {
         String lightReading = "-";
         String pressureReading = "-";
         String humidReading = "-";
+        boolean tempSensorConnected;
+        boolean moistSensorConnected;
+        boolean lightSensorConnected;
+        boolean pressureSensorConnected;
+        boolean humidSensorConnected;
+
         ArduinoDataPoint arduinoDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
         if (arduinoDataPoint != null) {
-            if (arduinoDataPoint.getTempCelsius() != null) tempReading = String.format("%.1f", arduinoDataPoint.getTempCelsius());
-            if (arduinoDataPoint.getMoisturePercent() != null) moistReading = String.format("%.0f", arduinoDataPoint.getMoisturePercent());
-            if (arduinoDataPoint.getLightPercent() != null) lightReading = String.format("%.0f", arduinoDataPoint.getLightPercent());
-            if (arduinoDataPoint.getAtmosphereAtm() != null) pressureReading = String.format("%.3f", arduinoDataPoint.getAtmosphereAtm());
-            if (arduinoDataPoint.getHumidityPercent() != null) humidReading = String.format("%.0f", arduinoDataPoint.getHumidityPercent());
+            if (arduinoDataPoint.getTempCelsius() != null) {
+                tempSensorConnected = isTempConnected(arduinoDataPoint.getTempCelsius());
+                tempReading = (tempSensorConnected) ? String.format("%.1f", arduinoDataPoint.getTempCelsius()) : "-";
+            }
+            if (arduinoDataPoint.getMoisturePercent() != null) {
+                moistSensorConnected = isMoistConnected(arduinoDataPoint.getMoisturePercent());
+                moistReading = (moistSensorConnected) ? String.format("%.0f", arduinoDataPoint.getMoisturePercent()) : "-";
+            }
+            if (arduinoDataPoint.getLightPercent() != null) {
+                lightSensorConnected = isLightConnected(arduinoDataPoint.getLightPercent());
+                lightReading = (lightSensorConnected) ? String.format("%.0f", arduinoDataPoint.getLightPercent()) : "-";
+            }
+            if (arduinoDataPoint.getAtmosphereAtm() != null) {
+                pressureSensorConnected = isPressureConnected(arduinoDataPoint.getAtmosphereAtm());
+                pressureReading = (pressureSensorConnected) ? String.format("%.3f", arduinoDataPoint.getAtmosphereAtm()) : "-";
+            }
+            if (arduinoDataPoint.getHumidityPercent() != null) {
+                humidSensorConnected = isHumidityConnected(arduinoDataPoint.getHumidityPercent());
+                humidReading = (humidSensorConnected) ? String.format("%.0f", arduinoDataPoint.getHumidityPercent()) : "-";
+            }
+
+
         }
         model.addAttribute("tempReading", tempReading);
         model.addAttribute("moistReading", moistReading);
@@ -156,4 +185,5 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("deviceStatus", deviceStatus);
         model.addAttribute("timeSinceLastReading", timeSinceLastReading);
     }
+
 }

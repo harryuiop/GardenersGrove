@@ -48,16 +48,28 @@
                     </button>
                 </div>
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0"><i class="bi bi-moisture"></i> <span th:text="'Soil Moisture: '+ ${moistReading} +'%'"></span></button>
+                    <button onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0">
+                        <i class="bi bi-moisture"></i>
+                        <span th:text="'Soil Moisture: '+ ${moistReading} +'%'"></span>
+                    </button>
                 </div>
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Light')" id="Light" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-brightness-high"></i> <span th:text="'Light: '+ ${lightReading} +'%'"></span></button>
+                    <button onclick="makeActive('Light')" id="Light" class="btn btn-stats-bar btn-no-bold m-0 lead">
+                        <i class="bi bi-brightness-high"></i>
+                        <span th:text="'Light: '+ ${lightReading} +'%'"></span>
+                    </button>
                 </div>
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Pressure')" id="Pressure" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-speedometer"></i> <span th:text="'Air Pressure: '+ ${pressureReading} +'atm'"></span></button>
+                    <button onclick="makeActive('Pressure')" id="Pressure" class="btn btn-stats-bar btn-no-bold m-0 lead">
+                        <i class="bi bi-speedometer"></i>
+                        <span th:text="'Air Pressure: '+ ${pressureReading} +'atm'"></span>
+                    </button>
                 </div>
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Humidity')" id="Humidity" class="btn btn-stats-bar btn-no-bold m-0 lead"><i class="bi bi-droplet-half"></i> <span th:text="'Humidity: '+ ${humidReading} +'%'"></span></button>
+                    <button onclick="makeActive('Humidity')" id="Humidity" class="btn btn-stats-bar btn-no-bold m-0 lead">
+                        <i class="bi bi-droplet-half"></i>
+                        <span th:text="'Humidity: '+ ${humidReading} +'%'"></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -81,6 +93,19 @@
                                             data-day-humidity=${graphDay.getHumidity()},
                                             data-month-humidity=${graphMonth.getHumidity()}"
         >
+            <!-- Sensor disconnected error -->
+            <div th:if="${owner}" class="row mx-4" id="disconnected-warning"
+                 th:data-temperature="${tempReading}"
+                 th:data-moisture="${moistReading}"
+                 th:data-light="${lightReading}"
+                 th:data-air-pressure="${pressureReading}"
+                 th:data-humidity="${humidReading}"
+            >
+                <div class="alert alert-warning">
+                    <i class="bi bi-link"></i>
+                    <span id="sensor-alert">Temperature</span><span> sensor currently not connected, please check connection</span>
+                </div>
+            </div>
             <!-- Temperature -->
             <div class="sensor-data m-4" id="temperature-data">
                 <div class="row" id="temp-units">
@@ -103,7 +128,6 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="row" id="graphs" data-units="c">
                     <div class="container">
                         <div class="row">

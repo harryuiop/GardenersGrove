@@ -10,6 +10,8 @@ const currentTempReading = document.getElementById("current-temp-reading");
 
 // Containers
 const temperatureGraphContainer = document.getElementById("graphs");
+const disconnectedWarning = document.getElementById("disconnected-warning");
+const alertSensor = document.getElementById("sensor-alert")
 
 // Labels
 const graphDataSet = document.getElementById("display-graphs").dataset;
@@ -124,7 +126,6 @@ const destroyGraphs = () => {
  * Destroys all graphs and render temperature graphs.
  */
 function renderTemperatureGraphs() {
-
     const tempMonthResults = JSON.parse(graphDataSet.monthTemp);
     const tempWeeklyResults = JSON.parse(graphDataSet.weekTemp);
     const tempDayResults = JSON.parse(graphDataSet.dayTemp);
@@ -150,6 +151,8 @@ function renderTemperatureGraphs() {
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
     dayGraph = createGraph(convertedDayResults,"graph-day", `Temperature (${temperatureUnit})`,
         GraphType.DAY, dayLabels);
+
+    alertMessage("Temperature")
 }
 
 /**
@@ -169,6 +172,8 @@ const renderMoistureGraph = () => {
     monthGraph = createGraph(moistureMonthResults, "graph-month", "Soil Moisture", GraphType.MONTH, monthLabels);
     weekGraph = createGraph(moistureWeeklyResults, "graph-week", "Soil Moisture", GraphType.WEEK, weekLabels);
     dayGraph = createGraph(moistureDayResults, "graph-day", "Soil Moisture", GraphType.DAY, dayLabels);
+
+    alertMessage("Moisture")
 }
 
 /**
@@ -189,6 +194,8 @@ const renderLightGraph = () => {
     monthGraph = createGraph(lightMonthResults, "graph-month", "Light", GraphType.MONTH, monthLabels);
     weekGraph = createGraph(lightWeeklyResults, "graph-week", "Light", GraphType.WEEK, weekLabels);
     dayGraph = createGraph(lightDayResults, "graph-day", "Light", GraphType.DAY, dayLabels);
+
+    alertMessage("Light")
 }
 
 /**
@@ -210,6 +217,8 @@ const renderPressureGraph = () => {
     monthGraph = createGraph(pressureMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
     weekGraph = createGraph(pressureWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels);
     dayGraph = createGraph(pressureDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
+
+    alertMessage("Air-Pressure")
 }
 
 /**
@@ -230,6 +239,8 @@ const renderHumidityGraph = () => {
     monthGraph = createGraph(humidityMonthResults, "graph-month", "Humidity", GraphType.MONTH, monthLabels);
     weekGraph = createGraph(humidityWeeklyResults, "graph-week", "Humidity", GraphType.WEEK, weekLabels);
     dayGraph = createGraph(humidityDayResults, "graph-day", "Humidity", GraphType.DAY, dayLabels);
+
+    alertMessage("Humidity")
 }
 
 
@@ -402,4 +413,13 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             }
         }
     )
+}
+
+function alertMessage(sensor) {
+    if (isNaN(Number(disconnectedWarning.getAttribute("data-"+sensor.toLowerCase())))) {
+        disconnectedWarning.style.display = "block"
+        alertSensor.innerText = sensor
+    } else {
+        disconnectedWarning.style.display = "none"
+    }
 }
