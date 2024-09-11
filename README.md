@@ -67,7 +67,8 @@ User 1 should have at least 9 gardens, the first with 10 plants and the second w
 
 The first garden contains inserted arduino data for the sensors (on the monitor gardens page).
 Dummy sensor data is from August 11th 2024 to October 10th 2024. Note not every 30-minute
-period in this time frame is accounted for.
+period in this time frame is accounted for. Current reading also grabs the newest data reading,
+since we need to add data in the future for your marking this result may not be accurate with the graphs.
 
 There are 9 more users that share a password with User 1 and have emails in the same format as User 1 but with a
 different number up to 9.
@@ -80,7 +81,8 @@ User 2 should have at least 10 gardens, the first with 7 plants.
 
 The first garden contains inserted arduino data for the sensors (on the monitor gardens page).
 Dummy sensor data is from August 11th 2024 to October 10th 2024. Note not every 30-minute
-period in this time frame is accounted for.
+period in this time frame is accounted for. Current reading also grabs the newest data reading,
+since we need to add data in the future for your marking this result may not be accurate with the graphs.
 
 ## Contributors
 
