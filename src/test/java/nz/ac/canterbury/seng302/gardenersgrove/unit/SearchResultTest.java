@@ -25,6 +25,7 @@ public class SearchResultTest {
     void getAutocompleteSuggestions_containsSingleFeature_returnSuggestions() {
         Feature feature = createFeature("New Zealand", "Christchurch", "Ilam",
                 "8041", "Example Street", "123");
+        ReflectionTestUtils.setField(feature, "id", "address");
 
         ReflectionTestUtils.setField(searchResult, "features", List.of(feature));
 
@@ -35,6 +36,7 @@ public class SearchResultTest {
         Map<String, String> locationMap = locations.get(0);
         Assertions.assertEquals("New Zealand", locationMap.get("country"));
         Assertions.assertEquals("123 Example Street", locationMap.get("streetAddress"));
+        Assertions.assertEquals("123 Example Street", locationMap.get("primaryAddress"));
         Assertions.assertEquals("Christchurch", locationMap.get("city"));
         Assertions.assertEquals("8041", locationMap.get("postcode"));
         Assertions.assertEquals("Ilam", locationMap.get("suburb"));
@@ -45,10 +47,14 @@ public class SearchResultTest {
     void getAutocompleteSuggestions_containsMultipleFeatures_returnSuggestions() {
         Feature feature1 = createFeature("New Zealand", "Christchurch", "Ilam",
                 "8041", "Example Street", "123");
+        ReflectionTestUtils.setField(feature1, "id", "address");
         Feature feature2 = createFeature("New Zealand", "Christchurch", "Ilam",
                 "9000", "Example Street", "125");
+        ReflectionTestUtils.setField(feature2, "id", "address");
         Feature feature3 = createFeature("Australia", "Sydney", "Example",
                 "1234", "Exemplar Road", "123");
+        ReflectionTestUtils.setField(feature3, "id", "address");
+
 
         ReflectionTestUtils.setField(searchResult, "features", Arrays.asList(feature1, feature2, feature3));
 
@@ -59,6 +65,7 @@ public class SearchResultTest {
         Map<String, String> locationMap1 = locations.get(0);
         Assertions.assertEquals("New Zealand", locationMap1.get("country"));
         Assertions.assertEquals("123 Example Street", locationMap1.get("streetAddress"));
+        Assertions.assertEquals("123 Example Street", locationMap1.get("primaryAddress"));
         Assertions.assertEquals("Christchurch", locationMap1.get("city"));
         Assertions.assertEquals("8041", locationMap1.get("postcode"));
         Assertions.assertEquals("Ilam", locationMap1.get("suburb"));
@@ -67,6 +74,7 @@ public class SearchResultTest {
         Map<String, String> locationMap2 = suggestions.get("locations").get(1);
         Assertions.assertEquals("New Zealand", locationMap2.get("country"));
         Assertions.assertEquals("125 Example Street", locationMap2.get("streetAddress"));
+        Assertions.assertEquals("125 Example Street", locationMap2.get("primaryAddress"));
         Assertions.assertEquals("Christchurch", locationMap2.get("city"));
         Assertions.assertEquals("9000", locationMap2.get("postcode"));
         Assertions.assertEquals("Ilam", locationMap2.get("suburb"));
@@ -75,6 +83,7 @@ public class SearchResultTest {
         Map<String, String> locationMap3 = suggestions.get("locations").get(2);
         Assertions.assertEquals("Australia", locationMap3.get("country"));
         Assertions.assertEquals("123 Exemplar Road", locationMap3.get("streetAddress"));
+        Assertions.assertEquals("123 Exemplar Road", locationMap3.get("primaryAddress"));
         Assertions.assertEquals("Sydney", locationMap3.get("city"));
         Assertions.assertEquals("1234", locationMap3.get("postcode"));
         Assertions.assertEquals("Example", locationMap3.get("suburb"));
