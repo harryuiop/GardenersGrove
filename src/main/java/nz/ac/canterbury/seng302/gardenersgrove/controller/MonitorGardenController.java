@@ -20,7 +20,13 @@ import java.time.Duration;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isTempConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isMoistConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isLightConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isPressureConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isHumidityConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
+
 
 /**
  * Controller for the monitor garden page. For viewing statistics and live updates for a specific garden.
@@ -58,42 +64,43 @@ public class MonitorGardenController extends NavBar {
      * @return Thymeleaf html template of the monitor garden page.
      */
     @GetMapping(MONITOR_GARDEN_URI_STRING)
-    public String monitorGarden(
-            @PathVariable long gardenId,
-            Model model
-    ) throws NoSuchGardenException {
+    public String monitorGarden(@PathVariable long gardenId, Model model)
+            throws NoSuchGardenException {
+
         this.updateGardensNavBar(model, gardenService, userService);
 
         User currentUser = userService.getAuthenticatedUser();
-
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
-        if (optionalGarden.isEmpty()
-                || optionalGarden.get().getOwner().getId() != currentUser.getId()
-                && !optionalGarden.get().isGardenPublic()) {
+
+        if (optionalGarden.isEmpty()) {
             throw new NoSuchGardenException(gardenId);
         }
         Garden garden = optionalGarden.get();
 
-        String deviceStatus;
-        ArduinoDataPoint lastDataPoint;
-        Long timeSinceLastReading = null;
-
-        if (garden.getArduinoId() == null) {
-            deviceStatus = "NOT_LINKED";
-        } else {
-            lastDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
-            if (lastDataPoint == null) {
-                deviceStatus = "NO_DATA";
-            } else {
-                timeSinceLastReading = Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs().toMinutes();
-                if (timeSinceLastReading <= 5) {
-                    deviceStatus = "UP_TO_DATE";
-                } else {
-                    deviceStatus = "OUT_OF_DATE";
-                }
-            }
+        boolean notOwner = garden.getOwner().getId() != currentUser.getId();
+        boolean privateGarden = !garden.isGardenPublic();
+        if (notOwner && privateGarden) {
+            throw new NoSuchGardenException(gardenId);
         }
 
+        model.addAttribute("garden", garden);
+        model.addAttribute("owner", garden.getOwner() == currentUser);
+        model.addAttribute("garden", optionalGarden.get());
+
+        //This is where we input if the arduino is connected. Still to be implemented.
+        model.addAttribute("connected", false);
+
+        addDeviceStatusInformationToModel(model, garden);
+        addCurrentSensorReadingsToModel(model, garden);
+        addGraphDataToModel(model, gardenId);
+
+        return "gardenMonitoring";
+    }
+
+    /**
+     * Helper method to add current sensor readings to html model.
+     */
+    private void addCurrentSensorReadingsToModel(Model model, Garden garden) {
         String tempReading = "-";
         String moistReading = "-";
         String lightReading = "-";
@@ -109,23 +116,23 @@ public class MonitorGardenController extends NavBar {
         if (arduinoDataPoint != null) {
             if (arduinoDataPoint.getTempCelsius() != null) {
                 tempSensorConnected = isTempConnected(arduinoDataPoint.getTempCelsius());
-                tempReading = (tempSensorConnected) ? arduinoDataPoint.getTempCelsius().toString() : "-";
+                tempReading = (tempSensorConnected) ? String.format("%.1f", arduinoDataPoint.getTempCelsius()) : "-";
             }
             if (arduinoDataPoint.getMoisturePercent() != null) {
                 moistSensorConnected = isMoistConnected(arduinoDataPoint.getMoisturePercent());
-                moistReading = (moistSensorConnected) ? arduinoDataPoint.getMoisturePercent().toString() : "-";
+                moistReading = (moistSensorConnected) ? String.format("%.0f", arduinoDataPoint.getMoisturePercent()) : "-";
             }
             if (arduinoDataPoint.getLightPercent() != null) {
                 lightSensorConnected = isLightConnected(arduinoDataPoint.getLightPercent());
-                lightReading = (lightSensorConnected) ? arduinoDataPoint.getLightPercent().toString() : "-";
+                lightReading = (lightSensorConnected) ? String.format("%.0f", arduinoDataPoint.getLightPercent()) : "-";
             }
             if (arduinoDataPoint.getAtmosphereAtm() != null) {
                 pressureSensorConnected = isPressureConnected(arduinoDataPoint.getAtmosphereAtm());
-                pressureReading = (pressureSensorConnected) ? arduinoDataPoint.getAtmosphereAtm().toString() : "-";
+                pressureReading = (pressureSensorConnected) ? String.format("%.3f", arduinoDataPoint.getAtmosphereAtm()) : "-";
             }
             if (arduinoDataPoint.getHumidityPercent() != null) {
                 humidSensorConnected = isHumidityConnected(arduinoDataPoint.getHumidityPercent());
-                humidReading = (humidSensorConnected) ? arduinoDataPoint.getHumidityPercent().toString() : "-";
+                humidReading = (humidSensorConnected) ? String.format("%.0f", arduinoDataPoint.getHumidityPercent()) : "-";
             }
 
 
@@ -135,15 +142,12 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("lightReading", lightReading);
         model.addAttribute("pressureReading", pressureReading);
         model.addAttribute("humidReading", humidReading);
+    }
 
-        model.addAttribute("garden", garden);
-        model.addAttribute("owner", garden.getOwner() == currentUser);
-        model.addAttribute("deviceStatus", deviceStatus);
-        model.addAttribute("timeSinceLastReading", timeSinceLastReading);
-        model.addAttribute("garden", optionalGarden.get());
-        model.addAttribute("connected", false); //This is where we input if the arduino is connected. Still to be implemented.
-
-        // Add Graph Data
+    /**
+     * Helper method to add graph data to html model.
+     */
+    private void addGraphDataToModel(Model model, Long gardenId) {
         FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId, LocalDateTime.now());
         FormattedGraphData weekData = arduinoDataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
         FormattedGraphData monthData = arduinoDataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
@@ -151,8 +155,35 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("graphDay", dayData);
         model.addAttribute("graphWeek", weekData);
         model.addAttribute("graphMonth", monthData);
+    }
 
-        return "gardenMonitoring";
+    /**
+     * Add device status, and time since last reading to html model.
+     */
+    private void addDeviceStatusInformationToModel(Model model, Garden garden) {
+        String deviceStatus;
+        ArduinoDataPoint lastDataPoint;
+        long minutesSinceLastReading;
+        String timeSinceLastReading = "";
+
+        if (garden.getArduinoId() == null) {
+            deviceStatus = "NOT_LINKED";
+        } else {
+            lastDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
+            if (lastDataPoint == null) {
+                deviceStatus = "NO_DATA";
+            } else {
+                minutesSinceLastReading = Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs().toMinutes();
+                timeSinceLastReading = minutestoTimeString(minutesSinceLastReading);
+                if (minutesSinceLastReading <= 5) {
+                    deviceStatus = "UP_TO_DATE";
+                } else {
+                    deviceStatus = "OUT_OF_DATE";
+                }
+            }
+        }
+        model.addAttribute("deviceStatus", deviceStatus);
+        model.addAttribute("timeSinceLastReading", timeSinceLastReading);
     }
 
 }
