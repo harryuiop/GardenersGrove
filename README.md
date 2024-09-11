@@ -59,12 +59,28 @@ By default, the application will run on local port 8080 [http://localhost:8080](
 > - Pending and declined requests are visible below the incoming friend requests and can be cancelled on ths page.
 
 ## Default User Credentials
+
+### On Test
 __Email__: user1@gmail.com \
 __Password__: Password1!\
-User 1 has 2 gardens, the first with 10 plants and the second with 1 plant.
+User 1 should have at least 9 gardens, the first with 10 plants and the second with 1 plant.
+
+The first garden contains inserted arduino data for the sensors (on the monitor gardens page).
+Dummy sensor data is from August 11th 2024 to October 10th 2024. Note not every 30-minute
+period in this time frame is accounted for.
 
 There are 9 more users that share a password with User 1 and have emails in the same format as User 1 but with a
 different number up to 9.
+
+### On Prod
+
+__Email__: user2@gmail.com \
+__Password__: Password1!\
+User 2 should have at least 10 gardens, the first with 7 plants.
+
+The first garden contains inserted arduino data for the sensors (on the monitor gardens page).
+Dummy sensor data is from August 11th 2024 to October 10th 2024. Note not every 30-minute
+period in this time frame is accounted for.
 
 ## Contributors
 
