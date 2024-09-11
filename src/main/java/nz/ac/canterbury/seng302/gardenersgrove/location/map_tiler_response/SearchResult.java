@@ -36,7 +36,10 @@ public class SearchResult {
     }
 
     /**
-     * Get mapping of single location to send to javascript autcomplete.
+     * Helper method to get mapping of a single location to send to javascript autocomplete.
+     *
+     * @param feature Location Feature object - to get the location details from.
+     * @return Location map of location details (to later be converted into JSON).
      */
     private Map<String, String> getLocationMap(Feature feature) {
         Map<String, String> locationMap = new HashMap<>();
