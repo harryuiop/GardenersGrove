@@ -112,7 +112,7 @@ public class ArduinoDataValidator {
      * @return boolean indicating whether the moisture sensor functions correctly
      */
     public static boolean isMoistConnected(Double moisture) {
-        return true; // TODO: find out the value that gets returned when the sensor is disconnected
+        return moisture == 0;
     }
 
     /**
