@@ -93,7 +93,7 @@
                                             data-month-humidity=${graphMonth.getHumidity()}"
         >
             <!-- Sensor disconnected error -->
-            <div class="row mx-4" id="disconnected-warning"
+            <div th:if="${owner}" class="row mx-4" id="disconnected-warning"
                  th:data-temperature="${tempReading}"
                  th:data-moisture="${moistReading}"
                  th:data-light="${lightReading}"
