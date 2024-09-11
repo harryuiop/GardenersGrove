@@ -9,18 +9,23 @@ import nz.ac.canterbury.seng302.gardenersgrove.exceptions.UnableToFetchArduinoDa
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoJsonData;
-import nz.ac.canterbury.seng302.gardenersgrove.weather.UnableToFetchWeatherException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.ARDUINO_SENSOR_DATA;
 
 /**
  * Controller for endpoints used by the Arduino.
  */
 @Controller
 public class ArduinoDataController {
-    private final GardenService gardenService;
+    Logger logger = LoggerFactory.getLogger(ArduinoDataController.class);
 
+    private final GardenService gardenService;
     private final ArduinoDataPointService dataPointService;
 
     ArduinoDataController(GardenService gardenService, ArduinoDataPointService dataPointService) {
@@ -40,6 +45,7 @@ public class ArduinoDataController {
     @ResponseBody
     public void receiveArduinoData(@RequestBody String sensorData) throws UnableToFetchArduinoDataException {
         try {
+            logger.info("POST {} {}", ARDUINO_SENSOR_DATA, sensorData);
             ArduinoJsonData response = objectMapper.readValue(sensorData, ArduinoJsonData.class);
             if (ArduinoDataValidator.checkValidSensorData(response)) {
                 dataPointService.saveDataPoint(new ArduinoDataPoint(gardenService.getGardenByArduinoId(response.getId()), response.getTime(),
