@@ -10,13 +10,6 @@ const searchButton = document.getElementById("search-addon");
 const hiddenTagList = document.getElementById("hiddenTagList")
 
 /**
- * Getter to grab the tags and give to the HTML page
- */
-function getTags() {
-    return tagContainer
-}
-
-/**
  * On user adding tag, queries database if tag exists via rest request.
  */
 function submitTagToSearch() {

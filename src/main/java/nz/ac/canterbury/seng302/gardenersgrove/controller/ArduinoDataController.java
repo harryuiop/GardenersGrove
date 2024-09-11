@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.UnableToFetchArduinoDataException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoJsonData;
@@ -37,7 +38,7 @@ public class ArduinoDataController {
      */
     @PostMapping(ARDUINO_SENSOR_DATA)
     @ResponseBody
-    public void receiveArduinoData(@RequestBody String sensorData) throws UnableToFetchWeatherException {
+    public void receiveArduinoData(@RequestBody String sensorData) throws UnableToFetchArduinoDataException {
         try {
             ArduinoJsonData response = objectMapper.readValue(sensorData, ArduinoJsonData.class);
             if (ArduinoDataValidator.checkValidSensorData(response)) {
@@ -46,7 +47,7 @@ public class ArduinoDataController {
                         response.getLightLevelPercentage(), response.getMoisturePercentage()));
             }
         } catch (JsonProcessingException exception) {
-                throw new UnableToFetchWeatherException("Failed to parse JSON response from API", exception);
+                throw new UnableToFetchArduinoDataException("Failed to parse JSON response from Arduino", exception);
         }
     }
 }
