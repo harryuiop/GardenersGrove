@@ -12,6 +12,9 @@ public class Feature {
     private double relevance;
     private String text;
 
+    // Type of Location. For example: city, country, street, etc.
+    private String id;
+
     // Additional information about the location like the country, city, etc.
     private List<Context> context;
 
@@ -34,13 +37,13 @@ public class Feature {
 
     /**
      * The text content from a given id used for additional information about a location like city.
-     * @param id The full id of the context, for example, postal_code.3373541.
+     * @param locationId Type of location like city, country, etc.
      * @return The text content result, for example, 8140.
      */
-    private String getContextTextFromId(String id) {
+    private String getContextTextFromId(LocationType locationId) {
         if (context == null || context.isEmpty()) return null;
         for (Context contextResult : context) {
-            if (contextResult.getId().startsWith(id)) {
+            if (contextResult.getId().startsWith(locationId.toString())) {
                 return contextResult.getText();
             }
         }
@@ -51,14 +54,14 @@ public class Feature {
      * @return Full country name. For example, New Zealand.
      */
     public String getCountry() {
-        return getContextTextFromId("country");
+        return getContextTextFromId(LocationType.COUNTRY);
     }
 
     /**
      * @return Full city name (county from MapTiler).
      */
     public String getCity() {
-        return getContextTextFromId("county");
+        return getContextTextFromId(LocationType.CITY);
     }
 
     /**
@@ -94,14 +97,14 @@ public class Feature {
      * @return Full suburb name (Municipality from MapTiler).
      */
     public String getSuburb() {
-        return getContextTextFromId("municipality");
+        return getContextTextFromId(LocationType.SUBURB);
     }
 
     /**
      * @return Postal Code. For example, 8140.
      */
     public String getPostcode() {
-        return getContextTextFromId("postal_code");
+        return getContextTextFromId(LocationType.POSTCODE);
     }
 
     /**
@@ -110,6 +113,13 @@ public class Feature {
      */
     public List<Context> getContext() {
         return context;
+    }
+
+    /**
+     * @return Type of location (like city, country, etc.)
+     */
+    public String getId() {
+        return id;
     }
 
     /**

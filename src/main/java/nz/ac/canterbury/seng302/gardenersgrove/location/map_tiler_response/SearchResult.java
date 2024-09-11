@@ -29,18 +29,57 @@ public class SearchResult {
         List<Map<String, String>> locationList = new ArrayList<>();
         if (features == null || features.isEmpty()) return json;
         for (Feature feature : features) {
-            String streetAddress = feature.getStreetAddress();
-            if (streetAddress == null) streetAddress = "";
-            Map<String, String> locationMap = new HashMap<>();
-            locationMap.put("streetAddress", streetAddress);
-            locationMap.put("outerLocation", feature.getOuterLocation());
-            locationMap.put("country", feature.getCountry());
-            locationMap.put("city", feature.getCity());
-            locationMap.put("suburb", feature.getSuburb());
-            locationMap.put("postcode", feature.getPostcode());
-            locationList.add(locationMap);
+            locationList.add(getLocationMap(feature));
         }
         json.put("locations", locationList);
         return json;
+    }
+
+    /**
+     * Helper method to get mapping of a single location to send to javascript autocomplete.
+     *
+     * @param feature Location Feature object - to get the location details from.
+     * @return Location map of location details (to later be converted into JSON).
+     */
+    private Map<String, String> getLocationMap(Feature feature) {
+        Map<String, String> locationMap = new HashMap<>();
+
+        String streetAddress = feature.getStreetAddress();
+        if (streetAddress == null || !feature.getId().startsWith(LocationType.ADDRESS.toString())) {
+            streetAddress = "";
+            locationMap.put("primaryAddress", feature.getText());
+        } else {
+            locationMap.put("primaryAddress", streetAddress);
+        }
+        locationMap.put("streetAddress", streetAddress);
+
+        locationMap.put("outerLocation", feature.getOuterLocation());
+
+        if (feature.getId().startsWith(LocationType.COUNTRY.toString())) {
+            locationMap.put("country", feature.getText());
+        } else {
+            locationMap.put("country", feature.getCountry());
+        }
+
+        if (feature.getId().startsWith(LocationType.CITY.toString())) {
+            locationMap.put("city", feature.getText());
+        } else {
+            locationMap.put("city", feature.getCity());
+        }
+
+        if (feature.getId().startsWith(LocationType.SUBURB.toString())) {
+            locationMap.put("suburb", feature.getText());
+        } else {
+            locationMap.put("suburb", feature.getSuburb());
+
+        }
+
+        if (feature.getId().startsWith(LocationType.POSTCODE.toString())) {
+            locationMap.put("postcode", feature.getText());
+        } else {
+            locationMap.put("postcode", feature.getPostcode());
+        }
+
+        return locationMap;
     }
 }
