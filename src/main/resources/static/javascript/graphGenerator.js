@@ -5,6 +5,8 @@
 const tempUnits = document.getElementById('temp-units');
 const fahrenheitButton = document.getElementById("fahrenheit-btn");
 const celsiusButton = document.getElementById("celsius-btn");
+const currentTempUnit = document.getElementById("current-temp-unit");
+const currentTempReading = document.getElementById("current-temp-reading");
 
 // Containers
 const temperatureGraphContainer = document.getElementById("graphs");
@@ -54,25 +56,52 @@ function makeActive(buttonId) {
         case "Temperature":
             renderTemperatureGraphs();
             break;
+        case "Moisture":
+            renderMoistureGraph();
+            break;
+        case "Light":
+            renderLightGraph();
+            break;
         case "Pressure":
             renderPressureGraph();
             break;
+        case "Humidity":
+            renderHumidityGraph();
+            break;
+        default:
+            console.error("Graph button id is invalid");
     }
 }
 
 /**
- * Change temperature unit to Fahrenheit or Celsius AND update graph
+ * Change temperature unit to Fahrenheit or Celsius, update graph, update current temperature
  * @param unit c for Celsius, anything else for Fahrenheit
  */
 function changeTemperatureUnit(unit) {
+    const currentTempUnitText = currentTempUnit.innerText;
+
     if (unit === 'c') {
         celsiusButton.className = "btn btn-toggle-selected";
         fahrenheitButton.className = "btn btn-toggle-unselected";
         temperatureGraphContainer.setAttribute("data-units", "c");
+
+        // Change in unit
+        if (currentTempUnitText === "°F" && !isNaN(Number(currentTempReading.innerText))) {
+            currentTempReading.innerText = convertFahrenheitToCelsius(parseFloat(currentTempReading.innerText)).toFixed(1);
+        }
+        currentTempUnit.innerText = "°C";
+
     } else {
         celsiusButton.className = "btn btn-toggle-unselected";
         fahrenheitButton.className = "btn btn-toggle-selected";
         temperatureGraphContainer.setAttribute("data-units", "f");
+
+        // Change in unit
+        if (currentTempUnitText === "°C" && !isNaN(Number(currentTempReading.innerText))) {
+            currentTempReading.innerText = convertCelsiusToFahrenheit(parseFloat(currentTempReading.innerText)).toFixed(1);
+        }
+        currentTempUnit.innerText = "°F";
+
     }
     renderTemperatureGraphs();
 }
@@ -124,6 +153,45 @@ function renderTemperatureGraphs() {
 }
 
 /**
+ * Destroys all graphs and render Moisture graphs.
+ */
+const renderMoistureGraph = () => {
+    const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture);
+    const moistureWeeklyResults = JSON.parse(graphDataSet.weekMoisture);
+    const moistureDayResults = JSON.parse(graphDataSet.dayMoisture);
+
+    tempUnits.style.display = "none";
+    changeGraphTitle("Soil Moisture Last 30 Days", "Soil Moisture Last 7 Days", "Soil Moisture Today");
+
+    // reset graphs
+    destroyGraphs();
+
+    monthGraph = createGraph(moistureMonthResults, "graph-month", "Soil Moisture", GraphType.MONTH, monthLabels);
+    weekGraph = createGraph(moistureWeeklyResults, "graph-week", "Soil Moisture", GraphType.WEEK, weekLabels);
+    dayGraph = createGraph(moistureDayResults, "graph-day", "Soil Moisture", GraphType.DAY, dayLabels);
+}
+
+/**
+ * Destroys all graphs and render light graphs.
+ */
+const renderLightGraph = () => {
+    const lightMonthResults = JSON.parse(graphDataSet.monthLight);
+    const lightWeeklyResults = JSON.parse(graphDataSet.weekLight);
+    const lightDayResults = JSON.parse(graphDataSet.dayLight);
+
+    tempUnits.style.display = "none";
+
+    changeGraphTitle("Light Level Last 30 Days", "Light Level Last 7 Days", "Light Level Today");
+
+    // reset graphs
+    destroyGraphs();
+
+    monthGraph = createGraph(lightMonthResults, "graph-month", "Light", GraphType.MONTH, monthLabels);
+    weekGraph = createGraph(lightWeeklyResults, "graph-week", "Light", GraphType.WEEK, weekLabels);
+    dayGraph = createGraph(lightDayResults, "graph-day", "Light", GraphType.DAY, dayLabels);
+}
+
+/**
  * Destroys all graphs and render pressure graphs.
  */
 const renderPressureGraph = () => {
@@ -144,12 +212,36 @@ const renderPressureGraph = () => {
     dayGraph = createGraph(pressureDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
 }
 
+/**
+ * Destroys all graphs and render humidity graphs.
+ */
+const renderHumidityGraph = () => {
+    const humidityMonthResults = JSON.parse(graphDataSet.monthLight);
+    const humidityWeeklyResults = JSON.parse(graphDataSet.weekLight);
+    const humidityDayResults = JSON.parse(graphDataSet.dayLight);
+
+    tempUnits.style.display = "none";
+
+    changeGraphTitle("Humidity Last 30 Days", "Humidity Last 7 Days", "Humidity Today");
+
+    // reset graphs
+    destroyGraphs();
+
+    monthGraph = createGraph(humidityMonthResults, "graph-month", "Humidity", GraphType.MONTH, monthLabels);
+    weekGraph = createGraph(humidityWeeklyResults, "graph-week", "Humidity", GraphType.WEEK, weekLabels);
+    dayGraph = createGraph(humidityDayResults, "graph-day", "Humidity", GraphType.DAY, dayLabels);
+}
+
 
 function convertCelsiusToFahrenheit(celsiusInput) {
     if (celsiusInput === null) return null;
     return celsiusInput * 1.8 + 32;
 }
 
+function convertFahrenheitToCelsius(fahrenheit) {
+    return (fahrenheit - 32) / 1.8;
+
+}
 
 /**
  * Get graph information for a single day graph.
