@@ -98,9 +98,25 @@ class MonitorGardenControllerTest {
     }
 
     @Test
-    void requestGardenMonitoringPage_invalidDataAll_correctStringDisplayed() throws Exception {
+    void requestGardenMonitoringPage_nullDataAll_correctStringDisplayed() throws Exception {
         garden.setArduinoId("127.0.0.1");
         ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.of(2000, 1, 1, 0, 0), null, null, null, null, null);
+        arduinoDataPointService.saveDataPoint(arduinoDataPoint);
+        Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
+        gardenRepository.save(garden);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.model().attribute("tempReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("moistReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("lightReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("pressureReading", "-"))
+                .andExpect(MockMvcResultMatchers.model().attribute("humidReading", "-"));
+    }
+
+    @Test
+    void requestGardenMonitoringPage_invalidDataAll_correctStringDisplayed() throws Exception {
+        garden.setArduinoId("127.0.0.1");
+        ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.of(2000, 1, 1, 0, 0), null, null, 0d, 0d, 0d);
         arduinoDataPointService.saveDataPoint(arduinoDataPoint);
         Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
         gardenRepository.save(garden);
