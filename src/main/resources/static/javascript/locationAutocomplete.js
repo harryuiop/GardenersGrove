@@ -103,6 +103,7 @@ function renderAutocomplete(data) {
         primaryTextElement.classList.add("primary-text");
         secondaryTextElement.classList.add("secondary-text");
 
+        let primaryAddress = item.primaryAddress;
         let streetAddress = item.streetAddress;
         let outerLocation = item.outerLocation;
         let country = item.country;
@@ -110,13 +111,8 @@ function renderAutocomplete(data) {
         let suburb = item.suburb;
         let postcode = item.postcode;
 
-        let isStreetAddressPrimary = !!streetAddress;
-        if (isStreetAddressPrimary) {
-            primaryTextElement.innerHTML = streetAddress;
-            secondaryTextElement.innerHTML = outerLocation;
-        } else {
-            primaryTextElement.innerHTML = outerLocation;
-        }
+        primaryTextElement.innerHTML = primaryAddress;
+        secondaryTextElement.innerHTML = outerLocation;
 
         // Update input box on selection.
         suggestionElement.addEventListener('click', function() {
@@ -130,7 +126,7 @@ function renderAutocomplete(data) {
         });
 
         suggestionElement.appendChild(primaryTextElement);
-        if (isStreetAddressPrimary) suggestionElement.appendChild(secondaryTextElement);
+        suggestionElement.appendChild(secondaryTextElement);
         autocompleteList.appendChild(suggestionElement);
     });
     const dropdownItems = document.getElementsByClassName("dropdown-item");
