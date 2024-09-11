@@ -13,8 +13,8 @@ public class ArduinoJsonData {
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("temperatureCelcius")
-    private double temperatureCelsius;
+    @JsonProperty("temperatureCelsius")
+    private Double temperatureCelsius;
 
     @JsonProperty("humidityPercentage")
     private double humidityPercentage;
@@ -35,7 +35,7 @@ public class ArduinoJsonData {
         return id;
     }
 
-    public double getTemperatureCelsius() {
+    public Double getTemperatureCelsius() {
         return temperatureCelsius;
     }
 

@@ -3,7 +3,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoJsonData;
 import org.springframework.stereotype.Component;
 
@@ -87,9 +86,62 @@ public class ArduinoDataValidator {
         return (difference.toMinutes() < MAX_READING_DELAY);
     }
 
+    /**
+     * Returns true if all data values retrieved from the JSON sent by the arduino is valid
+     * @param dataPoint entity containing all data values sent by the Arduino
+     * @return a boolean indicating whether all data values are valid (within reasonable range)
+     */
     public static boolean checkValidSensorData(ArduinoJsonData dataPoint) {
         return checkValidAtmosphericPressure(dataPoint.getAtmosphereAtm()) && checkValidLight(dataPoint.getLightLevelPercentage())
                 && checkValidTime(dataPoint.getTime()) && checkValidTemperature(dataPoint.getTemperatureCelsius())
                 && checkValidMoisture(dataPoint.getMoisturePercentage()) && checkValidHumidity(dataPoint.getHumidityPercentage());
+    }
+
+    /**
+     * Returns whether the temperature sensor is faulty or disconnected
+     * @param temperature value sent by the arduino
+     * @return boolean indicating whether the temperature sensor (DHT11) functions correctly
+     */
+    public static boolean isTempConnected(Double temperature) {
+        return !Double.isNaN(temperature);
+    }
+
+    /**
+     * Returns whether the moisture sensor is faulty or disconnected
+     * @param moisture value sent by the arduino
+     * @return boolean indicating whether the moisture sensor functions correctly
+     */
+    public static boolean isMoistConnected(Double moisture) {
+        return moisture != 0;
+    }
+
+    /**
+     * Returns whether the light sensor is faulty or disconnected
+     * @param light value sent by the arduino
+     * @return boolean indicating whether the light sensor functions correctly
+     */
+    public static boolean isLightConnected(Double light) {
+        return light != 0;
+    }
+
+    /**
+     * Returns whether the barometric sensor is faulty of disconnected
+     * @param pressure value sent by the arduino
+     * @return boolean indicating whether the barometric sensor functions correctly
+     */
+    public static boolean isPressureConnected(Double pressure) {
+        return pressure != 0;
+    }
+
+    /**
+     * Returns whether the humidity sensor is faulty or disconnected
+     * Side note: there is an opportunity to only check if the temperature is connected
+     * since both values came from the same sensor, but it is not implemented as so
+     * due to consistency
+     * @param humidity value sent by the arduino
+     * @return boolean indicating whether the humidity sensor (DHT11) functions correctly
+     */
+    public static boolean isHumidityConnected(Double humidity) {
+        return !Double.isNaN(humidity);
     }
 }

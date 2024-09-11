@@ -35,7 +35,8 @@ public class ArduinoDataPoint {
     @Column
     private Double moisturePercent;
 
-    public ArduinoDataPoint(Garden garden, LocalDateTime time, Double tempCelsius, Double humidityPercent, Double atmosphereAtm, Double lightPercent, Double moisturePercent) {
+    public ArduinoDataPoint(Garden garden, LocalDateTime time, Double tempCelsius, Double humidityPercent,
+                            Double atmosphereAtm, Double lightPercent, Double moisturePercent) {
         this.garden = garden;
         this.time = time;
         this.tempCelsius = tempCelsius;
