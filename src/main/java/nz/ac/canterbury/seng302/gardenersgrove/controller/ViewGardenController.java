@@ -55,7 +55,9 @@ public class ViewGardenController extends NavBar {
      * @param weatherService Object for main interactions with Open-Meteo API
      */
     @Autowired
-    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService, TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker, WeatherService weatherService) {
+    public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService,
+                                TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker,
+                                WeatherService weatherService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
@@ -93,7 +95,7 @@ public class ViewGardenController extends NavBar {
             model.addAttribute("tagErrors", errorMessages[0]);
         }
 
-        List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLat(), garden.getLocation().getLng());
+        List<WeatherData> weatherData = weatherService.getWeatherData(garden.getLocation().getLng(), garden.getLocation().getLat());
         int pastDays = weatherService.getPastDaysCount();
         int forecastedDays = weatherService.getForecastDayCount();
         List<WeatherData> shownWeatherData = weatherData.subList(pastDays, pastDays + forecastedDays);
@@ -105,6 +107,7 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("plants", plants);
         model.addAttribute("owner", owner);
         model.addAttribute("editPlantUriString", EDIT_PLANT_URI_STRING);
+        model.addAttribute("monitorGardenUriString", monitorGardenUri(garden.getId()));
         model.addAttribute("uploadPlantImageUriString", UPLOAD_PLANT_IMAGE_URI_STRING);
         model.addAttribute("tags", garden.getTags());
         model.addAttribute("tagFormSubmissionUri", newGardenTagUri(garden.getId()));
@@ -114,7 +117,6 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("isRainy", weatherService.isRainy(weatherData));
         model.addAttribute("popupClosed", cookies);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MMM yyyy"));
-
         return "viewGarden";
     }
 
@@ -149,7 +151,7 @@ public class ViewGardenController extends NavBar {
                 && !friendshipService.areFriends(optionalGarden.get().getOwner(), currentUser)) {
             throw new NoSuchGardenException(gardenId);
         }
-        boolean owner = optionalGarden.get().getOwner() == userService.getAuthenticatedUser();
+        boolean owner = optionalGarden.get().getOwner() == currentUser;
         return loadGardenPage(
                         optionalGarden.get(),
                         editGardenUri(gardenId),
@@ -212,11 +214,11 @@ public class ViewGardenController extends NavBar {
 
     /**
      * Changes the garden so that it is public (viewable by all)
-     * @param gardenId                  The Id of the garden being made public
+     * @param gardenId                  The id of the garden being made public
      * @param publicGarden              A string of whether the garden should be public or not
      * @param redirectAttributes        Add attributes to that are still there after the redirect
      * @return                          The edit garden page the user was already on
-     * @throws NoSuchGardenException    If the garden can't be found by the given Id will throw this error
+     * @throws NoSuchGardenException    If the garden can't be found by the given id will throw this error
      */
     @PostMapping(MAKE_GARDEN_PUBLIC_STRING)
     public String makeGardenPublic(@PathVariable long gardenId, @RequestParam(required = false)
@@ -233,7 +235,7 @@ public class ViewGardenController extends NavBar {
             isGardenPublic = publicGarden != null && (publicGarden.equals("true"));
         } else {
             redirectAttributes.addFlashAttribute("gardenDescriptionError",
-                    "Garden description has not been checked against our langauge standards. " +
+                    "Garden description has not been checked against our language standards. " +
                             "You must edit your description before this garden can be made public");
         }
         optionalGarden.get().setIsGardenPublic(isGardenPublic);
@@ -265,11 +267,12 @@ public class ViewGardenController extends NavBar {
 
         Garden garden = optionalGarden.get();
         String errorMessages = errorChecker.tagNameErrors(tagName);
+        String lowerTagName = tagName.toLowerCase();
 
         if (!errorMessages.isEmpty())
             redirectAttributes.addFlashAttribute("tagErrors", errorMessages);
-        else if (tagService.findByName(tagName) == null || !tagService.findByName(tagName).getGardens().contains(garden))
-            tagService.saveTag(tagName, garden);
+        else if (tagService.findByName(lowerTagName) == null || !tagService.findByName(lowerTagName).getGardens().contains(garden))
+            tagService.saveTag(lowerTagName, garden);
 
         return "redirect:" + viewGardenUri(gardenId);
     }

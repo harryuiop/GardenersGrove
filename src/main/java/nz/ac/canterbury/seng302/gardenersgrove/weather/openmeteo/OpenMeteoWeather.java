@@ -8,7 +8,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -93,14 +92,14 @@ public class OpenMeteoWeather implements WeatherService {
      * Gets the weather data from the API and converts the weather response
      * to a list of ForecastWeatherData objects
      *
-     * @param latitude  specified by the location of the garden
      * @param longitude specified by the location of the garden
+     * @param latitude  specified by the location of the garden
      * @return a converted weather response to a list of ForecastWeatherData objects
      * @throws InterruptedException          if the Http request send operation is interrupted
      * @throws UnableToFetchWeatherException if the server request fails or JSON parsing fails
      */
     @Override
-    public List<WeatherData> getWeatherData(double latitude, double longitude) throws InterruptedException {
+    public List<WeatherData> getWeatherData(double longitude, double latitude) throws InterruptedException {
         try {
             WeatherResponse response = objectMapper.readValue(getJsonFromApi(latitude, longitude), WeatherResponse.class);
             return convertWeatherResponse(response);
@@ -209,9 +208,7 @@ public class OpenMeteoWeather implements WeatherService {
      * @return true if the weather is rainy, false otherwise
      */
     private boolean checkWeatherIsRainy(List<String> weatherDescriptions) {
-
-        return (!sunnyDescription.contains(weatherDescriptions.get(0)) && !otherDescription.contains(weatherDescriptions.get(0))) &&
-                (!sunnyDescription.contains(weatherDescriptions.get(1)) && !otherDescription.contains(weatherDescriptions.get(1)));
+        return !sunnyDescription.contains(weatherDescriptions.get(2)) && !otherDescription.contains(weatherDescriptions.get(2));
     }
 
 
@@ -227,6 +224,7 @@ public class OpenMeteoWeather implements WeatherService {
 
         weatherDescriptions.add(weatherData.get(0).getWeatherDescription());
         weatherDescriptions.add(weatherData.get(1).getWeatherDescription());
+        weatherDescriptions.add(weatherData.get(2).getWeatherDescription());
 
         return weatherDescriptions;
     }

@@ -21,6 +21,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
@@ -276,7 +278,7 @@ public class GardenController extends NavBar {
         if (errors.isEmpty() || (errors.containsKey("profanityCheckError") && errors.size() == 1)) {
             Location locationEntity = garden.getLocation();
 
-            boolean locationFound = true;
+            boolean locationFound = updateLocationCoordinates(locationEntity, streetAddress, country, city);
             boolean profanityCheckWorked = !errors.containsKey("profanityCheckError");
             // Get new location from API request
             if ((locationEntity.getStreetAddress() == null || locationEntity.getStreetAddress().isEmpty())
@@ -284,6 +286,12 @@ public class GardenController extends NavBar {
                     || !locationEntity.isCoordinatesSet()) {
                 locationFound = updateLocationCoordinates(locationEntity, streetAddress, country, city);
             }
+
+            // Sets garden location to 0.0, 0.0 if there is no matching location
+            if (!locationFound) {
+                garden.getLocation().setCoordinatesToZero();
+            }
+
             locationEntity.setCountry(country);
             locationEntity.setSuburb(suburb);
             locationEntity.setCity(city);

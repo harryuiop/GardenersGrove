@@ -18,6 +18,7 @@ public class UriConfig {
     public static final String UPLOAD_PROFILE_IMAGE_URI_STRING = "/profile/image";
     public static final String NEW_GARDEN_URI_STRING = "/garden/new";
     public static final String VIEW_GARDEN_URI_STRING = "/garden/{gardenId}";
+    public static final String MONITOR_GARDEN_URI_STRING = "/garden/{gardenId}/monitor";
     public static final String NEW_GARDEN_TAG_URI_STRING = "/garden/{gardenId}/tag/new";
     public static final String EDIT_GARDEN_URI_STRING = "/garden/{gardenId}/edit";
     public static final String NEW_PLANT_URI_STRING = "/garden/{gardenId}/plant/new";
@@ -28,16 +29,14 @@ public class UriConfig {
     public static final String BROWSE_PUBLIC_GARDENS_URI_STRING = "/browse";
     public static final String MANAGE_FRIENDS_URI_STRING = "/friends";
     public static final String VIEW_ALL_FRIENDS_GARDENS_URI_STRING = "/friends/{friendId}/gardens";
-
     public static final String VIEW_FRIENDS_PROFILE_URI_STRING = "/friends/{friendId}/profile";
-
     public static final String SEARCH_RESULTS_STRING = "/search/results";
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
     public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup/{gardenId}/{deployed}";
-
-
+    public static final String ARDUINO_SENSOR_DATA = "/sensor-data";
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
+    private static final UriTemplate MONITOR_GARDEN_URI = new UriTemplate(MONITOR_GARDEN_URI_STRING);
     private static final UriTemplate NEW_GARDEN_TAG_URI = new UriTemplate(NEW_GARDEN_TAG_URI_STRING);
     private static final UriTemplate VIEW_ALL_FRIENDS_GARDENS_URI = new UriTemplate(VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
     private static final UriTemplate EDIT_GARDEN_URI = new UriTemplate(EDIT_GARDEN_URI_STRING);
@@ -105,6 +104,9 @@ public class UriConfig {
     public static URI viewGardenUri(long gardenId) {
         return VIEW_GARDEN_URI.expand(gardenId);
     }
+    public static URI monitorGardenUri(long gardenId) {
+        return MONITOR_GARDEN_URI.expand(gardenId);
+    }
     public static URI newGardenTagUri(long gardenId) {
         return NEW_GARDEN_TAG_URI.expand(gardenId);
     }
@@ -131,18 +133,15 @@ public class UriConfig {
     public static URI sendCookiesForWeatherAdvicePopup(long gardenId, int deployed) {
         return SET_WEATHER_POPUP_ALERT_COOKIES_URI.expand(gardenId, deployed);
     }
-
     public static URI viewAllGardensUri() {
         return URI.create(VIEW_ALL_GARDENS_URI_STRING);
     }
     public static URI makeGardenPublicUri(long gardenId) {
         return MAKE_GARDEN_PUBLIC_URI.expand(gardenId);
     }
-
     public static URI browsePublicGardensUri() {
         return URI.create(BROWSE_PUBLIC_GARDENS_URI_STRING);
     }
     public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
     public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
-
 }

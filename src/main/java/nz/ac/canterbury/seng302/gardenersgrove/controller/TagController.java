@@ -41,4 +41,16 @@ public class TagController {
         logger.info("GET /show-autocomplete");
         return tagService.findAutocompleteSuggestions(query, MAX_SUGGESTIONS);
     }
+
+    /**
+     * Check if tag exists
+     *
+     * @param query User input for tag field.
+     * @return If tag exists or not
+     */
+    @GetMapping("/tag/exists")
+    public boolean getTagExists(@RequestParam String query) {
+        logger.info("GET /tag-exists");
+        return tagService.findByName(query) != null;
+    }
 }

@@ -4,7 +4,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ErrorChecker;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ImageValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -202,6 +201,7 @@ public class ProfileController extends NavBar {
 
         userService.updateUser(prevUpdateUser);
 
+        this.updateGardensNavBar(model, gardenService, userService);
         return "redirect:" + viewProfileUri();
     }
 

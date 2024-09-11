@@ -11,6 +11,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.TagService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -96,15 +98,16 @@ class TagServiceTest {
         Assertions.assertEquals(0, tagNames.size());
     }
 
-    @Test
-    void autocompleteSuggestions_singleSuggestions() {
-        String query = "tag";
+    @ParameterizedTest
+    @ValueSource(strings = {"tag", "Tag", "TAG"})
+    void autocompleteSuggestions_singleSuggestions(String query) {
         List<Tag> mockedTags = new ArrayList<>();
-        mockedTags.add(new Tag("tag1", garden1));
+        mockedTags.add(new Tag(query.toLowerCase(), garden1));
         Mockito.when(tagRepositorySpy.findByNameContains(anyString())).thenReturn(mockedTags);
         List<String> tagNames = tagService.findAutocompleteSuggestions(query, autocompleteLimit);
 
         Assertions.assertEquals(1, tagNames.size());
+        Assertions.assertEquals(query.toLowerCase(), tagNames.get(0));
     }
 
     @Test
