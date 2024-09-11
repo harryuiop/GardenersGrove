@@ -9,7 +9,7 @@
       <div>
         <div class="container-fluid p-3 text-white text-center">
           <h1 class="text-dark">Manage my friends</h1>
-          <form method="post" th:action="@{${searchResultsUri}}">
+          <form method="post" th:action="@{${searchResultsUri}}" id="searchUsersForm">
             <div
               class="input-group rounded mx-auto"
               style="width: 100%; max-width: 20vw; min-width: 300px"
@@ -25,15 +25,17 @@
                 th:name="searchUser"
                 th:value="*{search}"
                 type="text"
-              />
+                /> <!-- This is the max length of an email and 129 is the max name length -->
               <button
+                type="button"
                 class="input-group-text border-0 btn-sm"
                 id="search-addon"
                 th:for="searchForm"
-                type="submit"
+                onclick="checkLength()"
               >
                 <i class="bi bi-search" style="color: black"></i>
               </button>
+              <p id="searchError" style="visibility: hidden; font-size: small" class="error m-0 p-0">This name or email is more than 320 characters and so it is invalid. Try a different search</p>
             </div>
           </form>
         </div>
@@ -367,5 +369,8 @@
     removeFriendButton.addEventListener("click", () =>
       document.getElementById(formId).submit(),
     );
+  </script>
+  <script type="text/javascript"
+          th:src="@{/javascript/maxSearchLength.js}">
   </script>
 </html>
