@@ -121,7 +121,7 @@ public class ArduinoDataValidator {
      * @return boolean indicating whether the light sensor functions correctly
      */
     public static boolean isLightConnected(Double light) {
-        return true;
+        return light == 0;
     }
 
     /**
