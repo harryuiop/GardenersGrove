@@ -39,7 +39,7 @@ public class ArduinoDataPointService {
      * @return The data reading.
      */
     public ArduinoDataPoint getMostRecentArduinoDataPoint(Garden garden) {
-        return dataPointRepository.findFirstByGardenOrderByTime(garden);
+        return dataPointRepository.findFirstByGardenOrderByTimeDesc(garden);
     }
 
     /**
