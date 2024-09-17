@@ -1,10 +1,10 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoJsonData;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 
 /**
@@ -17,8 +17,8 @@ public class ArduinoDataValidator {
     final static double MAX_TEMPERATURE = 60.0; // Highest temp recorded on Earth
     final static double MIN_HUMIDITY = 0.0;
     final static double MAX_HUMIDITY = 100.0;
-    final static double MIN_ATMOSPHERE = 80.0; // Lowest barometer reading recorded on Earth
-    final static double MAX_ATMOSPHERE = 110.0; // Highest barometer reading recorded on Earth
+    final static double MIN_ATMOSPHERE = 0.8; // Lowest barometer reading recorded on Earth
+    final static double MAX_ATMOSPHERE = 1.1; // Highest barometer reading recorded on Earth
     final static double MIN_LIGHT = 0.0;
     final static double MAX_LIGHT = 100.0;
     final static double MIN_MOISTURE = 0.0;
@@ -59,6 +59,7 @@ public class ArduinoDataValidator {
 
     /**
      * Returns true if the light level is within the range MIN_LIGHT to MAX_LIGHT
+     *
      * @param lightLevel the light level value recorded in the arduino data
      * @return a boolean of whether the light level is valid or not
      */
@@ -68,6 +69,7 @@ public class ArduinoDataValidator {
 
     /**
      * Returns true if the moisture is within the range MIN_LIGHT to MAX_LIGHT
+     *
      * @param moisture the moisture value recorded in the arduino data
      * @return a boolean of whether the moisture is valid or not
      */
@@ -77,6 +79,7 @@ public class ArduinoDataValidator {
 
     /**
      * Returns true if the difference in time between the reading and the current time is less than MAX_READING_DELAY, else false
+     *
      * @param time the LocalDateTime time of data reading
      * @return a boolean of whether the time difference is less than MAX_READING_DELAY
      */
@@ -88,17 +91,22 @@ public class ArduinoDataValidator {
 
     /**
      * Returns true if all data values retrieved from the JSON sent by the arduino is valid
+     *
      * @param dataPoint entity containing all data values sent by the Arduino
      * @return a boolean indicating whether all data values are valid (within reasonable range)
      */
     public static boolean checkValidSensorData(ArduinoJsonData dataPoint) {
-        return checkValidAtmosphericPressure(dataPoint.getAtmosphereAtm()) && checkValidLight(dataPoint.getLightLevelPercentage())
-                && checkValidTime(dataPoint.getTime()) && checkValidTemperature(dataPoint.getTemperatureCelsius())
-                && checkValidMoisture(dataPoint.getMoisturePercentage()) && checkValidHumidity(dataPoint.getHumidityPercentage());
+        return checkValidAtmosphericPressure(dataPoint.getAtmosphereAtm())
+                && checkValidLight(dataPoint.getLightLevelPercentage())
+                && checkValidTime(dataPoint.getTime())
+                && checkValidTemperature(dataPoint.getTemperatureCelsius())
+                && checkValidMoisture(dataPoint.getMoisturePercentage())
+                && checkValidHumidity(dataPoint.getHumidityPercentage());
     }
 
     /**
      * Returns whether the temperature sensor is faulty or disconnected
+     *
      * @param temperature value sent by the arduino
      * @return boolean indicating whether the temperature sensor (DHT11) functions correctly
      */
@@ -108,6 +116,7 @@ public class ArduinoDataValidator {
 
     /**
      * Returns whether the moisture sensor is faulty or disconnected
+     *
      * @param moisture value sent by the arduino
      * @return boolean indicating whether the moisture sensor functions correctly
      */
@@ -117,6 +126,7 @@ public class ArduinoDataValidator {
 
     /**
      * Returns whether the light sensor is faulty or disconnected
+     *
      * @param light value sent by the arduino
      * @return boolean indicating whether the light sensor functions correctly
      */
@@ -126,6 +136,7 @@ public class ArduinoDataValidator {
 
     /**
      * Returns whether the barometric sensor is faulty of disconnected
+     *
      * @param pressure value sent by the arduino
      * @return boolean indicating whether the barometric sensor functions correctly
      */
@@ -138,6 +149,7 @@ public class ArduinoDataValidator {
      * Side note: there is an opportunity to only check if the temperature is connected
      * since both values came from the same sensor, but it is not implemented as so
      * due to consistency
+     *
      * @param humidity value sent by the arduino
      * @return boolean indicating whether the humidity sensor (DHT11) functions correctly
      */
