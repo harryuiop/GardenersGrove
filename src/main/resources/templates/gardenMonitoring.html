@@ -12,7 +12,7 @@
             <h2 class="text-break" th:text="${garden.getName()}"></h2>
         </div>
         <div class="container w-150 d-flex flex-row-reverse" style="display: inline-block">
-            <button th:if="${owner}" type="button" class="btn btn-edit mb-3 m-lg-2" data-bs-toggle="modal"> Settings <i class="bi bi-gear"></i>
+            <button th:if="${owner}" type="button" class="btn btn-edit mb-3 m-lg-2" data-bs-toggle="modal" data-bs-target="#settingsModal"> Settings <i class="bi bi-gear"></i>
             </button>
             <th:block th:switch="${deviceStatus}">
                 <div th:case="'UP_TO_DATE'" class="alert alert-success m-lg-2">
@@ -151,6 +151,23 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="settingsModal" class="modal fade" tabindex="-1" aria-labelledby="settingsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="settingsModalLabel">Settings</h5>
+            </div>
+            <div class="modal-body">
+                Settings will show here!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-edit" data-bs-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-edit" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
