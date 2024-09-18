@@ -19,8 +19,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.format.DateTimeFormatter;
-
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.ARDUINO_SENSOR_DATA;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,14 +63,11 @@ public class ArduinoDataControllerTest {
 
     @Test
     void send_valid_data_saved_to_database() throws Exception {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-
-        String jsonString = "{\"humidityPercentage\":35,\"lightLevelPercentage\":80,\"moisturePercentage\":75,\"id\":\"testid\",\"time\":\"22-08-2024 14:36\",\"temperatureCelsius\":18,\"atmosphereAtm\":100}";
+        String jsonString = "{\"humidityPercentage\":35,\"lightLevelPercentage\":80,\"moisturePercentage\":75,\"id\":\"testid\",\"time\":\"22-08-2024 14:36\",\"temperatureCelsius\":18,\"atmosphereAtm\":1.0}";
 
         mockMvc.perform(MockMvcRequestBuilders.post(ARDUINO_SENSOR_DATA)
                         .content(jsonString)
-                        .contentType(MediaType.TEXT_PLAIN))
+                        .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk());
 
         Assertions.assertEquals(1, dataPointRepository.findAllByGardenId(gardenId).size());
@@ -86,7 +81,7 @@ public class ArduinoDataControllerTest {
     void send_invalid_data_not_saved(String jsonString) throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ARDUINO_SENSOR_DATA)
                         .content(jsonString)
-                        .contentType(MediaType.TEXT_PLAIN))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         Assertions.assertEquals(0, dataPointRepository.findAllByGardenId(gardenId).size());

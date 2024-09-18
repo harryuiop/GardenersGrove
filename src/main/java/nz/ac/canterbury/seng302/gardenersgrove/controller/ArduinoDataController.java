@@ -48,12 +48,18 @@ public class ArduinoDataController {
             logger.info("POST {} {}", ARDUINO_SENSOR_DATA, sensorData);
             ArduinoJsonData response = objectMapper.readValue(sensorData, ArduinoJsonData.class);
             if (ArduinoDataValidator.checkValidSensorData(response)) {
-                dataPointService.saveDataPoint(new ArduinoDataPoint(gardenService.getGardenByArduinoId(response.getId()), response.getTime(),
-                        response.getTemperatureCelsius(), response.getHumidityPercentage(), response.getAtmosphereAtm(),
-                        response.getLightLevelPercentage(), response.getMoisturePercentage()));
+                dataPointService.saveDataPoint(new ArduinoDataPoint(
+                        gardenService.getGardenByArduinoId(response.getId()),
+                        response.getTime(),
+                        response.getTemperatureCelsius(),
+                        response.getHumidityPercentage(),
+                        response.getAtmosphereAtm(),
+                        response.getLightLevelPercentage(),
+                        response.getMoisturePercentage()
+                ));
             }
         } catch (JsonProcessingException exception) {
-                throw new UnableToFetchArduinoDataException("Failed to parse JSON response from Arduino", exception);
+            throw new UnableToFetchArduinoDataException("Failed to parse JSON response from Arduino", exception);
         }
     }
 }
