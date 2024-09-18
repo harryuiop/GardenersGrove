@@ -9,8 +9,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.EmailSenderService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ResetPasswordTokenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,7 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.LOGIN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.resetPasswordUri;
 
 @SpringBootTest
 @WithMockUser(value = "1")
@@ -92,7 +93,7 @@ class LogInControllerResetPasswordTest {
     }
 
     @Test
-    void goToResetPasswordPage_incorrectToken_stayOnPage() throws Exception {
+    void goToResetPasswordPage_correctToken_stayOnPage() throws Exception {
         String tokenStr = this.correctTokenStr;
         long userId = user.getUserId();
         mockMvc.perform(MockMvcRequestBuilders.get(resetPasswordUri(tokenStr, userId)))
@@ -186,5 +187,28 @@ class LogInControllerResetPasswordTest {
                 .andExpect(MockMvcResultMatchers.view().name("resetPassword"));
         User updatedUser = userService.getUserById(user.getUserId());
         Assertions.assertEquals(this.currentPassword, updatedUser.getPassword());
+    }
+
+    @Test
+    void goToResetPassword_tokenUsed_redirectToLogin() throws Exception {
+        String tokenStr = this.correctTokenStr;
+        long userId = user.getUserId();
+        String newPassword = this.correctNewPassword;
+        String retypePassword = this.correctNewPassword;
+        mockMvc.perform(MockMvcRequestBuilders.post(resetPasswordUri(tokenStr, userId))
+                        .param("newPassword", newPassword)
+                        .param("retypeNewPassword", retypePassword))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl(LOGIN_URI_STRING));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(resetPasswordUri(tokenStr, userId)))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl(LOGIN_URI_STRING));
+
+        User updatedUser = userService.getUserById(user.getUserId());
+        Assertions.assertNotEquals(this.currentPassword, updatedUser.getPassword());
+        Assertions.assertNull(resetPasswordTokenRepository.getResetPasswordTokenByUserId(user.getUserId()));
+
+
     }
 }

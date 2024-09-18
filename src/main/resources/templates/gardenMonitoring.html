@@ -5,78 +5,88 @@
 </head>
 
 <body class="bg">
-<nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
-<div>
-    <div class="d-flex justify-content-between flex-column flex-md-row">
-        <div class="container align-content-left">
-            <h2 class="text-break" th:text="${garden.getName()}"></h2>
-        </div>
-        <div class="container w-150 d-flex flex-row-reverse" style="display: inline-block">
-            <button th:if="${owner}" type="button" class="btn btn-edit mb-3 m-lg-2" data-bs-toggle="modal"> Settings <i class="bi bi-gear"></i>
-            </button>
-            <th:block th:switch="${deviceStatus}">
-                <div th:case="'UP_TO_DATE'" class="alert alert-success m-lg-2">
-                    <i class="bi bi-link"></i> Device linked to garden! The last update was received
-                    <span th:text="${timeSinceLastReading}"></span>
-                    minutes ago.
-                </div>
-                <div th:case="'OUT_OF_DATE'" class="alert alert-warning m-lg-2">
-                    <i class="bi bi-cloud-slash"></i> Device linked to garden!
-                    The last update was received
-                    <span th:text="${timeSinceLastReading}"></span>
-                    ago, you may want to check if the device is connected to the internet!
-                </div>
-                <div th:case="'NO_DATA'" class="alert alert-warning m-lg-2">
-                    <i class="bi bi-cloud-slash"></i> Device linked to garden! No data available
-                </div>
-                <div th:case="'NOT_LINKED'" class="alert alert-danger m-lg-2" style="display: inline-block">
-                    <i class="bi bi-cloud-slash"></i>
-                    There is no device linked to this garden
-                </div>
-            </th:block>
-        </div>
-    </div>
-
-    <div class="ms-3">
-        <h6 class="m-0 lead">Current Statistics</h6>
-    </div>
-
-    <div class="row">
-        <div class="col bg-white rounded m-4 p-3 shadow-sm">
-            <div class="d-flex justify-content-between flex-column flex-md-row">
-                <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Temperature')" id="Temperature" class="btn btn-stats-bar-active btn-no-bold m-0 lead"><i class="bi bi-thermometer-half"></i>
-                        <span>Temperature:&nbsp;</span><span id="current-temp-reading" th:text="${tempReading}"></span><span id="current-temp-unit">°C</span>
-                    </button>
-                </div>
-                <div class="container w-100 text-center align-content-center">
-                    <button th:onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0">
-                        <i class="bi bi-moisture"></i>
-                        <span th:text="'Soil Moisture: '+ ${moistReading} +'%'"></span>
-                    </button>
-                </div>
-                <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Light')" id="Light" class="btn btn-stats-bar btn-no-bold m-0 lead">
-                        <i class="bi bi-brightness-high"></i>
-                        <span th:text="'Light: '+ ${lightReading} +'%'"></span>
-                    </button>
-                </div>
-                <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Pressure')" id="Pressure" class="btn btn-stats-bar btn-no-bold m-0 lead">
-                        <i class="bi bi-speedometer"></i>
-                        <span th:text="'Air Pressure: '+ ${pressureReading} +'atm'"></span>
-                    </button>
-                </div>
-                <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Humidity')" id="Humidity" class="btn btn-stats-bar btn-no-bold m-0 lead">
-                        <i class="bi bi-droplet-half"></i>
-                        <span th:text="'Humidity: '+ ${humidReading} +'%'"></span>
-                    </button>
-                </div>
+    <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
+    <div>
+        <div class="d-flex justify-content-between flex-column flex-md-row">
+            <div class="container align-content-left">
+                <h2 class="text-break" th:text="${garden.getName()}"></h2>
+            </div>
+            <div class="container w-150 d-flex flex-row-reverse" style="display: inline-block">
+                <button th:if="${owner}" type="button" class="btn btn-edit mb-3 m-lg-2" data-bs-toggle="modal"
+                    data-bs-target="#settingsModal">
+                    Settings <i class="bi bi-gear"></i>
+                </button>
+                <th:block th:switch="${deviceStatus}">
+                    <div th:case="'UP_TO_DATE'" class="alert alert-success m-lg-2">
+                        <i class="bi bi-link"></i> Device linked to garden! The last
+                        update was received
+                        <span th:text="${timeSinceLastReading}"></span>
+                        minutes ago.
+                    </div>
+                    <div th:case="'OUT_OF_DATE'" class="alert alert-warning m-lg-2">
+                        <i class="bi bi-cloud-slash"></i> Device linked to garden! The
+                        last update was received
+                        <span th:text="${timeSinceLastReading}"></span>
+                        ago, you may want to check if the device is connected to the
+                        internet!
+                    </div>
+                    <div th:case="'NO_DATA'" class="alert alert-warning m-lg-2">
+                        <i class="bi bi-cloud-slash"></i> Device linked to garden! No data
+                        available
+                    </div>
+                    <div th:case="'NOT_LINKED'" class="alert alert-danger m-lg-2" style="display: inline-block">
+                        <i class="bi bi-cloud-slash"></i>
+                        There is no device linked to this garden
+                    </div>
+                </th:block>
             </div>
         </div>
 
-        <div id="display-graphs" th:attr="data-day-labels=${graphDay.getLabels()},
+        <div class="ms-3">
+            <h6 class="m-0 lead">Current Statistics</h6>
+        </div>
+
+        <div class="row">
+            <div class="col bg-white rounded m-4 p-3 shadow-sm">
+                <div class="d-flex justify-content-between flex-column flex-md-row">
+                    <div class="container w-100 text-center align-content-center">
+                        <button onclick="makeActive('Temperature')" id="Temperature"
+                            class="btn btn-stats-bar-active btn-no-bold m-0 lead">
+                            <i class="bi bi-thermometer-half"></i>
+                            <span>Temperature:&nbsp;</span><span id="current-temp-reading"
+                                th:text="${tempReading}"></span><span id="current-temp-unit">°C</span>
+                        </button>
+                    </div>
+                    <div class="container w-100 text-center align-content-center">
+                    <button onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0">
+                            <i class="bi bi-moisture"></i>
+                            <span th:text="'Soil Moisture: '+ ${moistReading} +'%'"></span>
+                        </button>
+                    </div>
+                    <div class="container w-100 text-center align-content-center">
+                        <button onclick="makeActive('Light')" id="Light" class="btn btn-stats-bar btn-no-bold m-0 lead">
+                            <i class="bi bi-brightness-high"></i>
+                            <span th:text="'Light: '+ ${lightReading} +'%'"></span>
+                        </button>
+                    </div>
+                    <div class="container w-100 text-center align-content-center">
+                        <button onclick="makeActive('Pressure')" id="Pressure"
+                            class="btn btn-stats-bar btn-no-bold m-0 lead">
+                            <i class="bi bi-speedometer"></i>
+                            <span th:text="'Air Pressure: '+ ${pressureReading} +'atm'"></span>
+                        </button>
+                    </div>
+                    <div class="container w-100 text-center align-content-center">
+                        <button onclick="makeActive('Humidity')" id="Humidity"
+                            class="btn btn-stats-bar btn-no-bold m-0 lead">
+                            <i class="bi bi-droplet-half"></i>
+                            <span th:text="'Humidity: '+ ${humidReading} +'%'"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="display-graphs" th:attr="data-day-labels=${graphDay.getLabels()},
                                             data-month-labels=${graphMonth.getLabels()},
                                             data-week-labels=${graphWeek.getLabels()},
                                             data-week-temp=${graphWeek.getTemperature()},
@@ -93,9 +103,8 @@
                                             data-month-pressure=${graphMonth.getAtmosphere()},
                                             data-week-humidity=${graphWeek.getHumidity()},
                                             data-day-humidity=${graphDay.getHumidity()},
-                                            data-month-humidity=${graphMonth.getHumidity()}"
-        >
-            <!-- Sensor disconnected error -->
+                                            data-month-humidity=${graphMonth.getHumidity()}">
+                <!-- Sensor disconnected error -->
             <div th:if="${owner}" class="row mx-4" id="disconnected-warning"
                  th:data-temperature="${tempReading}"
                  th:data-moisture="${moistReading}"
@@ -104,10 +113,11 @@
                  th:data-humidity="${humidReading}"
             >
                 <div class="alert alert-danger">
-                    <i class="bi bi-link"></i>
-                    <span id="sensor-alert">Temperature</span><span> sensor currently not connected, please check connection</span>
+                        <i class="bi bi-link"></i>
+                        <span id="sensor-alert">Temperature</span><span>
+                            sensor currently not connected, please check connection</span>
+                    </div>
                 </div>
-            </div>
 
             <!-- Advice -->
             <div class="row mx-4">
@@ -126,39 +136,34 @@
                     <div class="input-group mb-3">
                         <button class="btn btn-toggle-selected" id="celsius-btn"
                                 style="
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-                "
-                                onclick="changeTemperatureUnit('c')">
-                            Celsius
-                        </button>
-                        <button class="btn btn-toggle-unselected" id="fahrenheit-btn"
-                                style="
-                        border-top-left-radius: 0;
-                        border-bottom-left-radius: 0;
-                    "
-                                onclick="changeTemperatureUnit('f')">
-                            Fahrenheit
-                        </button>
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                  " onclick="changeTemperatureUnit('c')">
+                                Celsius
+                            </button>
+                            <button class="btn btn-toggle-unselected" id="fahrenheit-btn" style="
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                  " onclick="changeTemperatureUnit('f')">
+                                Fahrenheit
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="row" id="graphs" data-units="c">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xl-6 col-md-12 mt-3" id="day-graph-container">
-                                <h5 class="text-break text-center"
-                                    id="day-title"></h5>
-                                <canvas id="graph-day"></canvas>
-                            </div>
-                            <div class="col-xl-6 col-md-12 mt-3" id="month-graph-container">
-                                <h5 class="text-break text-center"
-                                    id="month-title"></h5>
-                                <canvas id="graph-month"></canvas>
-                            </div>
-                            <div class="col-xl-6 col-md-12 mt-3" id="week-graph-container">
-                                <h5 class="text-break text-center"
-                                    id="week-title"></h5>
-                                <canvas id="graph-week"></canvas>
+                    <div class="row" id="graphs" data-units="c">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xl-6 col-md-12 mt-3" id="day-graph-container">
+                                    <h5 class="text-break text-center" id="day-title"></h5>
+                                    <canvas id="graph-day"></canvas>
+                                </div>
+                                <div class="col-xl-6 col-md-12 mt-3" id="month-graph-container">
+                                    <h5 class="text-break text-center" id="month-title"></h5>
+                                    <canvas id="graph-month"></canvas>
+                                </div>
+                                <div class="col-xl-6 col-md-12 mt-3" id="week-graph-container">
+                                    <h5 class="text-break text-center" id="week-title"></h5>
+                                    <canvas id="graph-week"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -166,7 +171,113 @@
             </div>
         </div>
     </div>
-</div>
-<script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
+    <div id="settingsModal" class="modal fade" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fs-5" id="settingsModalLabel">Settings</h5>
+                </div>
+                <form id="garden-advice-ranges">
+                    <div class="modal-body">
+                        <p class="mb-0">Temperature Range ºC</p>
+                        <div class="d-flex flew-row">
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
+                                    id="minTemp" th:name="minTemp" th:value="*{minTemp}" data-cy="minTemp"
+                                    th:classappend="${minTempError} ? 'border border-danger'" />
+                                <label class="form-input" for="minTemp"> Minimum</label>
+                                <p class="error message" th:text="${minTempError}"></p>
+                            </div>
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
+                                    id="maxTemp" th:name="maxTemp" th:value="*{maxTemp}" data-cy="maxTemp"
+                                    th:classappend="${maxTempError} ? 'border border-danger'" />
+                                <label class="form-input" for="maxTemp"> Maximum</label>
+                                <p class="error message" th:text="${maxTempError}"></p>
+                            </div>
+                        </div>
+                        <p class="mb-0">Soil Moisture Range (%)</p>
+                        <div class="d-flex flew-row">
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" step="1" min="0" max="100" class="form-control" placeholder="10"
+                                    id="minSoilMoisture" th:name="minSoilMoisture" th:value="*{minSoilMoisture}"
+                                    data-cy="minSoilMoisture"
+                                    th:classappend="${minSoilMoistureError} ? 'border border-danger'" />
+                                <label class="form-input" for="minSoilMoisture">Minimum</label>
+                                <p class="error message" th:text="${minSoilMoistureError}"></p>
+                            </div>
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0" max="100" class="form-control" placeholder="60"
+                                    id="maxSoilMoisture" th:name="maxSoilMoisture" th:value="*{maxSoilMoisture}"
+                                    data-cy="maxSoilMoisture"
+                                    th:classappend="${maxSoilMoistureError} ? 'border border-danger'" />
+                                <label class="form-input" for="maxSoilMoisture">Maximum</label>
+                                <p class="error message" th:text="${maxSoilMoistureError}"></p>
+                            </div>
+                        </div>
+                        <p class="mb-0">Air Pressure Range (Atm)</p>
+                        <div class="d-flex flew-row">
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
+                                    id="minAirPressure" th:name="minAirPressure" th:value="*{minAirPressure}"
+                                    data-cy="minAirPressure"
+                                    th:classappend="${minAirPressureError} ? 'border border-danger'" />
+                                <label class="form-input" for="minAirPressure"> Minimum</label>
+                                <p class="error message" th:text="${minAirPressureError}"></p>
+                            </div>
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
+                                    id="maxAirPressure" th:name="maxAirPressure" th:value="*{maxAirPressure}"
+                                    data-cy="maxAirPressure"
+                                    th:classappend="${maxAirPressureError} ? 'border border-danger'" />
+                                <label class="form-input" for="maxAirPressure"> Maximum</label>
+                                <p class="error message" th:text="${maxAirPressureError}"></p>
+                            </div>
+                        </div>
+                        <p class="mb-0">Humidity Range (%)</p>
+                        <div class="d-flex flew-row">
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" step="1" min="0" max="100" class="form-control" placeholder="10"
+                                    id="minHumidity" th:name="minHumidity" th:value="*{minHumidity}"
+                                    data-cy="minHumidity"
+                                    th:classappend="${minHumidityError} ? 'border border-danger'" />
+                                <label class="form-input" for="minHumidity">Minimum</label>
+                                <p class="error message" th:text="${minHumidityError}"></p>
+                            </div>
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0" max="100" class="form-control" placeholder="60"
+                                    id="maxHumidity" th:name="maxHumidity" th:value="*{maxHumidity}"
+                                    data-cy="maxHumidity"
+                                    th:classappend="${maxHumidityError} ? 'border border-danger'" />
+                                <label class="form-input" for="maxHumidity">Maximum</label>
+                                <p class="error message" th:text="${maxHumidityError}"></p>
+                            </div>
+                        </div>
+                        <p class="mb-0">Light Level</p>
+                        <div class="d-flex flew-row">
+                            <select class="form-select form-floating w-100 mx-1" name="lightLevel" id="lightLevel">
+                                <option value="full-shade">Full Shade</option>
+                                <option value="part-shade">Part Shade</option>
+                                <option value="part-sun">Part Sun</option>
+                                <option value="full-sun">Full Sun</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
+                            Save
+                        </button>
+                        <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
+    <script type="text/javascript" th:src="@{/javascript/dualRangeSlider.js}"></script>
 </body>
+
 </html>

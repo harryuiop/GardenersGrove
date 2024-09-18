@@ -100,7 +100,11 @@ public class FormValuesValidator {
      * @return  true if the number only contains digits and less than 1 billion and is not "0", otherwise false.
      */
     public boolean checkValidPlantCount(String value) {
-        return value == null || value.matches("^(?!0$)[0-9]{0,9}$");
+        try {
+            return value == null || value.isEmpty() || Integer.parseInt(value) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**
