@@ -50,7 +50,7 @@
                     </button>
                 </div>
                 <div class="container w-100 text-center align-content-center">
-                    <button onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0">
+                    <button th:onclick="makeActive('Moisture')" id="Moisture" class="btn btn-stats-bar m-0">
                         <i class="bi bi-moisture"></i>
                         <span th:text="'Soil Moisture: '+ ${moistReading} +'%'"></span>
                     </button>
@@ -103,11 +103,23 @@
                  th:data-air-pressure="${pressureReading}"
                  th:data-humidity="${humidReading}"
             >
-                <div class="alert alert-warning">
+                <div class="alert alert-danger">
                     <i class="bi bi-link"></i>
                     <span id="sensor-alert">Temperature</span><span> sensor currently not connected, please check connection</span>
                 </div>
             </div>
+
+            <!-- Advice -->
+            <div class="row mx-4">
+                <div id="advice" class="alert alert-warning"
+                th:data-temperature="${temperatureAdvice}"
+                th:data-moisture="${moistureAdvice}"
+                th:data-light="${lightAdvice}"
+                th:data-humidity="${humidityAdvice}">
+                    warning
+                </div>
+            </div>
+
             <!-- Temperature -->
             <div class="sensor-data m-4" id="temperature-data">
                 <div class="row" id="temp-units">
