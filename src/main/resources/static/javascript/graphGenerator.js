@@ -11,7 +11,8 @@ const currentTempReading = document.getElementById("current-temp-reading");
 // Containers
 const temperatureGraphContainer = document.getElementById("graphs");
 const disconnectedWarning = document.getElementById("disconnected-warning");
-const alertSensor = document.getElementById("sensor-alert")
+const alertSensor = document.getElementById("sensor-alert");
+const advicePopup =     document.getElementById("advice");
 
 // Labels
 const graphDataSet = document.getElementById("display-graphs").dataset;
@@ -363,7 +364,7 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
  * @param graphId       the id of the div where the graph goes
- * @param sensorName    Name of sensor e.g Temperature
+ * @param {string} sensorName    Name of sensor e.g Temperature
  * @param graphType     Type of graph: Month, Week, Day
  * @param timeLabels    Time labels for y-axis
  */
@@ -417,9 +418,17 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
 
 function alertMessage(sensor) {
     if (isNaN(Number(disconnectedWarning.getAttribute("data-"+sensor.toLowerCase())))) {
-        disconnectedWarning.style.display = "block"
-        alertSensor.innerText = sensor
+        disconnectedWarning.style.display = "block";
+        alertSensor.innerText = sensor;
     } else {
-        disconnectedWarning.style.display = "none"
+        disconnectedWarning.style.display = "none";
+    }
+
+    const adviceMessage = advicePopup.getAttribute("data-"+sensor.toLowerCase());
+    if (adviceMessage != null) {
+        advicePopup.style.display = "block";
+        advicePopup.innerText = adviceMessage;
+    } else {
+        advicePopup.style.display = "none";
     }
 }
