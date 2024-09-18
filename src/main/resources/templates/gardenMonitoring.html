@@ -161,45 +161,90 @@
                 <div class="modal-header">
                     <h5 class="modal-title fs-5" id="settingsModalLabel">Settings</h5>
                 </div>
-                <div class="modal-body">
-                    <p class="mb-0">Temperature Range</p>
-                    <div class="d-flex flew-row">
-                        <div class="form-field form-floating w-100 mx-1">
-                            <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
-                                id="minTemp" th:name="minTemp" th:value="*{minTemp}" data-cy="minTemp"
-                                th:classappend="${minTempError} ? 'border border-danger'" />
-                            <label class="form-input" for="minTemp"> Minimum (ºC) </label>
-                            <p class="error message" th:text="${minTempError}"></p>
+                <form id="garden-advice-ranges">
+                    <div class="modal-body">
+                        <p class="mb-0">Temperature Range ºC</p>
+                        <div class="d-flex flew-row">
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
+                                    id="minTemp" th:name="minTemp" th:value="*{minTemp}" data-cy="minTemp"
+                                    th:classappend="${minTempError} ? 'border border-danger'" />
+                                <label class="form-input" for="minTemp"> Minimum</label>
+                                <p class="error message" th:text="${minTempError}"></p>
+                            </div>
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
+                                    id="maxTemp" th:name="maxTemp" th:value="*{maxTemp}" data-cy="maxTemp"
+                                    th:classappend="${maxTempError} ? 'border border-danger'" />
+                                <label class="form-input" for="maxTemp"> Maximum</label>
+                                <p class="error message" th:text="${maxTempError}"></p>
+                            </div>
                         </div>
-                        <div class="form-field form-floating w-100 mx-1">
-                            <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
-                                id="maxTemp" th:name="maxTemp" th:value="*{maxTemp}" data-cy="maxTemp"
-                                th:classappend="${maxTempError} ? 'border border-danger'" />
-                            <label class="form-input" for="maxTemp"> Maximum (ºC) </label>
-                            <p class="error message" th:text="${maxTempError}"></p>
+                        <p class="mb-0">Soil Moisture Range (%)</p>
+                        <div class="d-flex flew-row">
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" step="1" min="0" max="100" class="form-control" placeholder="10"
+                                    id="minSoilMoisture" th:name="minSoilMoisture" th:value="*{minSoilMoisture}"
+                                    data-cy="minSoilMoisture"
+                                    th:classappend="${minSoilMoistureError} ? 'border border-danger'" />
+                                <label class="form-input" for="minSoilMoisture">Minimum</label>
+                                <p class="error message" th:text="${minSoilMoistureError}"></p>
+                            </div>
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0" max="100" class="form-control" placeholder="60"
+                                    id="maxSoilMoisture" th:name="maxSoilMoisture" th:value="*{maxSoilMoisture}"
+                                    data-cy="maxSoilMoisture"
+                                    th:classappend="${maxSoilMoistureError} ? 'border border-danger'" />
+                                <label class="form-input" for="maxSoilMoisture">Maximum</label>
+                                <p class="error message" th:text="${maxSoilMoistureError}"></p>
+                            </div>
                         </div>
-                    </div>
-                    <p class="mb-0">Soil Moisture Range</p>
-                    <div class="d-flex flew-row">
-                        <div class="form-field form-floating w-100 mx-1">
-                            <input type="number" step="1" min="0" max="100" class="form-control" placeholder="10"
-                                id="minSoilMoisture" th:name="minSoilMoisture" th:value="*{minSoilMoisture}"
-                                data-cy="minSoilMoisture"
-                                th:classappend="${minSoilMoistureError} ? 'border border-danger'" />
-                            <label class="form-input" for="minSoilMoisture">
-                                Minimum (%)
-                            </label>
-                            <p class="error message" th:text="${minSoilMoistureError}"></p>
+                        <p class="mb-0">Air Pressure Range (Atm)</p>
+                        <div class="d-flex flew-row">
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
+                                    id="minAirPressure" th:name="minAirPressure" th:value="*{minAirPressure}"
+                                    data-cy="minAirPressure"
+                                    th:classappend="${minAirPressureError} ? 'border border-danger'" />
+                                <label class="form-input" for="minAirPressure"> Minimum</label>
+                                <p class="error message" th:text="${minAirPressureError}"></p>
+                            </div>
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
+                                    id="maxAirPressure" th:name="maxAirPressure" th:value="*{maxAirPressure}"
+                                    data-cy="maxAirPressure"
+                                    th:classappend="${maxAirPressureError} ? 'border border-danger'" />
+                                <label class="form-input" for="maxAirPressure"> Maximum</label>
+                                <p class="error message" th:text="${maxAirPressureError}"></p>
+                            </div>
                         </div>
-                        <div class="form-field form-floating w-100 mx-1">
-                            <input type="number" min="0" max="100" class="form-control" placeholder="60"
-                                id="maxSoilMoisture" th:name="maxSoilMoisture" th:value="*{maxSoilMoisture}"
-                                data-cy="maxSoilMoisture"
-                                th:classappend="${maxSoilMoistureError} ? 'border border-danger'" />
-                            <label class="form-input" for="maxSoilMoisture">
-                                Maximum (%)
-                            </label>
-                            <p class="error message" th:text="${maxSoilMoistureError}"></p>
+                        <p class="mb-0">Humidity Range (%)</p>
+                        <div class="d-flex flew-row">
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" step="1" min="0" max="100" class="form-control" placeholder="10"
+                                    id="minHumidity" th:name="minHumidity" th:value="*{minHumidity}"
+                                    data-cy="minHumidity"
+                                    th:classappend="${minHumidityError} ? 'border border-danger'" />
+                                <label class="form-input" for="minHumidity">Minimum</label>
+                                <p class="error message" th:text="${minHumidityError}"></p>
+                            </div>
+                            <div class="form-field form-floating w-100 mx-1">
+                                <input type="number" min="0" max="100" class="form-control" placeholder="60"
+                                    id="maxHumidity" th:name="maxHumidity" th:value="*{maxHumidity}"
+                                    data-cy="maxHumidity"
+                                    th:classappend="${maxHumidityError} ? 'border border-danger'" />
+                                <label class="form-input" for="maxHumidity">Maximum</label>
+                                <p class="error message" th:text="${maxHumidityError}"></p>
+                            </div>
+                        </div>
+                        <p class="mb-0">Light Level</p>
+                        <div class="d-flex flew-row">
+                            <select class="form-select form-floating w-100 mx-1" name="lightLevel" id="lightLevel">
+                                <option value="full-shade">Full Shade</option>
+                                <option value="part-shade">Part Shade</option>
+                                <option value="part-sun">Part Sun</option>
+                                <option value="full-sun">Full Sun</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -210,9 +255,10 @@
                             Close
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
+    </div>
     </div>
     <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
     <script type="text/javascript" th:src="@{/javascript/dualRangeSlider.js}"></script>
