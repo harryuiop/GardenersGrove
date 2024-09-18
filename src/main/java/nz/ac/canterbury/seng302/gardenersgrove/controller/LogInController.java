@@ -168,6 +168,7 @@ public class LogInController {
         }
 
         user.setPassword(userService.hashUserPassword(newPassword));
+        resetPasswordTokenService.deleteToken(hashedTokenEntity);
         userService.updateUser(user);
 
         // send verification email
