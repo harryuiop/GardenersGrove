@@ -12,22 +12,24 @@
             <h2 class="text-break" th:text="${garden.getName()}"></h2>
         </div>
         <div class="container w-150 d-flex flex-row-reverse" style="display: inline-block">
+            <button th:if="${owner}" type="button" class="btn btn-edit mb-3 m-lg-2" data-bs-toggle="modal"> Settings <i class="bi bi-gear"></i>
+            </button>
             <th:block th:switch="${deviceStatus}">
-                <div th:case="'UP_TO_DATE'" class="alert alert-success">
+                <div th:case="'UP_TO_DATE'" class="alert alert-success m-lg-2">
                     <i class="bi bi-link"></i> Device linked to garden! The last update was received
                     <span th:text="${timeSinceLastReading}"></span>
                     minutes ago.
                 </div>
-                <div th:case="'OUT_OF_DATE'" class="alert alert-warning">
+                <div th:case="'OUT_OF_DATE'" class="alert alert-warning m-lg-2">
                     <i class="bi bi-cloud-slash"></i> Device linked to garden!
                     The last update was received
                     <span th:text="${timeSinceLastReading}"></span>
                     ago, you may want to check if the device is connected to the internet!
                 </div>
-                <div th:case="'NO_DATA'" class="alert alert-warning">
+                <div th:case="'NO_DATA'" class="alert alert-warning m-lg-2">
                     <i class="bi bi-cloud-slash"></i> Device linked to garden! No data available
                 </div>
-                <div th:case="'NOT_LINKED'" class="alert alert-danger" style="display: inline-block">
+                <div th:case="'NOT_LINKED'" class="alert alert-danger m-lg-2" style="display: inline-block">
                     <i class="bi bi-cloud-slash"></i>
                     There is no device linked to this garden
                 </div>
