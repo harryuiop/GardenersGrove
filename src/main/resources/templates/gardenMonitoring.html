@@ -163,7 +163,22 @@
                 <h5 class="modal-title fs-5" id="settingsModalLabel">Settings</h5>
             </div>
             <div class="modal-body">
-                Settings will show here!
+                <div class="range_container">
+                    <div class="sliders_control">
+                        <label for="fromSlider"></label><input id="fromSlider" type="range" value="10" min="0" max="100"/>
+                        <label for="toSlider"></label><input id="toSlider" type="range" value="40" min="0" max="100"/>
+                    </div>
+                    <div class="form_control_slider">
+                        <div class="form_control_container">
+                            <div class="form_control_container__time">Min</div>
+                            <label for="fromInput"></label><input class="form_control_container__time__input" type="number" id="fromInput" value="10" min="0" max="100"/>
+                        </div>
+                        <div class="form_control_container">
+                            <div class="form_control_container__time">Max</div>
+                            <label for="toInput"></label><input class="form_control_container__time__input" type="number" id="toInput" value="40" min="0" max="100"/>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-edit" data-bs-dismiss="modal">Save</button>
@@ -173,5 +188,6 @@
     </div>
 </div>
 <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/dualRangeSlider.js}"></script>
 </body>
 </html>
