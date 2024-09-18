@@ -136,7 +136,7 @@ public class PlantController extends NavBar {
         }
         Garden garden = optionalGarden.get();
         return loadPlantForm(
-                        null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null,
                 null, null, null, null, "/images/default-plant.jpg",
                 garden.getName(),
                 newPlantUri(gardenId), viewGardenUri(gardenId),
@@ -170,7 +170,7 @@ public class PlantController extends NavBar {
         Plant plant = optionalPlant.get();
 
         return loadPlantForm(
-                        null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null,
                 plant.getName(),
                 plant.getCount() == null ? "" : plant.getCount().toString(),
                 plant.getDescription(),
@@ -265,13 +265,13 @@ public class PlantController extends NavBar {
 
         if (!errors.isEmpty()) {
             return loadPlantForm(
-                            errors.get("plantNameError"),
-                            errors.get("plantCountError"),
-                            errors.get("plantDescriptionError"),
-                            errors.get("plantedDateError"),
-                            errors.get("imageTypeError"),
-                            errors.get("imageSizeError"),
-                            errors.get("plantImageUploadError"),
+                    errors.get("plantNameError"),
+                    errors.get("plantCountError"),
+                    errors.get("plantDescriptionError"),
+                    errors.get("plantedDateError"),
+                    errors.get("imageTypeError"),
+                    errors.get("imageSizeError"),
+                    errors.get("plantImageUploadError"),
                     plantName,
                     plantCount,
                     plantDescription,
@@ -336,13 +336,13 @@ public class PlantController extends NavBar {
 
         if (!errors.isEmpty()) {
             return loadPlantForm(
-                            errors.get("plantNameError"),
-                            errors.get("plantCountError"),
-                            errors.get("plantDescriptionError"),
-                            errors.get("plantedDateError"),
-                            errors.get("imageTypeError"),
-                            errors.get("imageSizeError"),
-                            errors.get("plantImageUploadError"),
+                    errors.get("plantNameError"),
+                    errors.get("plantCountError"),
+                    errors.get("plantDescriptionError"),
+                    errors.get("plantedDateError"),
+                    errors.get("imageTypeError"),
+                    errors.get("imageSizeError"),
+                    errors.get("plantImageUploadError"),
                     plantName,
                     plantCount,
                     plantDescription,
@@ -368,10 +368,11 @@ public class PlantController extends NavBar {
 
     /**
      * Helper method to turn string into integer
+     *
      * @param plantCount String
      * @return null or Integer
      */
     private Integer parseStringToInt(String plantCount) {
-        return ( plantCount == null || plantCount.isEmpty() ) ? null : Integer.parseInt(plantCount);
+        return (plantCount == null || plantCount.isEmpty()) ? null : Integer.parseInt(plantCount);
     }
 }
