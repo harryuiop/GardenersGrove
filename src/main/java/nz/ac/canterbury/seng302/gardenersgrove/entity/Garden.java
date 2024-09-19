@@ -8,7 +8,8 @@ import java.util.List;
 
 /**
  * Entity class reflecting a garden's full information
- * Note the @link{Entity} annotation required for declaring this as a persistence entity
+ * Note the @link{Entity} annotation required for declaring this as a
+ * persistence entity
  */
 @Entity
 public class Garden {
@@ -50,6 +51,10 @@ public class Garden {
     @Column(unique = true)
     private String arduinoId = null;
 
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "advice_ranges", referencedColumnName = "id")
+    private AdviceRanges adviceRanges;
+
     /**
      * JPA required no-args constructor
      */
@@ -59,15 +64,17 @@ public class Garden {
     /**
      * Creates a new Garden object
      *
-     * @param owner                 User who create and therefore owns the garden
-     * @param name                  name of Garden
-     * @param description           a note made about the garden by the creator
-     * @param location              The details of the physical place where the garden is
-     * @param size                  The physical size of the garden in square metres
-     * @param verifiedDescription   Whether the description is suitable for public consumption
+     * @param owner               User who create and therefore owns the garden
+     * @param name                name of Garden
+     * @param description         a note made about the garden by the creator
+     * @param location            The details of the physical place where the garden
+     *                            is
+     * @param size                The physical size of the garden in square metres
+     * @param verifiedDescription Whether the description is suitable for public
+     *                            consumption
      */
     public Garden(User owner, String name, String description, Location location,
-                  Float size, boolean verifiedDescription) {
+            Float size, boolean verifiedDescription) {
         this.owner = owner;
         this.name = name;
         this.description = description;
@@ -78,6 +85,8 @@ public class Garden {
         this.isGardenPublic = false;
         this.verifiedDescription = verifiedDescription;
         this.timeCreated = LocalDateTime.now();
+        this.adviceRanges = new AdviceRanges();
+
     }
 
     public void setArduinoId(String id) {
@@ -118,6 +127,7 @@ public class Garden {
 
     /**
      * Used in frontend to show full location.
+     * 
      * @return Location in string format.
      */
     public String getLocationString() {
@@ -166,6 +176,10 @@ public class Garden {
 
     public LocalDateTime getTimeCreated() {
         return timeCreated;
+    }
+
+    public AdviceRanges getAdviceRanges() {
+        return this.adviceRanges;
     }
 
     @Override

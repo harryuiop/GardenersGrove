@@ -166,15 +166,15 @@
                         <p class="mb-0">Temperature Range ºC</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
-                                    id="minTemp" th:name="minTemp" th:value="*{minTemp}" data-cy="minTemp"
+                                    <input type="number" th:min="${MIN_VALID_TEMP}" th:max="${MAX_VALID_TEMP}" class="form-control" placeholder="10"
+                                    id="minTemp" th:name="minTemp" th:value="*{adviceRanges.getMinTemperature()}" data-cy="minTemp"
                                     th:classappend="${minTempError} ? 'border border-danger'" />
                                 <label class="form-input" for="minTemp"> Minimum</label>
                                 <p class="error message" th:text="${minTempError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
-                                    id="maxTemp" th:name="maxTemp" th:value="*{maxTemp}" data-cy="maxTemp"
+                                    <input type="number" th:min="${MIN_VALID_TEMP}" max="${MAX_VALID_TEMP}" class="form-control" placeholder="10"
+                                    id="maxTemp" th:name="maxTemp" th:value="*{adviceRanges.getMaxTemperature()}" data-cy="maxTemp"
                                     th:classappend="${maxTempError} ? 'border border-danger'" />
                                 <label class="form-input" for="maxTemp"> Maximum</label>
                                 <p class="error message" th:text="${maxTempError}"></p>
@@ -183,16 +183,16 @@
                         <p class="mb-0">Soil Moisture Range (%)</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" step="1" min="0" max="100" class="form-control" placeholder="10"
-                                    id="minSoilMoisture" th:name="minSoilMoisture" th:value="*{minSoilMoisture}"
+                                    <input type="number" step="1" th:min="${MIN_VALID_MOISTURE}" max="${MAX_VALID_MOISTURE}" class="form-control" placeholder="10"
+                                    id="minSoilMoisture" th:name="minSoilMoisture" th:value="*{adviceRanges.getMinMoisture()}"
                                     data-cy="minSoilMoisture"
                                     th:classappend="${minSoilMoistureError} ? 'border border-danger'" />
                                 <label class="form-input" for="minSoilMoisture">Minimum</label>
                                 <p class="error message" th:text="${minSoilMoistureError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" min="0" max="100" class="form-control" placeholder="60"
-                                    id="maxSoilMoisture" th:name="maxSoilMoisture" th:value="*{maxSoilMoisture}"
+                                    <input type="number" min="${MIN_VALID_MOISTURE}" max="${MAX_VALID_MOISTURE}" class="form-control" placeholder="60"
+                                    id="maxSoilMoisture" th:name="maxSoilMoisture" th:value="*{adviceRanges.getMaxMoisture()}"
                                     data-cy="maxSoilMoisture"
                                     th:classappend="${maxSoilMoistureError} ? 'border border-danger'" />
                                 <label class="form-input" for="maxSoilMoisture">Maximum</label>
@@ -202,16 +202,16 @@
                         <p class="mb-0">Air Pressure Range (Atm)</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
-                                    id="minAirPressure" th:name="minAirPressure" th:value="*{minAirPressure}"
+                                    <input type="number" min="${MIN_VALID_PRESSURE}" max="${MAX_VALID_PRESSURE}" class="form-control" placeholder="10"
+                                    id="minAirPressure" th:name="minAirPressure" th:value="*{adviceRanges.getMinPressure()}"
                                     data-cy="minAirPressure"
                                     th:classappend="${minAirPressureError} ? 'border border-danger'" />
                                 <label class="form-input" for="minAirPressure"> Minimum</label>
                                 <p class="error message" th:text="${minAirPressureError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" min="0.0001" max="80000000" class="form-control" placeholder="10"
-                                    id="maxAirPressure" th:name="maxAirPressure" th:value="*{maxAirPressure}"
+                                    <input type="number" min="${MIN_VALID_PRESSURE}" max="${MAX_VALID_PRESSURE}" class="form-control" placeholder="10"
+                                    id="maxAirPressure" th:name="maxAirPressure" th:value="*{adviceRanges.getMaxPressure()}"
                                     data-cy="maxAirPressure"
                                     th:classappend="${maxAirPressureError} ? 'border border-danger'" />
                                 <label class="form-input" for="maxAirPressure"> Maximum</label>
@@ -221,16 +221,16 @@
                         <p class="mb-0">Humidity Range (%)</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" step="1" min="0" max="100" class="form-control" placeholder="10"
-                                    id="minHumidity" th:name="minHumidity" th:value="*{minHumidity}"
+                                    <input type="number" step="1" min="${MIN_VALID_HUMIDITY}" max="${MAX_VALID_HUMIDITY}" class="form-control" placeholder="10"
+                                    id="minHumidity" th:name="minHumidity" th:value="*{adviceRanges.getMinHumidity()}"
                                     data-cy="minHumidity"
                                     th:classappend="${minHumidityError} ? 'border border-danger'" />
                                 <label class="form-input" for="minHumidity">Minimum</label>
                                 <p class="error message" th:text="${minHumidityError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" min="0" max="100" class="form-control" placeholder="60"
-                                    id="maxHumidity" th:name="maxHumidity" th:value="*{maxHumidity}"
+                                    <input type="number" step="1" min="${MIN_VALID_HUMIDITY}" max="${MAX_VALID_HUMIDITY}" class="form-control" placeholder="10"
+                                    id="maxHumidity" th:name="maxHumidity" th:value="*{adviceRanges.getMaxHumidity()}"
                                     data-cy="maxHumidity"
                                     th:classappend="${maxHumidityError} ? 'border border-danger'" />
                                 <label class="form-input" for="maxHumidity">Maximum</label>
@@ -240,10 +240,11 @@
                         <p class="mb-0">Light Level</p>
                         <div class="d-flex flew-row">
                             <select class="form-select form-floating w-100 mx-1" name="lightLevel" id="lightLevel">
-                                <option value="full-shade">Full Shade</option>
-                                <option value="part-shade">Part Shade</option>
-                                <option value="part-sun">Part Sun</option>
-                                <option value="full-sun">Full Sun</option>
+                                <option th:each="lightLevel : ${LIGHT_LEVELS}"
+                                        th:value="${lightLevel}"
+                                        th:text="${lightLevel}"
+                                        th:selected="${lightLevel == adviceRanges.getLightLevel()}"
+                                    ></option>
                             </select>
                         </div>
                     </div>
@@ -261,7 +262,6 @@
     </div>
     </div>
     <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
-    <script type="text/javascript" th:src="@{/javascript/dualRangeSlider.js}"></script>
 </body>
 
 </html>

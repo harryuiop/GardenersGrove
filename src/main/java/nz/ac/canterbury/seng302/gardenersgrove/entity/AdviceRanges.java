@@ -48,11 +48,10 @@ public class AdviceRanges {
     private long maxHumidity;
 
     @Column(nullable = false)
-    private LightLevel lightLevel; // Could be an enum
-
+    private LightLevel lightLevel;
 
     /**
-     * JPA requires a no args constructor.
+     * Uses the default values specified to initially create the advice ranges.
      */
     public AdviceRanges() {
         this.minTemperature = DEFAULT_MIN_TEMPERATURE;
@@ -70,5 +69,98 @@ public class AdviceRanges {
         this.lightLevel = DEFAULT_LIGHT_LEVEL;
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public long getMinTemperature() {
+        return minTemperature;
+    }
+
+    public void setMinTemperature(long minTemperature) {
+        this.minTemperature = minTemperature;
+    }
+
+    public long getMaxTemperature() {
+        return maxTemperature;
+    }
+
+    public void setMaxTemperature(long maxTemperature) {
+        this.maxTemperature = maxTemperature;
+    }
+
+    public long getMinMoisture() {
+        return minMoisture;
+    }
+
+    public void setMinMoisture(long minMoisture) {
+        this.minMoisture = minMoisture;
+    }
+
+    public long getMaxMoisture() {
+        return maxMoisture;
+    }
+
+    public void setMaxMoisture(long maxMoisture) {
+        this.maxMoisture = maxMoisture;
+    }
+
+    public long getMinPressure() {
+        return minPressure;
+    }
+
+    public void setMinPressure(long minPressure) {
+        this.minPressure = minPressure;
+    }
+
+    public long getMaxPressure() {
+        return maxPressure;
+    }
+
+    public void setMaxPressure(long maxPressure) {
+        this.maxPressure = maxPressure;
+    }
+
+    public long getMinHumidity() {
+        return minHumidity;
+    }
+
+    public void setMinHumidity(long minHumidity) {
+        this.minHumidity = minHumidity;
+    }
+
+    public long getMaxHumidity() {
+        return maxHumidity;
+    }
+
+    public void setMaxHumidity(long maxHumidity) {
+        this.maxHumidity = maxHumidity;
+    }
+
+    public LightLevel getLightLevel() {
+        return lightLevel;
+    }
+
+    public void setLightLevel(LightLevel lightLevel) {
+        this.lightLevel = lightLevel;
+    }
+
+    /**
+     * Resets all advice ranges to the default values.
+     **/
+    public void resetToDefaults() {
+        this.minTemperature = DEFAULT_MIN_TEMPERATURE;
+        this.maxTemperature = DEFAULT_MAX_TEMPERATURE;
+
+        this.minHumidity = DEFAULT_MIN_HUMIDITY;
+        this.maxHumidity = DEFAULT_MAX_HUMIDITY;
+
+        this.minMoisture = DEFAULT_MIN_MOISTURE;
+        this.maxMoisture = DEFAULT_MAX_MOISTURE;
+
+        this.minPressure = DEFAULT_MIN_PRESSURE;
+        this.maxPressure = DEFAULT_MAX_PRESSURE;
+
+        this.lightLevel = DEFAULT_LIGHT_LEVEL;
+    }
 }
