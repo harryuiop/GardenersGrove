@@ -1,5 +1,7 @@
 const adviceRanges = document.querySelectorAll(".advice-range");
 
+const openAdviceButton = document.getElementById("open-advice-button");
+
 const minTemp = document.getElementById("minTemp");
 const maxTemp = document.getElementById("maxTemp");
 const minSoilMoisture = document.getElementById("minSoilMoisture");
@@ -8,6 +10,21 @@ const minAirPressure = document.getElementById("minAirPressure");
 const maxAirPressure = document.getElementById("maxAirPressure");
 const minHumidity = document.getElementById("minHumidity");
 const maxHumidity = document.getElementById("maxHumidity");
+
+/**
+ * Maintain saved initial advice range values.
+ */
+let initialValues;
+document.addEventListener("DOMContentLoaded", function() {
+    initialValues = Array.from(adviceRanges).map(input => input.value);
+});
+openAdviceButton.addEventListener("click", function () {
+    if (initialValues) {
+        initialValues.forEach((value, index) => {
+            adviceRanges[index].value = value;
+        });
+    }
+})
 
 /**
  * Prevent invalid characters and invalid sizes.

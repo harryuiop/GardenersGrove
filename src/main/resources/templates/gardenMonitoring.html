@@ -13,8 +13,8 @@
                 <h2 class="text-break" th:text="${garden.getName()}"></h2>
             </div>
             <div class="container w-150 d-flex flex-row-reverse" style="display: inline-block">
-                <button th:if="${owner}" type="button" class="btn btn-edit mb-3 m-lg-2" data-bs-toggle="modal"
-                    data-bs-target="#settingsModal">
+                <button th:if="${owner}" type="button" class="btn btn-edit mb-3 m-lg-2" id="open-advice-button"
+                        data-bs-toggle="modal" data-bs-target="#settingsModal">
                     Settings <i class="bi bi-gear"></i>
                 </button>
                 <th:block th:switch="${deviceStatus}">
