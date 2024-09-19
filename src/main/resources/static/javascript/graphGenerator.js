@@ -30,6 +30,8 @@ const GraphType = Object.freeze({
 
 // graph declarations
 let monthGraph, weekGraph, dayGraph;
+let currentlySelectedSensorView = "Temperature";
+let sensorAdviceMessageDisabled = new Map();
 
 /**
  * Render temperature graphs on page load.
@@ -54,6 +56,8 @@ function makeActive(buttonId) {
             }
         }
     )
+
+    currentlySelectedSensorView = buttonId;
 
     switch (buttonId){
         case "Temperature":
@@ -430,10 +434,18 @@ function alertMessage(sensor) {
     }
 
     const adviceMessage = advicePopup.getAttribute("data-"+sensor.toLowerCase());
-    if (adviceMessage != null) {
+    if (adviceMessage != null && !sensorAdviceMessageDisabled.get(sensor)) {
         advicePopup.style.display = "block";
         advicePopup.firstChild.textContent = adviceMessage;
     } else {
         advicePopup.style.display = "none";
     }
+}
+
+/**
+ * hide the advice message for the currently selected sensor.
+ */
+function closeAdvicePopup() {
+    sensorAdviceMessageDisabled.set(currentlySelectedSensorView, true);
+    advicePopup.style.display = "none";
 }
