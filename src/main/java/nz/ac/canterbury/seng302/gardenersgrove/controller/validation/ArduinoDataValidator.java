@@ -13,17 +13,17 @@ import java.time.LocalDateTime;
 @Component
 public class ArduinoDataValidator {
 
-    public final static double MIN_TEMPERATURE = -90.0; // Lowest temp recorded on Earth
-    public final static double MAX_TEMPERATURE = 60.0; // Highest temp recorded on Earth
-    public final static double MIN_HUMIDITY = 0.0;
-    public final static double MAX_HUMIDITY = 100.0;
-    public final static double MIN_ATMOSPHERE = 0.8; // Lowest barometer reading recorded on Earth
-    public final static double MAX_ATMOSPHERE = 1.1; // Highest barometer reading recorded on Earth
-    public final static double MIN_LIGHT = 0.0;
-    public final static double MAX_LIGHT = 100.0;
-    public final static double MIN_MOISTURE = 0.0;
-    public final static double MAX_MOISTURE = 100.0;
-    public final static int MAX_READING_DELAY = 5; // In minutes
+    public static final double MIN_TEMPERATURE = -90.0; // Lowest temp recorded on Earth
+    public static final double MAX_TEMPERATURE = 60.0; // Highest temp recorded on Earth
+    public static final double MIN_HUMIDITY = 0.0;
+    public static final double MAX_HUMIDITY = 100.0;
+    public static final double MIN_ATMOSPHERE = 0.8; // Lowest barometer reading recorded on Earth
+    public static final double MAX_ATMOSPHERE = 1.1; // Highest barometer reading recorded on Earth
+    public static final double MIN_LIGHT = 0.0;
+    public static final double MAX_LIGHT = 100.0;
+    public static final double MIN_MOISTURE = 0.0;
+    public static final double MAX_MOISTURE = 100.0;
+    public static final int MAX_READING_DELAY = 5; // In minutes
 
     /**
      * Returns true if the temperature is within the range MIN_TEMPERATURE to

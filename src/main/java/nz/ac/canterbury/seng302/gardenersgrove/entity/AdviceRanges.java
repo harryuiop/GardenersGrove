@@ -9,15 +9,15 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 @Entity
 public class AdviceRanges {
 
-    private final static long DEFAULT_MIN_TEMPERATURE = 10;
-    private final static long DEFAULT_MAX_TEMPERATURE = 10;
-    private final static long DEFAULT_MIN_MOISTURE = 10;
-    private final static long DEFAULT_MAX_MOISTURE = 10;
-    private final static long DEFAULT_MIN_PRESSURE = 10;
-    private final static long DEFAULT_MAX_PRESSURE = 10;
-    private final static long DEFAULT_MIN_HUMIDITY = 10;
-    private final static long DEFAULT_MAX_HUMIDITY = 10;
-    private final static LightLevel DEFAULT_LIGHT_LEVEL = LightLevel.PART_SUN;
+    private static final long DEFAULT_MIN_TEMPERATURE = 10;
+    private static final long DEFAULT_MAX_TEMPERATURE = 10;
+    private static final long DEFAULT_MIN_MOISTURE = 10;
+    private static final long DEFAULT_MAX_MOISTURE = 10;
+    private static final long DEFAULT_MIN_PRESSURE = 10;
+    private static final long DEFAULT_MAX_PRESSURE = 10;
+    private static final long DEFAULT_MIN_HUMIDITY = 10;
+    private static final long DEFAULT_MAX_HUMIDITY = 10;
+    private static final LightLevel DEFAULT_LIGHT_LEVEL = LightLevel.PART_SUN;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

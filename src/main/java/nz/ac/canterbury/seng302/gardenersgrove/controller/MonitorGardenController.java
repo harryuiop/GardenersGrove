@@ -1,36 +1,30 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isHumidityConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isLightConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isMoistConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isPressureConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isTempConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
-import nz.ac.canterbury.seng302.gardenersgrove.service.AdviceRangesService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Optional;
+
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
+import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
 /**
  * Controller for the monitor garden page. For viewing statistics and live
@@ -41,7 +35,6 @@ public class MonitorGardenController extends NavBar {
     private final UserService userService;
     private final GardenService gardenService;
     private final ArduinoDataPointService arduinoDataPointService;
-    private final AdviceRangesService adviceRangesService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the
@@ -51,18 +44,15 @@ public class MonitorGardenController extends NavBar {
      * @param userService             A User database access object.
      * @param arduinoDataPointService A arduinoDataPointService database access
      *                                object.
-     * @param adviceRangesService     A AdviceRangesService database access object.
      */
     @Autowired
     public MonitorGardenController(
             UserService userService,
             GardenService gardenService,
-            ArduinoDataPointService arduinoDataPointService,
-            AdviceRangesService adviceRangesService) {
+            ArduinoDataPointService arduinoDataPointService) {
         this.userService = userService;
         this.gardenService = gardenService;
         this.arduinoDataPointService = arduinoDataPointService;
-        this.adviceRangesService = adviceRangesService;
     }
 
     /**
@@ -202,7 +192,7 @@ public class MonitorGardenController extends NavBar {
     }
 
     /**
-     * Add all of the data thresholds to the model to be used for the valid ranges
+     * Add all the data thresholds to the model to be used for the valid ranges
      * on the advice range inputs.
      */
     private void addArduinoDataThresholds(Model model) {
@@ -215,7 +205,6 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("MIN_VALID_HUMIDITY", ArduinoDataValidator.MIN_HUMIDITY);
         model.addAttribute("MAX_VALID_HUMIDITY", ArduinoDataValidator.MAX_HUMIDITY);
         model.addAttribute("LIGHT_LEVELS", Arrays.asList(LightLevel.values()));
-        System.out.println(Arrays.asList(LightLevel.values()));
     }
 
 }
