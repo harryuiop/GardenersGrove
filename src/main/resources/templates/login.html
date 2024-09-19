@@ -23,7 +23,7 @@
 
         <div class="g-col-md-4">
             <div class="bg-white p-5 rounded shadow ">
-                <form th:action="@{${loginUri}}" method="post" name="loginForm" class="">
+                <form th:action="@{${loginUri}}" method="post" name="loginForm" id="loginForm" class="">
                     <h2 class="text-center display-3 title-heading mb-4">Login</h2>
 
                     <div class="form-floating mb-3">
@@ -60,6 +60,7 @@
                     <div class="col auto text-center mt-4 mb-4">
                         <button class="btn btn-confirm"
                                 type="submit"
+                                id="signInButton"
                         >Sign In <i class="bi bi-box-arrow-in-right"></i>
                         </button>
                     </div>
@@ -72,4 +73,5 @@
     </div>
 </div>
 </body>
+<script type="text/javascript" th:src="@{/javascript/emojiChecker.js}"></script>
 </html>
