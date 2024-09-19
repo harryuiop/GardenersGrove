@@ -9,6 +9,9 @@ const maxAirPressure = document.getElementById("maxAirPressure");
 const minHumidity = document.getElementById("minHumidity");
 const maxHumidity = document.getElementById("maxHumidity");
 
+/**
+ * Prevent invalid characters and invalid sizes.
+ */
 function preventInvalidCharacters(event) {
     if (['e', 'E', '+'].includes(event.key)) {
         event.preventDefault();
@@ -32,6 +35,7 @@ function ensureMinMaxCorrect(minElement, maxElement) {
             minElement.classList.add("border", "border-danger");
         } else {
             minElement.classList.remove("border", "border-danger");
+            maxElement.classList.remove("border", "border-danger");
         }
     });
     maxElement.addEventListener("input", function(event) {
@@ -39,6 +43,7 @@ function ensureMinMaxCorrect(minElement, maxElement) {
             maxElement.classList.add("border", "border-danger");
         } else {
             maxElement.classList.remove("border", "border-danger");
+            minElement.classList.remove("border", "border-danger");
         }
     })
 }
