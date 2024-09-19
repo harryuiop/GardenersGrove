@@ -427,7 +427,7 @@ function alertMessage(sensor) {
     const adviceMessage = advicePopup.getAttribute("data-"+sensor.toLowerCase());
     if (adviceMessage != null) {
         advicePopup.style.display = "block";
-        advicePopup.innerText = adviceMessage;
+        advicePopup.firstChild.textContent = adviceMessage;
     } else {
         advicePopup.style.display = "none";
     }
