@@ -1,5 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.utility;
 
+/**
+ * Light level used in the advice ranges.
+ */
 public enum LightLevel {
     FULL_SHADE("Full Shade"),
     PART_SHADE("Part Shade"),
