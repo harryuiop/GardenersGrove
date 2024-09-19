@@ -15,16 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.LocalDateTime;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isTempConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isMoistConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isLightConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isPressureConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isHumidityConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
 
@@ -93,6 +89,7 @@ public class MonitorGardenController extends NavBar {
         addDeviceStatusInformationToModel(model, garden);
         addCurrentSensorReadingsToModel(model, garden);
         addGraphDataToModel(model, gardenId);
+        addAdviceMessagesToModel(model);
 
         return "gardenMonitoring";
     }
@@ -143,8 +140,15 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("lightReading", lightReading);
         model.addAttribute("pressureReading", pressureReading);
         model.addAttribute("humidReading", humidReading);
+    }
 
-        model.addAttribute("temperatureAdvice", "temperature");
+    /**
+     * Add all advice message information to the Thymeleaf model.
+     *
+     * @param model The Thymeleaf model to add information to.
+     */
+    private void addAdviceMessagesToModel(Model model) {
+        model.addAttribute("temperatureAdvice", "Temperature");
         model.addAttribute("moistureAdvice", "Moisture");
         model.addAttribute("lightAdvice", "Light");
         model.addAttribute("humidityAdvice", "Humidity");
