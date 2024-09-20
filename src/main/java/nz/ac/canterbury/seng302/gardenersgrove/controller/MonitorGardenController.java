@@ -15,16 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.LocalDateTime;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isTempConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isMoistConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isLightConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isPressureConnected;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.isHumidityConnected;
+import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
 
@@ -61,7 +57,7 @@ public class MonitorGardenController extends NavBar {
      * @param gardenId The id of the garden being viewed
      * @param model    Puts the data into the template to be viewed
      *
-     * @return Thymeleaf html template of the monitor garden page.
+     * @return Thymeleaf HTML template of the monitor garden page.
      */
     @GetMapping(MONITOR_GARDEN_URI_STRING)
     public String monitorGarden(@PathVariable long gardenId, Model model)
@@ -93,12 +89,16 @@ public class MonitorGardenController extends NavBar {
         addDeviceStatusInformationToModel(model, garden);
         addCurrentSensorReadingsToModel(model, garden);
         addGraphDataToModel(model, gardenId);
+        addAdviceMessagesToModel(model);
 
         return "gardenMonitoring";
     }
 
     /**
-     * Helper method to add current sensor readings to html model.
+     * Helper method to add current sensor readings to HTML model.
+     *
+     * @param model The Thymeleaf model to add information to.
+     * @param garden The Garden to get sensor readings for.
      */
     private void addCurrentSensorReadingsToModel(Model model, Garden garden) {
         String tempReading = "-";
@@ -134,16 +134,21 @@ public class MonitorGardenController extends NavBar {
                 humidSensorConnected = isHumidityConnected(arduinoDataPoint.getHumidityPercent());
                 humidReading = (humidSensorConnected) ? String.format("%.0f", arduinoDataPoint.getHumidityPercent()) : "-";
             }
-
-
         }
         model.addAttribute("tempReading", tempReading);
         model.addAttribute("moistReading", moistReading);
         model.addAttribute("lightReading", lightReading);
         model.addAttribute("pressureReading", pressureReading);
         model.addAttribute("humidReading", humidReading);
+    }
 
-        model.addAttribute("temperatureAdvice", "temperature");
+    /**
+     * Add all advice message information to the Thymeleaf model.
+     *
+     * @param model The Thymeleaf model to add information to.
+     */
+    private void addAdviceMessagesToModel(Model model) {
+        model.addAttribute("temperatureAdvice", "Temperature");
         model.addAttribute("moistureAdvice", "Moisture");
         model.addAttribute("lightAdvice", "Light");
         model.addAttribute("humidityAdvice", "Humidity");
@@ -151,6 +156,9 @@ public class MonitorGardenController extends NavBar {
 
     /**
      * Helper method to add graph data to html model.
+     *
+     * @param model The Thymeleaf model to add information to.
+     * @param gardenId The ID number of the garden to get graph data for.
      */
     private void addGraphDataToModel(Model model, Long gardenId) {
         FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId, LocalDateTime.now());
@@ -164,6 +172,9 @@ public class MonitorGardenController extends NavBar {
 
     /**
      * Add device status, and time since last reading to html model.
+     *
+     * @param model Thy Thymeleaf model to add information to.
+     * @param garden The Garden to check device status information of.
      */
     private void addDeviceStatusInformationToModel(Model model, Garden garden) {
         String deviceStatus;
@@ -190,5 +201,4 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("deviceStatus", deviceStatus);
         model.addAttribute("timeSinceLastReading", timeSinceLastReading);
     }
-
 }

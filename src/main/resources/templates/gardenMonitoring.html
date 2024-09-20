@@ -121,12 +121,14 @@
 
             <!-- Advice -->
             <div class="row mx-4">
-                <div id="advice" class="alert alert-warning"
+                <div id="advice" class="alert alert-warning position-relative"
                 th:data-temperature="${temperatureAdvice}"
                 th:data-moisture="${moistureAdvice}"
                 th:data-light="${lightAdvice}"
                 th:data-humidity="${humidityAdvice}">
-                    warning
+                    <button class="btn btn-close me-3 mt-3 position-absolute top-0 end-0"
+                            type="button" onclick="closeAdvicePopup()">
+                    </button>
                 </div>
             </div>
 
@@ -275,9 +277,7 @@
             </div>
         </div>
     </div>
-    </div>
     <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
-    <script type="text/javascript" th:src="@{/javascript/dualRangeSlider.js}"></script>
 </body>
 
 </html>
