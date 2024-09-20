@@ -12,7 +12,7 @@ const currentTempReading = document.getElementById("current-temp-reading");
 const temperatureGraphContainer = document.getElementById("graphs");
 const disconnectedWarning = document.getElementById("disconnected-warning");
 const alertSensor = document.getElementById("sensor-alert");
-const advicePopup = document.getElementById("advice");
+const advicePopup =     document.getElementById("advice");
 
 // Labels
 const graphDataSet = document.getElementById("display-graphs").dataset;
@@ -272,15 +272,15 @@ function getDayGraphInformation(sensorName, data, timeLabels) {
 
     return [
         {
-            labels: timeLabels,
+        labels: timeLabels,
             datasets: [{
-                label: `Average ${sensorName} per Half-hour`,
-                data: data,
-                fill: true,
-                borderColor: GRAPH_COLOR,
-                tension: 0.1
-            }]
-        }, "Time (Half-hourly)", sensorName];
+            label: `Average ${sensorName} per Half-hour`,
+            data: data,
+            fill: true,
+            borderColor: GRAPH_COLOR,
+            tension: 0.1
+        }]
+    }, "Time (Half-hourly)", sensorName];
 }
 
 /**
@@ -347,18 +347,18 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
                 borderColor: WEEK_GRAPH_COLORS[1],
                 tension: 0.1
             },
-                {
-                    label: `Afternoon (12:00pm - 5:59pm)`,
-                    data: afternoonData,
-                    borderColor: WEEK_GRAPH_COLORS[2],
-                    tension: 0.1
-                },
-                {
-                    label: `Evening (6:00pm - 11:59pm)`,
-                    data: eveningData,
-                    borderColor: WEEK_GRAPH_COLORS[3],
-                    tension: 0.1
-                }
+            {
+                label: `Afternoon (12:00pm - 5:59pm)`,
+                data: afternoonData,
+                borderColor: WEEK_GRAPH_COLORS[2],
+                tension: 0.1
+            },
+            {
+                label: `Evening (6:00pm - 11:59pm)`,
+                data: eveningData,
+                borderColor: WEEK_GRAPH_COLORS[3],
+                tension: 0.1
+            }
             ]
         }, "Time (Day)", sensorName]
 }
@@ -433,7 +433,7 @@ function alertMessage(sensor) {
         disconnectedWarning.style.display = "none";
     }
 
-    const adviceMessage = advicePopup.getAttribute("data-" + sensor.toLowerCase());
+    const adviceMessage = advicePopup.getAttribute("data-"+sensor.toLowerCase());
     if (adviceMessage != null && !sensorAdviceMessageDisabled.get(sensor)) {
         advicePopup.style.display = "block";
         advicePopup.firstChild.textContent = adviceMessage;

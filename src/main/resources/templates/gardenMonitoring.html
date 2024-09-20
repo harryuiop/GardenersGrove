@@ -1,6 +1,5 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-
 <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Gardeners' Grove</title>
 </head>
@@ -106,20 +105,39 @@
                                             data-day-humidity=${graphDay.getHumidity()},
                                             data-month-humidity=${graphMonth.getHumidity()}">
                 <!-- Sensor disconnected error -->
-                <div th:if="${owner}" class="row mx-4" id="disconnected-warning" th:data-temperature="${tempReading}"
-                    th:data-moisture="${moistReading}" th:data-light="${lightReading}"
-                    th:data-air-pressure="${pressureReading}" th:data-humidity="${humidReading}">
-                    <div class="alert alert-warning">
+            <div th:if="${owner}" class="row mx-4" id="disconnected-warning"
+                 th:data-temperature="${tempReading}"
+                 th:data-moisture="${moistReading}"
+                 th:data-light="${lightReading}"
+                 th:data-air-pressure="${pressureReading}"
+                 th:data-humidity="${humidReading}"
+            >
+                <div class="alert alert-danger">
                         <i class="bi bi-link"></i>
                         <span id="sensor-alert">Temperature</span><span>
                             sensor currently not connected, please check connection</span>
                     </div>
                 </div>
-                <!-- Temperature -->
-                <div class="sensor-data m-4" id="temperature-data">
-                    <div class="row" id="temp-units">
-                        <div class="input-group mb-3">
-                            <button class="btn btn-toggle-selected" id="celsius-btn" style="
+
+            <!-- Advice -->
+            <div class="row mx-4">
+                <div id="advice" class="alert alert-warning position-relative"
+                th:data-temperature="${temperatureAdvice}"
+                th:data-moisture="${moistureAdvice}"
+                th:data-light="${lightAdvice}"
+                th:data-humidity="${humidityAdvice}">
+                    <button class="btn btn-close me-3 mt-3 position-absolute top-0 end-0"
+                            type="button" onclick="closeAdvicePopup()">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Temperature -->
+            <div class="sensor-data m-4" id="temperature-data">
+                <div class="row" id="temp-units">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-toggle-selected" id="celsius-btn"
+                                style="
                     border-top-right-radius: 0;
                     border-bottom-right-radius: 0;
                   " onclick="changeTemperatureUnit('c')">
