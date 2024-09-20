@@ -86,6 +86,7 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("garden", garden);
         model.addAttribute("owner", garden.getOwner() == currentUser);
         model.addAttribute("gardenList", gardenService.getAllGardens());
+        model.addAttribute("adviceRanges", garden.getAdviceRanges());
 
         // This is where we input if the arduino is connected. Still to be implemented.
         model.addAttribute("connected", false);
@@ -94,7 +95,6 @@ public class MonitorGardenController extends NavBar {
         addCurrentSensorReadingsToModel(model, garden);
         addGraphDataToModel(model, gardenId);
         addArduinoDataThresholds(model);
-
         addAdviceMessagesToModel(model);
 
         return "gardenMonitoring";
