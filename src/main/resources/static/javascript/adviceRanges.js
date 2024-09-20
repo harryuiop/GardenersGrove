@@ -30,7 +30,12 @@ openAdviceButton.addEventListener("click", function () {
  * Prevent invalid characters and invalid sizes.
  */
 function preventInvalidCharacters(event) {
-    if (['e', 'E', '+'].includes(event.key)) {
+    const key = event.key;
+    const allowedKeys = [
+        'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+        'Delete', 'Home', 'End', 'Enter', '.', '-'
+    ];
+    if (!/^\d$/.test(key) && !allowedKeys.includes(key)) {
         event.preventDefault();
     }
 }
@@ -47,8 +52,10 @@ for (const adviceRange of adviceRanges) {
  * @param maxElement Input Max Element
  */
 function ensureMinMaxCorrect(minElement, maxElement) {
+    // In min max range
     minElement.addEventListener("input", function(event) {
-        if (event.target.value >= parseFloat(maxElement.value)) {
+        const value = parseFloat(event.target.value)
+        if (value >= parseFloat(maxElement.value) || !valueInMinMaxRange(maxElement, value)) {
             minElement.classList.add("border", "border-danger");
         } else {
             minElement.classList.remove("border", "border-danger");
@@ -56,13 +63,18 @@ function ensureMinMaxCorrect(minElement, maxElement) {
         }
     });
     maxElement.addEventListener("input", function(event) {
-        if (event.target.value <= parseFloat(maxElement.value)) {
+        const value = parseFloat(event.target.value)
+        if (value <= parseFloat(maxElement.value) || !valueInMinMaxRange(maxElement, value)) {
             maxElement.classList.add("border", "border-danger");
         } else {
             maxElement.classList.remove("border", "border-danger");
             minElement.classList.remove("border", "border-danger");
         }
     })
+}
+
+function valueInMinMaxRange(element, value) {
+    return value >= element.min && value <= element.max;
 }
 
 ensureMinMaxCorrect(minTemp, maxTemp);

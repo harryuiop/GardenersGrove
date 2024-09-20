@@ -173,7 +173,8 @@
                                 <p class="error message" th:text="${minTempError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
-                                    <input type="number" th:min="${MIN_VALID_TEMP}" max="${MAX_VALID_TEMP}" class="form-control advice-range" placeholder="10"
+                                <input type="number" th:min="${MIN_VALID_TEMP}" th:max="${MAX_VALID_TEMP}"
+                                       class="form-control advice-range" placeholder="10"
                                     id="maxTemp" th:name="maxTemp" th:value="*{adviceRanges.getMaxTemperature()}" data-cy="maxTemp"
                                     th:classappend="${maxTempError} ? 'border border-danger'" />
                                 <label class="form-input" for="maxTemp"> Maximum</label>
@@ -183,7 +184,8 @@
                         <p class="mb-0">Soil Moisture Range (%)</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
-                                    <input type="number" step="1" th:min="${MIN_VALID_MOISTURE}" max="${MAX_VALID_MOISTURE}" class="form-control advice-range" placeholder="10"
+                                <input type="number" step="1" th:min="${MIN_VALID_MOISTURE}"
+                                       th:max="${MAX_VALID_MOISTURE}" class="form-control advice-range" placeholder="10"
                                     id="minSoilMoisture" th:name="minSoilMoisture" th:value="*{adviceRanges.getMinMoisture()}"
                                     data-cy="minSoilMoisture"
                                     th:classappend="${minSoilMoistureError} ? 'border border-danger'" />
@@ -191,7 +193,8 @@
                                 <p class="error message" th:text="${minSoilMoistureError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
-                                    <input type="number" min="${MIN_VALID_MOISTURE}" max="${MAX_VALID_MOISTURE}" class="form-control advice-range" placeholder="60"
+                                <input type="number" th:min="${MIN_VALID_MOISTURE}" th:max="${MAX_VALID_MOISTURE}"
+                                       class="form-control advice-range" placeholder="60"
                                     id="maxSoilMoisture" th:name="maxSoilMoisture" th:value="*{adviceRanges.getMaxMoisture()}"
                                     data-cy="maxSoilMoisture"
                                     th:classappend="${maxSoilMoistureError} ? 'border border-danger'" />
@@ -202,7 +205,8 @@
                         <p class="mb-0">Air Pressure Range (Atm)</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
-                                    <input type="number" min="${MIN_VALID_PRESSURE}" max="${MAX_VALID_PRESSURE}" class="form-control advice-range" placeholder="10"
+                                <input type="number" th:min="${MIN_VALID_PRESSURE}" th:max="${MAX_VALID_PRESSURE}"
+                                       class="form-control advice-range" placeholder="10"
                                     id="minAirPressure" th:name="minAirPressure" th:value="*{adviceRanges.getMinPressure()}"
                                     data-cy="minAirPressure"
                                     th:classappend="${minAirPressureError} ? 'border border-danger'" />
@@ -210,7 +214,8 @@
                                 <p class="error message" th:text="${minAirPressureError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
-                                    <input type="number" min="${MIN_VALID_PRESSURE}" max="${MAX_VALID_PRESSURE}" class="form-control advice-range" placeholder="10"
+                                <input type="number" th:min="${MIN_VALID_PRESSURE}" th:max="${MAX_VALID_PRESSURE}"
+                                       class="form-control advice-range" placeholder="10"
                                     id="maxAirPressure" th:name="maxAirPressure" th:value="*{adviceRanges.getMaxPressure()}"
                                     data-cy="maxAirPressure"
                                     th:classappend="${maxAirPressureError} ? 'border border-danger'" />
@@ -221,7 +226,8 @@
                         <p class="mb-0">Humidity Range (%)</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
-                                    <input type="number" step="1" min="${MIN_VALID_HUMIDITY}" max="${MAX_VALID_HUMIDITY}" class="form-control advice-range" placeholder="10"
+                                <input type="number" step="1" th:min="${MIN_VALID_HUMIDITY}"
+                                       th:max="${MAX_VALID_HUMIDITY}" class="form-control advice-range" placeholder="10"
                                     id="minHumidity" th:name="minHumidity" th:value="*{adviceRanges.getMinHumidity()}"
                                     data-cy="minHumidity"
                                     th:classappend="${minHumidityError} ? 'border border-danger'" />
@@ -229,7 +235,8 @@
                                 <p class="error message" th:text="${minHumidityError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
-                                    <input type="number" step="1" min="${MIN_VALID_HUMIDITY}" max="${MAX_VALID_HUMIDITY}" class="form-control advice-range" placeholder="10"
+                                <input type="number" step="1" th:min="${MIN_VALID_HUMIDITY}"
+                                       th:max="${MAX_VALID_HUMIDITY}" class="form-control advice-range" placeholder="10"
                                     id="maxHumidity" th:name="maxHumidity" th:value="*{adviceRanges.getMaxHumidity()}"
                                     data-cy="maxHumidity"
                                     th:classappend="${maxHumidityError} ? 'border border-danger'" />
