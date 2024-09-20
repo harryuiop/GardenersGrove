@@ -9,7 +9,7 @@
 <div>
     <div class="d-flex justify-content-between flex-column flex-md-row">
         <div class="container align-content-left">
-            <h2 class="ms-3 text-break" th:text="${garden.getName()}"></h2>
+            <h2 class="text-break" th:text="${garden.getName()}"></h2>
         </div>
         <div class="container w-150 d-flex flex-row-reverse" style="display: inline-block">
             <button th:if="${owner}" type="button" class="btn btn-edit mb-3 m-lg-2" data-bs-toggle="modal"> Settings <i class="bi bi-gear"></i>
@@ -38,15 +38,7 @@
     </div>
 
     <div class="ms-3">
-        <div class="ms-3 dropdown">
-            <button class="btn dropdown-toggle mb-3" style="background-color: #477641; color: white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Compare <i class="bi bi-layers"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li th:each="userGarden: ${gardenList}"><a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item" href="#" th:text="${userGarden.getName()}"></a></li>
-            </ul>
-        </div>
-        <h6 class="ms-3 lead">Current Statistics</h6>
+        <h6 class="m-0 lead">Current Statistics</h6>
     </div>
 
     <div class="row">
@@ -123,6 +115,14 @@
 <!--                        Compare <i class="bi bi-layers"></i>-->
 <!--                    </button>-->
 <!--                </div>-->
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle mb-3" style="background-color: #477641; color: white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Compare <i class="bi bi-layers"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li th:each="userGarden: ${gardenList}"><a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item" href="#" th:text="${userGarden.getName()}"></a></li>
+                    </ul>
+                </div>
                 <div class="row" id="temp-units">
                     <div class="input-group mb-3">
                         <button class="btn btn-toggle-selected" id="celsius-btn"
