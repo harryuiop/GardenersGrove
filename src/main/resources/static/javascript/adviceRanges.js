@@ -64,7 +64,7 @@ function ensureMinMaxCorrect(minElement, maxElement) {
     });
     maxElement.addEventListener("input", function(event) {
         const value = parseFloat(event.target.value)
-        if (value <= parseFloat(maxElement.value) || !valueInMinMaxRange(maxElement, value)) {
+        if (value <= parseFloat(minElement.value) || !valueInMinMaxRange(maxElement, value)) {
             maxElement.classList.add("border", "border-danger");
         } else {
             maxElement.classList.remove("border", "border-danger");

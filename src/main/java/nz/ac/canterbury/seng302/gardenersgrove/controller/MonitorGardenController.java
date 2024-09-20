@@ -222,8 +222,8 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("MAX_VALID_TEMP", ArduinoDataValidator.MAX_TEMPERATURE);
         model.addAttribute("MIN_VALID_MOISTURE", ArduinoDataValidator.MIN_MOISTURE);
         model.addAttribute("MAX_VALID_MOISTURE", ArduinoDataValidator.MAX_MOISTURE);
-        model.addAttribute("MIN_VALID_ATMOSPHERE", ArduinoDataValidator.MIN_ATMOSPHERE);
-        model.addAttribute("MAX_VALID_ATMOSPHERE", ArduinoDataValidator.MAX_ATMOSPHERE);
+        model.addAttribute("MIN_VALID_PRESSURE", ArduinoDataValidator.MIN_ATMOSPHERE);
+        model.addAttribute("MAX_VALID_PRESSURE", ArduinoDataValidator.MAX_ATMOSPHERE);
         model.addAttribute("MIN_VALID_HUMIDITY", ArduinoDataValidator.MIN_HUMIDITY);
         model.addAttribute("MAX_VALID_HUMIDITY", ArduinoDataValidator.MAX_HUMIDITY);
         model.addAttribute("LIGHT_LEVELS", Arrays.asList(LightLevel.values()));
