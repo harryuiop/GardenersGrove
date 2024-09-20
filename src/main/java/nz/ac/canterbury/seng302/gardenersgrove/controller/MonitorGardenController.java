@@ -143,6 +143,11 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("lightReading", lightReading);
         model.addAttribute("pressureReading", pressureReading);
         model.addAttribute("humidReading", humidReading);
+
+        model.addAttribute("temperatureAdvice", "temperature");
+        model.addAttribute("moistureAdvice", "Moisture");
+        model.addAttribute("lightAdvice", "Light");
+        model.addAttribute("humidityAdvice", "Humidity");
     }
 
     /**
