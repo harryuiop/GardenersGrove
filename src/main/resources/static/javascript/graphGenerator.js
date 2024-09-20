@@ -287,14 +287,19 @@ function getDayGraphInformation(sensorName, data, timeLabels) {
  * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
-function getMonthGraphInformation(sensorName, data, timeLabels) {
+function getMonthGraphInformation(sensorName, data, compared, timeLabels) {
+    console.log(data)
     return [
         {
             labels: timeLabels,
             datasets: [{
-                label: `Average ${sensorName} per Day`,
+                label: "Garden 1 Average ${sensorName} per Day",
                 data: data,
-                fill: true,
+                borderColor: GRAPH_COLOR,
+                tension: 0.1
+                }, {
+                label: "Garden Average ${sensorName} per Day",
+                data: compared,
                 borderColor: GRAPH_COLOR,
                 tension: 0.1
             }]
@@ -382,7 +387,7 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             [dataObject, xLabel, yLabel] = getWeekGraphInformation(sensorName, data, timeLabels);
             break;
         case GraphType.MONTH:
-            [dataObject, xLabel, yLabel] = getMonthGraphInformation(sensorName, data, timeLabels);
+            [dataObject, xLabel, yLabel] = getMonthGraphInformation(sensorName, data, [null], timeLabels);
             break;
         default:
             [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
