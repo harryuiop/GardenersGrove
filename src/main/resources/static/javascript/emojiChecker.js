@@ -7,7 +7,6 @@
 const loginForm = document.getElementById("loginForm");
 const usernameInput = document.getElementById("username");
 const emailError = document.getElementById("emailError");
-const invalidError = document.getElementById("invalidError");
 
 /**
  * Check if a given text contains emojis
