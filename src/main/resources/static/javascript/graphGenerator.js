@@ -11,7 +11,8 @@ const currentTempReading = document.getElementById("current-temp-reading");
 // Containers
 const temperatureGraphContainer = document.getElementById("graphs");
 const disconnectedWarning = document.getElementById("disconnected-warning");
-const alertSensor = document.getElementById("sensor-alert")
+const alertSensor = document.getElementById("sensor-alert");
+const advicePopup = document.getElementById("advice");
 
 // Labels
 const graphDataSet = document.getElementById("display-graphs").dataset;
@@ -29,6 +30,8 @@ const GraphType = Object.freeze({
 
 // graph declarations
 let monthGraph, weekGraph, dayGraph;
+let currentlySelectedSensorView = "Temperature";
+let sensorAdviceMessageDisabled = new Map();
 
 /**
  * Render temperature graphs on page load.
@@ -39,7 +42,7 @@ window.onload = function() {
 
 /**
  * Make graphs for that sensor shown.
- * @param buttonId Sensor selected
+ * @param {string} buttonId Sensor selected
  */
 function makeActive(buttonId) {
     const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
@@ -53,6 +56,8 @@ function makeActive(buttonId) {
             }
         }
     )
+
+    currentlySelectedSensorView = buttonId;
 
     switch (buttonId){
         case "Temperature":
@@ -77,7 +82,7 @@ function makeActive(buttonId) {
 
 /**
  * Change temperature unit to Fahrenheit or Celsius, update graph, update current temperature
- * @param unit c for Celsius, anything else for Fahrenheit
+ * @param {string} unit c for Celsius, anything else for Fahrenheit
  */
 function changeTemperatureUnit(unit) {
     const currentTempUnitText = currentTempUnit.innerText;
@@ -267,15 +272,15 @@ function getDayGraphInformation(sensorName, data, timeLabels) {
 
     return [
         {
-        labels: timeLabels,
+            labels: timeLabels,
             datasets: [{
-            label: `Average ${sensorName} per Half-hour`,
-            data: data,
-            fill: true,
-            borderColor: GRAPH_COLOR,
-            tension: 0.1
-        }]
-    }, "Time (Half-hourly)", sensorName];
+                label: `Average ${sensorName} per Half-hour`,
+                data: data,
+                fill: true,
+                borderColor: GRAPH_COLOR,
+                tension: 0.1
+            }]
+        }, "Time (Half-hourly)", sensorName];
 }
 
 /**
@@ -287,19 +292,14 @@ function getDayGraphInformation(sensorName, data, timeLabels) {
  * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
-function getMonthGraphInformation(sensorName, data, compared, timeLabels) {
-    console.log(data)
+function getMonthGraphInformation(sensorName, data, timeLabels) {
     return [
         {
             labels: timeLabels,
             datasets: [{
-                label: "Garden 1 Average ${sensorName} per Day",
+                label: `Average ${sensorName} per Day`,
                 data: data,
-                borderColor: GRAPH_COLOR,
-                tension: 0.1
-                }, {
-                label: "Garden Average ${sensorName} per Day",
-                data: compared,
+                fill: true,
                 borderColor: GRAPH_COLOR,
                 tension: 0.1
             }]
@@ -347,18 +347,18 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
                 borderColor: WEEK_GRAPH_COLORS[1],
                 tension: 0.1
             },
-            {
-                label: `Afternoon (12:00pm - 5:59pm)`,
-                data: afternoonData,
-                borderColor: WEEK_GRAPH_COLORS[2],
-                tension: 0.1
-            },
-            {
-                label: `Evening (6:00pm - 11:59pm)`,
-                data: eveningData,
-                borderColor: WEEK_GRAPH_COLORS[3],
-                tension: 0.1
-            }
+                {
+                    label: `Afternoon (12:00pm - 5:59pm)`,
+                    data: afternoonData,
+                    borderColor: WEEK_GRAPH_COLORS[2],
+                    tension: 0.1
+                },
+                {
+                    label: `Evening (6:00pm - 11:59pm)`,
+                    data: eveningData,
+                    borderColor: WEEK_GRAPH_COLORS[3],
+                    tension: 0.1
+                }
             ]
         }, "Time (Day)", sensorName]
 }
@@ -368,7 +368,7 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
  * @param graphId       the id of the div where the graph goes
- * @param sensorName    Name of sensor e.g Temperature
+ * @param {string} sensorName    Name of sensor e.g Temperature
  * @param graphType     Type of graph: Month, Week, Day
  * @param timeLabels    Time labels for y-axis
  */
@@ -387,7 +387,7 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             [dataObject, xLabel, yLabel] = getWeekGraphInformation(sensorName, data, timeLabels);
             break;
         case GraphType.MONTH:
-            [dataObject, xLabel, yLabel] = getMonthGraphInformation(sensorName, data, [null], timeLabels);
+            [dataObject, xLabel, yLabel] = getMonthGraphInformation(sensorName, data, timeLabels);
             break;
         default:
             [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
@@ -420,11 +420,32 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
     )
 }
 
+/**
+ * Show the correct alert and advice message for the given sensor.
+ *
+ * @param {string} sensor The particular sensor metric to show alert and advice for.
+ */
 function alertMessage(sensor) {
     if (isNaN(Number(disconnectedWarning.getAttribute("data-"+sensor.toLowerCase())))) {
-        disconnectedWarning.style.display = "block"
-        alertSensor.innerText = sensor
+        disconnectedWarning.style.display = "block";
+        alertSensor.innerText = sensor;
     } else {
-        disconnectedWarning.style.display = "none"
+        disconnectedWarning.style.display = "none";
     }
+
+    const adviceMessage = advicePopup.getAttribute("data-" + sensor.toLowerCase());
+    if (adviceMessage != null && !sensorAdviceMessageDisabled.get(sensor)) {
+        advicePopup.style.display = "block";
+        advicePopup.firstChild.textContent = adviceMessage;
+    } else {
+        advicePopup.style.display = "none";
+    }
+}
+
+/**
+ * hide the advice message for the currently selected sensor.
+ */
+function closeAdvicePopup() {
+    sensorAdviceMessageDisabled.set(currentlySelectedSensorView, true);
+    advicePopup.style.display = "none";
 }
