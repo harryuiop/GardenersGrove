@@ -22,6 +22,7 @@ openAdviceButton.addEventListener("click", function () {
     if (initialValues) {
         initialValues.forEach((value, index) => {
             adviceRanges[index].value = value;
+            adviceRanges[index].classList.remove("border", "border-danger");
         });
     }
 })
@@ -54,21 +55,27 @@ for (const adviceRange of adviceRanges) {
 function ensureMinMaxCorrect(minElement, maxElement) {
     // In min max range
     minElement.addEventListener("input", function(event) {
-        const value = parseFloat(event.target.value)
-        if (value >= parseFloat(maxElement.value) || !valueInMinMaxRange(maxElement, value)) {
+        const value = parseFloat(event.target.value);
+        const maxValue = parseFloat(maxElement.value);
+        if (value >= maxValue || !valueInMinMaxRange(maxElement, value)) {
             minElement.classList.add("border", "border-danger");
         } else {
             minElement.classList.remove("border", "border-danger");
-            maxElement.classList.remove("border", "border-danger");
+            if (valueInMinMaxRange(maxElement, maxValue) && maxValue > value) {
+                maxElement.classList.remove("border", "border-danger");
+            }
         }
     });
     maxElement.addEventListener("input", function(event) {
         const value = parseFloat(event.target.value)
-        if (value <= parseFloat(minElement.value) || !valueInMinMaxRange(maxElement, value)) {
+        const minValue = parseFloat(minElement.value);
+        if (value <= minValue || !valueInMinMaxRange(maxElement, value)) {
             maxElement.classList.add("border", "border-danger");
         } else {
             maxElement.classList.remove("border", "border-danger");
-            minElement.classList.remove("border", "border-danger");
+            if (valueInMinMaxRange(maxElement, minValue) && minValue < value) {
+                minElement.classList.remove("border", "border-danger");
+            }
         }
     })
 }
