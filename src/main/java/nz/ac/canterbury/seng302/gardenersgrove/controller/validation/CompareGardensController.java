@@ -45,9 +45,9 @@ public class CompareGardensController extends NavBar {
      */
     @GetMapping(COMPARE_GARDEN_URI_STRING)
     public String displayCompareGardensPage(
-            @PathVariable long yourGardenId,
-            @PathVariable long theirGardenId,
-            Model model
+        @PathVariable long yourGardenId,
+        @PathVariable long theirGardenId,
+        Model model
     ) throws NoSuchGardenException {
 
         this.updateGardensNavBar(model, gardenService, userService);

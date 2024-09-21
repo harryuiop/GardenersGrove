@@ -1,11 +1,9 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
-import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoControllerDataService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -15,14 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
-import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
-
 
 /**
  * Controller for the monitor garden page. For viewing statistics and live updates for a specific garden.

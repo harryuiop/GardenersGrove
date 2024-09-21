@@ -37,7 +37,7 @@ public class UriConfig {
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
     public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup/{gardenId}/{deployed}";
     public static final String ARDUINO_SENSOR_DATA = "/sensor-data";
-    public static final String COMPARE_GARDEN_URI_STRING = "/garden/{yourGardenId}/{theirGardenId}/compare";
+    public static final String COMPARE_GARDEN_URI_STRING = "/garden/compare/{yourGardenId}/{theirGardenId}";
 
 
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
