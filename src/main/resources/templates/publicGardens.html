@@ -57,18 +57,20 @@
         </div>
       </div>
 
-      <div class="col-xg-1 col-lg-1 mt-2">
         <!-- Search Button -->
         <form th:action="@{/publicGardens}" method="get">
-          <button
-                  class="btn btn-edit rounded-3"
-                  id="search-addon"
-                  th:for="search-bar"
-                  type="submit"
-          >
-            <span class="d-flex align-items-center">Search<i class="ps-2 bi bi-search"></i></span>
-          </button>
+          <div class="col-xg-1 col-lg-1 mt-2">
+            <button
+                    class="btn btn-edit d-flex align-items-center rounded-3 ms-3"
+                    id="search-addon"
+                    th:for="search-bar"
+                    type="submit"
+            >
+              <span class="d-flex align-items-center">Search<i class="ps-2 bi bi-search"></i></span>
+            </button>
+          </div>
         </form>
+
       </div>
     </div>
 
