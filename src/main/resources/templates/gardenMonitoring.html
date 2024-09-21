@@ -121,17 +121,27 @@
 
             <!-- Advice -->
             <div class="row mx-4">
-                <div id="advice" class="alert alert-warning"
+                <div id="advice" class="alert alert-warning position-relative"
                 th:data-temperature="${temperatureAdvice}"
                 th:data-moisture="${moistureAdvice}"
                 th:data-light="${lightAdvice}"
                 th:data-humidity="${humidityAdvice}">
-                    warning
+                    <button class="btn btn-close me-3 mt-3 position-absolute top-0 end-0"
+                            type="button" onclick="closeAdvicePopup()">
+                    </button>
                 </div>
             </div>
 
             <!-- Temperature -->
-            <div class="sensor-data m-4" id="temperature-data">
+            <div class="sensor-data m-4 row" id="graph-info">
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle mb-3" style="background-color: #477641; color: white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Compare <i class="bi bi-layers"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li th:each="userGarden: ${gardenList}"><a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item" href="#" th:text="${userGarden.getName()}"></a></li>
+                    </ul>
+                </div>
                 <div class="row" id="temp-units">
                     <div class="input-group mb-3">
                         <button class="btn btn-toggle-selected" id="celsius-btn"
@@ -275,9 +285,7 @@
             </div>
         </div>
     </div>
-    </div>
     <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
-    <script type="text/javascript" th:src="@{/javascript/dualRangeSlider.js}"></script>
 </body>
 
 </html>
