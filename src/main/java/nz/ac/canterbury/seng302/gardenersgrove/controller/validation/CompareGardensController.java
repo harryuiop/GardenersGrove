@@ -5,6 +5,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoControllerDataService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,11 +22,13 @@ public class CompareGardensController extends NavBar {
 
     private final GardenService gardenService;
     private final UserService userService;
+    private final ArduinoControllerDataService arduinoControllerDataService;
 
     @Autowired
-    public CompareGardensController(GardenService gardenService, UserService userService) {
+    public CompareGardensController(GardenService gardenService, UserService userService, ArduinoControllerDataService arduinoControllerDataService) {
         this.gardenService = gardenService;
         this.userService = userService;
+        this.arduinoControllerDataService = arduinoControllerDataService;
     }
 
     @GetMapping(COMPARE_GARDEN_URI_STRING)
@@ -59,6 +62,8 @@ public class CompareGardensController extends NavBar {
         model.addAttribute("yourGarden", yourGarden);
         model.addAttribute("theirGarden", theirGarden);
         model.addAttribute("owner", yourGarden.getOwner() == currentUser);
+
+        arduinoControllerDataService.addGraphDataToModel(model, yourGardenId, theirGardenId);
 
         return "compareGarden";
     }
