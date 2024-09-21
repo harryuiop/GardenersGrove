@@ -65,7 +65,6 @@ public class FormValuesValidator {
      * @return false to show there are no errors
      */
     public boolean checkBlank(String string) {
-        System.out.println("name is check blank " + string);
         if (string != null) {
             return string.isBlank();
         }
