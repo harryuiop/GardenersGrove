@@ -20,7 +20,7 @@ public class UriConfig {
     public static final String VIEW_GARDEN_URI_STRING = "/garden/{gardenId}";
     public static final String MONITOR_GARDEN_URI_STRING = "/garden/{gardenId}/monitor";
 
-    public static final String COMPARE_GARDENS_URI_STRING = "/garden/{gardenId1}/{gardenId2}/compare";
+    public static final String COMPARE_GARDENS_URI_STRING = "/garden/compare/{gardenId1}/{gardenId2}";
 
     public static final String NEW_GARDEN_TAG_URI_STRING = "/garden/{gardenId}/tag/new";
     public static final String EDIT_GARDEN_URI_STRING = "/garden/{gardenId}/edit";

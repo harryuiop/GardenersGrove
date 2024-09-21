@@ -1,4 +1,4 @@
-package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
+package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;

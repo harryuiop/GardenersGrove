@@ -434,6 +434,7 @@ function alertMessage(sensor) {
     }
 
     const adviceMessage = advicePopup.getAttribute("data-"+sensor.toLowerCase());
+    console.log("test")
     if (adviceMessage != null && !sensorAdviceMessageDisabled.get(sensor)) {
         advicePopup.style.display = "block";
         advicePopup.firstChild.textContent = adviceMessage;
