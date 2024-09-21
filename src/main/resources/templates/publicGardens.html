@@ -8,68 +8,69 @@
 <body class="bg">
 <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
 
-<!-- Searching -->
-<form id="search-form" class="row justify-content-center align-items-center mt-5 p-3 p-lg-0">
-  <div class="col-lg-4 col-12 mb-2 text-center">
-    <!-- Search Input -->
-    <div class="input-group rounded">
-      <input
-              aria-describedby="search-public-gardens"
-              aria-label="Search for public gardens"
-              autocomplete="off"
-              class="form-control rounded"
-              placeholder="Search for gardens"
-              th:name="searchParameter"
-              type="text"
-              id="garden-input"
-              th:value="${gardenSearchSearch}"
-      />
-    </div>
-  </div>
+<!-- Searching bar -->
+<form id="search-form" class="mt-5 p-3 p-lg-0 d-flex justify-content-center">
+    <div class="row w-50 d-flex justify-content-center">
+      <!-- Search Bar -->
+      <div class="col-xl-6 col-lg-12 mt-2">
+        <input
+                  aria-describedby="search-public-gardens"
+                  aria-label="Search for public gardens"
+                  autocomplete="off"
+                  class="form-control rounded"
+                  placeholder="Search for gardens"
+                  th:name="searchParameter"
+                  type="text"
+                  id="garden-input"
+                  th:value="${gardenSearchSearch}"
+          />
+      </div>
 
-    <!-- Tag Input -->
-    <div class="col-lg-4 col-12 mb-2 text-center">
-      <div class="input-group d-flex flex-nowrap">
-        <div class="input-group-prepend">
+      <!-- (|#|Add Tags to search  |+|) Section  -->
+      <div class="col-xl-5 col-lg-11 mt-2">
+        <div class="d-flex align-items-center">
+
+          <!-- Input group text -->
           <div class="input-group-text"
-               style="
-                            border-top-right-radius: 0;
-                            border-bottom-right-radius: 0;
-                            ">#
+               style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+            #
+          </div>
+
+          <!-- Tag Input -->
+          <div class="col">
+            <input type="text" class="form-control" placeholder="Add Tag" id="tagName"
+                   data-cy="tagName" style="border-radius: 0" autofocus>
+            <input type="hidden" id="hiddenTagList" value="">
+            <div id="autocomplete-list" class="dropdown-menu w-40 shadow inputStyle"></div>
+          </div>
+
+          <!-- Button -->
+          <div class="input-group-append">
+            <button class="btn btn-confirm"
+                    id="tag-submit"
+                    type="button"
+                    onclick="submitTagToSearch()"
+                    style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+              +
+            </button>
           </div>
         </div>
-        <div>
-          <label for="tagName"></label><input type="text" class="form-control" placeholder="Add tag to search" id="tagName"
-                                              data-cy="tagName" style="border-radius: 0" autofocus>
-          <input type="hidden" id="hiddenTagList" th:name="hiddenTagName" value="">
-          <div id="autocomplete-list" class="dropdown-menu w-40 shadow inputStyle"></div>
-        </div>
-        <div class="input-group-append">
-          <button class="btn btn-confirm"
-                  id="tag-submit"
-                  type="button"
-                  onclick="submitTagToSearch()"
-                  style="
-                               border-top-left-radius: 0;
-                               border-bottom-left-radius: 0;
-                               "
-          >+
-          </button>
-        </div>
+      </div>
 
-      <!-- Search Button -->
-      <form th:action="@{/publicGardens}" method="get">
-        <button
-                class="btn btn-edit d-flex align-items-center rounded-3 ms-3"
-                id="search-addon"
-                th:for="search-bar"
-                type="submit"
-        >
-          <span class="d-flex align-items-center">Search<i class="ps-2 bi bi-search"></i></span>
-        </button>
-      </form>
+      <div class="col-xg-1 col-lg-1 mt-2">
+        <!-- Search Button -->
+        <form th:action="@{/publicGardens}" method="get">
+          <button
+                  class="btn btn-edit rounded-3"
+                  id="search-addon"
+                  th:for="search-bar"
+                  type="submit"
+          >
+            <span class="d-flex align-items-center">Search<i class="ps-2 bi bi-search"></i></span>
+          </button>
+        </form>
+      </div>
     </div>
-  </div>
 
   <!-- Error Message -->
   <p id="tag-error-message" class="error message mt-1 text-center"></p>
