@@ -17,6 +17,9 @@ import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.COMPARE_GARDEN_URI_STRING;
 
+/**
+ * Controller for the compare garden page. For viewing statistics of your garden and a chosen garden.
+ */
 @Controller
 public class CompareGardensController extends NavBar {
 
@@ -31,12 +34,21 @@ public class CompareGardensController extends NavBar {
         this.arduinoControllerDataService = arduinoControllerDataService;
     }
 
+    /**
+     * Set up compare garden page and display attributes
+     *
+     * @param yourGardenId The id of your garden to be compared
+     * @param theirGardenId The id of the chosen garden to be compared with
+     * @param model Puts the data into the template to be viewed
+     * @return Thymeleaf HTML template of the compare garden page.
+     * @throws NoSuchGardenException Thrown if the garden you are fetching is private and not your own
+     */
     @GetMapping(COMPARE_GARDEN_URI_STRING)
     public String displayCompareGardensPage(
             @PathVariable long yourGardenId,
             @PathVariable long theirGardenId,
             Model model
-    ) throws NoSuchGardenException, InterruptedException {
+    ) throws NoSuchGardenException {
 
         this.updateGardensNavBar(model, gardenService, userService);
         User currentUser = userService.getAuthenticatedUser();

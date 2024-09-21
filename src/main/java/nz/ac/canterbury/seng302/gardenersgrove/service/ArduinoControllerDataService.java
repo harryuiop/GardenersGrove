@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
+/**
+ * This is a service class setup to deal with helping HTML models get the correct data from the Arduino.
+ */
 @Service
 public class ArduinoControllerDataService {
     private final ArduinoDataPointService arduinoDataPointService;
