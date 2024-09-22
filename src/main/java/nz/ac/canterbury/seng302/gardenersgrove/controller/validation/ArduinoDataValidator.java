@@ -6,29 +6,28 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-
 /**
- * Defines the validation checks for the arduino data to make sure they are realistic.
+ * Defines the validation checks for the arduino data to make sure they are
+ * realistic.
  */
 @Component
 public class ArduinoDataValidator {
 
-    final static double MIN_TEMPERATURE = -90.0; // Lowest temp recorded on Earth
-    final static double MAX_TEMPERATURE = 60.0; // Highest temp recorded on Earth
-    final static double MIN_HUMIDITY = 0.0;
-    final static double MAX_HUMIDITY = 100.0;
-    final static double MIN_ATMOSPHERE = 0.8; // Lowest barometer reading recorded on Earth
-    final static double MAX_ATMOSPHERE = 1.1; // Highest barometer reading recorded on Earth
-    final static double MIN_LIGHT = 0.0;
-    final static double MAX_LIGHT = 100.0;
-    final static double MIN_MOISTURE = 0.0;
-    final static double MAX_MOISTURE = 100.0;
-
-    final static int MAX_READING_DELAY = 5;
-
+    public static final double MIN_TEMPERATURE = -90.0; // Lowest temp recorded on Earth
+    public static final double MAX_TEMPERATURE = 60.0; // Highest temp recorded on Earth
+    public static final double MIN_HUMIDITY = 0.0;
+    public static final double MAX_HUMIDITY = 100.0;
+    public static final double MIN_ATMOSPHERE = 0.8; // Lowest barometer reading recorded on Earth
+    public static final double MAX_ATMOSPHERE = 1.1; // Highest barometer reading recorded on Earth
+    public static final double MIN_LIGHT = 0.0;
+    public static final double MAX_LIGHT = 100.0;
+    public static final double MIN_MOISTURE = 0.0;
+    public static final double MAX_MOISTURE = 100.0;
+    public static final int MAX_READING_DELAY = 5; // In minutes
 
     /**
-     * Returns true if the temperature is within the range MIN_TEMPERATURE to MAX_TEMPERATURE
+     * Returns true if the temperature is within the range MIN_TEMPERATURE to
+     * MAX_TEMPERATURE
      *
      * @param temperature the temperature value recorded in the arduino data
      * @return a boolean of whether the temperature is valid or not
@@ -48,9 +47,11 @@ public class ArduinoDataValidator {
     }
 
     /**
-     * Returns true if the atmospheric pressure is within the range MIN_ATMOSPHERE to MAX_ATMOSPHERE
+     * Returns true if the atmospheric pressure is within the range MIN_ATMOSPHERE
+     * to MAX_ATMOSPHERE
      *
-     * @param atmosphericPressure the atmospheric pressure value recorded in the arduino data
+     * @param atmosphericPressure the atmospheric pressure value recorded in the
+     *                            arduino data
      * @return a boolean of whether the atmospheric pressure is valid or not
      */
     public static boolean checkValidAtmosphericPressure(double atmosphericPressure) {
@@ -78,10 +79,12 @@ public class ArduinoDataValidator {
     }
 
     /**
-     * Returns true if the difference in time between the reading and the current time is less than MAX_READING_DELAY, else false
+     * Returns true if the difference in time between the reading and the current
+     * time is less than MAX_READING_DELAY, else false
      *
      * @param time the LocalDateTime time of data reading
-     * @return a boolean of whether the time difference is less than MAX_READING_DELAY
+     * @return a boolean of whether the time difference is less than
+     *         MAX_READING_DELAY
      */
     public static boolean checkValidTime(LocalDateTime time) {
         LocalDateTime currentTime = LocalDateTime.now();
@@ -90,10 +93,12 @@ public class ArduinoDataValidator {
     }
 
     /**
-     * Returns true if all data values retrieved from the JSON sent by the arduino is valid
+     * Returns true if all data values retrieved from the JSON sent by the arduino
+     * is valid
      *
      * @param dataPoint entity containing all data values sent by the Arduino
-     * @return a boolean indicating whether all data values are valid (within reasonable range)
+     * @return a boolean indicating whether all data values are valid (within
+     *         reasonable range)
      */
     public static boolean checkValidSensorData(ArduinoJsonData dataPoint) {
         return checkValidAtmosphericPressure(dataPoint.getAtmosphereAtm())
@@ -108,7 +113,8 @@ public class ArduinoDataValidator {
      * Returns whether the temperature sensor is faulty or disconnected
      *
      * @param temperature value sent by the arduino
-     * @return boolean indicating whether the temperature sensor (DHT11) functions correctly
+     * @return boolean indicating whether the temperature sensor (DHT11) functions
+     *         correctly
      */
     public static boolean isTempConnected(Double temperature) {
         return !Double.isNaN(temperature);
@@ -146,12 +152,14 @@ public class ArduinoDataValidator {
 
     /**
      * Returns whether the humidity sensor is faulty or disconnected
-     * Side note: there is an opportunity to only check if the temperature is connected
+     * Side note: there is an opportunity to only check if the temperature is
+     * connected
      * since both values came from the same sensor, but it is not implemented as so
      * due to consistency
      *
      * @param humidity value sent by the arduino
-     * @return boolean indicating whether the humidity sensor (DHT11) functions correctly
+     * @return boolean indicating whether the humidity sensor (DHT11) functions
+     *         correctly
      */
     public static boolean isHumidityConnected(Double humidity) {
         return !Double.isNaN(humidity);

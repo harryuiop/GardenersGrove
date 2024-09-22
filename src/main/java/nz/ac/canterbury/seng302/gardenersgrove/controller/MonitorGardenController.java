@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
@@ -9,6 +10,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,15 +19,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
-
 /**
- * Controller for the monitor garden page. For viewing statistics and live updates for a specific garden.
+ * Controller for the monitor garden page. For viewing statistics and live
+ * updates for a specific garden.
  */
 @Controller
 public class MonitorGardenController extends NavBar {
@@ -34,18 +37,19 @@ public class MonitorGardenController extends NavBar {
     private final ArduinoDataPointService arduinoDataPointService;
 
     /**
-     * Spring will automatically call this constructor at runtime to inject the dependencies.
+     * Spring will automatically call this constructor at runtime to inject the
+     * dependencies.
      *
-     * @param gardenService A Garden database access object.
-     * @param userService   A User database access object.
-     * @param arduinoDataPointService A arduinoDataPointService database access object.
+     * @param gardenService           A Garden database access object.
+     * @param userService             A User database access object.
+     * @param arduinoDataPointService A arduinoDataPointService database access
+     *                                object.
      */
     @Autowired
     public MonitorGardenController(
             UserService userService,
             GardenService gardenService,
-            ArduinoDataPointService arduinoDataPointService
-    ) {
+            ArduinoDataPointService arduinoDataPointService) {
         this.userService = userService;
         this.gardenService = gardenService;
         this.arduinoDataPointService = arduinoDataPointService;
@@ -81,15 +85,16 @@ public class MonitorGardenController extends NavBar {
 
         model.addAttribute("garden", garden);
         model.addAttribute("owner", garden.getOwner() == currentUser);
-        model.addAttribute("garden", optionalGarden.get());
         model.addAttribute("gardenList", gardenService.getAllGardens());
+        model.addAttribute("adviceRanges", garden.getAdviceRanges());
 
-        //This is where we input if the arduino is connected. Still to be implemented.
+        // This is where we input if the arduino is connected. Still to be implemented.
         model.addAttribute("connected", false);
 
         addDeviceStatusInformationToModel(model, garden);
         addCurrentSensorReadingsToModel(model, garden);
         addGraphDataToModel(model, gardenId);
+        addArduinoDataThresholds(model);
         addAdviceMessagesToModel(model);
 
         return "gardenMonitoring";
@@ -121,7 +126,8 @@ public class MonitorGardenController extends NavBar {
             }
             if (arduinoDataPoint.getMoisturePercent() != null) {
                 moistSensorConnected = isMoistConnected(arduinoDataPoint.getMoisturePercent());
-                moistReading = (moistSensorConnected) ? String.format("%.0f", arduinoDataPoint.getMoisturePercent()) : "-";
+                moistReading = (moistSensorConnected) ? String.format("%.0f", arduinoDataPoint.getMoisturePercent())
+                        : "-";
             }
             if (arduinoDataPoint.getLightPercent() != null) {
                 lightSensorConnected = isLightConnected(arduinoDataPoint.getLightPercent());
@@ -129,12 +135,15 @@ public class MonitorGardenController extends NavBar {
             }
             if (arduinoDataPoint.getAtmosphereAtm() != null) {
                 pressureSensorConnected = isPressureConnected(arduinoDataPoint.getAtmosphereAtm());
-                pressureReading = (pressureSensorConnected) ? String.format("%.3f", arduinoDataPoint.getAtmosphereAtm()) : "-";
+                pressureReading = (pressureSensorConnected) ? String.format("%.3f", arduinoDataPoint.getAtmosphereAtm())
+                        : "-";
             }
             if (arduinoDataPoint.getHumidityPercent() != null) {
                 humidSensorConnected = isHumidityConnected(arduinoDataPoint.getHumidityPercent());
-                humidReading = (humidSensorConnected) ? String.format("%.0f", arduinoDataPoint.getHumidityPercent()) : "-";
+                humidReading = (humidSensorConnected) ? String.format("%.0f", arduinoDataPoint.getHumidityPercent())
+                        : "-";
             }
+
         }
         model.addAttribute("tempReading", tempReading);
         model.addAttribute("moistReading", moistReading);
@@ -190,7 +199,8 @@ public class MonitorGardenController extends NavBar {
             if (lastDataPoint == null) {
                 deviceStatus = "NO_DATA";
             } else {
-                minutesSinceLastReading = Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs().toMinutes();
+                minutesSinceLastReading = Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs()
+                        .toMinutes();
                 timeSinceLastReading = minutestoTimeString(minutesSinceLastReading);
                 if (minutesSinceLastReading <= 5) {
                     deviceStatus = "UP_TO_DATE";
@@ -202,4 +212,21 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("deviceStatus", deviceStatus);
         model.addAttribute("timeSinceLastReading", timeSinceLastReading);
     }
+
+    /**
+     * Add all the data thresholds to the model to be used for the valid ranges
+     * on the advice range inputs.
+     */
+    private void addArduinoDataThresholds(Model model) {
+        model.addAttribute("MIN_VALID_TEMP", ArduinoDataValidator.MIN_TEMPERATURE);
+        model.addAttribute("MAX_VALID_TEMP", ArduinoDataValidator.MAX_TEMPERATURE);
+        model.addAttribute("MIN_VALID_MOISTURE", ArduinoDataValidator.MIN_MOISTURE);
+        model.addAttribute("MAX_VALID_MOISTURE", ArduinoDataValidator.MAX_MOISTURE);
+        model.addAttribute("MIN_VALID_PRESSURE", ArduinoDataValidator.MIN_ATMOSPHERE);
+        model.addAttribute("MAX_VALID_PRESSURE", ArduinoDataValidator.MAX_ATMOSPHERE);
+        model.addAttribute("MIN_VALID_HUMIDITY", ArduinoDataValidator.MIN_HUMIDITY);
+        model.addAttribute("MAX_VALID_HUMIDITY", ArduinoDataValidator.MAX_HUMIDITY);
+        model.addAttribute("LIGHT_LEVELS", Arrays.asList(LightLevel.values()));
+    }
+
 }
