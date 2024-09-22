@@ -342,7 +342,7 @@ class ErrorCheckerTest {
         Map<String, String> errors = errorChecker.firstNameErrors(firstName);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("firstNameError",
-                "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+                "First name cannot be less than two characters and must only include letters, spaces, hyphens or apostrophes");
         Assertions.assertEquals(correctErrors, errors);
     }
 
@@ -404,7 +404,7 @@ class ErrorCheckerTest {
         Map<String, String> errors = errorChecker.lastNameErrors(lastName, noSurname);
         Map<String, String> correctErrors = new HashMap<>();
         correctErrors.put("lastNameError",
-                "Last name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+                "Last name cannot be less than two characters and must only include letters, spaces, hyphens or apostrophes");
         Assertions.assertEquals(correctErrors, errors);
     }
 
