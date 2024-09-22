@@ -2,10 +2,12 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
+import nz.ac.canterbury.seng302.gardenersgrove.service.AdviceRangesService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -23,6 +27,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.EDIT_ADVICE_URI_STRING;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
@@ -35,6 +40,7 @@ public class MonitorGardenController extends NavBar {
     private final UserService userService;
     private final GardenService gardenService;
     private final ArduinoDataPointService arduinoDataPointService;
+    private final AdviceRangesService adviceRangesService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the
@@ -49,10 +55,12 @@ public class MonitorGardenController extends NavBar {
     public MonitorGardenController(
             UserService userService,
             GardenService gardenService,
-            ArduinoDataPointService arduinoDataPointService) {
+            ArduinoDataPointService arduinoDataPointService,
+            AdviceRangesService adviceRangesService) {
         this.userService = userService;
         this.gardenService = gardenService;
         this.arduinoDataPointService = arduinoDataPointService;
+        this.adviceRangesService = adviceRangesService;
     }
 
     /**
@@ -66,7 +74,19 @@ public class MonitorGardenController extends NavBar {
     @GetMapping(MONITOR_GARDEN_URI_STRING)
     public String monitorGarden(@PathVariable long gardenId, Model model)
             throws NoSuchGardenException {
+        return loadMonitorGardenPage(gardenId, model);
+    }
 
+    /**
+     * Add monitor garden information to model.
+     *
+     * @param gardenId Id of garden monitoring
+     * @param model Model to add to
+     *
+     * @return Load of monitor gardens page
+     * @throws NoSuchGardenException If no garden is found.
+     */
+    private String loadMonitorGardenPage(Long gardenId, Model model) throws NoSuchGardenException{
         this.updateGardensNavBar(model, gardenService, userService);
 
         User currentUser = userService.getAuthenticatedUser();
@@ -87,6 +107,7 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("owner", garden.getOwner() == currentUser);
         model.addAttribute("gardenList", gardenService.getAllGardens());
         model.addAttribute("adviceRanges", garden.getAdviceRanges());
+        model.addAttribute("editAdviceUri", EDIT_ADVICE_URI_STRING);
 
         // This is where we input if the arduino is connected. Still to be implemented.
         model.addAttribute("connected", false);
@@ -228,5 +249,55 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("MAX_VALID_HUMIDITY", ArduinoDataValidator.MAX_HUMIDITY);
         model.addAttribute("LIGHT_LEVELS", Arrays.asList(LightLevel.values()));
     }
+
+    /**
+     * Update advice ranges as set by user.
+     *
+     * @param gardenId Id of garden updating
+     * @param minTemp Min Temperature
+     * @param maxTemp Max Temperature
+     * @param minSoilMoisture Min soil moisture
+     * @param maxSoilMoisture Max soil moisture
+     * @param minAirPressure Min air pressure
+     * @param maxAirPressure Max air pressure
+     * @param minHumidity Min humidity
+     * @param maxHumidity Max humidity
+     * @param lightLevel Light level (discrete string that is converted to an enum)
+     * @param model Model to add attributes to
+     *
+     * @return Load of monitor gardens page
+     * @throws NoSuchGardenException If garden does not exist
+     */
+    @PostMapping(EDIT_ADVICE_URI_STRING)
+    public String editAdviceForGarden(@RequestParam long gardenId,
+                                      @RequestParam double minTemp, @RequestParam double maxTemp,
+                                      @RequestParam double minSoilMoisture, @RequestParam double maxSoilMoisture,
+                                      @RequestParam double minAirPressure, @RequestParam double maxAirPressure,
+                                      @RequestParam double minHumidity, @RequestParam double maxHumidity,
+                                      @RequestParam String lightLevel, Model model) throws NoSuchGardenException {
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            return loadMonitorGardenPage(gardenId, model);
+
+        }
+        Garden garden = optionalGarden.get();
+        AdviceRanges adviceRanges = garden.getAdviceRanges();
+
+        // TODO add some validation
+        adviceRanges.setMinTemperature(minTemp);
+        adviceRanges.setMaxTemperature(maxTemp);
+        adviceRanges.setMinMoisture(minSoilMoisture);
+        adviceRanges.setMaxMoisture(maxSoilMoisture);
+        adviceRanges.setMinPressure(minAirPressure);
+        adviceRanges.setMaxPressure(maxAirPressure);
+        adviceRanges.setMinHumidity(minHumidity);
+        adviceRanges.setMaxHumidity(maxHumidity);
+        // TODO set light level
+        adviceRangesService.saveAdviceRanges(adviceRanges);
+        gardenService.saveGarden(garden);
+        return loadMonitorGardenPage(gardenId, model);
+
+    }
+
 
 }
