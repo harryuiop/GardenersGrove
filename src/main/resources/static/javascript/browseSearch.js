@@ -14,6 +14,7 @@ const hiddenTagList = document.getElementById("hiddenTagList")
  */
 function submitTagToSearch() {
     const addedTag = tagField.value;
+    console.log(addedTag);
 
     const deployment = window.location.pathname.split('/')[1];
     const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
