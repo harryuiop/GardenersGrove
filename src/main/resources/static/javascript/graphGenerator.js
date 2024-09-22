@@ -30,6 +30,8 @@ const GraphType = Object.freeze({
 
 // graph declarations
 let monthGraph, weekGraph, dayGraph;
+let currentlySelectedSensorView = "Temperature";
+let sensorAdviceMessageDisabled = new Map();
 
 /**
  * Render temperature graphs on page load.
@@ -40,7 +42,7 @@ window.onload = function() {
 
 /**
  * Make graphs for that sensor shown.
- * @param buttonId Sensor selected
+ * @param {string} buttonId Sensor selected
  */
 function makeActive(buttonId) {
     const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
@@ -54,6 +56,8 @@ function makeActive(buttonId) {
             }
         }
     )
+
+    currentlySelectedSensorView = buttonId;
 
     switch (buttonId){
         case "Temperature":
@@ -78,7 +82,7 @@ function makeActive(buttonId) {
 
 /**
  * Change temperature unit to Fahrenheit or Celsius, update graph, update current temperature
- * @param unit c for Celsius, anything else for Fahrenheit
+ * @param {string} unit c for Celsius, anything else for Fahrenheit
  */
 function changeTemperatureUnit(unit) {
     const currentTempUnitText = currentTempUnit.innerText;
@@ -416,6 +420,11 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
     )
 }
 
+/**
+ * Show the correct alert and advice message for the given sensor.
+ *
+ * @param {string} sensor The particular sensor metric to show alert and advice for.
+ */
 function alertMessage(sensor) {
     if (isNaN(Number(disconnectedWarning.getAttribute("data-"+sensor.toLowerCase())))) {
         disconnectedWarning.style.display = "block";
@@ -425,10 +434,18 @@ function alertMessage(sensor) {
     }
 
     const adviceMessage = advicePopup.getAttribute("data-"+sensor.toLowerCase());
-    if (adviceMessage != null) {
+    if (adviceMessage != null && !sensorAdviceMessageDisabled.get(sensor)) {
         advicePopup.style.display = "block";
-        advicePopup.innerText = adviceMessage;
+        advicePopup.firstChild.textContent = adviceMessage;
     } else {
         advicePopup.style.display = "none";
     }
+}
+
+/**
+ * hide the advice message for the currently selected sensor.
+ */
+function closeAdvicePopup() {
+    sensorAdviceMessageDisabled.set(currentlySelectedSensorView, true);
+    advicePopup.style.display = "none";
 }
