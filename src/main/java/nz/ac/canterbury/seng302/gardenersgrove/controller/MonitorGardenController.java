@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.AdviceRangesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
@@ -80,7 +82,7 @@ public class MonitorGardenController extends NavBar {
     /**
      * Add monitor garden information to model.
      *
-     * @param gardenId Id of garden monitoring
+     * @param gardenId id of garden monitoring
      * @param model Model to add to
      *
      * @return Load of monitor gardens page
@@ -283,19 +285,28 @@ public class MonitorGardenController extends NavBar {
         Garden garden = optionalGarden.get();
         AdviceRanges adviceRanges = garden.getAdviceRanges();
 
-        adviceRanges.setMinTemperature(minTemp);
-        adviceRanges.setMaxTemperature(maxTemp);
-        adviceRanges.setMinMoisture(minSoilMoisture);
-        adviceRanges.setMaxMoisture(maxSoilMoisture);
-        adviceRanges.setMinPressure(minAirPressure);
-        adviceRanges.setMaxPressure(maxAirPressure);
-        adviceRanges.setMinHumidity(minHumidity);
-        adviceRanges.setMaxHumidity(maxHumidity);
+        // Validation
+        Map<String, String> errors = AdviceRangesValidator.checkAdviceRanges(minTemp, maxTemp,
+                minSoilMoisture, maxSoilMoisture, minAirPressure, maxAirPressure, minHumidity, maxHumidity);
 
-        adviceRanges.setLightLevel(LightLevel.fromDisplayName(lightLevelString));
+        if (errors.isEmpty()) {
+            adviceRanges.setMinTemperature(minTemp);
+            adviceRanges.setMaxTemperature(maxTemp);
+            adviceRanges.setMinMoisture(minSoilMoisture);
+            adviceRanges.setMaxMoisture(maxSoilMoisture);
+            adviceRanges.setMinPressure(minAirPressure);
+            adviceRanges.setMaxPressure(maxAirPressure);
+            adviceRanges.setMinHumidity(minHumidity);
+            adviceRanges.setMaxHumidity(maxHumidity);
 
-        adviceRangesService.saveAdviceRanges(adviceRanges);
-        gardenService.saveGarden(garden);
+            adviceRanges.setLightLevel(LightLevel.fromDisplayName(lightLevelString));
+
+            adviceRangesService.saveAdviceRanges(adviceRanges);
+            gardenService.saveGarden(garden);
+        } else {
+            // TODO add error messages and persist changes
+        }
+
         return loadMonitorGardenPage(gardenId, model);
 
     }
