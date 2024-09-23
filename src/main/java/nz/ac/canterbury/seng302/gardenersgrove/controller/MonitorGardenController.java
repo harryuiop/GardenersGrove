@@ -30,8 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.EDIT_ADVICE_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
@@ -318,7 +317,7 @@ public class MonitorGardenController extends NavBar {
 
             adviceRangesService.saveAdviceRanges(adviceRanges);
             gardenService.saveGarden(garden);
-            return loadMonitorGardenPage(gardenId, model, new HashMap<>(), Optional.empty());
+            return "redirect:" + monitorGardenUri(gardenId);
         }
         return loadMonitorGardenPage(gardenId, model, errors, Optional.of(adviceRangesDTO));
     }

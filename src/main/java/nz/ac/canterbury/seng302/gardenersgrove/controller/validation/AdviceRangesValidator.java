@@ -59,7 +59,7 @@ public class AdviceRangesValidator {
      *
      * @return if the range is valid or not
      */
-    private static boolean checkRangeValid(double minValue, double maxValue, DoublePredicate validator) {
+    public static boolean checkRangeValid(double minValue, double maxValue, DoublePredicate validator) {
         return validator.test(minValue) && validator.test(maxValue) && maxValue > minValue;
     }
 
