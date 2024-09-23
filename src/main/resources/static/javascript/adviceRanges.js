@@ -15,7 +15,8 @@ const maxHumidity = document.getElementById("maxHumidity");
  * Open modal if errors have occurred when submitting form.
  */
 document.addEventListener("DOMContentLoaded", function() {
-    if (settingsButton.dataset.openModal) {
+    console.log(settingsButton.dataset.openModal, settingsButton.dataset.openModal === "true");
+    if (settingsButton.dataset.openModal === "true") {
         settingsButton.click();
     }
 });

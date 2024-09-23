@@ -1,5 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
 
+import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.DoublePredicate;
@@ -12,15 +14,20 @@ public class AdviceRangesValidator {
     /**
      * Check if there are errors when user changes the advice ranges for their garden.
      *
+     * @param adviceRangesDTO Data Transfer object containing advice ranges values
+     *
      * @return A key - value map of errors, with the key being the name of the attribute to
      * pass into the model and the value being the error message string.
      */
-    public static Map<String, String> checkAdviceRanges(double minTemp, double maxTemp, double minMoisture, double maxMoisture,
-                                                        double minPressure, double maxPressure, double minHumidity, double maxHumidity) {
-        boolean temperatureValid = checkRangeValid(minTemp, maxTemp, ArduinoDataValidator::checkValidTemperature);
-        boolean moistureValid = checkRangeValid(minMoisture, maxMoisture, ArduinoDataValidator::checkValidMoisture);
-        boolean pressureValid = checkRangeValid(minPressure, maxPressure, ArduinoDataValidator::checkValidAtmosphericPressure);
-        boolean humidityValid = checkRangeValid(minHumidity, maxHumidity, ArduinoDataValidator::checkValidHumidity);
+    public static Map<String, String> checkAdviceRanges(AdviceRangesDTO adviceRangesDTO) {
+        boolean temperatureValid = checkRangeValid(adviceRangesDTO.getMinTemp(), adviceRangesDTO.getMaxTemp(),
+                ArduinoDataValidator::checkValidTemperature);
+        boolean moistureValid = checkRangeValid(adviceRangesDTO.getMinSoilMoisture(), adviceRangesDTO.getMaxSoilMoisture(),
+                ArduinoDataValidator::checkValidMoisture);
+        boolean pressureValid = checkRangeValid(adviceRangesDTO.getMinAirPressure(), adviceRangesDTO.getMaxAirPressure(),
+                ArduinoDataValidator::checkValidAtmosphericPressure);
+        boolean humidityValid = checkRangeValid(adviceRangesDTO.getMinHumidity(), adviceRangesDTO.getMaxHumidity(),
+                ArduinoDataValidator::checkValidHumidity);
 
         HashMap<String, String> errors = new HashMap<>();
 
