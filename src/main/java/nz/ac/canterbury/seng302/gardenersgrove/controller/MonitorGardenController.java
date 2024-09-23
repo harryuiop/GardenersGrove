@@ -262,7 +262,7 @@ public class MonitorGardenController extends NavBar {
      * @param maxAirPressure Max air pressure
      * @param minHumidity Min humidity
      * @param maxHumidity Max humidity
-     * @param lightLevel Light level (discrete string that is converted to an enum)
+     * @param lightLevelString Light level (discrete string that is converted to an enum)
      * @param model Model to add attributes to
      *
      * @return Load of monitor gardens page
@@ -274,16 +274,15 @@ public class MonitorGardenController extends NavBar {
                                       @RequestParam double minSoilMoisture, @RequestParam double maxSoilMoisture,
                                       @RequestParam double minAirPressure, @RequestParam double maxAirPressure,
                                       @RequestParam double minHumidity, @RequestParam double maxHumidity,
-                                      @RequestParam String lightLevel, Model model) throws NoSuchGardenException {
+                                      @RequestParam String lightLevelString, Model model) throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
             return loadMonitorGardenPage(gardenId, model);
-
         }
+
         Garden garden = optionalGarden.get();
         AdviceRanges adviceRanges = garden.getAdviceRanges();
 
-        // TODO add some validation
         adviceRanges.setMinTemperature(minTemp);
         adviceRanges.setMaxTemperature(maxTemp);
         adviceRanges.setMinMoisture(minSoilMoisture);
@@ -292,7 +291,9 @@ public class MonitorGardenController extends NavBar {
         adviceRanges.setMaxPressure(maxAirPressure);
         adviceRanges.setMinHumidity(minHumidity);
         adviceRanges.setMaxHumidity(maxHumidity);
-        // TODO set light level
+
+        adviceRanges.setLightLevel(LightLevel.fromDisplayName(lightLevelString));
+
         adviceRangesService.saveAdviceRanges(adviceRanges);
         gardenService.saveGarden(garden);
         return loadMonitorGardenPage(gardenId, model);
