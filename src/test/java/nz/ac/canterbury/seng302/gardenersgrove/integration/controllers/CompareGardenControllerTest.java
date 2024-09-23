@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.compareGardensUri;
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.monitorGardenUri;
 
 @SpringBootTest
 @WithMockUser(value = "1")
