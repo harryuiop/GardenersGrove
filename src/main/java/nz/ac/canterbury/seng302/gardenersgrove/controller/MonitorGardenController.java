@@ -111,7 +111,7 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("garden", garden);
         model.addAttribute("owner", garden.getOwner() == currentUser);
         model.addAttribute("gardenList", gardenService.getAllGardens());
-        model.addAttribute("editAdviceUri", EDIT_ADVICE_URI_STRING);
+        model.addAttribute("editAdviceUri", EDIT_ADVICE_RANGES_URI_STRING);
         model.addAllAttributes(adviceRangesErrors);
         model.addAttribute("openAdviceRangesModel", !adviceRangesErrors.isEmpty());
 
@@ -280,8 +280,8 @@ public class MonitorGardenController extends NavBar {
      * @return Load of monitor gardens page
      * @throws NoSuchGardenException If garden does not exist
      */
-    @PostMapping(EDIT_ADVICE_URI_STRING)
-    public String editAdviceForGarden(@RequestParam long gardenId,
+    @PostMapping(EDIT_ADVICE_RANGES_URI_STRING)
+    public String editAdviceForGarden(@PathVariable long gardenId,
                                       @RequestParam double minTemp, @RequestParam double maxTemp,
                                       @RequestParam double minSoilMoisture, @RequestParam double maxSoilMoisture,
                                       @RequestParam double minAirPressure, @RequestParam double maxAirPressure,
