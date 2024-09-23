@@ -1,7 +1,5 @@
 const adviceRanges = document.querySelectorAll(".advice-range");
 
-const settingsButton = document.getElementById("open-advice-button");
-
 const minTemp = document.getElementById("minTemp");
 const maxTemp = document.getElementById("maxTemp");
 const minSoilMoisture = document.getElementById("minSoilMoisture");
@@ -10,15 +8,49 @@ const minAirPressure = document.getElementById("minAirPressure");
 const maxAirPressure = document.getElementById("maxAirPressure");
 const minHumidity = document.getElementById("minHumidity");
 const maxHumidity = document.getElementById("maxHumidity");
+const lightLevel = document.getElementById("lightLevel");
 
-/**
- * Open modal if errors have occurred when submitting form.
- */
+const adviceFormDataset = document.getElementById("garden-advice-ranges").dataset;
+const openAdviceButton = document.getElementById("open-advice-button");
+
+const errorMessages = document.querySelectorAll(".error.message");
+
+
 document.addEventListener("DOMContentLoaded", function() {
-    console.log(settingsButton.dataset.openModal, settingsButton.dataset.openModal === "true");
-    if (settingsButton.dataset.openModal === "true") {
-        settingsButton.click();
+
+    /**
+     * Open modal if errors have occurred when submitting form.
+     */
+    if (adviceFormDataset.openModal === "true") {
+        openAdviceButton.click();
     }
+
+    /**
+     * Reset values when form is reopened
+     */
+    openAdviceButton.addEventListener("click", function () {
+        minTemp.value = adviceFormDataset.minTemp;
+        maxTemp.value = adviceFormDataset.maxTemp;
+
+        minSoilMoisture.value = adviceFormDataset.minMoisture;
+        maxSoilMoisture.value = adviceFormDataset.maxMoisture;
+
+        minAirPressure.value = adviceFormDataset.minPressure;
+        maxAirPressure.value = adviceFormDataset.maxPressure;
+
+        minHumidity.value = adviceFormDataset.minHumidity;
+        maxHumidity.value = adviceFormDataset.maxHumidity;
+
+        lightLevel.value = adviceFormDataset.lightLevel;
+
+        errorMessages.forEach(function (errorMessage) {
+            errorMessage.textContent = "";
+        });
+
+        adviceRanges.forEach(function (adviceRange) {
+            adviceRange.classList.remove("border", "border-danger");
+        })
+    })
 });
 
 /**

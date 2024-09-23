@@ -121,6 +121,8 @@ public class MonitorGardenController extends NavBar {
         } else {
             model.addAttribute("adviceRanges", new AdviceRangesDTO(garden.getAdviceRanges()));
         }
+        // Allow values to be reset to the saved ones
+        model.addAttribute("savedAdviceRanges", garden.getAdviceRanges());
 
         // This is where we input if the arduino is connected. Still to be implemented.
         model.addAttribute("connected", false);
