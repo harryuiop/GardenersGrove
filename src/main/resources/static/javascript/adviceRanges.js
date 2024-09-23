@@ -54,6 +54,17 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 /**
+ * Prevent form submitting on user pressing Enter
+ */
+adviceRanges.forEach((input) => {
+    input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+        }
+    });
+});
+
+/**
  * Prevent invalid characters and invalid sizes.
  */
 function preventInvalidCharacters(event) {
