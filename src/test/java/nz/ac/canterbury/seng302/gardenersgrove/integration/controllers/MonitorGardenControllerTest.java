@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
+import jakarta.transaction.Transactional;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
@@ -150,6 +151,7 @@ class MonitorGardenControllerTest {
     }
 
     @Test
+    @Transactional
     void postAdviceRanges_allInvalid_errorsShownAndAdviceRangesNotUpdated() throws Exception {
         // Make a copy of the previous advice ranges
         AdviceRangesDTO previousAdviceRanges = new AdviceRangesDTO(garden.getAdviceRanges());
@@ -184,6 +186,7 @@ class MonitorGardenControllerTest {
     }
 
     @Test
+    @Transactional
     void postAdviceRanges_allValid_errorsNotShownAndAdviceRangesUpdated() throws Exception {
         double newMinTemp = 15.34;
         double newMaxTemp = 27.57;
