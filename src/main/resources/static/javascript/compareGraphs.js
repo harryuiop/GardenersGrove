@@ -1,16 +1,11 @@
-const temperatureGraphContainer = document.getElementById("graphs");
-
 const graphDataSet = document.getElementById("display-graphs").dataset;
 const monthLabels = JSON.parse(graphDataSet.monthLabels);
 const dayLabels = JSON.parse(graphDataSet.dayLabels);
 
-const GRAPH_COLOR = 'rgb(75, 192, 192)';
+const GARDEN_1_COLOR = 'rgb(75, 192, 192)';
+const GARDEN_2_COLOR = 'rgb(52, 152, 219)';
 
-const GraphType = Object.freeze({
-    MONTH: 0, DAY: 2
-});
-
-let monthGraph, weekGraph, dayGraph;
+let monthGraph, dayGraph;
 let currentlySelectedSensorView = "Temperature";
 
 /**
@@ -70,13 +65,13 @@ function compareMonthGraphs(sensorName, data1, data2) {
                 label: `Garden 1 Average ${sensorName} per Day`,
                 data: data1,
                 fill: false,
-                borderColor: GRAPH_COLOR,
+                borderColor: GARDEN_1_COLOR,
                 tension: 0.1
             }, {
                 label: `Garden 2 Average ${sensorName} per Day`,
                 data: data2,
                 fill: false,
-                borderColor: 'rgb(52, 152, 219)',
+                borderColor: GARDEN_2_COLOR,
                 tension: 0.1
             }]
         }, "Time (Day)", sensorName]
@@ -90,13 +85,13 @@ function compareDayGraphs(sensorName, data1, data2) {
                 label: `Garden 1 Average ${sensorName} per Day`,
                 data: data1,
                 fill: false,
-                borderColor: GRAPH_COLOR,
+                borderColor: GARDEN_1_COLOR,
                 tension: 0.1
             }, {
                 label: `Garden 2 Average ${sensorName} per Day`,
                 data: data2,
                 fill: false,
-                borderColor: 'rgb(52, 152, 219)',
+                borderColor: GARDEN_2_COLOR,
                 tension: 0.1
             }]
         }, "Time (Half-hourly)", sensorName]
