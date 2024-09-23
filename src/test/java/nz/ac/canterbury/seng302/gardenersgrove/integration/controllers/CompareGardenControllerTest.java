@@ -6,6 +6,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,11 +37,15 @@ public class CompareGardenControllerTest {
     private UserRepository userRepository;
 
     @SpyBean
+    private UserService userService;
+
+    @SpyBean
     private ArduinoDataPointService arduinoDataPointService;
 
     static Garden garden;
     static Garden gardenTwo;
     static boolean gardenSaved = false;
+    static User user;
 
     @BeforeEach
     void saveGarden() {
@@ -49,7 +54,7 @@ public class CompareGardenControllerTest {
             return;
         }
 
-        User user = new User("testuser@email.com", "Test", "User", "Password1!", "2000-01-01");
+        user = new User("testuser@email.com", "Test", "User", "Password1!", "2000-01-01");
         userRepository.save(user);
 
         User userTwo = new User("testusertwo@email.com", "TestTwo", "UserTwo", "Password1!", "2000-01-01");
@@ -68,6 +73,7 @@ public class CompareGardenControllerTest {
 
     @Test
     void requestCompareGardenPage_validGardenIdOnBoth_200Response() throws Exception {
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
         mockMvc.perform(MockMvcRequestBuilders.get(compareGardensUri(garden.getId(), gardenTwo.getId())))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("compareGarden"));
