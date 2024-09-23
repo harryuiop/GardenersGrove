@@ -50,18 +50,14 @@ public class ArduinoControllerDataService {
      */
     public void addGraphDataToModel(Model model, Long gardenId1, Long gardenId2) {
         FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId1, LocalDateTime.now());
-        FormattedGraphData weekData = arduinoDataPointService.getWeekGraphData(gardenId1, LocalDateTime.now());
         FormattedGraphData monthData = arduinoDataPointService.getMonthGraphData(gardenId1, LocalDateTime.now());
 
         FormattedGraphData dayDataOther = arduinoDataPointService.getDayGraphData(gardenId2, LocalDateTime.now());
-        FormattedGraphData weekDataOther = arduinoDataPointService.getWeekGraphData(gardenId2, LocalDateTime.now());
         FormattedGraphData monthDataOther = arduinoDataPointService.getMonthGraphData(gardenId2, LocalDateTime.now());
 
         model.addAttribute("graphDay", dayData);
-        model.addAttribute("graphWeek", weekData);
         model.addAttribute("graphMonth", monthData);
         model.addAttribute("graphDayOther", dayDataOther);
-        model.addAttribute("graphWeekOther", weekDataOther);
         model.addAttribute("graphMonthOther", monthDataOther);
     }
 

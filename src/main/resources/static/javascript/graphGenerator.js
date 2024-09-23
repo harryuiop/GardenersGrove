@@ -230,9 +230,9 @@ const renderPressureGraph = () => {
  * Destroys all graphs and render humidity graphs.
  */
 const renderHumidityGraph = () => {
-    const humidityMonthResults = JSON.parse(graphDataSet.monthLight);
-    const humidityWeeklyResults = JSON.parse(graphDataSet.weekLight);
-    const humidityDayResults = JSON.parse(graphDataSet.dayLight);
+    const humidityMonthResults = JSON.parse(graphDataSet.monthHumidity);
+    const humidityWeeklyResults = JSON.parse(graphDataSet.weekHumidity);
+    const humidityDayResults = JSON.parse(graphDataSet.dayHumidity);
 
     tempUnits.style.display = "none";
 
@@ -434,7 +434,6 @@ function alertMessage(sensor) {
     }
 
     const adviceMessage = advicePopup.getAttribute("data-"+sensor.toLowerCase());
-    console.log("test")
     if (adviceMessage != null && !sensorAdviceMessageDisabled.get(sensor)) {
         advicePopup.style.display = "block";
         advicePopup.firstChild.textContent = adviceMessage;
