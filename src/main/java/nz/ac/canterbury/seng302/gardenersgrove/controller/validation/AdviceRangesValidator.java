@@ -1,4 +1,5 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller.validation;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.DoublePredicate;

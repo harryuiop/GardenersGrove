@@ -13,7 +13,7 @@
             </div>
             <div class="container w-150 d-flex flex-row-reverse" style="display: inline-block">
                 <button th:if="${owner}" type="button" class="btn btn-edit mb-3 m-lg-2" id="open-advice-button"
-                        data-bs-toggle="modal" data-bs-target="#settingsModal">
+                        data-bs-toggle="modal" data-bs-target="#settingsModal" th:attr="data-open-modal=${openAdviceRangesModel}">
                     Settings <i class="bi bi-gear"></i>
                 </button>
                 <th:block th:switch="${deviceStatus}">
@@ -194,19 +194,18 @@
                             <div class="form-field form-floating w-100 mx-1">
                                     <input type="number" th:min="${MIN_VALID_TEMP}" th:max="${MAX_VALID_TEMP}" class="form-control advice-range" placeholder="10"
                                     id="minTemp" th:name="minTemp" th:value="*{adviceRanges.getMinTemperature()}" data-cy="minTemp"
-                                    th:classappend="${minTempError} ? 'border border-danger'" />
+                                    th:classappend="${temperatureError} ? 'border border-danger'" />
                                 <label class="form-input" for="minTemp"> Minimum</label>
-                                <p class="error message" th:text="${minTempError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
                                 <input type="number" th:min="${MIN_VALID_TEMP}" th:max="${MAX_VALID_TEMP}"
                                        class="form-control advice-range" placeholder="10"
                                     id="maxTemp" th:name="maxTemp" th:value="*{adviceRanges.getMaxTemperature()}" data-cy="maxTemp"
-                                    th:classappend="${maxTempError} ? 'border border-danger'" />
+                                    th:classappend="${temperatureError} ? 'border border-danger'" />
                                 <label class="form-input" for="maxTemp"> Maximum</label>
-                                <p class="error message" th:text="${maxTempError}"></p>
                             </div>
                         </div>
+                        <p class="error message" th:text="${temperatureError}"></p>
                         <p class="mb-0">Soil Moisture Range (%)</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
@@ -214,20 +213,19 @@
                                        th:max="${MAX_VALID_MOISTURE}" class="form-control advice-range" placeholder="10"
                                     id="minSoilMoisture" th:name="minSoilMoisture" th:value="*{adviceRanges.getMinMoisture()}"
                                     data-cy="minSoilMoisture"
-                                    th:classappend="${minSoilMoistureError} ? 'border border-danger'" />
+                                    th:classappend="${moistureError} ? 'border border-danger'" />
                                 <label class="form-input" for="minSoilMoisture">Minimum</label>
-                                <p class="error message" th:text="${minSoilMoistureError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
                                 <input type="number" th:min="${MIN_VALID_MOISTURE}" th:max="${MAX_VALID_MOISTURE}"
                                        class="form-control advice-range" placeholder="60"
                                     id="maxSoilMoisture" th:name="maxSoilMoisture" th:value="*{adviceRanges.getMaxMoisture()}"
                                     data-cy="maxSoilMoisture"
-                                    th:classappend="${maxSoilMoistureError} ? 'border border-danger'" />
+                                    th:classappend="${moistureError} ? 'border border-danger'" />
                                 <label class="form-input" for="maxSoilMoisture">Maximum</label>
-                                <p class="error message" th:text="${maxSoilMoistureError}"></p>
                             </div>
                         </div>
+                        <p class="error message" th:text="${moistureError}"></p>
                         <p class="mb-0">Air Pressure Range (Atm)</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
@@ -235,20 +233,19 @@
                                        class="form-control advice-range" placeholder="10" step="0.05"
                                     id="minAirPressure" th:name="minAirPressure" th:value="*{adviceRanges.getMinPressure()}"
                                     data-cy="minAirPressure"
-                                    th:classappend="${minAirPressureError} ? 'border border-danger'" />
+                                    th:classappend="${pressureError} ? 'border border-danger'" />
                                 <label class="form-input" for="minAirPressure"> Minimum</label>
-                                <p class="error message" th:text="${minAirPressureError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
                                 <input type="number" th:min="${MIN_VALID_PRESSURE}" th:max="${MAX_VALID_PRESSURE}"
                                        class="form-control advice-range" placeholder="10" step="0.05"
                                     id="maxAirPressure" th:name="maxAirPressure" th:value="*{adviceRanges.getMaxPressure()}"
                                     data-cy="maxAirPressure"
-                                    th:classappend="${maxAirPressureError} ? 'border border-danger'" />
+                                    th:classappend="${pressureError} ? 'border border-danger'" />
                                 <label class="form-input" for="maxAirPressure"> Maximum</label>
-                                <p class="error message" th:text="${maxAirPressureError}"></p>
                             </div>
                         </div>
+                        <p class="error message" th:text="${pressureError}"></p>
                         <p class="mb-0">Humidity Range (%)</p>
                         <div class="d-flex flew-row">
                             <div class="form-field form-floating w-100 mx-1">
@@ -256,20 +253,19 @@
                                        th:max="${MAX_VALID_HUMIDITY}" class="form-control advice-range" placeholder="10"
                                     id="minHumidity" th:name="minHumidity" th:value="*{adviceRanges.getMinHumidity()}"
                                     data-cy="minHumidity"
-                                    th:classappend="${minHumidityError} ? 'border border-danger'" />
+                                    th:classappend="${humidityError} ? 'border border-danger'" />
                                 <label class="form-input" for="minHumidity">Minimum</label>
-                                <p class="error message" th:text="${minHumidityError}"></p>
                             </div>
                             <div class="form-field form-floating w-100 mx-1">
                                 <input type="number" step="1" th:min="${MIN_VALID_HUMIDITY}"
                                        th:max="${MAX_VALID_HUMIDITY}" class="form-control advice-range" placeholder="10"
                                     id="maxHumidity" th:name="maxHumidity" th:value="*{adviceRanges.getMaxHumidity()}"
                                     data-cy="maxHumidity"
-                                    th:classappend="${maxHumidityError} ? 'border border-danger'" />
+                                    th:classappend="${humidityError} ? 'border border-danger'" />
                                 <label class="form-input" for="maxHumidity">Maximum</label>
-                                <p class="error message" th:text="${maxHumidityError}"></p>
                             </div>
                         </div>
+                        <p class="error message" th:text="${humidityError}"></p>
                         <p class="mb-0">Light Level</p>
                         <div class="d-flex flew-row">
                             <select class="form-select form-floating w-100 mx-1" name="lightLevel" id="lightLevel">

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -76,7 +77,7 @@ public class MonitorGardenController extends NavBar {
     @GetMapping(MONITOR_GARDEN_URI_STRING)
     public String monitorGarden(@PathVariable long gardenId, Model model)
             throws NoSuchGardenException {
-        return loadMonitorGardenPage(gardenId, model);
+        return loadMonitorGardenPage(gardenId, model, new HashMap<>());
     }
 
     /**
@@ -88,7 +89,7 @@ public class MonitorGardenController extends NavBar {
      * @return Load of monitor gardens page
      * @throws NoSuchGardenException If no garden is found.
      */
-    private String loadMonitorGardenPage(Long gardenId, Model model) throws NoSuchGardenException{
+    private String loadMonitorGardenPage(Long gardenId, Model model, Map<String, String> adviceRangesErrors) throws NoSuchGardenException{
         this.updateGardensNavBar(model, gardenService, userService);
 
         User currentUser = userService.getAuthenticatedUser();
@@ -110,6 +111,8 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("gardenList", gardenService.getAllGardens());
         model.addAttribute("adviceRanges", garden.getAdviceRanges());
         model.addAttribute("editAdviceUri", EDIT_ADVICE_URI_STRING);
+        model.addAllAttributes(adviceRangesErrors);
+        model.addAttribute("openAdviceRangesModel", !adviceRangesErrors.isEmpty());
 
         // This is where we input if the arduino is connected. Still to be implemented.
         model.addAttribute("connected", false);
@@ -264,7 +267,7 @@ public class MonitorGardenController extends NavBar {
      * @param maxAirPressure Max air pressure
      * @param minHumidity Min humidity
      * @param maxHumidity Max humidity
-     * @param lightLevelString Light level (discrete string that is converted to an enum)
+     * @param lightLevel Light level (discrete string that is converted to an enum)
      * @param model Model to add attributes to
      *
      * @return Load of monitor gardens page
@@ -276,10 +279,10 @@ public class MonitorGardenController extends NavBar {
                                       @RequestParam double minSoilMoisture, @RequestParam double maxSoilMoisture,
                                       @RequestParam double minAirPressure, @RequestParam double maxAirPressure,
                                       @RequestParam double minHumidity, @RequestParam double maxHumidity,
-                                      @RequestParam String lightLevelString, Model model) throws NoSuchGardenException {
+                                      @RequestParam String lightLevel, Model model) throws NoSuchGardenException {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
-            return loadMonitorGardenPage(gardenId, model);
+            return loadMonitorGardenPage(gardenId, model, new HashMap<>());
         }
 
         Garden garden = optionalGarden.get();
@@ -299,15 +302,13 @@ public class MonitorGardenController extends NavBar {
             adviceRanges.setMinHumidity(minHumidity);
             adviceRanges.setMaxHumidity(maxHumidity);
 
-            adviceRanges.setLightLevel(LightLevel.fromDisplayName(lightLevelString));
+            adviceRanges.setLightLevel(LightLevel.fromDisplayName(lightLevel));
 
             adviceRangesService.saveAdviceRanges(adviceRanges);
             gardenService.saveGarden(garden);
-        } else {
-            // TODO add error messages and persist changes
         }
 
-        return loadMonitorGardenPage(gardenId, model);
+        return loadMonitorGardenPage(gardenId, model, errors);
 
     }
 

@@ -1,6 +1,6 @@
 const adviceRanges = document.querySelectorAll(".advice-range");
 
-const openAdviceButton = document.getElementById("open-advice-button");
+const settingsButton = document.getElementById("open-advice-button");
 
 const minTemp = document.getElementById("minTemp");
 const maxTemp = document.getElementById("maxTemp");
@@ -12,20 +12,13 @@ const minHumidity = document.getElementById("minHumidity");
 const maxHumidity = document.getElementById("maxHumidity");
 
 /**
- * Maintain saved initial advice range values.
+ * Open modal if errors have occurred when submitting form.
  */
-let initialValues;
 document.addEventListener("DOMContentLoaded", function() {
-    initialValues = Array.from(adviceRanges).map(input => input.value);
-});
-openAdviceButton.addEventListener("click", function () {
-    if (initialValues) {
-        initialValues.forEach((value, index) => {
-            adviceRanges[index].value = value;
-            adviceRanges[index].classList.remove("border", "border-danger");
-        });
+    if (settingsButton.dataset.openModal) {
+        settingsButton.click();
     }
-})
+});
 
 /**
  * Prevent invalid characters and invalid sizes.
