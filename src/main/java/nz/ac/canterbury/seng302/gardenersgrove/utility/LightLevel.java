@@ -11,7 +11,7 @@ public enum LightLevel {
 
     public final String string;
 
-    LightLevel(String string) {
+    private LightLevel(String string) {
         this.string = string;
     }
 
