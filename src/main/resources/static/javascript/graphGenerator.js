@@ -218,7 +218,7 @@ const renderPressureGraph = () => {
 
     monthGraph = createGraph(getMonthGraphInformation(`Pressure (ATM)`, pressureMonthResults), "graph-month");
     weekGraph = createGraph(getWeekGraphInformation(`Pressure (ATM)`, pressureWeeklyResults), "graph-week");
-    dayGraph = createGraph(getDayGraphInformation(`Pressure (ATM)`), pressureDayResults, "graph-day");
+    dayGraph = createGraph(getDayGraphInformation(`Pressure (ATM)`, pressureDayResults), "graph-day");
 
     alertMessage("Air-Pressure")
 }
