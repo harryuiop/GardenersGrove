@@ -35,7 +35,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minu
  */
 @Controller
 public class MonitorGardenController extends NavBar {
-    Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
+    Logger logger = LoggerFactory.getLogger(MonitorGardenController.class);
     private final UserService userService;
     private final GardenService gardenService;
     private final ArduinoDataPointService arduinoDataPointService;
