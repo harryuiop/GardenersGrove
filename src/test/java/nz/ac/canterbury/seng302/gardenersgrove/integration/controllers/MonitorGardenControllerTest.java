@@ -12,6 +12,9 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import org.junit.jupiter.api.Assertions;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -43,8 +46,14 @@ class MonitorGardenControllerTest {
     static boolean gardenSaved = false;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private FriendshipService friendshipService;
     @SpyBean
     private ArduinoDataPointService arduinoDataPointService;
+    @SpyBean
+    private UserService userService;
+
+    static User user;
 
     @BeforeEach
     void saveGarden() {
@@ -52,13 +61,13 @@ class MonitorGardenControllerTest {
         if (gardenSaved) {
             return;
         }
-        User user = new User("testuser@email.com", "Test", "User", "Password1!", "2000-01-01");
+        user = new User("testuser@email.com", "Test", "User", "Password1!", "2000-01-01");
         userRepository.save(user);
-
         Location location = new Location("Test", "Location");
         garden = new Garden(user, "g1", "desc", location, 1.0f, true);
         gardenRepository.save(garden);
         gardenSaved = true;
+
     }
 
     @Test
@@ -224,5 +233,37 @@ class MonitorGardenControllerTest {
         Assertions.assertEquals(newMaxHumidity, updatedGarden.getAdviceRanges().getMaxHumidity(), 0.001);
         Assertions.assertEquals(newMinAirPressure, updatedGarden.getAdviceRanges().getMinPressure(), 0.001);
         Assertions.assertEquals(newMaxAirPressure, updatedGarden.getAdviceRanges().getMaxPressure(), 0.001);
+    }
+    @Test
+    void requestMonitorPage_randomUserNotPublic_notAbleToVisit() throws Exception {
+        User randomUser = new User("randomUser@mail.com", "Random", "User", "Password1!", "");
+        userRepository.save(randomUser);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(randomUser);
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    void requestMonitorPage_friendUser_ableToVisit() throws Exception {
+        User friendUser = new User("friendUser@mail.com", "Friend", "User", "Password1!", "");
+        userRepository.save(friendUser);
+        friendshipService.addFriend(user, friendUser);
+        Assertions.assertTrue(friendshipService.areFriends(user, friendUser));
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(friendUser);
+        Assertions.assertEquals(user, garden.getOwner());
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+    @Test
+    void requestMonitorPage_nonFriendPublicGarden_ableToVisit() throws Exception {
+        User randomUser = new User("randomUser@mail.com", "Random", "User", "Password1!", "");
+        userRepository.save(randomUser);
+        garden.setIsGardenPublic(true);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(randomUser);
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+        garden.setIsGardenPublic(false);
     }
 }
