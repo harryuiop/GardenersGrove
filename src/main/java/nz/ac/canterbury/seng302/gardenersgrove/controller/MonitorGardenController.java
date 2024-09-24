@@ -7,6 +7,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
@@ -38,6 +39,7 @@ public class MonitorGardenController extends NavBar {
     private final UserService userService;
     private final GardenService gardenService;
     private final ArduinoDataPointService arduinoDataPointService;
+    private final FriendshipService friendshipService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the
@@ -52,10 +54,12 @@ public class MonitorGardenController extends NavBar {
     public MonitorGardenController(
             UserService userService,
             GardenService gardenService,
-            ArduinoDataPointService arduinoDataPointService) {
+            ArduinoDataPointService arduinoDataPointService,
+            FriendshipService friendshipService) {
         this.userService = userService;
         this.gardenService = gardenService;
         this.arduinoDataPointService = arduinoDataPointService;
+        this.friendshipService = friendshipService;
     }
 
     /**
@@ -83,7 +87,8 @@ public class MonitorGardenController extends NavBar {
 
         boolean notOwner = garden.getOwner().getId() != currentUser.getId();
         boolean privateGarden = !garden.isGardenPublic();
-        if (notOwner && privateGarden) {
+        boolean notFriends = !friendshipService.areFriends(optionalGarden.get().getOwner(), currentUser);
+        if (notOwner && privateGarden && notFriends) {
             throw new NoSuchGardenException(gardenId);
         }
 
