@@ -1,7 +1,5 @@
 const adviceRanges = document.querySelectorAll(".advice-range");
 
-const openAdviceButton = document.getElementById("open-advice-button");
-
 const minTemp = document.getElementById("minTemp");
 const maxTemp = document.getElementById("maxTemp");
 const minSoilMoisture = document.getElementById("minSoilMoisture");
@@ -10,22 +8,61 @@ const minAirPressure = document.getElementById("minAirPressure");
 const maxAirPressure = document.getElementById("maxAirPressure");
 const minHumidity = document.getElementById("minHumidity");
 const maxHumidity = document.getElementById("maxHumidity");
+const lightLevel = document.getElementById("lightLevel");
+
+const adviceFormDataset = document.getElementById("garden-advice-ranges").dataset;
+const openAdviceButton = document.getElementById("open-advice-button");
+
+const errorMessages = document.querySelectorAll(".error.message");
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    /**
+     * Open modal if errors have occurred when submitting form.
+     */
+    if (adviceFormDataset.openModal === "true") {
+        openAdviceButton.click();
+    }
+
+    /**
+     * Reset values when form is reopened
+     */
+    openAdviceButton.addEventListener("click", function () {
+        minTemp.value = adviceFormDataset.minTemp;
+        maxTemp.value = adviceFormDataset.maxTemp;
+
+        minSoilMoisture.value = adviceFormDataset.minMoisture;
+        maxSoilMoisture.value = adviceFormDataset.maxMoisture;
+
+        minAirPressure.value = adviceFormDataset.minPressure;
+        maxAirPressure.value = adviceFormDataset.maxPressure;
+
+        minHumidity.value = adviceFormDataset.minHumidity;
+        maxHumidity.value = adviceFormDataset.maxHumidity;
+
+        lightLevel.value = adviceFormDataset.lightLevel;
+
+        errorMessages.forEach(function (errorMessage) {
+            errorMessage.textContent = "";
+        });
+
+        adviceRanges.forEach(function (adviceRange) {
+            adviceRange.classList.remove("border", "border-danger");
+        })
+    })
+});
 
 /**
- * Maintain saved initial advice range values.
+ * Prevent form submitting on user pressing Enter
  */
-let initialValues;
-document.addEventListener("DOMContentLoaded", function() {
-    initialValues = Array.from(adviceRanges).map(input => input.value);
+adviceRanges.forEach((input) => {
+    input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+        }
+    });
 });
-openAdviceButton.addEventListener("click", function () {
-    if (initialValues) {
-        initialValues.forEach((value, index) => {
-            adviceRanges[index].value = value;
-            adviceRanges[index].classList.remove("border", "border-danger");
-        });
-    }
-})
 
 /**
  * Prevent invalid characters and invalid sizes.
