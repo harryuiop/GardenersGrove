@@ -4,7 +4,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
 
 /**
  * Data Transfer object to encapsulate advice ranges. This is used for handling any errors.
- * Note: All getters are used in HTML (ignore no usages).
  */
 public class AdviceRangesDTO {
     private final double minTemp;

@@ -9,8 +9,4 @@ public class NoSuchGardenException extends Exception {
     public NoSuchGardenException(long gardenId) {
         super("Unable to find garden with id " + gardenId + " visible to logged in user.");
     }
-
-    public NoSuchGardenException() {
-        super("Unable to view the requested information as the current logged in user.");
-    }
 }

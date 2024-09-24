@@ -10,11 +10,14 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.AdviceRangesService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,10 +43,12 @@ import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minu
  */
 @Controller
 public class MonitorGardenController extends NavBar {
+    Logger logger = LoggerFactory.getLogger(MonitorGardenController.class);
     private final UserService userService;
     private final GardenService gardenService;
     private final ArduinoDataPointService arduinoDataPointService;
     private final AdviceRangesService adviceRangesService;
+    private final FriendshipService friendshipService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the
@@ -59,10 +64,12 @@ public class MonitorGardenController extends NavBar {
             UserService userService,
             GardenService gardenService,
             ArduinoDataPointService arduinoDataPointService,
+            FriendshipService friendshipService,
             AdviceRangesService adviceRangesService) {
         this.userService = userService;
         this.gardenService = gardenService;
         this.arduinoDataPointService = arduinoDataPointService;
+        this.friendshipService = friendshipService;
         this.adviceRangesService = adviceRangesService;
     }
 
@@ -76,6 +83,7 @@ public class MonitorGardenController extends NavBar {
     @GetMapping(MONITOR_GARDEN_URI_STRING)
     public String monitorGarden(@PathVariable long gardenId, Model model)
             throws NoSuchGardenException {
+        logger.info("GET {}", monitorGardenUri(gardenId));
         return loadMonitorGardenPage(gardenId, model, new HashMap<>(), Optional.empty());
     }
 
@@ -104,7 +112,8 @@ public class MonitorGardenController extends NavBar {
 
         boolean notOwner = garden.getOwner().getId() != currentUser.getId();
         boolean privateGarden = !garden.isGardenPublic();
-        if (notOwner && privateGarden) {
+        boolean notFriends = !friendshipService.areFriends(garden.getOwner(), currentUser);
+        if (notOwner && privateGarden && notFriends) {
             throw new NoSuchGardenException(gardenId);
         }
 
