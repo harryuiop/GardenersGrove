@@ -11,6 +11,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.MONITOR_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
@@ -32,6 +34,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minu
  */
 @Controller
 public class MonitorGardenController extends NavBar {
+    Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
     private final UserService userService;
     private final GardenService gardenService;
     private final ArduinoDataPointService arduinoDataPointService;
@@ -66,6 +69,7 @@ public class MonitorGardenController extends NavBar {
     @GetMapping(MONITOR_GARDEN_URI_STRING)
     public String monitorGarden(@PathVariable long gardenId, Model model)
             throws NoSuchGardenException {
+        logger.info("GET {}", monitorGardenUri(gardenId));
 
         this.updateGardensNavBar(model, gardenService, userService);
 
