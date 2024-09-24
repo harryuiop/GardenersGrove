@@ -139,7 +139,7 @@
                         Compare <i class="bi bi-layers"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        <li th:each="userGarden: ${gardenList}"><a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item" href="#" th:text="${userGarden.getName()}"></a></li>
+                        <li th:each="userGarden: ${gardenList}"><a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" href="#" th:text="${userGarden.getName()}"></a></li>
                     </ul>
                 </div>
                 <div class="row" id="temp-units">
