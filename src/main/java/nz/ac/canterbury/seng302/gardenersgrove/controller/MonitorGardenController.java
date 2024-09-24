@@ -87,7 +87,7 @@ public class MonitorGardenController extends NavBar {
 
         boolean notOwner = garden.getOwner().getId() != currentUser.getId();
         boolean privateGarden = !garden.isGardenPublic();
-        boolean notFriends = !friendshipService.areFriends(optionalGarden.get().getOwner(), currentUser);
+        boolean notFriends = !friendshipService.areFriends(garden.getOwner(), currentUser);
         if (notOwner && privateGarden && notFriends) {
             throw new NoSuchGardenException(gardenId);
         }
