@@ -48,7 +48,7 @@ class MonitorGardenControllerTest {
     @SpyBean
     private UserService userService;
 
-    private User user;
+    static User user;
 
     @BeforeEach
     void saveGarden() {
@@ -158,7 +158,6 @@ class MonitorGardenControllerTest {
     void requestMonitorPage_randomUserNotPublic_notAbleToVisit() throws Exception {
         User randomUser = new User("randomUser@mail.com", "Random", "User", "Password1!", "");
         userRepository.save(randomUser);
-        garden.setIsGardenPublic(false);
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(randomUser);
         mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
@@ -174,6 +173,18 @@ class MonitorGardenControllerTest {
         Assertions.assertEquals(user, garden.getOwner());
         mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+    @Test
+    void requestMonitorPage_nonFriendPublicGarden_ableToVisit() throws Exception {
+        User randomUser = new User("randomUser@mail.com", "Random", "User", "Password1!", "");
+        userRepository.save(randomUser);
+        garden.setIsGardenPublic(true);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(randomUser);
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+        garden.setIsGardenPublic(false);
 
     }
 }
