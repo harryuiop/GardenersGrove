@@ -1,17 +1,10 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
-import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
+import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
-import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
-import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
 
 /**
  * Controller for the monitor garden page. For viewing statistics and live
@@ -38,28 +26,28 @@ public class MonitorGardenController extends NavBar {
     Logger logger = LoggerFactory.getLogger(ViewGardenController.class);
     private final UserService userService;
     private final GardenService gardenService;
-    private final ArduinoDataPointService arduinoDataPointService;
     private final FriendshipService friendshipService;
+    private final ArduinoControllerDataService arduinoControllerDataService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the
      * dependencies.
      *
-     * @param gardenService           A Garden database access object.
-     * @param userService             A User database access object.
-     * @param arduinoDataPointService A arduinoDataPointService database access
-     *                                object.
+     * @param gardenService                  A Garden database access object.
+     * @param userService                    A User database access object.
+     * @param arduinoControllerDataService   A ArduinoControllerDataService object.
+     * @param friendshipService              A friendshipService object.
      */
     @Autowired
     public MonitorGardenController(
             UserService userService,
             GardenService gardenService,
-            ArduinoDataPointService arduinoDataPointService,
-            FriendshipService friendshipService) {
+            FriendshipService friendshipService,
+            ArduinoControllerDataService arduinoControllerDataService) {
         this.userService = userService;
         this.gardenService = gardenService;
-        this.arduinoDataPointService = arduinoDataPointService;
         this.friendshipService = friendshipService;
+        this.arduinoControllerDataService = arduinoControllerDataService;
     }
 
     /**
@@ -100,142 +88,12 @@ public class MonitorGardenController extends NavBar {
         // This is where we input if the arduino is connected. Still to be implemented.
         model.addAttribute("connected", false);
 
-        addDeviceStatusInformationToModel(model, garden);
-        addCurrentSensorReadingsToModel(model, garden);
-        addGraphDataToModel(model, gardenId);
-        addArduinoDataThresholds(model);
-        addAdviceMessagesToModel(model);
+        arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
+        arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
+        arduinoControllerDataService.addGraphDataToModel(model, gardenId);
+        arduinoControllerDataService.addArduinoDataThresholds(model);
+        arduinoControllerDataService.addAdviceMessagesToModel(model);
 
         return "gardenMonitoring";
     }
-
-    /**
-     * Helper method to add current sensor readings to HTML model.
-     *
-     * @param model The Thymeleaf model to add information to.
-     * @param garden The Garden to get sensor readings for.
-     */
-    private void addCurrentSensorReadingsToModel(Model model, Garden garden) {
-        String tempReading = "-";
-        String moistReading = "-";
-        String lightReading = "-";
-        String pressureReading = "-";
-        String humidReading = "-";
-        boolean tempSensorConnected;
-        boolean moistSensorConnected;
-        boolean lightSensorConnected;
-        boolean pressureSensorConnected;
-        boolean humidSensorConnected;
-
-        ArduinoDataPoint arduinoDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
-        if (arduinoDataPoint != null) {
-            if (arduinoDataPoint.getTempCelsius() != null) {
-                tempSensorConnected = isTempConnected(arduinoDataPoint.getTempCelsius());
-                tempReading = (tempSensorConnected) ? String.format("%.1f", arduinoDataPoint.getTempCelsius()) : "-";
-            }
-            if (arduinoDataPoint.getMoisturePercent() != null) {
-                moistSensorConnected = isMoistConnected(arduinoDataPoint.getMoisturePercent());
-                moistReading = (moistSensorConnected) ? String.format("%.0f", arduinoDataPoint.getMoisturePercent())
-                        : "-";
-            }
-            if (arduinoDataPoint.getLightPercent() != null) {
-                lightSensorConnected = isLightConnected(arduinoDataPoint.getLightPercent());
-                lightReading = (lightSensorConnected) ? String.format("%.0f", arduinoDataPoint.getLightPercent()) : "-";
-            }
-            if (arduinoDataPoint.getAtmosphereAtm() != null) {
-                pressureSensorConnected = isPressureConnected(arduinoDataPoint.getAtmosphereAtm());
-                pressureReading = (pressureSensorConnected) ? String.format("%.3f", arduinoDataPoint.getAtmosphereAtm())
-                        : "-";
-            }
-            if (arduinoDataPoint.getHumidityPercent() != null) {
-                humidSensorConnected = isHumidityConnected(arduinoDataPoint.getHumidityPercent());
-                humidReading = (humidSensorConnected) ? String.format("%.0f", arduinoDataPoint.getHumidityPercent())
-                        : "-";
-            }
-
-        }
-        model.addAttribute("tempReading", tempReading);
-        model.addAttribute("moistReading", moistReading);
-        model.addAttribute("lightReading", lightReading);
-        model.addAttribute("pressureReading", pressureReading);
-        model.addAttribute("humidReading", humidReading);
-    }
-
-    /**
-     * Add all advice message information to the Thymeleaf model.
-     *
-     * @param model The Thymeleaf model to add information to.
-     */
-    private void addAdviceMessagesToModel(Model model) {
-        model.addAttribute("temperatureAdvice", "Temperature");
-        model.addAttribute("moistureAdvice", "Moisture");
-        model.addAttribute("lightAdvice", "Light");
-        model.addAttribute("humidityAdvice", "Humidity");
-    }
-
-    /**
-     * Helper method to add graph data to html model.
-     *
-     * @param model The Thymeleaf model to add information to.
-     * @param gardenId The ID number of the garden to get graph data for.
-     */
-    private void addGraphDataToModel(Model model, Long gardenId) {
-        FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId, LocalDateTime.now());
-        FormattedGraphData weekData = arduinoDataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
-        FormattedGraphData monthData = arduinoDataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
-
-        model.addAttribute("graphDay", dayData);
-        model.addAttribute("graphWeek", weekData);
-        model.addAttribute("graphMonth", monthData);
-    }
-
-    /**
-     * Add device status, and time since last reading to html model.
-     *
-     * @param model Thy Thymeleaf model to add information to.
-     * @param garden The Garden to check device status information of.
-     */
-    private void addDeviceStatusInformationToModel(Model model, Garden garden) {
-        String deviceStatus;
-        ArduinoDataPoint lastDataPoint;
-        long minutesSinceLastReading;
-        String timeSinceLastReading = "";
-
-        if (garden.getArduinoId() == null) {
-            deviceStatus = "NOT_LINKED";
-        } else {
-            lastDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
-            if (lastDataPoint == null) {
-                deviceStatus = "NO_DATA";
-            } else {
-                minutesSinceLastReading = Duration.between(LocalDateTime.now(), lastDataPoint.getTime()).abs()
-                        .toMinutes();
-                timeSinceLastReading = minutestoTimeString(minutesSinceLastReading);
-                if (minutesSinceLastReading <= 5) {
-                    deviceStatus = "UP_TO_DATE";
-                } else {
-                    deviceStatus = "OUT_OF_DATE";
-                }
-            }
-        }
-        model.addAttribute("deviceStatus", deviceStatus);
-        model.addAttribute("timeSinceLastReading", timeSinceLastReading);
-    }
-
-    /**
-     * Add all the data thresholds to the model to be used for the valid ranges
-     * on the advice range inputs.
-     */
-    private void addArduinoDataThresholds(Model model) {
-        model.addAttribute("MIN_VALID_TEMP", ArduinoDataValidator.MIN_TEMPERATURE);
-        model.addAttribute("MAX_VALID_TEMP", ArduinoDataValidator.MAX_TEMPERATURE);
-        model.addAttribute("MIN_VALID_MOISTURE", ArduinoDataValidator.MIN_MOISTURE);
-        model.addAttribute("MAX_VALID_MOISTURE", ArduinoDataValidator.MAX_MOISTURE);
-        model.addAttribute("MIN_VALID_PRESSURE", ArduinoDataValidator.MIN_ATMOSPHERE);
-        model.addAttribute("MAX_VALID_PRESSURE", ArduinoDataValidator.MAX_ATMOSPHERE);
-        model.addAttribute("MIN_VALID_HUMIDITY", ArduinoDataValidator.MIN_HUMIDITY);
-        model.addAttribute("MAX_VALID_HUMIDITY", ArduinoDataValidator.MAX_HUMIDITY);
-        model.addAttribute("LIGHT_LEVELS", Arrays.asList(LightLevel.values()));
-    }
-
 }
