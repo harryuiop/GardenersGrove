@@ -2,6 +2,9 @@ const graphDataSet = document.getElementById("display-graphs").dataset;
 const monthLabels = JSON.parse(graphDataSet.monthLabels);
 const dayLabels = JSON.parse(graphDataSet.dayLabels);
 
+const garden1 = document.getElementById("garden-names").dataset.yourGarden;
+const garden2 = document.getElementById("garden-names").dataset.theirGarden;
+
 const GARDEN_1_COLOR = 'rgb(75, 192, 192)';
 const GARDEN_2_COLOR = 'rgb(52, 152, 219)';
 
@@ -62,13 +65,13 @@ function compareMonthGraphs(sensorName, data1, data2) {
         {
             labels: monthLabels,
             datasets: [{
-                label: `Garden 1 Average ${sensorName} per Day`,
+                label: `${garden1} Average ${sensorName} per Day`,
                 data: data1,
                 fill: false,
                 borderColor: GARDEN_1_COLOR,
                 tension: 0.1
             }, {
-                label: `Garden 2 Average ${sensorName} per Day`,
+                label: `${garden2} Average ${sensorName} per Day`,
                 data: data2,
                 fill: false,
                 borderColor: GARDEN_2_COLOR,
@@ -82,13 +85,13 @@ function compareDayGraphs(sensorName, data1, data2) {
         {
             labels: dayLabels,
             datasets: [{
-                label: `Garden 1 Average ${sensorName} per Day`,
+                label: `${garden1} Average ${sensorName} per Day`,
                 data: data1,
                 fill: false,
                 borderColor: GARDEN_1_COLOR,
                 tension: 0.1
             }, {
-                label: `Garden 2 Average ${sensorName} per Day`,
+                label: `${garden2} Average ${sensorName} per Day`,
                 data: data2,
                 fill: false,
                 borderColor: GARDEN_2_COLOR,
