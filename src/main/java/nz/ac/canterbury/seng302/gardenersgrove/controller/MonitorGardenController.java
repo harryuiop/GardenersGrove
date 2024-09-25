@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoControllerDataService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.AdviceRangesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -169,7 +170,6 @@ public class MonitorGardenController extends NavBar {
         if (optionalGarden.isEmpty()) {
             return loadMonitorGardenPage(gardenId, model, new HashMap<>(), Optional.empty());
         }
-}
 
         Garden garden = optionalGarden.get();
         AdviceRanges adviceRanges = garden.getAdviceRanges();
