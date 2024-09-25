@@ -12,10 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.Optional;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.COMPARE_GARDEN_URI_STRING;
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
+
 
 /**
  * Controller for the compare garden page. For viewing statistics of your garden and a chosen garden.
@@ -74,6 +74,7 @@ public class CompareGardensController extends NavBar {
         model.addAttribute("yourGarden", yourGarden);
         model.addAttribute("theirGarden", theirGarden);
         model.addAttribute("owner", yourGarden.getOwner() == currentUser);
+        model.addAttribute("gardenMonitoringUri", monitorGardenUri(yourGarden.getId()));
 
         arduinoControllerDataService.addGraphDataToModel(model, yourGardenId, theirGardenId);
 
