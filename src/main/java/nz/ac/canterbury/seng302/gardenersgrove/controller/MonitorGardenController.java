@@ -190,14 +190,21 @@ public class MonitorGardenController extends NavBar {
         return loadMonitorGardenPage(gardenId, model, errors, Optional.of(adviceRangesDTO));
     }
 
+    /**
+     * Resets the advice range of the requested garden.
+     *
+     * @param gardenId The ID number of the garden to reset ranges for.
+     * @throws NoSuchGardenException If there is no garden with ID {@code gardenId}.
+     */
     @PostMapping(RESET_ADVICE_RANGES_URI_STRING)
     @ResponseBody
-    void funcName(@PathVariable long gardenId) throws NoSuchGardenException {
+    void resetAdviceRanges(@PathVariable long gardenId) throws NoSuchGardenException {
         logger.info("POST {}", resetAdviceRangesUri(gardenId));
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
             throw new NoSuchGardenException(gardenId);
         }
+
         Garden garden = optionalGarden.get();
         garden.getAdviceRanges().resetToDefaults();
         gardenService.saveGarden(garden);
