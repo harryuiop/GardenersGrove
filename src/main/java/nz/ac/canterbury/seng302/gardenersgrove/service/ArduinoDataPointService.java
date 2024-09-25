@@ -135,7 +135,7 @@ public class ArduinoDataPointService {
             case "LIGHT" ->
                     points.stream().max(Comparator.comparing(ArduinoDataPoint::getLightPercent))
                             .map(ArduinoDataPoint::getLightPercent).orElse(null);
-            case "PRESSURE" ->
+            case "AIR PRESSURE" ->
                     points.stream().max(Comparator.comparing(ArduinoDataPoint::getAtmosphereAtm))
                             .map(ArduinoDataPoint::getAtmosphereAtm).orElse(null);
             default -> null;
@@ -166,7 +166,7 @@ public class ArduinoDataPointService {
             case "LIGHT" ->
                     points.stream().min(Comparator.comparing(ArduinoDataPoint::getLightPercent))
                             .map(ArduinoDataPoint::getLightPercent).orElse(null);
-            case "PRESSURE" ->
+            case "AIR PRESSURE" ->
                     points.stream().min(Comparator.comparing(ArduinoDataPoint::getAtmosphereAtm))
                             .map(ArduinoDataPoint::getAtmosphereAtm).orElse(null);
             default -> null;

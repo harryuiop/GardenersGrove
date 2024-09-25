@@ -31,13 +31,6 @@ class ArduinoDataPointServiceTest {
     static Garden garden = new Garden(user, "Garden", null, new Location("New Zealand", "Christchurch"),
             null, true);
 
-//    @BeforeAll
-//    static void setArduinoDataPointService() {
-//        userRepository.save(user);
-//        gardenRepository.save(garden);
-//
-//    }
-
     @BeforeEach
     void setUpArduinoDataPointService() {
         arduinoDataPointRepositoryMock = Mockito.mock(ArduinoDataPointRepository.class);
@@ -60,7 +53,7 @@ class ArduinoDataPointServiceTest {
     @CsvSource({
             "TEMPERATURE, 9",
             "HUMIDITY, 10",
-            "PRESSURE, 11",
+            "AIR PRESSURE, 11",
             "LIGHT, 12",
             "MOISTURE, 13"
     })
@@ -72,7 +65,7 @@ class ArduinoDataPointServiceTest {
     @CsvSource({
             "TEMPERATURE, 0",
             "HUMIDITY, 1",
-            "PRESSURE, 2",
+            "AIR PRESSURE, 2",
             "LIGHT, 3",
             "MOISTURE, 4"
     })

@@ -3,7 +3,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.utility;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
-import org.h2.util.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
@@ -11,11 +12,14 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
 public class GardenPlantSuggestions {
+    Logger logger = LoggerFactory.getLogger(GardenPlantSuggestions.class);
 
     ArduinoDataPointService arduinoDataPointService;
 
@@ -35,11 +39,39 @@ public class GardenPlantSuggestions {
 
     public String getPlantSuggestionsForGarden(Garden garden) {
         //Current default prompt for testing
-        String prompt = "give me 3 plant suggestions for a christchurch (new zealand) garden";
+        StringBuilder prompt = new StringBuilder("give me 3 plant suggestions for a christchurch (new zealand) garden");
 
         if (arduinoDataPointService.checkFourteenDaysOfData(garden.getId())) {
             // Create prompt and get suggestion based on Arduino data
-            return "";
+            prompt = new StringBuilder("Given me 3 plant suggestions given my garden has");
+            List<String> sensors = new ArrayList<>(Arrays.asList("Temperature", "Moisture", "Light", "Air Pressure", "Humidity"));
+            for (String sensor : sensors) {
+                String unit;
+                if (sensor.equals("Temperature")) {
+                    unit = "C";
+                } else if (sensor.equals("Air Pressure")) {
+                    unit = "atm";
+                } else {
+                    unit = "%";
+                }
+                Double max = arduinoDataPointService.getMaxValueInRange(garden.getId(), LocalDateTime.now().minusDays(14), sensor.toUpperCase());
+                Double min = arduinoDataPointService.getMinValueInRange(garden.getId(), LocalDateTime.now().minusDays(14), sensor.toUpperCase());
+                if (max != null && min != null) {
+                    prompt.append(", ").append(sensor).append(" between ").append(min).append(unit).append("-").append(max).append(unit);
+                }
+            }
+            logger.info("Request sent to gemma: "+prompt);
+
+            if (prompt.toString().equals("Given me 3 plant suggestions given my garden has")) {
+                try {
+                    return getSuggestions(prompt.toString());
+                } catch (ProfanityCheckingException e) {
+                    logger.error(e.getMessage());
+                    return "Profanity found";
+                }
+            }
+
+            return "Please Check Arduino Connection";
         } else if (garden.getLocation().isLocationRecognized()) {
            // Create prompt and get suggestion based on location
             return "";
