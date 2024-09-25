@@ -1,10 +1,12 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.SensorAdviceMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
@@ -34,7 +37,7 @@ public class ArduinoControllerDataService {
      * @param model The Thymeleaf model to add information to.
      * @param gardenId The ID number of the garden to get graph data for.
      */
-    public void addGraphDataToModel(Model model, Long gardenId) {
+    public void addGraphDataAndAdviceMessagesToModel(Model model, Long gardenId, GardenService gardenService) {
         FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId, LocalDateTime.now());
         FormattedGraphData weekData = arduinoDataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
         FormattedGraphData monthData = arduinoDataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
@@ -42,6 +45,16 @@ public class ArduinoControllerDataService {
         model.addAttribute("graphDay", dayData);
         model.addAttribute("graphWeek", weekData);
         model.addAttribute("graphMonth", monthData);
+
+        Optional<Garden> garden = gardenService.getGardenById(gardenId);
+
+        if (garden.isEmpty()) return;
+
+        AdviceRanges adviceRanges = garden.get().getAdviceRanges();
+
+        SensorAdviceMessages sensorAdviceMessages = new SensorAdviceMessages(dayData, adviceRanges);
+
+        sensorAdviceMessages.addTemperatureAdviceToModel(model);
     }
 
     /**
@@ -110,18 +123,6 @@ public class ArduinoControllerDataService {
         model.addAttribute("lightReading", lightReading);
         model.addAttribute("pressureReading", pressureReading);
         model.addAttribute("humidReading", humidReading);
-    }
-
-    /**
-     * Add all advice message information to the Thymeleaf model.
-     *
-     * @param model The Thymeleaf model to add information to.
-     */
-    public void addAdviceMessagesToModel(Model model) {
-        model.addAttribute("temperatureAdvice", "Temperature");
-        model.addAttribute("moistureAdvice", "Moisture");
-        model.addAttribute("lightAdvice", "Light");
-        model.addAttribute("humidityAdvice", "Humidity");
     }
 
     /**
