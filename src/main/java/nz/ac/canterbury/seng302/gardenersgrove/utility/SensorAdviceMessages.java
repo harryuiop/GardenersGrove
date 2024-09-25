@@ -35,11 +35,11 @@ public class SensorAdviceMessages {
 
 
     private boolean isPointBelowMinInLast24Hours(List<Double> sensorReadings, double sensorMin) {
-        return !sensorReadings.stream().allMatch(sensorReading -> sensorReading < sensorMin);
+        return sensorReadings.stream().anyMatch(sensorReading -> sensorReading < sensorMin);
     }
 
     private boolean isPointAboveMaxInLast24Hours(List<Double> sensorReadings, double sensorMin) {
-        return !sensorReadings.stream().allMatch(sensorReading -> sensorReading > sensorMin);
+        return sensorReadings.stream().anyMatch(sensorReading -> sensorReading > sensorMin);
     }
 
     /**
