@@ -33,14 +33,13 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  * updates for a specific garden.
  */
 @Controller
-public class MonitorGardenController extends NavBar {
+class MonitorGardenController extends NavBar {
     Logger logger = LoggerFactory.getLogger(MonitorGardenController.class);
     private final UserService userService;
     private final GardenService gardenService;
     private final FriendshipService friendshipService;
     private final ArduinoControllerDataService arduinoControllerDataService;
     private final AdviceRangesService adviceRangesService;
-    private final ArduinoControllerDataService arduinoControllerDataService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the
