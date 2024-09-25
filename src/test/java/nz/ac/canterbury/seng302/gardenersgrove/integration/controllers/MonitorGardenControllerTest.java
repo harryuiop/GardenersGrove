@@ -284,7 +284,14 @@ class MonitorGardenControllerTest {
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
-        Assertions.assertEquals(garden.getAdviceRanges(), new AdviceRanges());
+        AdviceRanges ranges = garden.getAdviceRanges();
+        Assertions.assertEquals(ranges.getMinTemperature(), AdviceRanges.DEFAULT_MIN_TEMPERATURE);
+        Assertions.assertEquals(ranges.getMaxTemperature(), AdviceRanges.DEFAULT_MAX_TEMPERATURE);
+        Assertions.assertEquals(ranges.getMinHumidity(), AdviceRanges.DEFAULT_MIN_HUMIDITY);
+        Assertions.assertEquals(ranges.getMaxHumidity(), AdviceRanges.DEFAULT_MAX_HUMIDITY);
+        Assertions.assertEquals(ranges.getMinMoisture(), AdviceRanges.DEFAULT_MIN_MOISTURE);
+        Assertions.assertEquals(ranges.getMaxMoisture(), AdviceRanges.DEFAULT_MAX_MOISTURE);
+        Assertions.assertEquals(ranges.getLightLevel(), AdviceRanges.DEFAULT_LIGHT_LEVEL);
     }
 
     @Test

@@ -9,15 +9,15 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 @Entity
 public class AdviceRanges {
 
-    private static final double DEFAULT_MIN_TEMPERATURE = 10;
-    private static final double DEFAULT_MAX_TEMPERATURE = 30;
-    private static final double DEFAULT_MIN_MOISTURE = 20;
-    private static final double DEFAULT_MAX_MOISTURE = 90;
-    private static final double DEFAULT_MIN_PRESSURE = 0.8;
-    private static final double DEFAULT_MAX_PRESSURE = 1.1;
-    private static final double DEFAULT_MIN_HUMIDITY = 10;
-    private static final double DEFAULT_MAX_HUMIDITY = 90;
-    private static final LightLevel DEFAULT_LIGHT_LEVEL = LightLevel.PART_SUN;
+    public static final double DEFAULT_MIN_TEMPERATURE = 10;
+    public static final double DEFAULT_MAX_TEMPERATURE = 30;
+    public static final double DEFAULT_MIN_MOISTURE = 20;
+    public static final double DEFAULT_MAX_MOISTURE = 90;
+    public static final double DEFAULT_MIN_PRESSURE = 0.8;
+    public static final double DEFAULT_MAX_PRESSURE = 1.1;
+    public static final double DEFAULT_MIN_HUMIDITY = 10;
+    public static final double DEFAULT_MAX_HUMIDITY = 90;
+    public static final LightLevel DEFAULT_LIGHT_LEVEL = LightLevel.PART_SUN;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -162,21 +162,5 @@ public class AdviceRanges {
         this.maxPressure = DEFAULT_MAX_PRESSURE;
 
         this.lightLevel = DEFAULT_LIGHT_LEVEL;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof AdviceRanges adviceRanges) {
-            return this.minTemperature == adviceRanges.minTemperature
-                    && this.maxTemperature == adviceRanges.maxTemperature
-                    && this.minHumidity == adviceRanges.minHumidity
-                    && this.maxHumidity == adviceRanges.maxHumidity
-                    && this.minMoisture == adviceRanges.minMoisture
-                    && this.maxMoisture == adviceRanges.maxMoisture
-                    && this.minPressure == adviceRanges.minPressure
-                    && this.maxPressure == adviceRanges.maxPressure
-                    && this.lightLevel == adviceRanges.lightLevel;
-        }
-        return false;
     }
 }
