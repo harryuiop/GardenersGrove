@@ -109,7 +109,7 @@ class MonitorGardenController extends NavBar {
         }
 
         model.addAttribute("garden", garden);
-        model.addAttribute("owner", garden.getOwner() == currentUser);
+        model.addAttribute("owner", !notOwner);
         model.addAttribute("gardenList", gardenService.getAllGardens());
         model.addAttribute("editAdviceUri", EDIT_ADVICE_RANGES_URI_STRING);
         model.addAllAttributes(adviceRangesErrors);

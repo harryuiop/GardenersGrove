@@ -65,6 +65,8 @@ class MonitorGardenControllerTest {
     @BeforeEach
     void resetData() {
         Mockito.reset(arduinoDataPointService);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
+
     }
 
     @Test
