@@ -10,13 +10,13 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 public class AdviceRanges {
 
     private static final double DEFAULT_MIN_TEMPERATURE = 10;
-    private static final double DEFAULT_MAX_TEMPERATURE = 10;
-    private static final double DEFAULT_MIN_MOISTURE = 10;
-    private static final double DEFAULT_MAX_MOISTURE = 10;
+    private static final double DEFAULT_MAX_TEMPERATURE = 30;
+    private static final double DEFAULT_MIN_MOISTURE = 20;
+    private static final double DEFAULT_MAX_MOISTURE = 90;
     private static final double DEFAULT_MIN_PRESSURE = 0.8;
     private static final double DEFAULT_MAX_PRESSURE = 1.1;
     private static final double DEFAULT_MIN_HUMIDITY = 10;
-    private static final double DEFAULT_MAX_HUMIDITY = 10;
+    private static final double DEFAULT_MAX_HUMIDITY = 90;
     private static final LightLevel DEFAULT_LIGHT_LEVEL = LightLevel.PART_SUN;
 
     @Id
