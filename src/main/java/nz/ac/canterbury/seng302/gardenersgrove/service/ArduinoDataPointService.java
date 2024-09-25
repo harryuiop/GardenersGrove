@@ -7,6 +7,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -106,5 +107,9 @@ public class ArduinoDataPointService {
 
         return ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocks, accessTime);
     }
+
+//    public int checkFourteenDaysOfData(Long gardenId) {
+//
+//    }
 
 }
