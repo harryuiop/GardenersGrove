@@ -23,6 +23,12 @@ const weekLabels = JSON.parse(graphDataSet.weekLabels);
 const GRAPH_COLOR = 'rgb(75, 192, 192)';
 const WEEK_GRAPH_COLORS = ['rgb(44, 62, 80)', 'rgb(241, 196, 15)', 'rgb(52, 152, 219)', 'rgb(231, 76, 60)'];
 
+// Advice Reference
+const referenceLink = document.querySelector('[data-bs-target="#referenceModal"]');
+const modalContent = document.getElementById('modalReferenceContent');
+const adviceDataset = document.getElementById('advice').dataset;
+const referencesDataset = document.getElementById('references').dataset;
+
 // Graph Type enum, used for labelling.
 const GraphType = Object.freeze({
     MONTH: 0, WEEK: 1, DAY: 2
@@ -51,11 +57,10 @@ function makeActive(buttonId) {
     button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead';
 
     allButtons.forEach( allButtonsItem => {
-            if (allButtonsItem !== buttonId) {
-                document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
-            }
+        if (allButtonsItem !== buttonId) {
+            document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
         }
-    )
+    })
 
     currentlySelectedSensorView = buttonId;
 
@@ -448,4 +453,34 @@ function alertMessage(sensor) {
 function closeAdvicePopup() {
     sensorAdviceMessageDisabled.set(currentlySelectedSensorView, true);
     advicePopup.style.display = "none";
+}
+
+referenceLink.addEventListener('click', function(e) {
+    // Prevent the default action of the link
+    e.preventDefault();
+
+    // Update the modal content based on the advice
+    showReference();
+})
+
+/**
+ * Loads the corresponding references in the modal depending on the advice message
+ */
+function showReference() {
+    switch (currentlySelectedSensorView){
+        case "Temperature":
+            modalContent.innerHTML = referencesDataset.temperatureRef;
+            break;
+        case "Moisture":
+            modalContent.innerHTML = referencesDataset.moistureRef;
+            break;
+        case "Light":
+            modalContent.innerHTML = referencesDataset.lightRef;
+            break;
+        case "Humidity":
+            modalContent.innerHTML = referencesDataset.humidityRef;
+            break;
+        default:
+            console.error("References cannot be loaded with this sensor id");
+    }
 }
