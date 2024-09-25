@@ -39,35 +39,18 @@ public class GardenPlantSuggestions {
 
     public String getPlantSuggestionsForGarden(Garden garden) {
         //Current default prompt for testing
-        StringBuilder prompt = new StringBuilder("give me 3 plant suggestions for a christchurch (new zealand) garden");
+        String prompt = "give me 3 plant suggestions for a christchurch (new zealand) garden";
 
         if (arduinoDataPointService.checkFourteenDaysOfData(garden.getId())) {
             // Create prompt and get suggestion based on Arduino data
-            prompt = new StringBuilder("Given me 3 plant suggestions given my garden has");
-            List<String> sensors = new ArrayList<>(Arrays.asList("Temperature", "Moisture", "Light", "Air Pressure", "Humidity"));
-            for (String sensor : sensors) {
-                String unit;
-                if (sensor.equals("Temperature")) {
-                    unit = "C";
-                } else if (sensor.equals("Air Pressure")) {
-                    unit = "atm";
-                } else {
-                    unit = "%";
-                }
-                Double max = arduinoDataPointService.getMaxValueInRange(garden.getId(), LocalDateTime.now().minusDays(14), sensor.toUpperCase());
-                Double min = arduinoDataPointService.getMinValueInRange(garden.getId(), LocalDateTime.now().minusDays(14), sensor.toUpperCase());
-                if (max != null && min != null) {
-                    prompt.append(", ").append(sensor).append(" between ").append(min).append(unit).append("-").append(max).append(unit);
-                }
-            }
-            logger.info("Request sent to gemma: "+prompt);
+            String arduinoPrompt = getArduinoPrompt(garden.getId());
 
-            if (prompt.toString().equals("Given me 3 plant suggestions given my garden has")) {
+            if (!arduinoPrompt.equals("Given me 3 plant suggestions given my garden has")) {
                 try {
-                    return getSuggestions(prompt.toString());
+                    return getSuggestions(arduinoPrompt);
                 } catch (ProfanityCheckingException e) {
                     logger.error(e.getMessage());
-                    return "Profanity found";
+                    return "Invalid Response, no suggestions";
                 }
             }
 
@@ -107,5 +90,28 @@ public class GardenPlantSuggestions {
 
         List<String> responseList = Arrays.asList(responseMessage.body().split("\""));
         return responseList.get(11);
+    }
+
+    public String getArduinoPrompt(long gardenId) {
+        List<String> sensors = new ArrayList<>(Arrays.asList("Temperature", "Moisture", "Light", "Air Pressure", "Humidity"));
+        StringBuilder prompt = new StringBuilder("Given me 3 plant suggestions given my garden has");
+
+        for (String sensor : sensors) {
+            String unit;
+            if (sensor.equals("Temperature")) {
+                unit = "C";
+            } else if (sensor.equals("Air Pressure")) {
+                unit = "atm";
+            } else {
+                unit = "%";
+            }
+            Double max = arduinoDataPointService.getMaxValueInRange(gardenId, LocalDateTime.now().minusDays(14), sensor.toUpperCase());
+            Double min = arduinoDataPointService.getMinValueInRange(gardenId, LocalDateTime.now().minusDays(14), sensor.toUpperCase());
+            if (max != null && min != null) {
+                prompt.append(", ").append(sensor).append(" between ").append(min).append(unit).append("-").append(max).append(unit);
+            }
+        }
+        logger.info("Request sent to gemma: "+prompt);
+        return prompt.toString();
     }
 }
