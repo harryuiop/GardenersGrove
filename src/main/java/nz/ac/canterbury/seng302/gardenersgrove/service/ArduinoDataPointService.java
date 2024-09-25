@@ -6,9 +6,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointReposi
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -113,8 +111,66 @@ public class ArduinoDataPointService {
         return true;
     }
 
-    public double getMaxValueInRange(Long gardenId, LocalDateTime startDate, String sensorName) {
+    /**
+     * Given a garden and a sensor name as well as the date of which the data points should start from the method will
+     * find what the maximum value for that sensor is and return it.
+     * @param gardenId      The garden which the data points are relevant to.
+     * @param startDate     When the oldest data should be taken from.
+     * @param sensorName    The name of the sensor of which the data point belongs to.
+     * @return              A double value of the highest value found or null if no values are found or
+     *                      the sensor name is wrong.
+     */
+    public Double getMaxValueInRange(Long gardenId, LocalDateTime startDate, String sensorName) {
         List<ArduinoDataPoint> points = dataPointRepository.getArduinoDataPointOverDays(gardenId, startDate, LocalDateTime.now());
+        return switch (sensorName) {
+            case "TEMPERATURE" ->
+                    points.stream().max(Comparator.comparing(ArduinoDataPoint::getTempCelsius))
+                            .map(ArduinoDataPoint::getTempCelsius).orElse(null);
+            case "HUMIDITY" ->
+                    points.stream().max(Comparator.comparing(ArduinoDataPoint::getHumidityPercent))
+                            .map(ArduinoDataPoint::getHumidityPercent).orElse(null);
+            case "MOISTURE" ->
+                    points.stream().max(Comparator.comparing(ArduinoDataPoint::getMoisturePercent))
+                            .map(ArduinoDataPoint::getMoisturePercent).orElse(null);
+            case "LIGHT" ->
+                    points.stream().max(Comparator.comparing(ArduinoDataPoint::getLightPercent))
+                            .map(ArduinoDataPoint::getLightPercent).orElse(null);
+            case "PRESSURE" ->
+                    points.stream().max(Comparator.comparing(ArduinoDataPoint::getAtmosphereAtm))
+                            .map(ArduinoDataPoint::getAtmosphereAtm).orElse(null);
+            default -> null;
+        };
+    }
+
+    /**
+     * Given a garden and a sensor name as well as the date of which the data points should start from the method will
+     * find what the minimum value for that sensor is and return it.
+     * @param gardenId      The garden which the data points are relevant to.
+     * @param startDate     When the oldest data should be taken from.
+     * @param sensorName    The name of the sensor of which the data point belongs to.
+     * @return              A double value of the lowest value found or null if no values are found or
+     *                      the sensor name is wrong.
+     */
+    public Double getMinValueInRange(Long gardenId, LocalDateTime startDate, String sensorName) {
+        List<ArduinoDataPoint> points = dataPointRepository.getArduinoDataPointOverDays(gardenId, startDate, LocalDateTime.now());
+        return switch (sensorName) {
+            case "TEMPERATURE" ->
+                    points.stream().min(Comparator.comparing(ArduinoDataPoint::getTempCelsius))
+                            .map(ArduinoDataPoint::getTempCelsius).orElse(null);
+            case "HUMIDITY" ->
+                    points.stream().min(Comparator.comparing(ArduinoDataPoint::getHumidityPercent))
+                            .map(ArduinoDataPoint::getHumidityPercent).orElse(null);
+            case "MOISTURE" ->
+                    points.stream().min(Comparator.comparing(ArduinoDataPoint::getMoisturePercent))
+                            .map(ArduinoDataPoint::getMoisturePercent).orElse(null);
+            case "LIGHT" ->
+                    points.stream().min(Comparator.comparing(ArduinoDataPoint::getLightPercent))
+                            .map(ArduinoDataPoint::getLightPercent).orElse(null);
+            case "PRESSURE" ->
+                    points.stream().min(Comparator.comparing(ArduinoDataPoint::getAtmosphereAtm))
+                            .map(ArduinoDataPoint::getAtmosphereAtm).orElse(null);
+            default -> null;
+        };
     }
 
 }
