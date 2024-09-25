@@ -134,6 +134,8 @@ function renderTemperatureGraphs() {
     const tempMonthResults = JSON.parse(graphDataSet.monthTemp);
     const tempWeeklyResults = JSON.parse(graphDataSet.weekTemp);
     const tempDayResults = JSON.parse(graphDataSet.dayTemp);
+    const minTemperature = JSON.parse(graphDataSet.minTemp)
+    const maxTemperature = JSON.parse(graphDataSet.maxTemp)
 
     tempUnits.style.display = "block";
 
@@ -147,15 +149,15 @@ function renderTemperatureGraphs() {
 
     const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
     monthGraph = createGraph(convertedMonthResults,"graph-month", `Temperature (${temperatureUnit})`,
-        GraphType.MONTH, monthLabels);
+        GraphType.MONTH, monthLabels, minTemperature, maxTemperature);
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
     weekGraph = createGraph(convertedWeeklyResults,"graph-week", `Temperature (${temperatureUnit})`,
-        GraphType.WEEK, weekLabels);
+        GraphType.WEEK, weekLabels, minTemperature, maxTemperature);
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
     dayGraph = createGraph(convertedDayResults,"graph-day", `Temperature (${temperatureUnit})`,
-        GraphType.DAY, dayLabels);
+        GraphType.DAY, dayLabels, minTemperature, maxTemperature);
 
     alertMessage("Temperature")
 }
@@ -167,6 +169,8 @@ const renderMoistureGraph = () => {
     const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture);
     const moistureWeeklyResults = JSON.parse(graphDataSet.weekMoisture);
     const moistureDayResults = JSON.parse(graphDataSet.dayMoisture);
+    const minMoisture = JSON.parse(graphDataSet.minMoisture)
+    const maxMoisture = JSON.parse(graphDataSet.maxMoisture)
 
     tempUnits.style.display = "none";
     changeGraphTitle("Soil Moisture Last 30 Days", "Soil Moisture Last 7 Days", "Soil Moisture Today");
@@ -174,9 +178,9 @@ const renderMoistureGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(moistureMonthResults, "graph-month", "Soil Moisture", GraphType.MONTH, monthLabels);
-    weekGraph = createGraph(moistureWeeklyResults, "graph-week", "Soil Moisture", GraphType.WEEK, weekLabels);
-    dayGraph = createGraph(moistureDayResults, "graph-day", "Soil Moisture", GraphType.DAY, dayLabels);
+    monthGraph = createGraph(moistureMonthResults, "graph-month", "Soil Moisture", GraphType.MONTH, monthLabels, minMoisture, maxMoisture);
+    weekGraph = createGraph(moistureWeeklyResults, "graph-week", "Soil Moisture", GraphType.WEEK, weekLabels, minMoisture, maxMoisture);
+    dayGraph = createGraph(moistureDayResults, "graph-day", "Soil Moisture", GraphType.DAY, dayLabels, minMoisture, maxMoisture);
 
     alertMessage("Moisture")
 }
@@ -188,6 +192,7 @@ const renderLightGraph = () => {
     const lightMonthResults = JSON.parse(graphDataSet.monthLight);
     const lightWeeklyResults = JSON.parse(graphDataSet.weekLight);
     const lightDayResults = JSON.parse(graphDataSet.dayLight);
+    const lightValue = JSON.parse(graphDataSet.lightLevels)
 
     tempUnits.style.display = "none";
 
@@ -196,9 +201,9 @@ const renderLightGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(lightMonthResults, "graph-month", "Light", GraphType.MONTH, monthLabels);
-    weekGraph = createGraph(lightWeeklyResults, "graph-week", "Light", GraphType.WEEK, weekLabels);
-    dayGraph = createGraph(lightDayResults, "graph-day", "Light", GraphType.DAY, dayLabels);
+    monthGraph = createGraph(lightMonthResults, "graph-month", "Light", GraphType.MONTH, monthLabels, lightValue, lightValue);
+    weekGraph = createGraph(lightWeeklyResults, "graph-week", "Light", GraphType.WEEK, weekLabels, lightValue, lightValue);
+    dayGraph = createGraph(lightDayResults, "graph-day", "Light", GraphType.DAY, dayLabels, lightValue, lightValue);
 
     alertMessage("Light")
 }
@@ -211,6 +216,8 @@ const renderPressureGraph = () => {
     const pressureMonthResults = JSON.parse(graphDataSet.monthPressure);
     const pressureWeeklyResults = JSON.parse(graphDataSet.weekPressure);
     const pressureDayResults = JSON.parse(graphDataSet.dayPressure);
+    const minPressure = JSON.parse(graphDataSet.minPressure)
+    const maxPressure = JSON.parse(graphDataSet.maxPressure)
 
     tempUnits.style.display = "none";
 
@@ -219,9 +226,9 @@ const renderPressureGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(pressureMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
-    weekGraph = createGraph(pressureWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels);
-    dayGraph = createGraph(pressureDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
+    monthGraph = createGraph(pressureMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels, minPressure, maxPressure);
+    weekGraph = createGraph(pressureWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels, minPressure, maxPressure);
+    dayGraph = createGraph(pressureDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels, minPressure, maxPressure);
 
     alertMessage("Air-Pressure")
 }
@@ -233,6 +240,8 @@ const renderHumidityGraph = () => {
     const humidityMonthResults = JSON.parse(graphDataSet.monthLight);
     const humidityWeeklyResults = JSON.parse(graphDataSet.weekLight);
     const humidityDayResults = JSON.parse(graphDataSet.dayLight);
+    const minHumidity = JSON.parse(graphDataSet.minHumidity)
+    const maxHumidity = JSON.parse(graphDataSet.maxHumidity)
 
     tempUnits.style.display = "none";
 
@@ -241,9 +250,9 @@ const renderHumidityGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(humidityMonthResults, "graph-month", "Humidity", GraphType.MONTH, monthLabels);
-    weekGraph = createGraph(humidityWeeklyResults, "graph-week", "Humidity", GraphType.WEEK, weekLabels);
-    dayGraph = createGraph(humidityDayResults, "graph-day", "Humidity", GraphType.DAY, dayLabels);
+    monthGraph = createGraph(humidityMonthResults, "graph-month", "Humidity", GraphType.MONTH, monthLabels, minHumidity, maxHumidity);
+    weekGraph = createGraph(humidityWeeklyResults, "graph-week", "Humidity", GraphType.WEEK, weekLabels, minHumidity, maxHumidity);
+    dayGraph = createGraph(humidityDayResults, "graph-day", "Humidity", GraphType.DAY, dayLabels, minHumidity, maxHumidity);
 
     alertMessage("Humidity")
 }
@@ -287,7 +296,7 @@ function getDayGraphInformation(sensorName, data, timeLabels) {
  * Get graph information for a month graph.
  * Readings each day.
  *
- * @param sensorName Name of sensor used, e.g Temperature
+ * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
  * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
@@ -363,20 +372,51 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
         }, "Time (Day)", sensorName]
 }
 
+function updateRectangleConfig(sensorName, minValue, maxValue) {
+    Chart.plugins.register({
+        beforeDraw: function (chart) {
+            if (chart.config.options.shadedRegion) {
+                const ctx = chart.chart.ctx;
+                const chartArea = chart.chartArea;
+                const y = chart.scales['y-axis-0'];
+
+                const xStart1 = chartArea.left;
+                const xEnd1 = chartArea.right;
+                const yStart1 = chartArea.top;
+                const yEnd1 = y.getPixelForValue(maxValue);
+
+                const xStart2 = chartArea.left;
+                const xEnd2 = chartArea.right;
+                const yStart2 = y.getPixelForValue(minValue);
+                const yEnd2 = chartArea.bottom;
+
+                ctx.save();
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+
+                ctx.fillRect(xStart1, yStart1, xEnd1 - xStart1, yEnd1 - yStart1);
+                ctx.fillRect(xStart2, yStart2, xEnd2 - xStart2, yEnd2 - yStart2);
+
+                ctx.restore();
+            }
+        }
+    });
+}
 
 /**
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
  * @param graphId       the id of the div where the graph goes
- * @param {string} sensorName    Name of sensor e.g Temperature
+ * @param {string} sensorName    Name of sensor e.g. Temperature
  * @param graphType     Type of graph: Month, Week, Day
  * @param timeLabels    Time labels for y-axis
  */
-function createGraph(data, graphId, sensorName, graphType, timeLabels) {
+function createGraph(data, graphId, sensorName, graphType, timeLabels, minValue, maxValue) {
     if (!data || data.length === 0){
         console.error("No data points given for data:", data);
         return;
     }
+
+    console.log(minValue, maxValue)
 
     // Get graph information
     switch (graphType) {
@@ -392,6 +432,8 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
         default:
             [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
     }
+
+    updateRectangleConfig(sensorName, minValue, maxValue);
 
     return new Chart(document.getElementById(graphId),
         {
@@ -415,6 +457,7 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
                         }
                     }]
                 },
+                shadedRegion: true
             }
         }
     )

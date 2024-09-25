@@ -25,4 +25,5 @@ public class AdviceRangesService {
         this.adviceRangesRepository.save(adviceRanges);
     }
 
+//    public void getAdviceRanges(long gardenId) { adviceRangesRepository.findAllById() }
 }

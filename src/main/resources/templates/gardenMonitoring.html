@@ -103,8 +103,18 @@
                                             data-month-pressure=${graphMonth.getAtmosphere()},
                                             data-week-humidity=${graphWeek.getHumidity()},
                                             data-day-humidity=${graphDay.getHumidity()},
-                                            data-month-humidity=${graphMonth.getHumidity()}">
-                <!-- Sensor disconnected error -->
+                                            data-month-humidity=${graphMonth.getHumidity()},
+                                            data-min-temp=${garden.getAdviceRanges().getMinTemperature()},
+                                            data-max-temp=${garden.getAdviceRanges().getMaxTemperature()},
+                                            data-min-moisture=${garden.getAdviceRanges().getMinMoisture()},
+                                            data-max-moisture=${garden.getAdviceRanges().getMaxMoisture()},
+                                            data-min-pressure=${garden.getAdviceRanges().getMinPressure()},
+                                            data-max-pressure=${garden.getAdviceRanges().getMaxPressure()},
+                                            data-min-humidity=${garden.getAdviceRanges().getMinHumidity()},
+                                            data-max-humidity=${garden.getAdviceRanges().getMaxHumidity()},
+                                            data-light-levels=${garden.getAdviceRanges().getLightLevel()}">
+
+            <!-- Sensor disconnected error -->
             <div th:if="${owner}" class="row mx-4" id="disconnected-warning"
                  th:data-temperature="${tempReading}"
                  th:data-moisture="${moistReading}"
