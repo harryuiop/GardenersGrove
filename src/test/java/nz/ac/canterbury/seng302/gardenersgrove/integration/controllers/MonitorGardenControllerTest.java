@@ -42,7 +42,6 @@ class MonitorGardenControllerTest {
     GardenRepository gardenRepository;
 
     static Garden garden;
-    static boolean gardenSaved = false;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -54,19 +53,18 @@ class MonitorGardenControllerTest {
 
     static User user;
 
-    @BeforeEach
+    @BeforeAll
     void saveGarden() {
-        Mockito.reset(arduinoDataPointService);
-        if (gardenSaved) {
-            return;
-        }
         user = new User("testuser@email.com", "Test", "User", "Password1!", "2000-01-01");
         userRepository.save(user);
         Location location = new Location("Test", "Location");
         garden = new Garden(user, "g1", "desc", location, 1.0f, true);
         gardenRepository.save(garden);
-        gardenSaved = true;
+    }
 
+    @BeforeEach
+    void resetData() {
+        Mockito.reset(arduinoDataPointService);
     }
 
     @Test
