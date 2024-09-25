@@ -25,6 +25,7 @@ const WEEK_GRAPH_COLORS = ['rgb(44, 62, 80)', 'rgb(241, 196, 15)', 'rgb(52, 152,
 
 // Advice Reference
 const referenceLink = document.querySelector('[data-bs-target="#referenceModal"]');
+const referenceListElement = document.getElementById("reference-list");
 const modalContent = document.getElementById('modalReferenceContent');
 const adviceDataset = document.getElementById('advice').dataset;
 const referencesDataset = document.getElementById('references').dataset;
@@ -467,20 +468,35 @@ referenceLink.addEventListener('click', function(e) {
  * Loads the corresponding references in the modal depending on the advice message
  */
 function showReference() {
+
+    let references;
     switch (currentlySelectedSensorView){
         case "Temperature":
-            modalContent.innerHTML = referencesDataset.temperatureRef;
+            references = JSON.parse(referencesDataset.temperatureRef);
+            addRefToHTML(references);
             break;
         case "Moisture":
-            modalContent.innerHTML = referencesDataset.moistureRef;
+            references = JSON.parse(referencesDataset.moistureRef);
+            addRefToHTML(references);
             break;
         case "Light":
-            modalContent.innerHTML = referencesDataset.lightRef;
+            references = JSON.parse(referencesDataset.lightRef);
+            addRefToHTML(references);
             break;
         case "Humidity":
-            modalContent.innerHTML = referencesDataset.humidityRef;
+            references = JSON.parse(referencesDataset.humidityRef);
+            addRefToHTML(references);
             break;
         default:
             console.error("References cannot be loaded with this sensor id");
+    }
+}
+
+const addRefToHTML = (referenceData) => {
+    referenceListElement.innerHTML = "";
+    for (const reference of referenceData) {
+        const listAttribute = document.createElement("li");
+        listAttribute.innerHTML = reference;
+        referenceListElement.appendChild(listAttribute)
     }
 }

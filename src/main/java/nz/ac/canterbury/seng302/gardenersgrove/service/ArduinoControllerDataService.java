@@ -51,6 +51,8 @@ public class ArduinoControllerDataService {
         SensorAdviceMessages sensorAdviceMessages = new SensorAdviceMessages(dayData, adviceRanges);
 
         sensorAdviceMessages.addTemperatureAdviceToModel(model);
+        sensorAdviceMessages.addSoilMoistureAdviceToModel(model);
+        sensorAdviceMessages.addHumidityAdviceToModel(model);
     }
 
     /**

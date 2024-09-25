@@ -135,7 +135,8 @@
                        th:attr="data-temperature-ref=${temperatureReference},
                        data-moisture-ref=${moistureReference},
                        data-light-ref=${lightReference},
-                       data-humidity-ref=${humidityReference}"></p>
+                       data-humidity-ref=${humidityReference}">
+                    </p>
 
                     <!-- Close Button-->
                     <button class="btn btn-close me-3 mt-3 position-absolute top-0 end-0"
@@ -326,7 +327,7 @@
                     <h5 class="modal-title" id="referenceModalLabel">Reference Information</h5>
                 </div>
                 <div class="modal-body" id="modalReferenceContent">
-                    <!-- Advice specific reference -->
+                    <ul id="reference-list"></ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
