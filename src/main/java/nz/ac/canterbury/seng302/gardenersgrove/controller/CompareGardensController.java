@@ -75,6 +75,7 @@ public class CompareGardensController extends NavBar {
         model.addAttribute("theirGarden", theirGarden);
         model.addAttribute("owner", yourGarden.getOwner() == currentUser);
         model.addAttribute("gardenMonitoringUri", monitorGardenUri(yourGarden.getId()));
+        model.addAttribute("gardenList", gardenService.getAllGardens());
 
         arduinoControllerDataService.addGraphDataToModel(model, yourGardenId, theirGardenId);
 
