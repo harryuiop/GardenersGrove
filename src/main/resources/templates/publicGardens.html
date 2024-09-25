@@ -1,174 +1,187 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="~{fragments/importFragment :: headerfiles}">
-  <meta charset="UTF-8" />
-  <title>Public Gardens</title>
-</head>
+  <head th:insert="~{fragments/importFragment :: headerfiles}">
+    <meta charset="UTF-8" />
+    <title>Public Gardens</title>
+  </head>
 
-<body class="bg">
-<nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
+  <body class="bg">
+    <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
 
-<!-- Searching -->
-<form id="search-form" class="row justify-content-center align-items-center mt-5 p-3 p-lg-0">
-  <div class="col-lg-4 col-12 mb-2 text-center">
-    <!-- Search Input -->
-    <div class="input-group rounded">
+    <!-- Searching bar -->
+    <form
+      th:action="@{browse}"
+      method="GET"
+      id="search-form"
+      class="d-flex justify-content-center"
+    >
       <input
-              aria-describedby="search-public-gardens"
-              aria-label="Search for public gardens"
-              autocomplete="off"
-              class="form-control rounded"
-              placeholder="Search for gardens"
-              th:name="searchParameter"
-              type="text"
-              id="garden-input"
-              th:value="${gardenSearchSearch}"
+        id="hiddenTagList"
+        th:name="hiddenTagName"
+        type="hidden"
+        value=""
       />
-    </div>
-  </div>
-
-    <!-- Tag Input -->
-    <div class="col-lg-4 col-12 mb-2 text-center">
-      <div class="input-group d-flex flex-nowrap">
-        <div class="input-group-prepend">
-          <div class="input-group-text"
-               style="
-                            border-top-right-radius: 0;
-                            border-bottom-right-radius: 0;
-                            ">#
+      <div class="row w-75">
+        <!-- Garden field -->
+        <div class="col-md-6 p-0 pe-md-1">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text rounded-end-0">
+                <i class="bi bi-tree"></i>
+              </span>
+            </div>
+            <input
+              class="form-control"
+              id="garden-input"
+              placeholder="Search for gardens"
+              type="text"
+              th:name="searchParameter"
+              autocomplete="off"
+            />
+            <div class="input-group-append">
+              <button class="input-group-text rounded-start-0" type="submit">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
           </div>
         </div>
-        <div>
-          <label for="tagName"></label><input type="text" class="form-control" placeholder="Add tag to search" id="tagName"
-                                              data-cy="tagName" style="border-radius: 0" autofocus>
-          <input type="hidden" id="hiddenTagList" th:name="hiddenTagName" value="">
-          <div id="autocomplete-list" class="dropdown-menu w-40 shadow inputStyle"></div>
-        </div>
-        <div class="input-group-append">
-          <button class="btn btn-confirm"
-                  id="tag-submit"
-                  type="button"
-                  onclick="submitTagToSearch()"
-                  style="
-                               border-top-left-radius: 0;
-                               border-bottom-left-radius: 0;
-                               "
-          >+
-          </button>
-        </div>
 
-      <!-- Search Button -->
-      <form th:action="@{/publicGardens}" method="get">
-        <button
-                class="btn btn-edit d-flex align-items-center rounded-3 ms-3"
-                id="search-addon"
-                th:for="search-bar"
-                type="submit"
-        >
-          <span class="d-flex align-items-center">Search<i class="ps-2 bi bi-search"></i></span>
+        <!-- Tag field -->
+        <div class="col-8 col-md-4 col-xl-5 p-0 ps-md-1 pe-2 mt-1 mt-md-0">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text rounded-end-0"> # </span>
+            </div>
+            <input
+              class="form-control"
+              id="tagName"
+              placeholder="Search for tags"
+              type="text"
+              autocomplete="off"
+            />
+            <div class="input-group-append">
+              <button
+                class="input-group-text rounded-start-0"
+                type="button"
+                id="tag-submit"
+                onclick="submitTagToSearch()"
+              >
+                +
+              </button>
+            </div>
+            <div
+              class="dropdown-menu shadow inputStyle w-100 top-100"
+              id="autocomplete-list"
+              style="height: auto"
+            ></div>
+          </div>
+        </div>
+        <button type="submit" class="px-0 mt-1 mt-md-0 col-4 col-md-2 col-xl-1 btn btn-edit justify-content-center align-items-center">
+          <span class=" align-items-center"
+            >Search<i class="ps-2 bi bi-search"></i
+          ></span>
         </button>
-      </form>
+      </div>
+    </form>
+    <div class="row w-100 px-5">
+      <p class="error message mt-1 text-center" id="tag-error-message"></p>
+      <div class="display-tags d-flex flex-wrap justify-content-center">
+        <span id="tags-container"></span>
+      </div>
     </div>
-  </div>
 
-  <!-- Error Message -->
-  <p id="tag-error-message" class="error message mt-1 text-center"></p>
-
-  <!-- Display Tags -->
-  <div class="display-tags d-flex flex-wrap justify-content-center">
-    <span id="tags-container"></span>
-  </div>
-
-</form>
-
-
-
-<div th:if="${numberOfResults > 0}">
-  <div class="d-flex flex-column justify-content-center align-items-center">
-    <div
-            th:each="garden: ${gardenList}"
-            class="garden-item row rounded border p-5 my-3 w-75 position-relative bg-white shadow-sm"
-    >
-      <a
-              class="stretched-link"
-              th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"
-      ></a>
-      <div class="col-12 col-md-8 col-xl-4 mb-3 mb-md-0 align-items-center">
-        <h5 class="text-truncate" th:text="${garden.getName()}"></h5>
+    <div th:if="${numberOfResults > 0}">
+      <div class="d-flex flex-column justify-content-center align-items-center">
         <div
-                class="text-truncate"
-                th:text="${garden.getLocationString()}"
+          th:each="garden: ${gardenList}"
+          class="garden-item row rounded border p-5 my-3 w-75 position-relative bg-white shadow-sm"
+        >
+          <a
+            class="stretched-link"
+            th:href="@{${viewGardenUriString}(gardenId=${garden.id})}"
+          ></a>
+          <div class="col-12 col-md-8 col-xl-4 mb-3 mb-md-0 align-items-center">
+            <h5 class="text-truncate" th:text="${garden.getName()}"></h5>
+            <div
+              class="text-truncate"
+              th:text="${garden.getLocationString()}"
+            ></div>
+          </div>
+          <div class="col-3 col-sm-2 col-lg-1 d-flex align-items-center">
+            <div th:text="${garden.getPlants().size()}"></div>
+            <i class="bi bi-tree-fill"></i>
+          </div>
+          <div
+            class="col-5 col-sm-3 col-md-2 col-xl-1 d-flex align-items-center text-nowrap"
+            th:utext="${garden.getSize() != null} ? (${garden.getSize()} + ' m<sup>2</sup>')"
+          ></div>
+          <div
+            class="col-12 col-xl-6 d-flex mt-3 mt-xxl-0 align-items-center flex-wrap"
+          >
+            <div
+              th:each="tag : ${garden.getTags()}"
+              class="me-3"
+              th:text="'#' + ${tag.getName()}"
+            >
+              Hello
+            </div>
+          </div>
+        </div>
+        <nav>
+          <ul class="pagination">
+            <li
+              class="page-item"
+              th:classappend="${currentPage == 1} ? disabled"
+            >
+              <a
+                th:href="@{${browsePublicGardensUriString}(page=${1})}"
+                class="page-link"
+              >
+                <span aria-hidden="true">First</span>
+              </a>
+            </li>
+
+            <li th:each="page : ${pageNumbers}" class="page-item">
+              <a
+                class="page-link"
+                th:classappend="${page == currentPage} ? active"
+                th:href="@{${browsePublicGardensUriString}(page=${page}, gardenName=${gardenSearchSearch})}"
+                th:text="${page}"
+              ></a>
+            </li>
+
+            <li
+              class="page-item"
+              th:classappend="${currentPage == numberOfPages} ? disabled"
+            >
+              <a
+                class="page-link"
+                th:href="@{${browsePublicGardensUriString}(page=${numberOfPages})}"
+              >
+                <span aria-hidden="true">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div
+          th:text="'Showing results '+ ${(currentPage - 1) * 10 + 1} + ' to ' + ${(currentPage - 1) * 10 + gardenList.size()} + ' of ' + ${numberOfResults}"
+          class="mb-3"
         ></div>
       </div>
-      <div class="col-3 col-sm-2 col-lg-1 d-flex align-items-center">
-        <div th:text="${garden.getPlants().size()}"></div>
-        <i class="bi bi-tree-fill"></i>
-      </div>
-      <div
-              class="col-5 col-sm-3 col-md-2 col-xl-1 d-flex align-items-center text-nowrap"
-              th:utext="${garden.getSize() != null} ? (${garden.getSize()} + ' m<sup>2</sup>')"
-      ></div>
-      <div
-              class="col-12 col-xl-6 d-flex mt-3 mt-xxl-0 align-items-center flex-wrap"
-      >
-        <div
-                th:each="tag : ${garden.getTags()}"
-                class="me-3"
-                th:text="'#' + ${tag.getName()}"
-        >
-          Hello
-        </div>
-      </div>
     </div>
-    <nav>
-      <ul class="pagination">
-        <li
-                class="page-item"
-                th:classappend="${currentPage == 1} ? disabled"
-        >
-          <a
-                  th:href="@{${browsePublicGardensUriString}(page=${1})}"
-                  class="page-link"
-          >
-            <span aria-hidden="true">First</span>
-          </a>
-        </li>
-
-        <li th:each="page : ${pageNumbers}" class="page-item">
-          <a
-                  class="page-link"
-                  th:classappend="${page == currentPage} ? active"
-                  th:href="@{${browsePublicGardensUriString}(page=${page}, gardenName=${gardenSearchSearch})}"
-                  th:text="${page}"
-          ></a>
-        </li>
-
-        <li
-                class="page-item"
-                th:classappend="${currentPage == numberOfPages} ? disabled"
-        >
-          <a
-                  class="page-link"
-                  th:href="@{${browsePublicGardensUriString}(page=${numberOfPages})}"
-          >
-            <span aria-hidden="true">Last</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
     <div
-            th:text="'Showing results '+ ${(currentPage - 1) * 10 + 1} + ' to ' + ${(currentPage - 1) * 10 + gardenList.size()} + ' of ' + ${numberOfResults}"
-            class="mb-3"
-    ></div>
-  </div>
-</div>
-<div
-        class="d-flex justify-content-center mt-5"
-        th:if="${numberOfResults == 0}"
->
-  <h3>No gardens match your search</h3>
-</div>
-</body>
-<script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
-<script type="text/javascript" th:src="@{/javascript/browseSearch.js}"></script>
+      class="d-flex justify-content-center mt-5"
+      th:if="${numberOfResults == 0}"
+    >
+      <h3>No gardens match your search</h3>
+    </div>
+  </body>
+  <script
+    type="text/javascript"
+    th:src="@{/javascript/tagAutocomplete.js}"
+  ></script>
+  <script
+    type="text/javascript"
+    th:src="@{/javascript/browseSearch.js}"
+  ></script>
 </html>

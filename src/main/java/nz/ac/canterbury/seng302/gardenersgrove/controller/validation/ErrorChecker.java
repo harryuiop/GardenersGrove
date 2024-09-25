@@ -187,7 +187,7 @@ public class ErrorChecker {
       } else if (!formValuesValidator.checkUserName(firstName)) {
         errors.put(
             "firstNameError",
-            "First name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+            "First name cannot be less than two characters and must only include letters, spaces, hyphens or apostrophes");
       }
     }
     return errors;
@@ -222,7 +222,7 @@ public class ErrorChecker {
         } else if (!formValuesValidator.checkUserName(lastName)) {
           errors.put(
               "lastNameError",
-              "Last name cannot be empty and must only include letters, spaces, hyphens or apostrophes");
+              "Last name cannot be less than two characters and must only include letters, spaces, hyphens or apostrophes");
         }
       }
     }
