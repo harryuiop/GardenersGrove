@@ -11,6 +11,10 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoControllerDataService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.AdviceRangesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,6 +128,10 @@ public class MonitorGardenController extends NavBar {
         // This is where we input if the arduino is connected. Still to be implemented.
         model.addAttribute("connected", false);
 
+        arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
+        arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
+        arduinoControllerDataService.addGraphDataToModel(model, gardenId);
+        arduinoControllerDataService.addAdviceMessagesToModel(model);
         arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
         arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
         arduinoControllerDataService.addGraphDataToModel(model, gardenId);
