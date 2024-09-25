@@ -28,6 +28,7 @@ import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @SpringBootTest
 @WithMockUser(value = "1")
@@ -69,14 +70,16 @@ class MonitorGardenControllerTest {
 
     @Test
     void requestGardenMonitoringPage_validGardenId_200Response() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("gardenMonitoring"));
     }
 
     @Test
     void requestGardenMonitoringPage_noArduino_notLinkedStatus() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.model().attribute("deviceStatus", "NOT_LINKED"))
                 .andExpect(MockMvcResultMatchers.model().attribute("owner", true));
     }
@@ -86,7 +89,8 @@ class MonitorGardenControllerTest {
         garden.setArduinoId("127.0.0.1");
         gardenRepository.save(garden);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.model().attribute("deviceStatus", "NO_DATA"));
     }
 
@@ -98,7 +102,8 @@ class MonitorGardenControllerTest {
         Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
         gardenRepository.save(garden);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.model().attribute("deviceStatus", "OUT_OF_DATE"));
     }
 
@@ -116,7 +121,8 @@ class MonitorGardenControllerTest {
         Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
         gardenRepository.save(garden);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.model().attribute("tempReading", "-"))
                 .andExpect(MockMvcResultMatchers.model().attribute("moistReading", "-"))
                 .andExpect(MockMvcResultMatchers.model().attribute("lightReading", "-"))
@@ -132,7 +138,8 @@ class MonitorGardenControllerTest {
         Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
         gardenRepository.save(garden);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.model().attribute("tempReading", "-"))
                 .andExpect(MockMvcResultMatchers.model().attribute("moistReading", "-"))
                 .andExpect(MockMvcResultMatchers.model().attribute("lightReading", "-"))
@@ -148,7 +155,8 @@ class MonitorGardenControllerTest {
         Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
         gardenRepository.save(garden);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.model().attribute("tempReading", "2.0"))
                 .andExpect(MockMvcResultMatchers.model().attribute("moistReading", "2"))
                 .andExpect(MockMvcResultMatchers.model().attribute("lightReading", "2"))
@@ -172,6 +180,7 @@ class MonitorGardenControllerTest {
                         .param("minHumidity", Double.toString(ArduinoDataValidator.MIN_HUMIDITY - 1))
                         .param("maxHumidity", Double.toString(ArduinoDataValidator.MAX_HUMIDITY + 1))
                         .param("lightLevel", LightLevel.FULL_SHADE.toString())
+                        .with(csrf())
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("temperatureError"))
@@ -212,6 +221,7 @@ class MonitorGardenControllerTest {
                         .param("minHumidity", Double.toString(newMinHumidity))
                         .param("maxHumidity", Double.toString(newMaxHumidity))
                         .param("lightLevel", LightLevel.FULL_SHADE.toString())
+                        .with(csrf())
                 )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern(MONITOR_GARDEN_URI_STRING))
@@ -231,12 +241,14 @@ class MonitorGardenControllerTest {
         Assertions.assertEquals(newMinAirPressure, updatedGarden.getAdviceRanges().getMinPressure(), 0.001);
         Assertions.assertEquals(newMaxAirPressure, updatedGarden.getAdviceRanges().getMaxPressure(), 0.001);
     }
+
     @Test
     void requestMonitorPage_randomUserNotPublic_notAbleToVisit() throws Exception {
         User randomUser = new User("randomUser@mail.com", "Random", "User", "Password1!", "");
         userRepository.save(randomUser);
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(randomUser);
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
@@ -248,7 +260,8 @@ class MonitorGardenControllerTest {
         Assertions.assertTrue(friendshipService.areFriends(user, friendUser));
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(friendUser);
         Assertions.assertEquals(user, garden.getOwner());
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
@@ -259,14 +272,16 @@ class MonitorGardenControllerTest {
         userRepository.save(randomUser);
         garden.setIsGardenPublic(true);
         Mockito.when(userService.getAuthenticatedUser()).thenReturn(randomUser);
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
         garden.setIsGardenPublic(false);
     }
 
     @Test
     void resetAdviceRanges_validGardenId_updatesDatabase() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(resetAdviceRangesUri(garden.getId())))
+        mockMvc.perform(MockMvcRequestBuilders.post(resetAdviceRangesUri(garden.getId()))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
         Assertions.assertEquals(garden.getAdviceRanges(), new AdviceRanges());
@@ -274,7 +289,8 @@ class MonitorGardenControllerTest {
 
     @Test
     void resetAdviceRanges_invalidGardenId_throwsException() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(resetAdviceRangesUri(99999)))
+        mockMvc.perform(MockMvcRequestBuilders.post(resetAdviceRangesUri(99999))
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 }
