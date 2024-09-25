@@ -37,7 +37,8 @@ public class ArduinoDataController {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     /**
-     * Endpoint for Arduino to send sensor data to that creates an ArduinoDataPoint element that is saved to the database.
+     * Endpoint for Arduino to send sensor data to that creates an ArduinoDataPoint
+     * element that is saved to the database.
      *
      * @param sensorData the json data to parse
      */
@@ -47,17 +48,15 @@ public class ArduinoDataController {
         try {
             logger.info("POST {} {}", ARDUINO_SENSOR_DATA, sensorData);
             ArduinoJsonData response = objectMapper.readValue(sensorData, ArduinoJsonData.class);
-            if (ArduinoDataValidator.checkValidSensorData(response)) {
-                dataPointService.saveDataPoint(new ArduinoDataPoint(
-                        gardenService.getGardenByArduinoId(response.getId()),
-                        response.getTime(),
-                        response.getTemperatureCelsius(),
-                        response.getHumidityPercentage(),
-                        response.getAtmosphereAtm(),
-                        response.getLightLevelPercentage(),
-                        response.getMoisturePercentage()
-                ));
-            }
+            dataPointService.saveDataPoint(new ArduinoDataPoint(
+                    gardenService.getGardenByArduinoId(response.getId()),
+                    ArduinoDataValidator.checkValidTime(response.getTime()) ? response.getTime() : null,
+                    ArduinoDataValidator.checkValidTemperature(response.getTemperatureCelsius()) ? response.getTemperatureCelsius() : null,
+                    ArduinoDataValidator.checkValidHumidity(response.getHumidityPercentage()) ? response.getHumidityPercentage() : null,
+                    ArduinoDataValidator.checkValidAtmosphericPressure(response.getAtmosphereAtm()) ? response.getAtmosphereAtm() : null,
+                    ArduinoDataValidator.checkValidLight(response.getLightLevelPercentage()) ? response.getLightLevelPercentage() : null,
+                    ArduinoDataValidator.checkValidMoisture(response.getMoisturePercentage()) ? response.getMoisturePercentage() : null));
+
         } catch (JsonProcessingException exception) {
             throw new UnableToFetchArduinoDataException("Failed to parse JSON response from Arduino", exception);
         }

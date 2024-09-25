@@ -127,7 +127,7 @@ public class ArduinoDataValidator {
      * @return boolean indicating whether the moisture sensor functions correctly
      */
     public static boolean isMoistConnected(Double moisture) {
-        return moisture != 0;
+        return moisture >= 0;
     }
 
     /**
@@ -137,7 +137,7 @@ public class ArduinoDataValidator {
      * @return boolean indicating whether the light sensor functions correctly
      */
     public static boolean isLightConnected(Double light) {
-        return light != 0;
+        return light >= 0;
     }
 
     /**
@@ -147,7 +147,7 @@ public class ArduinoDataValidator {
      * @return boolean indicating whether the barometric sensor functions correctly
      */
     public static boolean isPressureConnected(Double pressure) {
-        return pressure != 0;
+        return pressure >= 0;
     }
 
     /**

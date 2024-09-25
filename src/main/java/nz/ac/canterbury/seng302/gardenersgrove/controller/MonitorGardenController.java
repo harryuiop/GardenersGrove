@@ -157,11 +157,11 @@ public class MonitorGardenController extends NavBar {
         String lightReading = "-";
         String pressureReading = "-";
         String humidReading = "-";
-        boolean tempSensorConnected;
-        boolean moistSensorConnected;
-        boolean lightSensorConnected;
-        boolean pressureSensorConnected;
-        boolean humidSensorConnected;
+        boolean tempSensorConnected = false;
+        boolean moistSensorConnected = false;
+        boolean lightSensorConnected = false;
+        boolean pressureSensorConnected = false;
+        boolean humidSensorConnected = false;
 
         ArduinoDataPoint arduinoDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(garden);
         if (arduinoDataPoint != null) {
@@ -195,6 +195,11 @@ public class MonitorGardenController extends NavBar {
         model.addAttribute("lightReading", lightReading);
         model.addAttribute("pressureReading", pressureReading);
         model.addAttribute("humidReading", humidReading);
+        model.addAttribute("tempSensorConnected", tempSensorConnected);
+        model.addAttribute("moistSensorConnected", moistSensorConnected);
+        model.addAttribute("lightSensorConnected", lightSensorConnected);
+        model.addAttribute("pressureSensorConnected", pressureSensorConnected);
+        model.addAttribute("humidSensorConnected", humidSensorConnected);
     }
 
     /**
