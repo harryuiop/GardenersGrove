@@ -2,18 +2,14 @@ package nz.ac.canterbury.seng302.gardenersgrove.integration.controllers;
 
 import jakarta.transaction.Transactional;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.*;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
-import org.junit.jupiter.api.Assertions;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +22,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -265,5 +262,19 @@ class MonitorGardenControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden.getId())))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
         garden.setIsGardenPublic(false);
+    }
+
+    @Test
+    void resetAdviceRanges_validGardenId_updatesDatabase() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(resetAdviceRangesUri(garden.getId())))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+
+        Assertions.assertEquals(garden.getAdviceRanges(), new AdviceRanges());
+    }
+
+    @Test
+    void resetAdviceRanges_invalidGardenId_throwsException() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(resetAdviceRangesUri(99999)))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 }

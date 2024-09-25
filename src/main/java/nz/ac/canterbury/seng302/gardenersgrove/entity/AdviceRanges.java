@@ -163,4 +163,20 @@ public class AdviceRanges {
 
         this.lightLevel = DEFAULT_LIGHT_LEVEL;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof AdviceRanges adviceRanges) {
+            return this.minTemperature == adviceRanges.minTemperature
+                    && this.maxTemperature == adviceRanges.maxTemperature
+                    && this.minHumidity == adviceRanges.minHumidity
+                    && this.maxHumidity == adviceRanges.maxHumidity
+                    && this.minMoisture == adviceRanges.minMoisture
+                    && this.maxMoisture == adviceRanges.maxMoisture
+                    && this.minPressure == adviceRanges.minPressure
+                    && this.maxPressure == adviceRanges.maxPressure
+                    && this.lightLevel == adviceRanges.lightLevel;
+        }
+        return false;
+    }
 }
