@@ -5,8 +5,8 @@ const dayLabels = JSON.parse(graphDataSet.dayLabels);
 const garden1 = document.getElementById("garden-names").dataset.yourGarden;
 const garden2 = document.getElementById("garden-names").dataset.theirGarden;
 
-const GARDEN_1_COLOR = 'rgb(75, 192, 192)';
-const GARDEN_2_COLOR = 'rgb(52, 152, 219)';
+const GARDEN_1_COLOR = 'rgb(71, 118, 65)';
+const GARDEN_2_COLOR = 'rgb(20, 41, 21)';
 
 let monthGraph, dayGraph;
 let currentlySelectedSensorView = "Temperature";

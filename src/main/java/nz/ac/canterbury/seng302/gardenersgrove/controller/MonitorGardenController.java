@@ -101,15 +101,15 @@ class MonitorGardenController extends NavBar {
         }
         Garden garden = optionalGarden.get();
 
-        boolean notOwner = garden.getOwner().getId() != currentUser.getId();
+        boolean owner = garden.getOwner().getId() == currentUser.getId();
         boolean privateGarden = !garden.isGardenPublic();
         boolean notFriends = !friendshipService.areFriends(garden.getOwner(), currentUser);
-        if (notOwner && privateGarden && notFriends) {
+        if (!owner && privateGarden && notFriends) {
             throw new NoSuchGardenException(gardenId);
         }
 
         model.addAttribute("garden", garden);
-        model.addAttribute("owner", !notOwner);
+        model.addAttribute("owner", owner);
         model.addAttribute("gardenList", gardenService.getAllGardens());
         model.addAttribute("editAdviceUri", EDIT_ADVICE_RANGES_URI_STRING);
         model.addAllAttributes(adviceRangesErrors);
