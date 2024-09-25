@@ -289,7 +289,7 @@
                         <p class="error message" th:text="${humidityError}"></p>
                         <p class="mb-0">Light Level</p>
                         <div class="d-flex flew-row">
-                            <select class="form-select form-floating w-100 mx-1" name="lightLevel" id="lightLevel">
+                            <label for="lightLevel"></label><select class="form-select form-floating w-100 mx-1" name="lightLevel" id="lightLevel">
                                 <option th:each="lightLevel : ${LIGHT_LEVELS}"
                                         th:value="${lightLevel}"
                                         th:text="${lightLevel}"
