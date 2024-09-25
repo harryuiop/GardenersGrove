@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.utility;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import org.h2.util.json.JSONObject;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
@@ -16,6 +17,12 @@ import java.util.List;
 
 public class GardenPlantSuggestions {
 
+    ArduinoDataPointService arduinoDataPointService;
+
+    public GardenPlantSuggestions(ArduinoDataPointService arduinoDataPointService) {
+        this.arduinoDataPointService = arduinoDataPointService;
+    }
+
     // Decide if there is an arduino connected
     // Pass to the correct method to deal with what data we have
     // if no arduino data
@@ -27,16 +34,21 @@ public class GardenPlantSuggestions {
     // pass back a string with suggestions
 
     public String getPlantSuggestionsForGarden(Garden garden) {
-        return "";
-    }
-
-    public String getSuggestionsWithData(Garden garden) {
-        return "";
-    }
-
-    public static String getSuggestionsWithLocation(Garden garden) throws ProfanityCheckingException {
+        //Current default prompt for testing
         String prompt = "give me 3 plant suggestions for a christchurch (new zealand) garden";
 
+        if (arduinoDataPointService.checkFourteenDaysOfData(garden.getId())) {
+            // Create prompt and get suggestion based on Arduino data
+            return "";
+        } else if (garden.getLocation().isLocationRecognized()) {
+           // Create prompt and get suggestion based on location
+            return "";
+        } else {
+            return "Please connect a device to your garden or update your location.";
+        }
+    }
+
+    public static String getSuggestions(String prompt) throws ProfanityCheckingException {
         URI uri = new DefaultUriBuilderFactory().builder()
                 .scheme("http")
                 .host("localhost")
@@ -62,7 +74,6 @@ public class GardenPlantSuggestions {
         }
 
         List<String> responseList = Arrays.asList(responseMessage.body().split("\""));
-        System.out.println(responseList);
         return responseList.get(11);
     }
 }

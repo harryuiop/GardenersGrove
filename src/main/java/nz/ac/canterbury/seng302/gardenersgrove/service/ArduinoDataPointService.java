@@ -108,8 +108,8 @@ public class ArduinoDataPointService {
         return ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocks, accessTime);
     }
 
-//    public int checkFourteenDaysOfData(Long gardenId) {
-//
-//    }
+    public boolean checkFourteenDaysOfData(Long gardenId) {
+        return true;
+    }
 
 }
