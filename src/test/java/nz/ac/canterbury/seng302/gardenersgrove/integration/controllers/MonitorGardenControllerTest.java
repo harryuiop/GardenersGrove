@@ -130,7 +130,7 @@ class MonitorGardenControllerTest {
     @Test
     void requestGardenMonitoringPage_invalidDataAll_correctStringDisplayed() throws Exception {
         garden.setArduinoId("127.0.0.1");
-        ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.of(2000, 1, 1, 0, 0), null, null, 0d, 0d, 0d);
+        ArduinoDataPoint arduinoDataPoint = new ArduinoDataPoint(garden, LocalDateTime.of(2000, 1, 1, 0, 0), null, null, -1.0, -1.0, -1.0);
         arduinoDataPointService.saveDataPoint(arduinoDataPoint);
         Mockito.doReturn(arduinoDataPoint).when(arduinoDataPointService).getMostRecentArduinoDataPoint(any());
         gardenRepository.save(garden);
