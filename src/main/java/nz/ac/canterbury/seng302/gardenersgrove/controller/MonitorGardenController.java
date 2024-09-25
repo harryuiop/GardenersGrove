@@ -126,7 +126,7 @@ public class MonitorGardenController extends NavBar {
 
         arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
         arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
-        arduinoControllerDataService.addGraphDataAndAdviceMessagesToModel(model, gardenId, gardenService);
+        arduinoControllerDataService.addGraphDataAndAdviceMessagesToModel(model, gardenId, garden);
         arduinoControllerDataService.addArduinoDataThresholds(model);
 
         return "gardenMonitoring";

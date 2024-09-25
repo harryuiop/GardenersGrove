@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator.*;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.TimeConverter.minutestoTimeString;
@@ -37,7 +36,7 @@ public class ArduinoControllerDataService {
      * @param model The Thymeleaf model to add information to.
      * @param gardenId The ID number of the garden to get graph data for.
      */
-    public void addGraphDataAndAdviceMessagesToModel(Model model, Long gardenId, GardenService gardenService) {
+    public void addGraphDataAndAdviceMessagesToModel(Model model, Long gardenId, Garden garden) {
         FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId, LocalDateTime.now());
         FormattedGraphData weekData = arduinoDataPointService.getWeekGraphData(gardenId, LocalDateTime.now());
         FormattedGraphData monthData = arduinoDataPointService.getMonthGraphData(gardenId, LocalDateTime.now());
@@ -46,11 +45,8 @@ public class ArduinoControllerDataService {
         model.addAttribute("graphWeek", weekData);
         model.addAttribute("graphMonth", monthData);
 
-        Optional<Garden> garden = gardenService.getGardenById(gardenId);
 
-        if (garden.isEmpty()) return;
-
-        AdviceRanges adviceRanges = garden.get().getAdviceRanges();
+        AdviceRanges adviceRanges = garden.getAdviceRanges();
 
         SensorAdviceMessages sensorAdviceMessages = new SensorAdviceMessages(dayData, adviceRanges);
 
