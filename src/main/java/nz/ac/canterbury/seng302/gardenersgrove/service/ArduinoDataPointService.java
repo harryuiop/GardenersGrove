@@ -6,6 +6,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointReposi
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.stereotype.Service;
@@ -110,6 +111,10 @@ public class ArduinoDataPointService {
 
     public boolean checkFourteenDaysOfData(Long gardenId) {
         return true;
+    }
+
+    public double getMaxValueInRange(Long gardenId, LocalDateTime startDate, String sensorName) {
+        List<ArduinoDataPoint> points = dataPointRepository.getArduinoDataPointOverDays(gardenId, startDate, LocalDateTime.now());
     }
 
 }
