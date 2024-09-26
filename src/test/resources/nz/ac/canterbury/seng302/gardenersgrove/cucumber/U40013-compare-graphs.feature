@@ -1,7 +1,7 @@
 Feature: As John, I want to compare my graphed data to other users so I can see how they vary.
   Background:
     Given I have a logged in user with a monitored garden
-    And I have a garden with a connected Arduino
+    And I have a garden with a connected arduino
 
   Scenario: AC1 - From the monitor garden page of another user's garden, there is a dropdown to compare with any of my gardens.
     Given There is another user with a monitored garden and connected arduino
@@ -22,5 +22,5 @@ Feature: As John, I want to compare my graphed data to other users so I can see 
   Scenario: AC4 - When I am comparing two gardens, and I select 'No Comparison' from the comparison dropdown, I am taken back to my monitoring page for my garden.
     Given I have a second garden with a connected Arduino
     And I am on the comparison page between two of my gardens
-    When I select the 'No Comparison' option from the comparison dropdown
+    When I select the No Comparison option from the comparison dropdown
     Then I am taken back to the monitor garden page for my original garden
