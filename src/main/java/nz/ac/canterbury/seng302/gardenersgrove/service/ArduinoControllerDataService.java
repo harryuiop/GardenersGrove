@@ -31,10 +31,11 @@ public class ArduinoControllerDataService {
     }
 
     /**
-     * Helper method to add graph data to the model.
+     * Helper method to add graph data and advice messages to the model.
      *
      * @param model The Thymeleaf model to add information to.
      * @param gardenId The ID number of the garden to get graph data for.
+     * @param garden Garden to get advice information from.
      */
     public void addGraphDataAndAdviceMessagesToModel(Model model, Long gardenId, Garden garden) {
         FormattedGraphData dayData = arduinoDataPointService.getDayGraphData(gardenId, LocalDateTime.now());
