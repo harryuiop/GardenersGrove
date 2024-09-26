@@ -8,7 +8,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
