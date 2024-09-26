@@ -2,8 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.AdviceRangesValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.*;
@@ -19,8 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
@@ -130,13 +130,8 @@ public class MonitorGardenController extends NavBar {
 
         arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
         arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
-        arduinoControllerDataService.addGraphDataToModel(model, gardenId);
-        arduinoControllerDataService.addAdviceMessagesToModel(model);
-        arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
-        arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
-        arduinoControllerDataService.addGraphDataToModel(model, gardenId);
+        arduinoControllerDataService.addGraphDataAndAdviceMessagesToModel(model, gardenId, garden);
         arduinoControllerDataService.addArduinoDataThresholds(model);
-        arduinoControllerDataService.addAdviceMessagesToModel(model);
 
         return "gardenMonitoring";
     }
