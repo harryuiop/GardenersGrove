@@ -21,7 +21,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.COMPARE_G
  * Controller for the compare garden page. For viewing statistics of your garden and a chosen garden.
  */
 @Controller
-class CompareGardensController extends NavBar {
+public class CompareGardensController extends NavBar {
 
     private final GardenService gardenService;
     private final UserService userService;
