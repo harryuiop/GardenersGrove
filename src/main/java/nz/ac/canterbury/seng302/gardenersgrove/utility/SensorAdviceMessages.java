@@ -93,7 +93,7 @@ public class SensorAdviceMessages {
     }
 
     public void addSoilMoistureAdviceToModel(Model model) {
-        String advice = getAdvice("moisture", dayData.getMoisture(),
+        String advice = getAdvice("soil moisture", dayData.getMoisture(),
                 adviceRanges.getMinMoisture(), adviceRanges.getMaxMoisture(),
                 BELOW_MOISTURE_ADVICE, ABOVE_MOISTURE_ADVICE);
 
@@ -105,7 +105,7 @@ public class SensorAdviceMessages {
     }
 
     public void addHumidityAdviceToModel(Model model) {
-        String advice = getAdvice("add", dayData.getHumidity(),
+        String advice = getAdvice("humidity", dayData.getHumidity(),
                 adviceRanges.getMinHumidity(), adviceRanges.getMaxHumidity(),
                 BELOW_HUMIDITY_ADVICE, ABOVE_HUMIDITY_ADVICE);
         if (!advice.isEmpty()) {
