@@ -12,20 +12,25 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.monitorGardenUri;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.*;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class CompareGraphsFeature {
@@ -57,7 +62,6 @@ public class CompareGraphsFeature {
         gardenService.saveGarden(garden);
         gardenId = garden.getId();
         auth = RunCucumberTest.authMaker.accept(user.getEmail(), "Password1!", userService);
-        SecurityContextHolder.getContext().setAuthentication(auth);
     }
     @And("I have a garden with a connected Arduino")
     public void iHaveAGardenWithAConnectedArduino() {
@@ -127,10 +131,22 @@ public class CompareGraphsFeature {
     }
 
     @Then("there is a dropdown containing the list of all my gardens to compare with the viewed garden")
-    public void thereIsADropdownContainingTheListOfAllMyGardensToCompareWithTheViewedGarden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden2Id))
-                .with(csrf()))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+    public void thereIsADropdownContainingTheListOfAllMyGardensToCompareWithTheViewedGardjjen() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        List<Garden> gardenList = gardenService.getAllGardens();
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(garden2Id))
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        try {
+            List<Garden> modelGardenList = (List<Garden>) mvcResult.getModelAndView().getModel().get("gardenList");
+            Assertions.assertEquals(gardenList.size(), modelGardenList.size(), "Garden list size mismatch");
+            for (int i = 0; i < gardenList.size(); i++) {
+                Assertions.assertEquals(gardenList.get(i).getId(), modelGardenList.get(i).getId());
+            }
+        } catch (Exception e) {
+            Assertions.fail("Unexpected error occurred during garden list comparison.");
+        }
     }
 
     @Given("I have a second garden with a connected Arduino")
