@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewGardenUri;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.GardenPlantSuggestions.getSuggestions;
@@ -48,6 +50,43 @@ public class PlantSuggestionsFeature {
     String expectedPrompt = "Given me 3 plant suggestions given my garden has, Temperature between -10.0C-42.0C, " +
                             "Moisture between 3.0%-55.0%, Light between 5.0%-57.0%, Air Pressure between 0.1atm-0.62atm, " +
                             "Humidity between 0.0%-52.0%";
+    String suggestion = """
+            You've got a nice range of conditions for your garden! Let me suggest some plants that thrive in this climate:
+
+            **Option 1: Lush & Green:**
+
+            * **Hosta (Various Varieties):** These popular perennials love humidity and partial shade, thriving even with
+            fluctuating air pressure.  They'll provide beautiful foliage and come in many colors.
+            * **Hydrangea Macrophylla (Bigleaf Hydrangea):** Thriving in humid conditions and partial shade, these beauties
+            offer large, showy blooms that add color to your garden.
+            * **Japanese Maple (Acer palmatum):** These prized trees are adaptable and prefer well-drained soil with moderate
+            moisture levels. They will also benefit from the humidity in your garden.
+
+            **Option 2:  Sunny & Sturdy:**
+
+            * **Clematis (various species):** These climbing vines love sunny spots and can tolerate some shade, but need
+            ample moisture to thrive. The diverse varieties offer beautiful flowers that suit a variety of styles.
+            * **Lavender (Lavandula angustifolia):**  Known for its fragrant purple blooms, Lavender thrives in full sun with
+            well-drained soil and moderate humidity. It's relatively low maintenance and drought-tolerant.
+            * **Succulents (various species):**  Many succulent varieties do well under humid conditions. These plants come in
+            many forms, shapes, and sizes to suit your preferences.
+
+            **Option 3:   Unique & Adaptable:**
+
+            * **Ajuga reptans (Bugleweed):** This groundcover thrives in the humidity you described with a spread of green
+            foliage and beautiful purple flowers, perfect for adding color and texture.
+            * **Ferns (various species):**  Many ferns prefer humid environments.  They add a unique textural element to your
+            garden and require less frequent watering than many other plants.
+
+
+             **Important Notes:**
+
+            * **Specific Varieties:** Check local nurseries or online resources for varieties that thrive in the exact
+            conditions you describe.
+            * **Soil & Drainage:**  Ensure proper soil drainage is available by amending with compost if needed. Avoid heavy
+            clay soils which can hold too much moisture and lead to root rot.
+            """;
+
     Garden garden;
     User user;
     Authentication auth;
@@ -74,9 +113,9 @@ public class PlantSuggestionsFeature {
     @When("the user clicks suggest plants on the view garden page,")
     public void theUserClicksSuggestPlantsOnTheViewGardenPage() throws Exception {
         try (MockedStatic<GardenPlantSuggestions> mockedSuggestions = mockStatic(GardenPlantSuggestions.class)) {
-            mockedSuggestions.when(() -> GardenPlantSuggestions.getSuggestions(expectedPrompt)).thenReturn("3 plants");
-            Assertions.assertEquals("3 plants", getSuggestions(expectedPrompt));
-            Assertions.assertNotEquals("3 plants", getSuggestions("H"));
+            mockedSuggestions.when(() -> GardenPlantSuggestions.getSuggestions(expectedPrompt)).thenReturn(suggestion);
+            Assertions.assertEquals(suggestion, getSuggestions(expectedPrompt));
+            Assertions.assertNotEquals(suggestion, getSuggestions("H"));
             result = mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId())));
         }
         result.andExpect(MockMvcResultMatchers.status().isOk());
@@ -84,6 +123,13 @@ public class PlantSuggestionsFeature {
 
     @Then("data is used to suggest 3 plants that would work well in the garden.")
     public void dataIsUsedToSuggestPlantsThatWouldWorkWellInTheGarden() throws Exception {
-        result.andExpect(model().attribute("plantSuggestions", "3 plants"));
+        List<String> expectResponse = new ArrayList<>();
+        expectResponse.add("<b>Hosta (Various Varieties):</b>\nThese popular perennials love humidity and partial shade, thriving even with" +
+                " fluctuating air pressure.  They'll provide beautiful foliage and come in many colors. ");
+        expectResponse.add("<b>Clematis (various species):</b>\nThese climbing vines love sunny spots and can tolerate some " +
+                "shade, but need ample moisture to thrive. The diverse varieties offer beautiful flowers that suit a variety of styles. ");
+        expectResponse.add("<b>Ajuga reptans (Bugleweed):</b>\nThis groundcover thrives in the humidity you described with a " +
+                "spread of green foliage and beautiful purple flowers, perfect for adding color and texture. ");
+        result.andExpect(model().attribute("plantSuggestions", expectResponse));
     }
 }

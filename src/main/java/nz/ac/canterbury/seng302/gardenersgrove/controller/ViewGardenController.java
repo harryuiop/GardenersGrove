@@ -8,7 +8,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchPlantException;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.GardenPlantSuggestions;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
@@ -60,7 +59,7 @@ public class ViewGardenController extends NavBar {
     @Autowired
     public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService,
                                 TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker,
-                                WeatherService weatherService, ArduinoDataPointService arduinoDataPointService, ArduinoDataPointService arduinoDataPointService1) {
+                                WeatherService weatherService , ArduinoDataPointService arduinoDataPointService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
@@ -68,7 +67,7 @@ public class ViewGardenController extends NavBar {
         this.tagService = tagService;
         this.weatherService = weatherService;
         this.errorChecker = errorChecker;
-        this.arduinoDataPointService = arduinoDataPointService1;
+        this.arduinoDataPointService = arduinoDataPointService;
     }
 
     /**
@@ -92,7 +91,7 @@ public class ViewGardenController extends NavBar {
                     Model model,
                     String cookies,
                     String... errorMessages
-    ) throws InterruptedException, ProfanityCheckingException {
+    ) throws InterruptedException {
         this.updateGardensNavBar(model, gardenService, userService);
 
         if (errorMessages.length > 0) {
@@ -122,6 +121,7 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("isRainy", weatherService.isRainy(weatherData));
         model.addAttribute("popupClosed", cookies);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MMM yyyy"));
+        logger.info("Plant Suggestions: " + gardenPlantSuggestions.getPlantSuggestionsForGarden(garden));
         model.addAttribute("plantSuggestions", gardenPlantSuggestions.getPlantSuggestionsForGarden(garden));
         return "viewGarden";
     }
@@ -138,7 +138,7 @@ public class ViewGardenController extends NavBar {
             @PathVariable long gardenId,
             @CookieValue(value="rainPopupSeen", defaultValue = "false") String popupClose,
             Model model
-    ) throws NoSuchGardenException, InterruptedException, ProfanityCheckingException {
+    ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
 

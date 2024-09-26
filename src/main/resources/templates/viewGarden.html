@@ -209,7 +209,9 @@
         <h5 class="modal-title fs-5" id="plantSuggestionModalLabel">Suggested Plants</h5>
       </div>
       <div class="modal-body">
-        <p th:text="${plantSuggestions}"></p>
+        <div th:each="suggestion : ${plantSuggestions}">
+          <p th:utext="${suggestion}"></p>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-edit" data-bs-dismiss="modal">Close</button>

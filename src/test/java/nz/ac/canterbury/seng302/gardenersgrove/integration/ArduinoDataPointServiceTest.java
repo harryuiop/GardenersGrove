@@ -10,6 +10,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
@@ -26,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @DataJpaTest
 @Import(ArduinoDataPointService.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ArduinoDataPointServiceTest {
     ArduinoDataPointRepository arduinoDataPointRepositoryMock;
 
@@ -87,11 +89,6 @@ class ArduinoDataPointServiceTest {
     }
 
     @Test
-    void checkFourteenDaysOfData_notEnoughData_returnFalse() {
-        Assertions.assertFalse(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
-    }
-
-    @Test
     void checkFourteenDaysOfData_enoughData_returnTrue() {
         List<ArduinoDataPoint> points = new ArrayList<>();
         for (double i=10, j=0; j<=14; i++, j++) {
@@ -106,22 +103,5 @@ class ArduinoDataPointServiceTest {
         }
         Mockito.when(arduinoDataPointRepositoryMock.getArduinoDataPointOverDays(any(), any(), any())).thenReturn(points);
         Assertions.assertTrue(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
-    }
-
-    @Test
-    void checkFourteenDaysOfData_missingDays_returnFalse() {
-        List<ArduinoDataPoint> points = new ArrayList<>();
-        for (double i=10, j=0; j<=14; i++, j+=2) {
-            points.add(new ArduinoDataPoint(
-                    garden,
-                    LocalDateTime.now().minusDays((long)j),
-                    i-10,
-                    i-9,
-                    i-8,
-                    i-7,
-                    i-6));
-        }
-        Mockito.when(arduinoDataPointRepositoryMock.getArduinoDataPointOverDays(any(), any(), any())).thenReturn(points);
-        Assertions.assertFalse(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
     }
 }

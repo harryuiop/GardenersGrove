@@ -37,7 +37,7 @@ public class GardenPlantSuggestions {
         //
     // pass back a string with suggestions
 
-    public String getPlantSuggestionsForGarden(Garden garden) {
+    public List<String> getPlantSuggestionsForGarden(Garden garden) {
         //Current default prompt for testing
         String prompt = "give me 3 plant suggestions for a christchurch (new zealand) garden";
 
@@ -47,19 +47,26 @@ public class GardenPlantSuggestions {
 
             if (!arduinoPrompt.equals("Given me 3 plant suggestions given my garden has")) {
                 try {
-                    return getSuggestions(arduinoPrompt);
+                    return parseSuggestions(getSuggestions(arduinoPrompt));
                 } catch (ProfanityCheckingException e) {
                     logger.error(e.getMessage());
-                    return "Invalid Response, no suggestions";
+                    List<String> suggestions = new ArrayList<>();
+                    suggestions.add("Invalid Response, no suggestions");
+                    return suggestions;
                 }
             }
-
-            return "Please Check Arduino Connection";
+            List<String> suggestions = new ArrayList<>();
+            suggestions.add("Please Check Arduino Connection");
+            return suggestions;
         } else if (garden.getLocation().isLocationRecognized()) {
            // Create prompt and get suggestion based on location
-            return "";
+            List<String> suggestions = new ArrayList<>();
+            suggestions.add("");
+            return suggestions;
         } else {
-            return "Please connect a device to your garden or update your location.";
+            List<String> suggestions = new ArrayList<>();
+            suggestions.add("Please connect a device to your garden or update your location.");
+            return suggestions;
         }
     }
 
@@ -113,5 +120,21 @@ public class GardenPlantSuggestions {
         }
         logger.info("Request sent to gemma: "+prompt);
         return prompt.toString();
+    }
+
+    public List<String> parseSuggestions(String response) {
+        List<String> plants = new ArrayList<>();
+        String[] splitResponse = response.split("Option");
+        for (String environment : splitResponse) {
+            String[] temp = environment.split("\\* \\*\\*");
+            if (temp.length > 1) {
+                String str = temp[1].replace("\n", " ").replace("** ", "\n");
+                int index = str.indexOf(":");
+                String before = str.substring(0, index+1);
+                String after = str.substring(index+1);
+                plants.add("<b>" + before + "</b>" + after);
+            }
+        }
+        return  plants;
     }
 }
