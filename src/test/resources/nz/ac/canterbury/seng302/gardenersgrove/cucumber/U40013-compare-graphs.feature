@@ -1,7 +1,7 @@
 Feature: As John, I want to compare my graphed data to other users so I can see how they vary.
   Background:
-    Given I have a logged in user with a monitored garden
-    And I have a garden with a connected arduino
+    Given I have a user that is logged in with a monitored garden
+    And I have a garden with a connected Arduino
 
   Scenario: AC1 - From the monitor garden page of another user's garden, there is a dropdown to compare with any of my gardens.
     Given There is another user with a monitored garden and connected arduino
