@@ -118,7 +118,6 @@ public class GardenPlantSuggestions {
                 prompt.append(", ").append(sensor).append(" between ").append(min).append(unit).append("-").append(max).append(unit);
             }
         }
-        logger.info("Request sent to gemma: "+prompt);
         return prompt.toString();
     }
 

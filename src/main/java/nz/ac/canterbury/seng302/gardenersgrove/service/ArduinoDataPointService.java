@@ -115,7 +115,7 @@ public class ArduinoDataPointService {
         if (garden.isEmpty()) {
             return false;
         }
-        for (int i=1; i<=14; i++) {
+        for (long i=1; i<=14; i++) {
             List<ArduinoDataPoint> points = dataPointRepository.getArduinoDataPointOverDays(gardenId, LocalDateTime.now().minusDays(i), LocalDateTime.now().minusDays(i-1));
             if (points.isEmpty()) {
                 return false;

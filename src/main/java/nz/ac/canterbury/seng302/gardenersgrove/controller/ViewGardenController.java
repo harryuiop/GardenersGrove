@@ -121,7 +121,6 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("isRainy", weatherService.isRainy(weatherData));
         model.addAttribute("popupClosed", cookies);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MMM yyyy"));
-        logger.info("Plant Suggestions: " + gardenPlantSuggestions.getPlantSuggestionsForGarden(garden));
         model.addAttribute("plantSuggestions", gardenPlantSuggestions.getPlantSuggestionsForGarden(garden));
         return "viewGarden";
     }
