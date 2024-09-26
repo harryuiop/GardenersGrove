@@ -11,8 +11,6 @@ const currentTempReading = document.getElementById("current-temp-reading");
 // Containers
 const temperatureGraphContainer = document.getElementById("graphs");
 const disconnectedWarning = document.getElementById("disconnected-warning");
-const alertSensor = document.getElementById("sensor-alert");
-const advicePopup =     document.getElementById("advice");
 
 // Labels
 const graphDataSet = document.getElementById("display-graphs").dataset;
@@ -23,12 +21,6 @@ const weekLabels = JSON.parse(graphDataSet.weekLabels);
 const GRAPH_COLOR = 'rgb(75, 192, 192)';
 const WEEK_GRAPH_COLORS = ['rgb(44, 62, 80)', 'rgb(241, 196, 15)', 'rgb(52, 152, 219)', 'rgb(231, 76, 60)'];
 
-// Advice Reference
-const referenceLink = document.querySelector('[data-bs-target="#referenceModal"]');
-const modalContent = document.getElementById('modalReferenceContent');
-const adviceDataset = document.getElementById('advice').dataset;
-const referencesDataset = document.getElementById('references').dataset;
-
 // Graph Type enum, used for labelling.
 const GraphType = Object.freeze({
     MONTH: 0, WEEK: 1, DAY: 2
@@ -37,7 +29,6 @@ const GraphType = Object.freeze({
 // graph declarations
 let monthGraph, weekGraph, dayGraph;
 let currentlySelectedSensorView = "Temperature";
-let sensorAdviceMessageDisabled = new Map();
 
 /**
  * Render temperature graphs on page load.
@@ -288,7 +279,7 @@ function getDayGraphInformation(sensorName, data) {
  * Get graph information for a month graph.
  * Readings each day.
  *
- * @param sensorName Name of sensor used, e.g Temperature
+ * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
@@ -394,64 +385,4 @@ function createGraph([dataObject, xLabel, yLabel], graphId) {
             }
         }
     )
-}
-
-/**
- * Show the correct alert and advice message for the given sensor.
- *
- * @param {string} sensor The particular sensor metric to show alert and advice for.
- */
-function alertMessage(sensor) {
-    if (isNaN(Number(disconnectedWarning.getAttribute("data-"+sensor.toLowerCase())))) {
-        disconnectedWarning.style.display = "block";
-        alertSensor.innerText = sensor;
-    } else {
-        disconnectedWarning.style.display = "none";
-    }
-
-    const adviceMessage = advicePopup.getAttribute("data-"+sensor.toLowerCase());
-    if (adviceMessage != null && !sensorAdviceMessageDisabled.get(sensor)) {
-        advicePopup.style.display = "block";
-        advicePopup.firstChild.textContent = adviceMessage;
-    } else {
-        advicePopup.style.display = "none";
-    }
-}
-
-/**
- * hide the advice message for the currently selected sensor.
- */
-function closeAdvicePopup() {
-    sensorAdviceMessageDisabled.set(currentlySelectedSensorView, true);
-    advicePopup.style.display = "none";
-}
-
-referenceLink.addEventListener('click', function(e) {
-    // Prevent the default action of the link
-    e.preventDefault();
-
-    // Update the modal content based on the advice
-    showReference();
-})
-
-/**
- * Loads the corresponding references in the modal depending on the advice message
- */
-function showReference() {
-    switch (currentlySelectedSensorView){
-        case "Temperature":
-            modalContent.innerHTML = referencesDataset.temperatureRef;
-            break;
-        case "Moisture":
-            modalContent.innerHTML = referencesDataset.moistureRef;
-            break;
-        case "Light":
-            modalContent.innerHTML = referencesDataset.lightRef;
-            break;
-        case "Humidity":
-            modalContent.innerHTML = referencesDataset.humidityRef;
-            break;
-        default:
-            console.error("References cannot be loaded with this sensor id");
-    }
 }
