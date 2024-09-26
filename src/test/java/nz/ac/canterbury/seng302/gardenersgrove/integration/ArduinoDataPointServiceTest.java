@@ -6,12 +6,15 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDateTime;
@@ -26,6 +29,8 @@ class ArduinoDataPointServiceTest {
     ArduinoDataPointRepository arduinoDataPointRepositoryMock;
 
     ArduinoDataPointService arduinoDataPointService;
+    @MockBean
+    GardenService gardenService;
 
     static User user = new User("arduino@datpoint.com", "First", "Last","Password1!", "");
     static Garden garden = new Garden(user, "Garden", null, new Location("New Zealand", "Christchurch"),
@@ -33,8 +38,9 @@ class ArduinoDataPointServiceTest {
 
     @BeforeEach
     void setUpArduinoDataPointService() {
+//        gardenService = Mockito.mock(GardenService.class);
         arduinoDataPointRepositoryMock = Mockito.mock(ArduinoDataPointRepository.class);
-        arduinoDataPointService = new ArduinoDataPointService(arduinoDataPointRepositoryMock);
+        arduinoDataPointService = new ArduinoDataPointService(arduinoDataPointRepositoryMock, gardenService);
         List<ArduinoDataPoint> points = new ArrayList<>();
         for (double i=10; i<20; i++) {
             points.add(new ArduinoDataPoint(
@@ -73,5 +79,14 @@ class ArduinoDataPointServiceTest {
         Assertions.assertEquals(expected, arduinoDataPointService.getMinValueInRange(garden.getId(), LocalDateTime.now(), sensor));
     }
 
+    @Test
+    void checkFourteenDaysOfData_noData_returnFalse() {
+        Mockito.when(arduinoDataPointRepositoryMock.getArduinoDataPointOverDays(any(), any(), any())).thenReturn(new ArrayList<>());
+        Assertions.assertFalse(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
+    }
 
+    @Test
+    void checkFourteenDaysOfData_notEnoughData_returnFalse() {
+        Assertions.assertFalse(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
+    }
 }

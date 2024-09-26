@@ -30,7 +30,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-public class PlantSuggestions {
+public class PlantSuggestionsFeature {
     @Autowired
     private MockMvc mockMvc;
 
@@ -45,6 +45,9 @@ public class PlantSuggestions {
 
     private GardenPlantSuggestions gardenPlantSuggestions;
 
+    String expectedPrompt = "Given me 3 plant suggestions given my garden has, Temperature between -10.0C-42.0C, " +
+                            "Moisture between 3.0%-55.0%, Light between 5.0%-57.0%, Air Pressure between 0.1atm-0.62atm, " +
+                            "Humidity between 0.0%-52.0%";
     Garden garden;
     User user;
     Authentication auth;
@@ -58,22 +61,21 @@ public class PlantSuggestions {
         userService.addUsers(user);
         garden = new Garden(user, "Garden", "", new Location("New Zealand", "Christchurch"), 1f, true);
         gardenService.saveGarden(garden);
-        for (double i=10; i<100; i+=10) {
-            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now(),
+        for (double i=10, j=0; j<=14; i+=4, j++) {
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays((long) j),
                     i-20,i-10,i/100,i-5,i-7));
         }
         auth = RunCucumberTest.authMaker.accept(user.getEmail(), "Password1!", userService);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        Assertions.assertEquals("Given me 3 plant suggestions given my garden has, Temperature between -10.0C-70.0C, Moisture between 3.0%-83.0%, Light between 5.0%-85.0%, Air Pressure between 0.1atm-0.9atm, Humidity between 0.0%-80.0%",
-                gardenPlantSuggestions.getArduinoPrompt(garden.getId()));
+        Assertions.assertEquals(expectedPrompt, gardenPlantSuggestions.getArduinoPrompt(garden.getId()));
     }
 
     @When("the user clicks suggest plants on the view garden page,")
     public void theUserClicksSuggestPlantsOnTheViewGardenPage() throws Exception {
         try (MockedStatic<GardenPlantSuggestions> mockedSuggestions = mockStatic(GardenPlantSuggestions.class)) {
-            mockedSuggestions.when(() -> GardenPlantSuggestions.getSuggestions("Given me 3 plant suggestions given my garden has, Temperature between -10.0C-70.0C, Moisture between 3.0%-83.0%, Light between 5.0%-85.0%, Air Pressure between 0.1atm-0.9atm, Humidity between 0.0%-80.0%")).thenReturn("3 plants");
-            Assertions.assertEquals("3 plants", getSuggestions("Given me 3 plant suggestions given my garden has, Temperature between -10.0C-70.0C, Moisture between 3.0%-83.0%, Light between 5.0%-85.0%, Air Pressure between 0.1atm-0.9atm, Humidity between 0.0%-80.0%"));
+            mockedSuggestions.when(() -> GardenPlantSuggestions.getSuggestions(expectedPrompt)).thenReturn("3 plants");
+            Assertions.assertEquals("3 plants", getSuggestions(expectedPrompt));
             Assertions.assertNotEquals("3 plants", getSuggestions("H"));
             result = mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId())));
         }
