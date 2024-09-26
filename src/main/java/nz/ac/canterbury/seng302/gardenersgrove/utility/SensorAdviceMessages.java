@@ -16,27 +16,27 @@ public class SensorAdviceMessages {
 
     private final AdviceRanges adviceRanges;
 
-    private final String BELOW_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours dropped " +
+    private static final String BELOW_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours dropped " +
             "below the set advice range. Cold temperatures can make plants go dormant or cause damage. " +
             "Look out for discoloured or wilting leaves, root ball damage, split in steam or trunk and " +
             "stunted growth. If you notice any of these signs, trim dead roots or repot the plant. " +
             "Do not fertilize, overwater, or over-trim the plant while it heals.";
-    private final String BELOW_MOISTURE_ADVICE = "MOISTURE IS BELOW";
-    private final String BELOW_HUMIDITY_ADVICE = "HUMIDITY IS BELOW";
+    private static final String BELOW_MOISTURE_ADVICE = "MOISTURE IS BELOW";
+    private static final String BELOW_HUMIDITY_ADVICE = "HUMIDITY IS BELOW";
 
-    private final String ABOVE_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours has " +
+    private static final String ABOVE_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours has " +
             "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
             " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
             "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
             "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize.";
-    private final String ABOVE_MOISTURE_ADVICE = "MOISTURE IS ABOVE";
-    private final String ABOVE_HUMIDITY_ADVICE = "HUMIDITY IS ABOVE";
+    private static final String ABOVE_MOISTURE_ADVICE = "MOISTURE IS ABOVE";
+    private static final String ABOVE_HUMIDITY_ADVICE = "HUMIDITY IS ABOVE";
 
-    private final String IDEAL_ADVICE = "This garden has an ideal ";
+    private static final String IDEAL_ADVICE = "This garden has an ideal ";
 
-    private final List<String> TEMPERATURE_REFERENCES;
-    private final List<String> MOISTURE_REFERENCES;
-    private final List<String> HUMIDITY_REFERENCES;
+    private final List<String> temperatureReferences = new ArrayList<>();
+    private final List<String> moistureReferences = new ArrayList<>();
+    private final List<String> humidityReferences = new ArrayList<>();
 
 
     /**
@@ -48,18 +48,15 @@ public class SensorAdviceMessages {
         this.dayData = dayData;
         this.adviceRanges = adviceRanges;
 
-        TEMPERATURE_REFERENCES = new ArrayList<>();
-        TEMPERATURE_REFERENCES.add("\"Let's Grow a Garden! Part 1: Temperature, A Key Factor for Growing Our Food\" : \"https://www.womeninagscience.org/post/let-s-grow-a-garden-part-1-temperature-a-key-factor-for-growing-our-food#:~:text=Temperature%20is%20an%20important%20factor,from%2040%20to%2085%20F.\"");
-        TEMPERATURE_REFERENCES.add("\"5 Warning Signs Your Plants Are Experiencing Cold Shock\" : \"https://garrettchurchill.com/5-warning-signs-your-plants-are-experiencing-cold-shock/\"");
-        TEMPERATURE_REFERENCES.add("\"Heat wave in the garden: How to identify and prevent heat stress in plants\" : \"https://extension.oregonstate.edu/gardening/flowers-shrubs-trees/heat-wave-garden-how-identify-prevent-heat-stress-plants#:~:text=Above%20104%C2%B0F%2C%20many,activity%20and%20growth%20in%20plants.\"");
+        temperatureReferences.add("\"Let's Grow a Garden! Part 1: Temperature, A Key Factor for Growing Our Food\" : \"https://www.womeninagscience.org/post/let-s-grow-a-garden-part-1-temperature-a-key-factor-for-growing-our-food#:~:text=Temperature%20is%20an%20important%20factor,from%2040%20to%2085%20F.\"");
+        temperatureReferences.add("\"5 Warning Signs Your Plants Are Experiencing Cold Shock\" : \"https://garrettchurchill.com/5-warning-signs-your-plants-are-experiencing-cold-shock/\"");
+        temperatureReferences.add("\"Heat wave in the garden: How to identify and prevent heat stress in plants\" : \"https://extension.oregonstate.edu/gardening/flowers-shrubs-trees/heat-wave-garden-how-identify-prevent-heat-stress-plants#:~:text=Above%20104%C2%B0F%2C%20many,activity%20and%20growth%20in%20plants.\"");
 
-        MOISTURE_REFERENCES = new ArrayList<>();
-        MOISTURE_REFERENCES.add("\"websiteName\" : \"url\"");
-        MOISTURE_REFERENCES.add("\"websiteName2\" : \"url2\"");
+        moistureReferences.add("\"websiteName\" : \"url\"");
+        moistureReferences.add("\"websiteName2\" : \"url2\"");
 
-        HUMIDITY_REFERENCES = new ArrayList<>();
-        HUMIDITY_REFERENCES.add("\"websiteName3\" : \"url3\"");
-        HUMIDITY_REFERENCES.add("\"websiteName4\" : \"url4\"");
+        humidityReferences.add("\"websiteName3\" : \"url3\"");
+        humidityReferences.add("\"websiteName4\" : \"url4\"");
     }
 
 
@@ -126,7 +123,7 @@ public class SensorAdviceMessages {
 
         if (!advice.isEmpty()) {
             model.addAttribute("temperatureAdvice", advice);
-            model.addAttribute("temperatureReference", TEMPERATURE_REFERENCES);
+            model.addAttribute("temperatureReference", this.temperatureReferences);
         }
     }
 
@@ -141,9 +138,8 @@ public class SensorAdviceMessages {
 
         if (!advice.isEmpty()) {
             model.addAttribute("moistureAdvice", advice);
-            model.addAttribute("moistureReference", MOISTURE_REFERENCES);
+            model.addAttribute("moistureReference", this.moistureReferences);
         }
-
     }
 
     /**
@@ -156,7 +152,7 @@ public class SensorAdviceMessages {
                 BELOW_HUMIDITY_ADVICE, ABOVE_HUMIDITY_ADVICE);
         if (!advice.isEmpty()) {
             model.addAttribute("humidityAdvice", advice);
-            model.addAttribute("humidityReference", HUMIDITY_REFERENCES);
+            model.addAttribute("humidityReference", this.humidityReferences);
         }
     }
 }
