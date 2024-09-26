@@ -15,7 +15,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.GardenPlantSuggestions;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +27,6 @@ import java.time.LocalDateTime;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewGardenUri;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.GardenPlantSuggestions.getSuggestions;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
@@ -54,7 +52,7 @@ public class PlantSuggestions {
     ResultActions result;
 
     @Given("there is 14 days worth of data from the Arduino,")
-    public void thereIsDaysWorthOfDataFromTheArduino() throws ProfanityCheckingException {
+    public void thereIsDaysWorthOfDataFromTheArduino() {
         gardenPlantSuggestions = new GardenPlantSuggestions(arduinoDataPointService);
         user = new User("test@user.com", "Suggest", "Plants", "Password1!", "");
         user.setConfirmation(true);
@@ -77,9 +75,8 @@ public class PlantSuggestions {
         try (MockedStatic<GardenPlantSuggestions> mockedSuggestions = mockStatic(GardenPlantSuggestions.class)) {
             mockedSuggestions.when(() -> GardenPlantSuggestions.getSuggestions("Given me 3 plant suggestions given my garden has, Temperature between -10.0C-70.0C, Moisture between 3.0%-83.0%, Light between 5.0%-85.0%, Air Pressure between 0.1atm-0.9atm, Humidity between 0.0%-80.0%")).thenReturn("3 plants");
             Assertions.assertEquals("3 plants", getSuggestions("Given me 3 plant suggestions given my garden has, Temperature between -10.0C-70.0C, Moisture between 3.0%-83.0%, Light between 5.0%-85.0%, Air Pressure between 0.1atm-0.9atm, Humidity between 0.0%-80.0%"));
+            Assertions.assertNotEquals("3 plants", getSuggestions("H"));
             result = mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId())));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
         result.andExpect(MockMvcResultMatchers.status().isOk());
     }
