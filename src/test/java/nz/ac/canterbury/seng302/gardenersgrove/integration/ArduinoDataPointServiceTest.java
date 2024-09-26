@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Import;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -38,7 +39,7 @@ class ArduinoDataPointServiceTest {
 
     @BeforeEach
     void setUpArduinoDataPointService() {
-//        gardenService = Mockito.mock(GardenService.class);
+        Mockito.when(gardenService.getGardenById(any())).thenReturn(Optional.ofNullable(garden));
         arduinoDataPointRepositoryMock = Mockito.mock(ArduinoDataPointRepository.class);
         arduinoDataPointService = new ArduinoDataPointService(arduinoDataPointRepositoryMock, gardenService);
         List<ArduinoDataPoint> points = new ArrayList<>();
@@ -87,6 +88,40 @@ class ArduinoDataPointServiceTest {
 
     @Test
     void checkFourteenDaysOfData_notEnoughData_returnFalse() {
+        Assertions.assertFalse(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
+    }
+
+    @Test
+    void checkFourteenDaysOfData_enoughData_returnTrue() {
+        List<ArduinoDataPoint> points = new ArrayList<>();
+        for (double i=10, j=0; j<=14; i++, j++) {
+            points.add(new ArduinoDataPoint(
+                    garden,
+                    LocalDateTime.now().minusDays((long)j),
+                    i-10,
+                    i-9,
+                    i-8,
+                    i-7,
+                    i-6));
+        }
+        Mockito.when(arduinoDataPointRepositoryMock.getArduinoDataPointOverDays(any(), any(), any())).thenReturn(points);
+        Assertions.assertTrue(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
+    }
+
+    @Test
+    void checkFourteenDaysOfData_missingDays_returnFalse() {
+        List<ArduinoDataPoint> points = new ArrayList<>();
+        for (double i=10, j=0; j<=14; i++, j+=2) {
+            points.add(new ArduinoDataPoint(
+                    garden,
+                    LocalDateTime.now().minusDays((long)j),
+                    i-10,
+                    i-9,
+                    i-8,
+                    i-7,
+                    i-6));
+        }
+        Mockito.when(arduinoDataPointRepositoryMock.getArduinoDataPointOverDays(any(), any(), any())).thenReturn(points);
         Assertions.assertFalse(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
     }
 }
