@@ -44,28 +44,36 @@ public class SensorAdviceMessages {
     }
 
 
-    private boolean isPointBelowMinInLast24Hours(List<Double> sensorReadings, double sensorMin) {
-        return sensorReadings.stream().anyMatch(sensorReading -> sensorReading != null && sensorReading < sensorMin);
-    }
-
-    private boolean isPointAboveMaxInLast24Hours(List<Double> sensorReadings, double sensorMin) {
-        return sensorReadings.stream().anyMatch(sensorReading -> sensorReading != null && sensorReading > sensorMin);
+    private AdviceMessageType findAdviceMessageType(List<Double> sensorReadings, double sensorMin, double sensorMax) {
+        int nullCount = 0;
+        boolean isBelow = false;
+        boolean isAbove = false;
+        for (Double sensorReading : sensorReadings) {
+            if (sensorReading == null) {
+                nullCount += 1;
+            } else {
+                if (sensorReading < sensorMin) isBelow = true;
+                if (sensorReading > sensorMax) isAbove = true;
+            }
+        }
+        if (nullCount == sensorReadings.size()) return AdviceMessageType.EMPTY;
+        if (isBelow && isAbove) return AdviceMessageType.BELOW_AND_ABOVE;
+        if (isBelow) return AdviceMessageType.BELOW;
+        if (isAbove) return AdviceMessageType.ABOVE;
+        return AdviceMessageType.WITHIN;
     }
 
     private String getAdvice(String sensorName, List<Double> sensorReadings, double minRange, double maxRange,
                              String belowAdvice, String aboveAdvice) {
-        boolean isSensorBelow = isPointBelowMinInLast24Hours(sensorReadings, minRange);
-        boolean isSensorAbove = isPointAboveMaxInLast24Hours(sensorReadings, maxRange);
+        AdviceMessageType adviceMessageType = findAdviceMessageType(sensorReadings, minRange, maxRange);
 
-        String advice = "";
-
-        if (isSensorBelow) advice += belowAdvice;
-
-        if (isSensorAbove) advice += ((!advice.isEmpty()) ? "\n" : "") + aboveAdvice;
-
-        if (!isSensorBelow && !isSensorAbove) return IDEAL_ADVICE + sensorName + ".";
-
-        return advice;
+        return switch (adviceMessageType) {
+            case BELOW -> belowAdvice;
+            case ABOVE -> aboveAdvice;
+            case BELOW_AND_ABOVE -> belowAdvice + "\n" + aboveAdvice;
+            case WITHIN -> IDEAL_ADVICE + sensorName + ".";
+            default -> "";
+        };
     }
 
     /**
@@ -77,16 +85,22 @@ public class SensorAdviceMessages {
                 adviceRanges.getMinTemperature(),
                 adviceRanges.getMaxTemperature(),
                 BELOW_TEMPERATURE_ADVICE, ABOVE_TEMPERATURE_ADVICE);
-        model.addAttribute("temperatureAdvice", advice);
-        model.addAttribute("temperatureReference", TEMPERATURE_REFERENCES);
+
+        if (!advice.isEmpty()) {
+            model.addAttribute("temperatureAdvice", advice);
+            model.addAttribute("temperatureReference", TEMPERATURE_REFERENCES);
+        }
     }
 
     public void addSoilMoistureAdviceToModel(Model model) {
         String advice = getAdvice("moisture", dayData.getMoisture(),
                 adviceRanges.getMinMoisture(), adviceRanges.getMaxMoisture(),
                 BELOW_MOISTURE_ADVICE, ABOVE_MOISTURE_ADVICE);
-        model.addAttribute("moistureAdvice", advice);
-        model.addAttribute("moistureReference", MOISTURE_REFERENCES);
+
+        if (!advice.isEmpty()) {
+            model.addAttribute("moistureAdvice", advice);
+            model.addAttribute("moistureReference", MOISTURE_REFERENCES);
+        }
 
     }
 
@@ -94,9 +108,10 @@ public class SensorAdviceMessages {
         String advice = getAdvice("add", dayData.getHumidity(),
                 adviceRanges.getMinHumidity(), adviceRanges.getMaxHumidity(),
                 BELOW_HUMIDITY_ADVICE, ABOVE_HUMIDITY_ADVICE);
-        model.addAttribute("humidityAdvice", advice);
-        model.addAttribute("humidityReference", HUMIDITY_REFERENCES);
-
+        if (!advice.isEmpty()) {
+            model.addAttribute("humidityAdvice", advice);
+            model.addAttribute("humidityReference", HUMIDITY_REFERENCES);
+        }
     }
 
 
