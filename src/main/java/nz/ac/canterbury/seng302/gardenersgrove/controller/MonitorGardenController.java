@@ -14,6 +14,10 @@ import org.slf4j.LoggerFactory;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoControllerDataService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoControllerDataService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.AdviceRangesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +37,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
  * updates for a specific garden.
  */
 @Controller
-class MonitorGardenController extends NavBar {
+public class MonitorGardenController extends NavBar {
     Logger logger = LoggerFactory.getLogger(MonitorGardenController.class);
     private final UserService userService;
     private final GardenService gardenService;
@@ -130,6 +134,10 @@ class MonitorGardenController extends NavBar {
         arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
         arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
         arduinoControllerDataService.addGraphDataToModel(model, gardenId);
+        arduinoControllerDataService.addAdviceMessagesToModel(model);
+        arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
+        arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
+        arduinoControllerDataService.addGraphDataToModel(model, gardenId);
         arduinoControllerDataService.addArduinoDataThresholds(model);
         arduinoControllerDataService.addAdviceMessagesToModel(model);
 
@@ -164,7 +172,7 @@ class MonitorGardenController extends NavBar {
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
             return loadMonitorGardenPage(gardenId, model, new HashMap<>(), Optional.empty());
-}
+        }
 
         Garden garden = optionalGarden.get();
         AdviceRanges adviceRanges = garden.getAdviceRanges();
