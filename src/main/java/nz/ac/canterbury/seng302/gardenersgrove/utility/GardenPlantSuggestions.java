@@ -99,6 +99,12 @@ public class GardenPlantSuggestions {
         return responseList.get(11);
     }
 
+    /**
+     * Given a garden it builds a prompt to feed into Gemma based on max and min data points for each sensor and returns
+     * the prompt.
+     * @param gardenId  The garden id that plants are being suggested for
+     * @return          The string to be feed into Gemma
+     */
     public String getArduinoPrompt(long gardenId) {
         List<String> sensors = new ArrayList<>(Arrays.asList("Temperature", "Moisture", "Light", "Air Pressure", "Humidity"));
         StringBuilder prompt = new StringBuilder("Given me 3 plant suggestions given my garden has");
@@ -121,6 +127,12 @@ public class GardenPlantSuggestions {
         return prompt.toString();
     }
 
+    /**
+     * Given a response from Gemma it cuts it down into 3 plant suggestions with the name of the plant being put into
+     * bold.
+     * @param response  The response from Gemma to be parsed
+     * @return          A list of 3 string descriptions of plants
+     */
     public List<String> parseSuggestions(String response) {
         List<String> plants = new ArrayList<>();
         String[] splitResponse = response.split("Option");
