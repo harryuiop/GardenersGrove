@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.compareGardensUri;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.monitorGardenUri;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -175,8 +176,8 @@ public class CompareGraphsFeature {
                 .andReturn();
         try {
             List<Garden> modelGardenList = (List<Garden>) mvcResult.getModelAndView().getModel().get("gardenList");
-            // modelGardenList shouldn't include the currently viewed garden, hence size - 1
-            Assertions.assertEquals(gardenList.size(), modelGardenList.size() - 1);
+            // modelGardenList shouldn't include the currently viewed garden, hence size + 1
+            Assertions.assertEquals(gardenList.size(), modelGardenList.size() + 1);
         } catch (Exception e) {
             Assertions.fail("Unexpected error occurred during garden list comparison.");
         }
@@ -185,25 +186,13 @@ public class CompareGraphsFeature {
     @And("I select another of my gardens from the comparison dropdown")
     public void iSelectAnotherOfMyGardensFromTheComparisonDropdown() {
         gardenToCompareId = gardenId;
-
     }
 
     @Then("I am shown a page with the comparison of both gardens")
-    public void iAmShownAPageWithTheComparisonOfBothGardens() {
+    public void iAmShownAPageWithTheComparisonOfBothGardens() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(auth);
-        MockMvc.
+        mockMvc.perform(MockMvcRequestBuilders.get(compareGardensUri(garden3Id, gardenToCompareId))
+                        .with(csrf()))
+                .andExpect(status().isOk());
     }
-
-    @And("I am on the comparison page between two of my gardens")
-    public void iAmOnTheComparisonPageBetweenTwoOfMyGardens() {
-    }
-
-    @When("I select the No Comparison option from the comparison dropdown")
-    public void iSelectTheNoComparisonOptionFromTheComparisonDropdown() {
-    }
-
-    @Then("I am taken back to the monitor garden page for my original garden")
-    public void iAmTakenBackToTheMonitorGardenPageForMyOriginalGarden() {
-    }
-
 }

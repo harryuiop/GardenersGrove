@@ -18,9 +18,3 @@ Feature: As John, I want to compare my graphed data to other users so I can see 
     When I navigate to the garden monitoring page for one of my gardens
     And I select another of my gardens from the comparison dropdown
     Then I am shown a page with the comparison of both gardens
-
-  Scenario: AC4 - When I am comparing two gardens, and I select 'No Comparison' from the comparison dropdown, I am taken back to my monitoring page for my garden.
-    Given I have a second garden with a connected Arduino
-    And I am on the comparison page between two of my gardens
-    When I select the No Comparison option from the comparison dropdown
-    Then I am taken back to the monitor garden page for my original garden
