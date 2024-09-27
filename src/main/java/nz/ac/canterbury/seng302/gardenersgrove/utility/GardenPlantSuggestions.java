@@ -17,13 +17,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class GardenPlantSuggestions {
     Logger logger = LoggerFactory.getLogger(GardenPlantSuggestions.class);
 
     ArduinoDataPointService arduinoDataPointService;
+    private final String context = "For the following request give 3 plants in the format of a plant name then ':' then a 2 line summary of about the plant. Have no wording before or after the plant name and description. have a number then a fullstops before each plant to tell which suggestion it is.";
 
-    public GardenPlantSuggestions(ArduinoDataPointService arduinoDataPointService) {
+
+    public GardenPlantSuggestions(ArduinoDataPointService arduinoDataPointService)  {
         this.arduinoDataPointService = arduinoDataPointService;
     }
 
@@ -45,9 +46,11 @@ public class GardenPlantSuggestions {
             // Create prompt and get suggestion based on Arduino data
             String arduinoPrompt = getArduinoPrompt(garden.getId());
 
-            if (!arduinoPrompt.equals("Given me 3 plant suggestions given my garden has")) {
+            if (!arduinoPrompt.equals(context + " Plant suggestions given my garden has")) {
                 try {
-                    return parseSuggestions(getSuggestions(arduinoPrompt));
+                    String response = getSuggestions(arduinoPrompt);
+                    logger.info(response);
+                    return parseSuggestions(response);
                 } catch (ProfanityCheckingException e) {
                     logger.error(e.getMessage());
                     List<String> suggestions = new ArrayList<>();
@@ -107,7 +110,7 @@ public class GardenPlantSuggestions {
      */
     public String getArduinoPrompt(long gardenId) {
         List<String> sensors = new ArrayList<>(Arrays.asList("Temperature", "Moisture", "Light", "Air Pressure", "Humidity"));
-        StringBuilder prompt = new StringBuilder("Given me 3 plant suggestions given my garden has");
+        StringBuilder prompt = new StringBuilder(context + " Plant suggestions given my garden has");
 
         for (String sensor : sensors) {
             String unit;
@@ -135,16 +138,14 @@ public class GardenPlantSuggestions {
      */
     public List<String> parseSuggestions(String response) {
         List<String> plants = new ArrayList<>();
-        String[] splitResponse = response.split("Option");
+        System.out.println(response);
+        String[] splitResponse = response.split("[0-9]: ");
         for (String environment : splitResponse) {
-            String[] temp = environment.split("\\* \\*\\*");
-            if (temp.length > 1) {
-                String str = temp[1].replace("\n", " ").replace("** ", "\n");
+                String str = environment.replace("\\n", "\n").replace("*", "");
                 int index = str.indexOf(":");
                 String before = str.substring(0, index+1);
                 String after = str.substring(index+1);
                 plants.add("<b>" + before + "</b>" + after);
-            }
         }
         return  plants;
     }

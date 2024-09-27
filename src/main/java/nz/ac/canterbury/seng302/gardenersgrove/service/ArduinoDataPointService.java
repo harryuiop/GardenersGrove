@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -115,8 +116,9 @@ public class ArduinoDataPointService {
         if (garden.isEmpty()) {
             return false;
         }
+        LocalDateTime time = LocalDateTime.now().with(LocalTime.MIDNIGHT);
         for (long i=1; i<=14; i++) {
-            List<ArduinoDataPoint> points = dataPointRepository.getArduinoDataPointOverDays(gardenId, LocalDateTime.now().minusDays(i), LocalDateTime.now().minusDays(i-1));
+            List<ArduinoDataPoint> points = dataPointRepository.getArduinoDataPointOverDays(gardenId, time.minusDays(i), time.minusDays(i-1));
             if (points.isEmpty()) {
                 return false;
             }

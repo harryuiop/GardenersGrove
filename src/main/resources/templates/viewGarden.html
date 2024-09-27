@@ -32,8 +32,8 @@
                     </a>
                   </div>
                 </div>
-                <button type="button" class="btn btn-edit mt-1" data-bs-toggle="modal"
-                        data-bs-target="#plantSuggestionModal">
+                <button id="plant-suggestions-button" type="button" class="btn btn-edit mt-1" data-bs-toggle="modal"
+                        data-bs-target="#plantSuggestionModal" th:attr="data-garden-id=${garden.getId()}">
                   Plant Suggestions
                 </button>
               </div>
@@ -209,9 +209,9 @@
         <h5 class="modal-title fs-5" id="plantSuggestionModalLabel">Suggested Plants</h5>
       </div>
       <div class="modal-body">
-        <div th:each="suggestion : ${plantSuggestions}">
-          <p th:utext="${suggestion}"></p>
-        </div>
+
+        <div id="plant-suggestion-container"></div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-edit" data-bs-dismiss="modal">Close</button>
@@ -233,4 +233,5 @@
 </script>
 <script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/cookies.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/plantSuggestions.js}"></script>
 </html>
