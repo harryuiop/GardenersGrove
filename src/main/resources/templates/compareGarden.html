@@ -90,7 +90,7 @@
                         th:href="${monitorGardenUri}"></a>
             </li>
             <li th:each="userGarden: ${gardenList}">
-                <a th:if="${userGarden.getId() != yourGarden.getId()}" class="dropdown-item text-truncate" style="
+                <a class="dropdown-item text-truncate" style="
               max-width: 75ch;
               overflow: hidden;
               text-overflow: ellipsis;

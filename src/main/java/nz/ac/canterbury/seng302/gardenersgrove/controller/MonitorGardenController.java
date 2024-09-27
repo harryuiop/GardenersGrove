@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -108,9 +109,12 @@ class MonitorGardenController extends NavBar {
             throw new NoSuchGardenException(gardenId);
         }
 
+        List<Garden> gardenList = gardenService.getAllGardens();
+        gardenList.removeIf(g -> g.getId() == gardenId);
+
         model.addAttribute("garden", garden);
         model.addAttribute("owner", !notOwner);
-        model.addAttribute("gardenList", gardenService.getAllGardens());
+        model.addAttribute("gardenList", gardenList);
         model.addAttribute("editAdviceUri", EDIT_ADVICE_RANGES_URI_STRING);
         model.addAllAttributes(adviceRangesErrors);
         model.addAttribute("openAdviceRangesModel", !adviceRangesErrors.isEmpty());

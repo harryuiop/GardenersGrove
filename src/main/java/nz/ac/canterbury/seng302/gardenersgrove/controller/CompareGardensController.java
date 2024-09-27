@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 import java.util.Optional;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
@@ -71,11 +73,14 @@ public class CompareGardensController extends NavBar {
             throw new NoSuchGardenException(yourGardenId);
         }
 
+        List<Garden> gardenList = gardenService.getAllGardens();
+        gardenList.removeIf(garden -> garden.getId() == yourGardenId);
+
         model.addAttribute("yourGarden", yourGarden);
         model.addAttribute("theirGarden", theirGarden);
         model.addAttribute("owner", yourGarden.getOwner() == currentUser);
         model.addAttribute("monitorGardenUri", monitorGardenUri(yourGarden.getId()));
-        model.addAttribute("gardenList", gardenService.getAllGardens());
+        model.addAttribute("gardenList", gardenList);
 
         arduinoControllerDataService.addGraphDataToModel(model, yourGardenId, theirGardenId);
 
