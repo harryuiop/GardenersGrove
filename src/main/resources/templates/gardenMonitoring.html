@@ -113,11 +113,11 @@
                  th:data-humidity="${humidReading}"
             >
                 <div class="alert alert-danger">
-                        <i class="bi bi-link"></i>
-                        <span id="sensor-alert">Temperature</span><span>
+                    <i class="bi bi-link"></i>
+                    <span id="sensor-alert">Temperature</span><span>
                             sensor currently not connected, please check connection</span>
-                    </div>
                 </div>
+            </div>
 
             <!-- Advice -->
             <div class="row mx-4">
@@ -126,9 +126,23 @@
                 th:data-moisture="${moistureAdvice}"
                 th:data-light="${lightAdvice}"
                 th:data-humidity="${humidityAdvice}">
+
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#referenceModal" class="btn btn-link">
+                        See References
+                    </a>
+
+                    <p id="references"
+                       th:attr="data-temperature-ref=${temperatureReference},
+                       data-moisture-ref=${moistureReference},
+                       data-light-ref=${lightReference},
+                       data-humidity-ref=${humidityReference}">
+                    </p>
+
+                    <!-- Close Button-->
                     <button class="btn btn-close me-3 mt-3 position-absolute top-0 end-0"
                             type="button" onclick="closeAdvicePopup()">
                     </button>
+
                 </div>
             </div>
 
@@ -159,6 +173,8 @@
                             </button>
                         </div>
                     </div>
+
+                    <!--Graphs-->
                     <div class="row" id="graphs" data-units="c">
                         <div class="container">
                             <div class="row">
@@ -177,6 +193,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -298,9 +315,32 @@
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
+
+    <!-- Reference Modal Structure -->
+    <div class="modal fade" id="referenceModal" tabindex="-1" aria-labelledby="referenceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="referenceModalLabel">Reference Information</h5>
+                </div>
+                <div class="modal-body" id="modalReferenceContent">
+                    <ul id="reference-list"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
+                        Close <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
     <script type="text/javascript" th:src="@{/javascript/adviceRanges.js}"></script>
+    <script type="text/javascript" th:src="@{/javascript/adviceMessages.js}"></script>
 </body>
 </html>
