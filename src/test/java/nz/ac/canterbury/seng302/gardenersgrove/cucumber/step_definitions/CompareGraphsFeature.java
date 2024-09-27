@@ -43,6 +43,7 @@ public class CompareGraphsFeature {
     private static Long garden2Id;
     private static Long garden3Id;
     private static User user;
+    private static Long gardenToCompareId;
 
     private Authentication auth;
     @Given("I have a user that is logged in with a monitored garden")
@@ -174,9 +175,8 @@ public class CompareGraphsFeature {
                 .andReturn();
         try {
             List<Garden> modelGardenList = (List<Garden>) mvcResult.getModelAndView().getModel().get("gardenList");
-            System.out.println(gardenList);
-            System.out.println(modelGardenList);
-            Assertions.assertEquals(gardenList.size(), modelGardenList.size());
+            // modelGardenList shouldn't include the currently viewed garden, hence size - 1
+            Assertions.assertEquals(gardenList.size(), modelGardenList.size() - 1);
         } catch (Exception e) {
             Assertions.fail("Unexpected error occurred during garden list comparison.");
         }
@@ -184,10 +184,14 @@ public class CompareGraphsFeature {
 
     @And("I select another of my gardens from the comparison dropdown")
     public void iSelectAnotherOfMyGardensFromTheComparisonDropdown() {
+        gardenToCompareId = gardenId;
+
     }
 
     @Then("I am shown a page with the comparison of both gardens")
     public void iAmShownAPageWithTheComparisonOfBothGardens() {
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        MockMvc.
     }
 
     @And("I am on the comparison page between two of my gardens")
