@@ -22,12 +22,14 @@ public class SensorAdviceMessages {
             "stunted growth. If you notice any of these signs, trim dead roots or repot the plant. " +
             "Do not fertilize, overwater, or over-trim the plant while it heals.";
     private static final String BELOW_MOISTURE_ADVICE = "MOISTURE IS BELOW";
-    private static final String BELOW_HUMIDITY_ADVICE = "HUMIDITY IS BELOW";
+    private static final String BELOW_HUMIDITY_ADVICE = "Humidity has been below the set ideal minimum in the last 24 " +
+            "hours  Look out for wilting, stunted growth, smaller leaves, dry tip burn, leaf curl. If any of these " +
+            "persist try using a mister, fog unit or sprinkler on your garden.";
 
     private static final String ABOVE_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours has " +
             "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
             " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
-            "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+            "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
             "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize.";
     private static final String ABOVE_MOISTURE_ADVICE = "MOISTURE IS ABOVE";
     private static final String ABOVE_HUMIDITY_ADVICE = "HUMIDITY IS ABOVE";
@@ -55,8 +57,8 @@ public class SensorAdviceMessages {
         moistureReferences.add("\"websiteName\" : \"url\"");
         moistureReferences.add("\"websiteName2\" : \"url2\"");
 
-        humidityReferences.add("\"websiteName3\" : \"url3\"");
-        humidityReferences.add("\"websiteName4\" : \"url4\"");
+        humidityReferences.add("\"The Green Pages: Humidity, temperature and watering\" : \"https://espacepourlavie.ca/en/humidity-temperature-and-watering#:~:text=Most%20plants%20grow%20best%20with,tolerate%20humidity%20levels%20below%2025%25\"");
+        humidityReferences.add("\"7 Mistakes Growers Make with Humidity\" : \"https://www.shogunfertilisers.com/en/growing-information/blogs/7-mistakes-growers-make-with-humidity/#:~:text=Generally%2C%20as%20the%20temperature%20increases,aim%20for%2055%2D70%25.\"");
     }
 
 
