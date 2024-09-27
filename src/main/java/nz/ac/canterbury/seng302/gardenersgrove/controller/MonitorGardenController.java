@@ -11,9 +11,17 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoControllerDataService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.AdviceRangesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -123,9 +131,8 @@ public class MonitorGardenController extends NavBar {
 
         arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
         arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
-        arduinoControllerDataService.addGraphDataToModel(model, gardenId);
+        arduinoControllerDataService.addGraphDataAndAdviceMessagesToModel(model, gardenId, garden);
         arduinoControllerDataService.addArduinoDataThresholds(model);
-        arduinoControllerDataService.addAdviceMessagesToModel(model);
 
         return "gardenMonitoring";
     }

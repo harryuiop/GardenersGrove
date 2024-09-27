@@ -11,8 +11,6 @@ const currentTempReading = document.getElementById("current-temp-reading");
 // Containers
 const temperatureGraphContainer = document.getElementById("graphs");
 const disconnectedWarning = document.getElementById("disconnected-warning");
-const alertSensor = document.getElementById("sensor-alert");
-const advicePopup =     document.getElementById("advice");
 
 // Labels
 const graphDataSet = document.getElementById("display-graphs").dataset;
@@ -31,7 +29,6 @@ const GraphType = Object.freeze({
 // graph declarations
 let monthGraph, weekGraph, dayGraph;
 let currentlySelectedSensorView = "Temperature";
-let sensorAdviceMessageDisabled = new Map();
 
 /**
  * Render temperature graphs on page load.
@@ -51,11 +48,10 @@ function makeActive(buttonId) {
     button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead';
 
     allButtons.forEach( allButtonsItem => {
-            if (allButtonsItem !== buttonId) {
-                document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
-            }
+        if (allButtonsItem !== buttonId) {
+            document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
         }
-    )
+    })
 
     currentlySelectedSensorView = buttonId;
 
@@ -287,7 +283,7 @@ function getDayGraphInformation(sensorName, data, timeLabels) {
  * Get graph information for a month graph.
  * Readings each day.
  *
- * @param sensorName Name of sensor used, e.g Temperature
+ * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
  * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
@@ -368,7 +364,7 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
  * @param graphId       the id of the div where the graph goes
- * @param {string} sensorName    Name of sensor e.g Temperature
+ * @param {string} sensorName    Name of sensor e.g. Temperature
  * @param graphType     Type of graph: Month, Week, Day
  * @param timeLabels    Time labels for y-axis
  */
@@ -418,34 +414,4 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             }
         }
     )
-}
-
-/**
- * Show the correct alert and advice message for the given sensor.
- *
- * @param {string} sensor The particular sensor metric to show alert and advice for.
- */
-function alertMessage(sensor) {
-    if (isNaN(Number(disconnectedWarning.getAttribute("data-"+sensor.toLowerCase())))) {
-        disconnectedWarning.style.display = "block";
-        alertSensor.innerText = sensor;
-    } else {
-        disconnectedWarning.style.display = "none";
-    }
-
-    const adviceMessage = advicePopup.getAttribute("data-"+sensor.toLowerCase());
-    if (adviceMessage != null && !sensorAdviceMessageDisabled.get(sensor)) {
-        advicePopup.style.display = "block";
-        advicePopup.firstChild.textContent = adviceMessage;
-    } else {
-        advicePopup.style.display = "none";
-    }
-}
-
-/**
- * hide the advice message for the currently selected sensor.
- */
-function closeAdvicePopup() {
-    sensorAdviceMessageDisabled.set(currentlySelectedSensorView, true);
-    advicePopup.style.display = "none";
 }
