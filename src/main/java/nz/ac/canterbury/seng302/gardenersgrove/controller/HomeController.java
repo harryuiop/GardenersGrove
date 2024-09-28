@@ -1,6 +1,10 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.slf4j.Logger;
@@ -11,6 +15,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.*;
 
@@ -23,6 +31,7 @@ public class HomeController extends NavBar {
     Logger logger = LoggerFactory.getLogger(HomeController.class);
     private final GardenService gardenService;
     private final UserService userService;
+    private final ArduinoDataPointService arduinoDataPointService;
 
     /**
      * The HomeController constructor need not be called ever.
@@ -32,9 +41,10 @@ public class HomeController extends NavBar {
      * @param userService   The User database access object.
      */
     @Autowired
-    public HomeController(GardenService gardenService, UserService userService) {
+    public HomeController(GardenService gardenService, UserService userService, ArduinoDataPointService arduinoDataPointService) {
         this.gardenService = gardenService;
         this.userService = userService;
+        this.arduinoDataPointService = arduinoDataPointService;
     }
 
     /**
@@ -49,20 +59,36 @@ public class HomeController extends NavBar {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        User loggedInUser = userService.getAuthenticatedUser();
+
         // Spring security allows requests to the root URI for unauthenticated users.
         // We must check to see if the principle is authenticated to determine which page to display.
-        if (auth.getPrincipal() == "anonymousUser" || userService.getAuthenticatedUser() == null) {
+        if (auth.getPrincipal() == "anonymousUser" || loggedInUser == null) {
             model.addAttribute("loginUri", loginUri());
             model.addAttribute("registerUri", registerUri());
             return "landing";
         }
         this.updateGardensNavBar(model, gardenService, userService);
 
+        addUriToModel(model);
+
+        List<Garden> connectedGardens =  gardenService.getConnectedGardens(loggedInUser);
+
+        Map<String, ArduinoDataPoint> arduinoDataPointsMap = new HashMap<>();
+        for (Garden connectedGarden : connectedGardens) {
+            arduinoDataPointsMap.put(connectedGarden.getName(),
+                    arduinoDataPointService.getMostRecentArduinoDataPoint(connectedGarden));
+        }
+        model.addAttribute("connectedGardens", arduinoDataPointsMap);
 
         return "home";
     }
 
-//    private void addUriToModel(Model model) {
-//        model.addAttribute("")
-//    }
+    private void addUriToModel(Model model) {
+        model.addAttribute("browseUri", browsePublicGardensUri());
+        model.addAttribute("profileUri", viewProfileUri());
+        model.addAttribute("friendsUri", viewFriendsUri());
+        model.addAttribute("myGardensUri", viewAllGardensUri());
+        model.addAttribute("createGardenUri", newGardenUri());
+    }
 }

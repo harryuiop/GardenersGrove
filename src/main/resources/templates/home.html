@@ -24,63 +24,82 @@
 
               <div class="row">
                 <div class="col-lg-4 p-4">
-                  <h2>Monitor Garden</h2>
+                  <h2>Garden Stats</h2>
 
-                  <div class="dropdown">
-                    <button class="btn dropdown-toggle btn-confirm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <span>Garden one</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li th:each="userGarden: ${gardenList}">
-                        <a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{|/garden/compare/${garden.getId()}/${userGarden.getId()}|}" th:text="${userGarden.getName()}"></a>
-                      </li>
-                    </ul>
+                  <div th:if="${connectedGardens.isEmpty()}">
+                    You have no gardens connected to an arduino.
+                    Please get in touch with the Garden Pulse team to connect a garden.
                   </div>
 
+                  <div th:unless="${connectedGardens.isEmpty()}">
+                    <div class="dropdown">
+                      <button class="btn dropdown-toggle btn-confirm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span id="selected-garden-name">Select a Garden</span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li th:each="entry : ${connectedGardens.entrySet()}">
+                          <a class="dropdown-item text-truncate"
+                             style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                             th:text="${entry.key}"
+                             th:attr="data-temp=${entry.value.getTempCelsius()},
+                                      data-moisture=${entry.value.getMoisturePercent()},
+                                      data-light=${entry.value.getLightPercent()},
+                                      data-pressure=${entry.value.getAtmosphereAtm()},
+                                      data-humidity=${entry.value.getHumidityPercent()}"
+                             onclick="updateGardenStats(this)"></a>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- Garden Stats-->
+                    <div class="row">
+                      <div class="col bg-white rounded shadow-sm">
+                        <div class="d-flex flex-column">
+                          <!-- Temperature -->
+                          <div class="container w-100 align-content-center py-2">
+                            <i class="bi bi-thermometer-half"></i>
+                            <span>Temperature:&nbsp;</span>
+                            <span id="current-temp-reading"></span>
+                            <span id="current-temp-unit">°C</span>
+                          </div>
 
-                  <!-- Garden Stats-->
-                  <div class="row">
-                    <div class="col bg-white rounded shadow-sm">
-                      <div class="d-flex flex-column">
-                        <!-- Temperature -->
-                        <div class="container w-100 align-content-center py-2">
-                          <i class="bi bi-thermometer-half"></i>
-                          <span>Temperature:&nbsp;</span>
-                          <span id="current-temp-reading" th:text="${tempReading}"></span>
-                          <span id="current-temp-unit">°C</span>
-                        </div>
+                          <!-- Soil Moisture -->
+                          <div class="container w-100 align-content-center py-2">
+                            <i class="bi bi-moisture"></i>
+                            <span>Soil Moisture:&nbsp;</span>
+                            <span id="current-moisture-reading"></span>
+                            <span>%</span>
+                          </div>
 
-                        <!-- Soil Moisture -->
-                        <div class="container w-100 align-content-center py-2">
-                          <i class="bi bi-moisture"></i>
-                          <span th:text="'Soil Moisture: '+ ${moistReading} + '%'"></span>
-                        </div>
+                          <!-- Light -->
+                          <div class="container w-100 align-content-center py-2">
+                            <i class="bi bi-brightness-high"></i>
+                            <span>Light:&nbsp;</span>
+                            <span id="current-light-reading"></span>
+                            <span>%</span>
+                          </div>
 
-                        <!-- Light -->
-                        <div class="container w-100 align-content-center py-2">
-                          <i class="bi bi-brightness-high"></i>
-                          <span th:text="'Light: '+ ${lightReading} + '%'"></span>
-                        </div>
+                          <!-- Air Pressure -->
+                          <div class="container w-100 align-content-center py-2">
+                            <i class="bi bi-speedometer"></i>
+                            <span>Pressure:&nbsp;</span>
+                            <span id="current-pressure-reading"></span>
+                            <span>atm</span>
+                          </div>
 
-                        <!-- Air Pressure -->
-                        <div class="container w-100 align-content-center py-2">
-                          <i class="bi bi-speedometer"></i>
-                          <span th:text="'Air Pressure: '+ ${pressureReading} + 'atm'"></span>
-                        </div>
-
-                        <!-- Humidity -->
-                        <div class="container w-100 align-content-center py-2">
-                          <i class="bi bi-droplet-half"></i>
-                          <span th:text="'Humidity: '+ ${humidReading} + '%'"></span>
+                          <!-- Humidity -->
+                          <div class="container w-100 align-content-center py-2">
+                            <i class="bi bi-droplet-half"></i>
+                            <span>Humidity:&nbsp;</span>
+                            <span id="current-humidity-reading"></span>
+                            <span>%</span>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <!-- Finish Garden Stats -->
                   </div>
-                  <!-- Finish Garden Stats -->
 
-                  <a th:href="@{${monitorGardenUri}}">
-                    Go to monitor gardens page
-                  </a>
+
                 </div>
               <div class="col-lg-8 p-4">
                 <div class="row">
@@ -94,7 +113,7 @@
                     </div>
                     <!-- Profile Button -->
                     <div class="col-md-4 mb-3">
-                      <a th:href="@{${browseUri}}">
+                      <a th:href="@{${profileUri}}">
                         <button type="button" class="btn btn-edit btn-lg">
                           Profile <i class="bi bi-person"></i>
                         </button>
@@ -103,7 +122,7 @@
                     <div class="w-100"></div>
                     <!-- Friends Button -->
                     <div class="col-md-4 mb-3">
-                      <a th:href="@{${browseUri}}">
+                      <a th:href="@{${friendsUri}}">
                         <button type="button" class="btn btn-edit btn-lg">
                           Friends <i class="bi bi-people"></i>
                         </button>
@@ -111,7 +130,7 @@
                     </div>
                     <!-- My Gardens Button -->
                     <div class="col-md-4 mb-3">
-                      <a th:href="@{${browseUri}}">
+                      <a th:href="@{${myGardensUri}}">
                         <button type="button" class="btn btn-edit btn-lg">
                           My Gardens <i class="bi bi-tree"></i>
                         </button>
@@ -120,7 +139,7 @@
                     <div class="w-100"></div>
                     <!-- Create Button -->
                     <div class="col-md-4 mb-3">
-                      <a th:href="@{${browseUri}}">
+                      <a th:href="@{${createGardenUri}}">
                         <button type="button" class="btn btn-edit btn-lg">
                           Create Garden <i class="bi bi-tree"></i>
                         </button>
@@ -139,7 +158,25 @@
 
 </div>
 <script>
+  function updateGardenStats(selectedItem) {
+    // Get the selected garden name
+    const gardenName = selectedItem.textContent;
+    document.getElementById("selected-garden-name").textContent = gardenName;
 
+    // Retrieve data attributes
+    const temp = selectedItem.getAttribute("data-temp");
+    const moisture = selectedItem.getAttribute("data-moisture");
+    const light = selectedItem.getAttribute("data-light");
+    const pressure = selectedItem.getAttribute("data-pressure");
+    const humidity = selectedItem.getAttribute("data-humidity");
+
+    // Update the stats in the corresponding HTML elements
+    document.getElementById("current-temp-reading").textContent = temp || "-";
+    document.getElementById("current-moisture-reading").textContent = moisture || "-";
+    document.getElementById("current-light-reading").textContent = light || "-";
+    document.getElementById("current-pressure-reading").textContent = pressure || "-";
+    document.getElementById("current-humidity-reading").textContent = humidity || "-";
+  }
 </script>
 </body>
 
