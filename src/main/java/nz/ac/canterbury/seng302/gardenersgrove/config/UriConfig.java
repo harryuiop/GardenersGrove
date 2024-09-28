@@ -41,6 +41,7 @@ public class UriConfig {
 
 
     public static final String EDIT_ADVICE_RANGES_URI_STRING = "/edit-advice/{gardenId}";
+    public static final String RESET_ADVICE_RANGES_URI_STRING = "/garden/{gardenId}/monitor/reset";
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
     private static final UriTemplate MONITOR_GARDEN_URI = new UriTemplate(MONITOR_GARDEN_URI_STRING);
@@ -56,6 +57,7 @@ public class UriConfig {
     private static final UriTemplate EDIT_ADVICE_RANGES_URI = new UriTemplate(EDIT_ADVICE_RANGES_URI_STRING);
     private static final UriTemplate COMPARE_GARDEN_URI = new UriTemplate(COMPARE_GARDEN_URI_STRING);
 
+    private static final UriTemplate RESET_ADVICE_RANGES_URI = new UriTemplate(RESET_ADVICE_RANGES_URI_STRING);
 
     private UriConfig() {
         throw new IllegalStateException("Utility class");
@@ -164,5 +166,9 @@ public class UriConfig {
     }
     public static URI editAdviceRangesUri(long gardenId) {
         return EDIT_ADVICE_RANGES_URI.expand(gardenId);
+    }
+
+    public static URI resetAdviceRangesUri(long gardenId) {
+        return RESET_ADVICE_RANGES_URI.expand(gardenId);
     }
 }

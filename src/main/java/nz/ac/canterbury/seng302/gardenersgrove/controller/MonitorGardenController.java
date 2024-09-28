@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,10 +47,10 @@ public class MonitorGardenController extends NavBar {
      * Spring will automatically call this constructor at runtime to inject the
      * dependencies.
      *
-     * @param gardenService                  A Garden database access object.
-     * @param userService                    A User database access object.
-     * @param arduinoControllerDataService   A ArduinoControllerDataService object.
-     * @param friendshipService              A friendshipService object.
+     * @param gardenService                A Garden database access object.
+     * @param userService                  A User database access object.
+     * @param arduinoControllerDataService A ArduinoControllerDataService object.
+     * @param friendshipService            A friendshipService object.
      */
     @Autowired
     public MonitorGardenController(
@@ -196,4 +197,23 @@ public class MonitorGardenController extends NavBar {
         return loadMonitorGardenPage(gardenId, model, errors, Optional.of(adviceRangesDTO));
     }
 
+    /**
+     * Resets the advice range of the requested garden.
+     *
+     * @param gardenId The ID number of the garden to reset ranges for.
+     * @throws NoSuchGardenException If there is no garden with ID {@code gardenId}.
+     */
+    @PostMapping(RESET_ADVICE_RANGES_URI_STRING)
+    @ResponseBody
+    void resetAdviceRanges(@PathVariable long gardenId) throws NoSuchGardenException {
+        logger.info("POST {}", resetAdviceRangesUri(gardenId));
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            throw new NoSuchGardenException(gardenId);
+        }
+
+        Garden garden = optionalGarden.get();
+        garden.getAdviceRanges().resetToDefaults();
+        gardenService.saveGarden(garden);
+    }
 }

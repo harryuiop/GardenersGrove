@@ -117,6 +117,20 @@ function ensureMinMaxCorrect(minElement, maxElement) {
     })
 }
 
+document.getElementById("resetAdviceRangesButton").addEventListener('click', () => {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    fetch('monitor/reset', {
+        method: 'POST',
+        headers: {
+            [csrfHeader]: csrfToken
+        }
+    })
+        .then(() => location.reload())
+        .catch(() => null);
+})
+
 function valueInMinMaxRange(element, value) {
     return value >= element.min && value <= element.max;
 }
