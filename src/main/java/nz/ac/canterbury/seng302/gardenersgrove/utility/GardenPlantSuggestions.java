@@ -41,7 +41,6 @@ public class GardenPlantSuggestions {
     public List<String> getPlantSuggestionsForGarden(Garden garden) {
         //Current default prompt for testing
         String prompt = String.format("give me 3 plant suggestions for a %s garden%n", garden.getLocation());
-        System.out.println(prompt);
 
         if (arduinoDataPointService.checkFourteenDaysOfData(garden.getId())) {
             // Create prompt and get suggestion based on Arduino data
