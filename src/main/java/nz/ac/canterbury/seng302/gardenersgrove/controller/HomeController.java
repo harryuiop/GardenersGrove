@@ -57,6 +57,12 @@ public class HomeController extends NavBar {
             return "landing";
         }
         this.updateGardensNavBar(model, gardenService, userService);
+
+
         return "home";
     }
+
+//    private void addUriToModel(Model model) {
+//        model.addAttribute("")
+//    }
 }

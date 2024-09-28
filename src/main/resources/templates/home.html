@@ -4,7 +4,142 @@
 <body class="bg">
 <div class="container-fluid p-0 m-0">
   <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
-  <h1 class="mt-3" style="text-align: center">Gardener's Grove</h1>
+
+    <div class="row">
+      <div class="col mx-4 rounded bg-white shadow-sm p-2">
+        <div class="row">
+          <div class="col-sm-4 col-md-3 col-12 text-center my-4">
+            <img class="rounded-circle profile-img p-4" th:src="@{/images/logo-gardenersgrove.png}"/>
+
+          </div>
+          <div
+                  class="col-sm-8 col-md-9 col-12 my-4 text-sm-start text-center d-flex flex-column justify-content-between">
+            <div class="flex-grow-1">
+              <p class="display-3 mb-0 text-break">
+                 Garden Pulse
+              </p>
+              <p>
+                Garden Pulse provides real-time monitoring and analysis of your garden's conditions through sensor data and customizable thresholds, offering tailored plant suggestions and advice messages to help you effortlessly cultivate a thriving garden.
+              </p>
+
+              <div class="row">
+                <div class="col-lg-4 p-4">
+                  <h2>Monitor Garden</h2>
+
+                  <div class="dropdown">
+                    <button class="btn dropdown-toggle btn-confirm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <span>Garden one</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li th:each="userGarden: ${gardenList}">
+                        <a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{|/garden/compare/${garden.getId()}/${userGarden.getId()}|}" th:text="${userGarden.getName()}"></a>
+                      </li>
+                    </ul>
+                  </div>
+
+
+                  <!-- Garden Stats-->
+                  <div class="row">
+                    <div class="col bg-white rounded shadow-sm">
+                      <div class="d-flex flex-column">
+                        <!-- Temperature -->
+                        <div class="container w-100 align-content-center py-2">
+                          <i class="bi bi-thermometer-half"></i>
+                          <span>Temperature:&nbsp;</span>
+                          <span id="current-temp-reading" th:text="${tempReading}"></span>
+                          <span id="current-temp-unit">°C</span>
+                        </div>
+
+                        <!-- Soil Moisture -->
+                        <div class="container w-100 align-content-center py-2">
+                          <i class="bi bi-moisture"></i>
+                          <span th:text="'Soil Moisture: '+ ${moistReading} + '%'"></span>
+                        </div>
+
+                        <!-- Light -->
+                        <div class="container w-100 align-content-center py-2">
+                          <i class="bi bi-brightness-high"></i>
+                          <span th:text="'Light: '+ ${lightReading} + '%'"></span>
+                        </div>
+
+                        <!-- Air Pressure -->
+                        <div class="container w-100 align-content-center py-2">
+                          <i class="bi bi-speedometer"></i>
+                          <span th:text="'Air Pressure: '+ ${pressureReading} + 'atm'"></span>
+                        </div>
+
+                        <!-- Humidity -->
+                        <div class="container w-100 align-content-center py-2">
+                          <i class="bi bi-droplet-half"></i>
+                          <span th:text="'Humidity: '+ ${humidReading} + '%'"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Finish Garden Stats -->
+
+                  <a th:href="@{${monitorGardenUri}}">
+                    Go to monitor gardens page
+                  </a>
+                </div>
+              <div class="col-lg-8 p-4">
+                <div class="row">
+                    <!-- Browse Button -->
+                    <div class="col-md-4 mb-3">
+                      <a th:href="@{${browseUri}}">
+                        <button type="button" class="btn btn-edit btn-lg">
+                          Browse <i class="bi bi-folder"></i>
+                        </button>
+                      </a>
+                    </div>
+                    <!-- Profile Button -->
+                    <div class="col-md-4 mb-3">
+                      <a th:href="@{${browseUri}}">
+                        <button type="button" class="btn btn-edit btn-lg">
+                          Profile <i class="bi bi-person"></i>
+                        </button>
+                      </a>
+                    </div>
+                    <div class="w-100"></div>
+                    <!-- Friends Button -->
+                    <div class="col-md-4 mb-3">
+                      <a th:href="@{${browseUri}}">
+                        <button type="button" class="btn btn-edit btn-lg">
+                          Friends <i class="bi bi-people"></i>
+                        </button>
+                      </a>
+                    </div>
+                    <!-- My Gardens Button -->
+                    <div class="col-md-4 mb-3">
+                      <a th:href="@{${browseUri}}">
+                        <button type="button" class="btn btn-edit btn-lg">
+                          My Gardens <i class="bi bi-tree"></i>
+                        </button>
+                      </a>
+                    </div>
+                    <div class="w-100"></div>
+                    <!-- Create Button -->
+                    <div class="col-md-4 mb-3">
+                      <a th:href="@{${browseUri}}">
+                        <button type="button" class="btn btn-edit btn-lg">
+                          Create Garden <i class="bi bi-tree"></i>
+                        </button>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 </div>
+<script>
+
+</script>
 </body>
 
