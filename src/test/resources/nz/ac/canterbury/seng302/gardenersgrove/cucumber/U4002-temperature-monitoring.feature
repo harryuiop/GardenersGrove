@@ -5,9 +5,12 @@ Feature: As John Doe, I want to be able to tell the current and previous tempera
     And I am on the garden stats page
 
 
+  Scenario: AC1 - Given I have a garden with a connected Arduino when I go to the garden stats page then I can see the current temperature (within the previous 5 minutes) in either degrees Celsius or Fahrenheit
+    Then I see the current temperature
+
   Scenario: AC2 - I can see the average daily temp of the past day
     When I choose to see a graph of the temperature in Degree Celsius over the last day
-    Then I see a a display of results for the average temperature for each half hour of that day.
+    Then I see a display of results for the average temperature for each half hour of that day.
 
     Scenario: AC3 - I can see the average daily temp of the past 7 days
       When I choose to see a graph of the temperature in Degree Celsius over the last seven days
