@@ -8,8 +8,8 @@ import java.util.List;
  */
 public class FormattedGraphData {
 
-    private List<List<Double>> sensorReadings;
-    private List<String> labels;
+    private final List<List<Double>> sensorReadings;
+    private final List<String> labels;
 
     /**
      * @param sensorReadings Lists of readings for each sensor to be on x-axis of graph.
@@ -61,5 +61,9 @@ public class FormattedGraphData {
             return new ArrayList<>();
         }
         return sensorReadings.get(4);
+    }
+
+    public void addAll(FormattedGraphData dayGraphData) {
+        this.sensorReadings.addAll(dayGraphData.sensorReadings);
     }
 }
