@@ -3,7 +3,6 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -59,11 +58,9 @@ public class HomeController extends NavBar {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        User loggedInUser = userService.getAuthenticatedUser();
-
         // Spring security allows requests to the root URI for unauthenticated users.
         // We must check to see if the principle is authenticated to determine which page to display.
-        if (auth.getPrincipal() == "anonymousUser" || loggedInUser == null) {
+        if (auth.getPrincipal() == "anonymousUser" || userService.getAuthenticatedUser() == null) {
             model.addAttribute("loginUri", loginUri());
             model.addAttribute("registerUri", registerUri());
             return "landing";
@@ -72,7 +69,7 @@ public class HomeController extends NavBar {
 
         addUriToModel(model);
 
-        List<Garden> connectedGardens =  gardenService.getConnectedGardens(loggedInUser);
+        List<Garden> connectedGardens =  gardenService.getConnectedGardens(userService.getAuthenticatedUser());
 
         Map<String, ArduinoDataPoint> arduinoDataPointsMap = new HashMap<>();
         for (Garden connectedGarden : connectedGardens) {
@@ -84,6 +81,11 @@ public class HomeController extends NavBar {
         return "home";
     }
 
+    /**
+     * Add page uri links to model
+     *
+     * @param model Model to add links to
+     */
     private void addUriToModel(Model model) {
         model.addAttribute("browseUri", browsePublicGardensUri());
         model.addAttribute("profileUri", viewProfileUri());
