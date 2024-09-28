@@ -1,5 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Gardeners' Grove</title>
 </head>
@@ -306,12 +308,17 @@
                             </select>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
-                            Close <i class="bi bi-x"></i>
-                        </button>
-                        <button type="submit" class="btn btn-confirm">
-                            Save <i class="bi bi-check"></i>
+                    <div class="modal-footer d-flex justify-content-between w-100">
+                        <div>
+                            <button type="submit" class="btn btn-confirm">
+                                Save <i class="bi bi-check"></i>
+                            </button>
+                            <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
+                                Close <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                        <button id="resetAdviceRangesButton" type="button" class="btn btn-danger">
+                            Reset to default <i class="bi bi-arrow-counterclockwise"></i>
                         </button>
                     </div>
                 </form>
