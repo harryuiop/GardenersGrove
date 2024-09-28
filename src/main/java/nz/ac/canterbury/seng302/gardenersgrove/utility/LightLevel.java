@@ -4,28 +4,25 @@ package nz.ac.canterbury.seng302.gardenersgrove.utility;
  * Light level used in the advice ranges.
  */
 public enum LightLevel {
-    FULL_SHADE("Full Shade", "FULL_SHADE advice", 6),
-    PART_SHADE("Part Shade", "PART_SHADE advice", 4),
-    PART_SUN("Part Sun", "PART_SUN advice", 2),
-    FULL_SUN("Full Sun", "FULL_SUN advice", 0);
+    FULL_SHADE("Full Shade", 0),
+    PART_SHADE("Part Shade", 2),
+    PART_SUN("Part Sun",  4),
+    FULL_SUN("Full Sun", 6),
+
+    UNKNOWN("Unknown", 0);
 
     private final String string;
-    private final String advice;
     private final int minimumHour;
 
-    LightLevel(String string, String advice, int minimumHour) {
+    LightLevel(String string, int minimumHour) {
         this.string = string;
-        this.advice = advice;
+
         this.minimumHour = minimumHour;
     }
 
     @Override
     public String toString() {
         return string;
-    }
-
-    public String getAdvice() {
-        return this.advice;
     }
 
     public int getMinimumHour() {
@@ -53,12 +50,15 @@ public enum LightLevel {
      * @param totalHour integer value that represent total hours that sensor value is more than 50 percent in 24 hours
      * @return The light level enum the string corresponds to
      */
-    public static LightLevel getLightLevel(int totalHour) {
+    public static LightLevel getLightLevel(Double totalHour) {
+
+        if (totalHour == null)  return LightLevel.UNKNOWN;
+
         for (LightLevel level : LightLevel.values()) {
             if (totalHour >= level.getMinimumHour()) {
                 return level;
             }
         }
-        throw new IllegalArgumentException(String.format("The Hour value %d is not valid%n", totalHour));
+        throw new IllegalArgumentException(String.format("The Hour value %f is not valid%n", totalHour));
     }
 }

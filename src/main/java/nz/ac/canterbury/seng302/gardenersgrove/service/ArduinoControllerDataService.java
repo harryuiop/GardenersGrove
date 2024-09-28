@@ -54,6 +54,7 @@ public class ArduinoControllerDataService {
         sensorAdviceMessages.addTemperatureAdviceToModel(model);
         sensorAdviceMessages.addSoilMoistureAdviceToModel(model);
         sensorAdviceMessages.addHumidityAdviceToModel(model);
+        sensorAdviceMessages.addLightAdviceToModel(model);
     }
 
     /**
