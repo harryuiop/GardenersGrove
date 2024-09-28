@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -43,6 +44,8 @@ public class TemperatureMonitoringFeature {
     private Authentication auth;
 
     private Long gardenId;
+
+    private ResultActions resultActions;
     private FormattedGraphData formattedWeekResults;
 
     private FormattedGraphData formattedDayResults;
@@ -96,9 +99,9 @@ public class TemperatureMonitoringFeature {
     @Given("I am on the garden stats page")
     public void iAmOnTheGardenStatsPage() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(auth);
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
-                        .with(csrf()))
-                .andExpect(status().isOk());
+        resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(monitorGardenUri(gardenId)).with(csrf())
+        );
     }
 
     @When("I choose to see a graph of the temperature in Degree Celsius over the last seven days")
@@ -135,8 +138,8 @@ public class TemperatureMonitoringFeature {
     }
 
     // AC2
-    @Then("I see a a display of results for the average temperature for each half hour of that day.")
-    public void iSeeAADisplayOfResultsForTheAverageTemperatureForEachHalfHourOfThatDay() {
+    @Then("I see a display of results for the average temperature for each half hour of that day.")
+    public void iSeeADisplayOfResultsForTheAverageTemperatureForEachHalfHourOfThatDay() {
         List<List<Double>> expectedData = Arrays.asList(
                 Arrays.asList(30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 Arrays.asList(40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
@@ -226,9 +229,7 @@ public class TemperatureMonitoringFeature {
 
     @Then("I receive a message saying that the garden is currently at an ideal temperature")
     public void i_receive_a_message_saying_that_the_garden_is_currently_at_an_ideal_temperature() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
-                        .with(csrf()))
-                .andExpect(status().isOk())
+        resultActions.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
                         "This garden has an ideal temperature."));
     }
@@ -265,9 +266,7 @@ public class TemperatureMonitoringFeature {
 
     @Then("I am shown a message informing me of symptoms to look for when plants get too cold")
     public void iAmShownAMessageInformingMeOfSymptomsToLookForWhenPlantsGetTooCold() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
-                        .with(csrf()))
-                .andExpect(status().isOk())
+        resultActions.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
                         "A temperature reading in the last 24 hours dropped " +
                                 "below the set advice range. Cold temperatures can make plants go dormant or cause damage. " +
@@ -308,9 +307,7 @@ public class TemperatureMonitoringFeature {
 
     @Then("I am shown a message informing me of symptoms to look for when plants get too hot")
     public void iAmShownAMessageInformingMeOfSymptomsToLookForWhenPlantsGetTooHot() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
-                        .with(csrf()))
-                .andExpect(status().isOk())
+        resultActions.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
                         "A temperature reading in the last 24 hours has " +
                                 "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
@@ -370,9 +367,7 @@ public class TemperatureMonitoringFeature {
 
     @Then("I am shown a message informing me of the plant symptoms that occur during high temperature fluctuations")
     public void iAmShownAMessageInformingMeOfThePlantSymptomsThatOccurDuringHighTemperatureFluctuations() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
-                        .with(csrf()))
-                .andExpect(status().isOk())
+        resultActions.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
                         "A temperature reading in the last 24 hours dropped " +
                                 "below the set advice range. Cold temperatures can make plants go dormant or cause damage. " +
@@ -384,5 +379,11 @@ public class TemperatureMonitoringFeature {
                                 " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
                                 "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
                                 "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize."));
+    }
+
+    @Then("I see the current temperature")
+    public void iSeeTheCurrentTemperature() throws Exception {
+        resultActions.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("tempReading"));
     }
 }
