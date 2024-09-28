@@ -34,8 +34,11 @@ public class UriConfig {
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
     public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup/{gardenId}/{deployed}";
     public static final String ARDUINO_SENSOR_DATA = "/sensor-data";
+    public static final String COMPARE_GARDENS_URI_STRING = "/garden/compare/{gardenId1}/{gardenId2}";
     public static final String EDIT_ADVICE_RANGES_URI_STRING = "/edit-advice/{gardenId}";
     public static final String RESET_ADVICE_RANGES_URI_STRING = "/garden/{gardenId}/monitor/reset";
+    public static final String COMPARE_GARDEN_URI_STRING = "/garden/compare/{yourGardenId}/{theirGardenId}";
+
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
     private static final UriTemplate MONITOR_GARDEN_URI = new UriTemplate(MONITOR_GARDEN_URI_STRING);
@@ -49,6 +52,7 @@ public class UriConfig {
     private static final UriTemplate SET_WEATHER_POPUP_ALERT_COOKIES_URI = new UriTemplate(SET_WEATHER_POPUP_ALERT_COOKIES);
     private static final UriTemplate EDIT_ADVICE_RANGES_URI = new UriTemplate(EDIT_ADVICE_RANGES_URI_STRING);
     private static final UriTemplate RESET_ADVICE_RANGES_URI = new UriTemplate(RESET_ADVICE_RANGES_URI_STRING);
+    private static final UriTemplate COMPARE_GARDEN_URI = new UriTemplate(COMPARE_GARDEN_URI_STRING);
 
     private UriConfig() {
         throw new IllegalStateException("Utility class");
@@ -131,6 +135,10 @@ public class UriConfig {
         return EDIT_PLANT_URI.expand(gardenId, plantId);
     }
 
+    public static URI compareGardensUri(long gardenId1, long gardenId2) {
+        return COMPARE_GARDEN_URI.expand(gardenId1, gardenId2);
+    }
+
     public static URI uploadPlantImageUri(long gardenId, long plantId) {
         return UPLOAD_PLANT_IMAGE_URI.expand(gardenId, plantId);
     }
@@ -151,8 +159,11 @@ public class UriConfig {
     public static URI editAdviceRangesUri(long gardenId) {
         return EDIT_ADVICE_RANGES_URI.expand(gardenId);
     }
-
     public static URI resetAdviceRangesUri(long gardenId) {
         return RESET_ADVICE_RANGES_URI.expand(gardenId);
     }
+    public static URI compareGardensUri(String yourGardenId, String theirGardenId) {
+        return COMPARE_GARDEN_URI.expand(yourGardenId, theirGardenId);
+    }
+
 }
