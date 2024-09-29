@@ -382,10 +382,12 @@ function updateRectangleConfig(minValue, maxValue) {
 
                 // upper limit shade
                 const yStart1 = chart.chartArea.top;
-                const yEnd1 = y.getPixelForValue(maxValue);
+                let yEnd1 = y.getPixelForValue(maxValue);
 
-                // Only draw shading if height of rectangle is positive
+                // Only draw shading if height of rectangle is positive (the range is visible on the drawn graph)
                 if (yEnd1 - yStart1 > 0) {
+                    // Prevent the shade rectangle from drawing over the x-axis labels
+                    yEnd1 = Math.min(yEnd1, chart.chartArea.bottom);
                     ctx.fillRect(xStart, yStart1, xEnd - xStart, yEnd1 - yStart1);
                 }
 
@@ -394,7 +396,7 @@ function updateRectangleConfig(minValue, maxValue) {
                 const yEnd2 = chart.chartArea.bottom;
 
                 if (yEnd2 - yStart2 > 0) {
-                    // prevent the shade rectangle from drawing over the graph legend
+                    // Prevent the shade rectangle from drawing over the graph legend
                     if (yStart2 < 0) {
                         yStart2 = chart.chartArea.top;
                     }
