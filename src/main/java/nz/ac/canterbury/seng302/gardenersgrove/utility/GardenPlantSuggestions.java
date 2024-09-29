@@ -1,9 +1,8 @@
 package nz.ac.canterbury.seng302.gardenersgrove.utility;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.GemmaException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
-import org.h2.util.json.JSONObject;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class GardenPlantSuggestions {
         }
     }
 
-    public static String getSuggestions(String prompt) throws ProfanityCheckingException {
+    public static String getSuggestions(String prompt) throws GemmaException {
         URI uri = new DefaultUriBuilderFactory().builder()
                 .scheme("http")
                 .host("localhost")
@@ -70,7 +69,7 @@ public class GardenPlantSuggestions {
         try (HttpClient client = HttpClient.newHttpClient()) {
             responseMessage = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException exception) {
-            throw new ProfanityCheckingException("Failed to check for profanity", exception);
+            throw new GemmaException();
         }
 
         List<String> responseList = Arrays.asList(responseMessage.body().split("\""));
