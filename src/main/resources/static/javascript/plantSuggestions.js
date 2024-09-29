@@ -10,6 +10,7 @@ plantSuggestionsButton.addEventListener("click", function () {
 function fetchPlantSuggestions(gardenId) {
     const deployment = window.location.pathname.split('/')[1];
     const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
+    plantSuggestionContainer.innerHTML = '';
     spinner.style.display = "inline-block";
     fetch( `${baseUri}/ai/suggestions?gardenId=${gardenId}`)
         .then(response => {
@@ -24,6 +25,9 @@ function fetchPlantSuggestions(gardenId) {
         })
         .catch(error => {
             spinner.style.display = "none";
+            const itemElement = document.createElement("p");
+            itemElement.innerHTML = "No Suggestions found";
+            plantSuggestionContainer.appendChild(itemElement);
             console.error('There was a problem with the fetch operation:', error);
         });
 }
@@ -31,15 +35,9 @@ function fetchPlantSuggestions(gardenId) {
 
 function renderPlantSuggestions(plantSuggestionList) {
     console.log(plantSuggestionList);
-    plantSuggestionContainer.innerHTML = '';
     if (!plantSuggestionList) {
         const itemElement = document.createElement("p");
         itemElement.innerHTML = "No Suggestions found";
-        plantSuggestionContainer.appendChild(itemElement);
-        return;
-    } else if (plantSuggestionList.size != 3) {
-        const itemElement = document.createElement("p");
-        itemElement.innerHTML = plantSuggestionList[0];
         plantSuggestionContainer.appendChild(itemElement);
         return;
     }

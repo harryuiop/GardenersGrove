@@ -27,14 +27,13 @@ public class GardenPlantSuggestionsRestController {
 
     @GetMapping("/ai/suggestions")
     public List<String> getPlantSuggestions(@RequestParam long gardenId) {
-        System.out.println("REQUESTED");
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
             List<String> error = new ArrayList<>();
             error.add("No garden Found");
             return error;
         }
-        return gardenPlantSuggestions.getPlantSuggestionsForGarden(optionalGarden.get());
+        return gardenPlantSuggestions.getPlantSuggestionsForGarden(optionalGarden.get(), true);
 
     }
 

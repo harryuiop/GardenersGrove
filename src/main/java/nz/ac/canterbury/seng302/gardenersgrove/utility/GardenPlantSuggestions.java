@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.utility;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoValidSuggestions;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import org.slf4j.Logger;
@@ -21,8 +22,7 @@ public class GardenPlantSuggestions {
     Logger logger = LoggerFactory.getLogger(GardenPlantSuggestions.class);
 
     ArduinoDataPointService arduinoDataPointService;
-    private final String context = "For the following request give 3 plants in the format of a plant name then ':' then a 2 line summary of about the plant. Have no wording before or after the plant name and description. have a number then a fullstops before each plant to tell which suggestion it is.";
-
+    private final String CONTEXT = "Give a response of 3 plants in the form 1. Plant Name : plant description, with no extra text before or after, suggestion plants that are suitable for these given environment factors; ";
 
     public GardenPlantSuggestions(ArduinoDataPointService arduinoDataPointService)  {
         this.arduinoDataPointService = arduinoDataPointService;
@@ -38,7 +38,7 @@ public class GardenPlantSuggestions {
         //
     // pass back a string with suggestions
 
-    public List<String> getPlantSuggestionsForGarden(Garden garden) {
+    public List<String> getPlantSuggestionsForGarden(Garden garden, boolean retry) {
         //Current default prompt for testing
         String prompt = String.format("give me 3 plant suggestions for a %s garden%n", garden.getLocation());
 
@@ -46,15 +46,24 @@ public class GardenPlantSuggestions {
             // Create prompt and get suggestion based on Arduino data
             String arduinoPrompt = getArduinoPrompt(garden.getId());
 
-            if (!arduinoPrompt.equals(context + " Plant suggestions given my garden has")) {
+            if (!arduinoPrompt.equals(CONTEXT)) {
                 try {
                     String response = getSuggestions(arduinoPrompt);
-                    logger.info(response);
-                    return parseSuggestions(response);
-                } catch (ProfanityCheckingException e) {
+                    while (!response.contains(":")) {
+                        logger.warn("Regenerate response");
+                        response = getSuggestions(prompt);
+                    }
+                    List<String> parsedResponse = parseSuggestions(response);
+                    if (parsedResponse.size() < 4 && retry){
+                        return getPlantSuggestionsForGarden(garden, false);
+                    } else if ( parsedResponse.size() < 4) {
+                        throw new NoValidSuggestions("No valid plant suggestions");
+                    }
+                    return parsedResponse;
+                } catch (Exception e) {
                     logger.error(e.getMessage());
                     List<String> suggestions = new ArrayList<>();
-                    suggestions.add("Invalid Response, no suggestions");
+                    suggestions.add("Invalid Response, no suggestions, try again later.");
                     return suggestions;
                 }
             }
@@ -110,7 +119,7 @@ public class GardenPlantSuggestions {
      */
     public String getArduinoPrompt(long gardenId) {
         List<String> sensors = new ArrayList<>(Arrays.asList("Temperature", "Moisture", "Light", "Air Pressure", "Humidity"));
-        StringBuilder prompt = new StringBuilder(context + " Plant suggestions given my garden has");
+        StringBuilder prompt = new StringBuilder(CONTEXT);
 
         for (String sensor : sensors) {
             String unit;
@@ -138,8 +147,7 @@ public class GardenPlantSuggestions {
      */
     public List<String> parseSuggestions(String response) {
         List<String> plants = new ArrayList<>();
-        System.out.println(response);
-        String[] splitResponse = response.split("[0-9]: ");
+        String[] splitResponse = response.split("[0-9]. ");
         for (String environment : splitResponse) {
                 String str = environment.replace("\\n", "\n").replace("*", "");
                 int index = str.indexOf(":");
