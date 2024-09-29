@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class SoilMoistureMonitoringFeature {
 
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -39,23 +38,7 @@ public class SoilMoistureMonitoringFeature {
     private GardenService gardenService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private AdviceSharedState adviceSharedState;
-
-    private Authentication auth;
-
-    private Long gardenId;
-
-    private ResultActions resultActions;
-
-    private FormattedGraphData formattedWeekResults;
-
-    private FormattedGraphData formattedDayResults;
-
-    private FormattedGraphData formattedMonthResults;
-
 
     @When("the soil moisture reading has stayed within some optimal temperature range for the past day")
     public void theSoilMoistureReadingHasStayedWithinSomeOptimalTemperatureRangeForThePastDay() {
@@ -92,12 +75,67 @@ public class SoilMoistureMonitoringFeature {
         mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(adviceSharedState.getGardenId()))
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
-                        "This garden is at an ideal moisture."));
+                .andExpect(MockMvcResultMatchers.model().attribute("moistureAdvice",
+                        "This garden has an ideal soil moisture."));
     }
 
     @When("the soil moisture reading has gone below some minimum value in the last day")
     public void theSoilMoistureReadingHasGoneBelowSomeMinimumValueInTheLastDay() {
+        Optional<Garden> optionalGarden = gardenService.getGardenById(adviceSharedState.getGardenId());
+        if (optionalGarden.isEmpty()) {
+            Assertions.fail();
+        }
+        Garden garden = optionalGarden.get();
+
+        AdviceRanges adviceRanges = garden.getAdviceRanges();
+        adviceRanges.setMaxMoisture(80);
+        adviceRanges.setMinMoisture(20);
+        gardenService.saveGarden(garden);
+
+        LocalDateTime startTime = LocalDateTime.now().minusDays(1);
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime currentTime = startTime;
+        while (currentTime.isBefore(endTime)) {
+            if (!currentTime.isEqual(startTime.plusMinutes(25))) {
+                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                        garden,
+                        currentTime,
+                        30d,
+                        40d,
+                        1d,
+                        60d,
+                        60d
+                ));
+            } else {
+                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                        garden,
+                        currentTime,
+                        30d,
+                        40d,
+                        1d,
+                        60d,
+                        70d
+                ));
+            }
+            currentTime = currentTime.plusMinutes(25);
+        }
+        System.out.println(arduinoDataPointService.getDayGraphData(adviceSharedState.getGardenId(), endTime).getSensorReadings());
+    }
+
+    @Then("I am shown a message that tells me to water my garden")
+    public void iAmShownAMessageThatTellsMeToWaterMyGarden() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(adviceSharedState.getGardenId()))
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.model().attribute("moistureAdvice",
+                    "This garden is below the ideal soil moisture. " +
+                            "Overly dry soil makes it difficult for plants to absorb moisture decreases the availability of " +
+                            "nutrients. If you are watering your garden regularly, try adding compost into your soil, or creating " +
+                            "a layer of compost on top of the soil to prevent the sun from evaporating water from the soil's surface."));
+    }
+
+    @When("the soil moisture reading has gone above some maximum value in the last day")
+    public void theSoilMoistureReadingHasGoneAboveSomeMaximumValueInTheLastDay() {
         Optional<Garden> optionalGarden = gardenService.getGardenById(adviceSharedState.getGardenId());
         if (optionalGarden.isEmpty()) {
             Assertions.fail();
@@ -127,34 +165,26 @@ public class SoilMoistureMonitoringFeature {
 
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
                 garden,
-                LocalDateTime.now().minusHours(5).minusMinutes(3),
+                startTime.plusMinutes(15),
                 30d,
                 10d,
                 1d,
                 60d,
-                50d
+                95d
         ));
-    }
 
-    @Then("I am shown a message that tells me to water my garden")
-    public void iAmShownAMessageThatTellsMeToWaterMyGarden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(adviceSharedState.getGardenId()))
-                    .with(csrf()))
-            .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
-                    "A temperature reading in the last 24 hours dropped " +
-                            "below the set advice range. Cold temperatures can make plants go dormant or cause damage. " +
-                            "Look out for discoloured or wilting leaves, root ball damage, split in steam or trunk and " +
-                            "stunted growth. If you notice any of these signs, trim dead roots or repot the plant. " +
-                            "Do not fertilize, overwrite, or over-trim the plant while it heals."));
-    }
-
-    @When("the soil moisture reading has gone above some maximum value in the last day")
-    public void theSoilMoistureReadingHasGoneAboveSomeMaximumValueInTheLastDay() {
-
+        System.out.println(arduinoDataPointService.getDayGraphData(adviceSharedState.getGardenId(), LocalDateTime.now()).getSensorReadings());
     }
 
     @Then("I am shown a message providing tips for very moist soil.")
-    public void iAmShownAMessageProvidingTipsForVeryMoistSoil() {
+    public void iAmShownAMessageProvidingTipsForVeryMoistSoil() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(adviceSharedState.getGardenId()))
+                .with(csrf()))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.model().attribute("moistureAdvice",
+            "This garden is above the ideal soil moisture. " +
+                    "Overly moist soil can create leaching of nutrients, root rot, fungal problems, and prevent growth. " +
+                    "Try adding organic matter/mulch underneath the plant's soil or mix in a speed-treating agent like " +
+                    "hydrated lime. You may need to raise or move your garden to ensure proper drainage."));
     }
 }
