@@ -283,7 +283,7 @@ class PlantControllerEditTest {
     @Test
     void submitForm_emojiDescription_plantUpdated() throws Exception {
         Plant plant = plantRepository.findAll().get(0);
-        String plantDescription = "\uD83C\uDF31";
+        String plantDescription = "\uD83C\uDF31\uD83E\uDD29";
         byte[] emptyImageBytes = new byte[0];
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(plant.getGarden().getId(), plant.getId()))
