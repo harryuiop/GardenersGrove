@@ -23,7 +23,7 @@
               </p>
 
               <div class="row">
-                <div class="col-md-6 p-2">
+                <div class="col-md-6 p-3">
                   <h2>Garden Stats</h2>
 
                   <div th:if="${connectedGardens.isEmpty()}">
@@ -55,7 +55,7 @@
                       <div class="col bg-white rounded">
                         <div class="d-flex flex-column">
                           <!-- Temperature -->
-                          <div class="container w-100 align-content-center py-2">
+                          <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-thermometer-half"></i>
                             <span>Temperature:&nbsp;</span>
                             <span id="current-temp-reading"></span>
@@ -63,7 +63,7 @@
                           </div>
 
                           <!-- Soil Moisture -->
-                          <div class="container w-100 align-content-center py-2">
+                          <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-moisture"></i>
                             <span>Soil Moisture:&nbsp;</span>
                             <span id="current-moisture-reading"></span>
@@ -71,7 +71,7 @@
                           </div>
 
                           <!-- Light -->
-                          <div class="container w-100 align-content-center py-2">
+                          <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-brightness-high"></i>
                             <span>Light:&nbsp;</span>
                             <span id="current-light-reading"></span>
@@ -79,7 +79,7 @@
                           </div>
 
                           <!-- Air Pressure -->
-                          <div class="container w-100 align-content-center py-2">
+                          <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-speedometer"></i>
                             <span>Pressure:&nbsp;</span>
                             <span id="current-pressure-reading"></span>
@@ -87,7 +87,7 @@
                           </div>
 
                           <!-- Humidity -->
-                          <div class="container w-100 align-content-center py-2">
+                          <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-droplet-half"></i>
                             <span>Humidity:&nbsp;</span>
                             <span id="current-humidity-reading"></span>
@@ -96,63 +96,33 @@
                         </div>
                       </div>
                     </div>
-                    <!-- Finish Garden Stats -->
                   </div>
-
-
                 </div>
-              <div class="col-md-6 p-2">
-                <div class="row">
-                    <!-- Browse Button -->
-                    <div class="col-md-4 mb-3">
-                      <a th:href="@{${browseUri}}">
-                        <button type="button" class="btn btn-edit btn-lg">
-                          Browse <i class="bi bi-folder"></i>
-                        </button>
-                      </a>
-                    </div>
-                    <!-- Profile Button -->
-                    <div class="col-md-4 mb-3">
-                      <a th:href="@{${profileUri}}">
-                        <button type="button" class="btn btn-edit btn-lg">
-                          Profile <i class="bi bi-person"></i>
-                        </button>
-                      </a>
-                    </div>
-                    <div class="w-100"></div>
-                    <!-- Friends Button -->
-                    <div class="col-md-4 mb-3">
-                      <a th:href="@{${friendsUri}}">
-                        <button type="button" class="btn btn-edit btn-lg">
-                          Friends <i class="bi bi-people"></i>
-                        </button>
-                      </a>
-                    </div>
-                    <!-- My Gardens Button -->
-                    <div class="col-md-4 mb-3">
-                      <a th:href="@{${myGardensUri}}">
-                        <button type="button" class="btn btn-edit btn-lg">
-                          My Gardens <i class="bi bi-tree"></i>
-                        </button>
-                      </a>
-                    </div>
-                    <div class="w-100"></div>
-                    <!-- Create Button -->
-                    <div class="col-md-4 mb-3">
-                      <a th:href="@{${createGardenUri}}">
-                        <button type="button" class="btn btn-edit btn-lg">
-                          Create Garden <i class="bi bi-tree"></i>
-                        </button>
-                      </a>
-                    </div>
-                  </div>
+                <div class="col-md-6 p-3">
+                  <h2>Where would you like to go?</h2>
+                <p>
+                  <a class="main-links" th:href="@{${browseUri}}"><i class="bi bi-search"></i> Browse Gardens</a>
+                </p>
+                <p>
+                  <a class="main-links" th:href="@{${myGardensUri}}"><i class="bi bi-tree"></i> My Gardens</a>
+                </p>
+                <p>
+                  <a class="main-links" th:href="@{${createGardenUri}}"><i class="bi bi-plus-square"></i> Create Gardens</a>
+                </p>
+                <p>
+                  <a class="main-links" th:href="@{${profileUri}}"><i class="bi bi-person"></i> Profile </a>
+                </p>
+                <p>
+                  <a class="main-links" th:href="@{${friendsUri}}"><i class="bi bi-people"></i> Friends </a>
+                </p>
+                </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
       </div>
+      <div class="p-4"> <!-- Helpful links -->
     </div>
 
 
