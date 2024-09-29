@@ -3,7 +3,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.utility;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
 import org.springframework.ui.Model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles advice messages for sensors based on the set advice range.
@@ -21,15 +22,25 @@ public class SensorAdviceMessages {
             "Look out for discoloured or wilting leaves, root ball damage, split in steam or trunk and " +
             "stunted growth. If you notice any of these signs, trim dead roots or repot the plant. " +
             "Do not fertilize, overwater, or over-trim the plant while it heals.";
-    private static final String BELOW_MOISTURE_ADVICE = "MOISTURE IS BELOW";
-    private static final String BELOW_HUMIDITY_ADVICE = "HUMIDITY IS BELOW";
+    private static final String BELOW_MOISTURE_ADVICE = "This garden is below the ideal soil moisture. " +
+            "Overly dry soil makes it difficult for plants to absorb moisture decreases the availability of " +
+            "nutrients. If you are watering your garden regularly, try adding compost into your soil, or creating " +
+            "a layer of compost on top of the soil to prevent the sun from evaporating water from the soil's surface.";
+    private static final String BELOW_HUMIDITY_ADVICE = "A temperature reading in the last 24 hours has gone above the " +
+            "set advice range. High temperatures can harm plants by slowing their growth and causing dehydration. " +
+            "This can lead to smaller, low-quality fruits and vegetables. Look for leaf rolling or cupping, wilting, " +
+            "dry leaf edges, sun-scald or bleached leaves. If any of these signs appear, water regularly, mulch, " +
+            "and provide shade. Do not transplant, prune or fertilize.";
 
     private static final String ABOVE_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours has " +
             "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
             " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
-            "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+            "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
             "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize.";
-    private static final String ABOVE_MOISTURE_ADVICE = "MOISTURE IS ABOVE";
+    private static final String ABOVE_MOISTURE_ADVICE = "This garden is above the ideal soil moisture. " +
+            "Overly moist soil can create leaching of nutrients, root rot, fungal problems, and prevent growth. " +
+            "Try adding organic matter/mulch underneath the plant's soil or mix in a speed-treating agent like " +
+            "hydrated lime. You may need to raise or move your garden to ensure proper drainage.";
     private static final String ABOVE_HUMIDITY_ADVICE = "HUMIDITY IS ABOVE";
 
     private static final String IDEAL_ADVICE = "This garden has an ideal ";
@@ -41,7 +52,8 @@ public class SensorAdviceMessages {
 
     /**
      * Construct sensor advice object.
-     * @param dayData Contains lists of sensor readings in the last 24 hours.
+     *
+     * @param dayData      Contains lists of sensor readings in the last 24 hours.
      * @param adviceRanges Garden's advice ranges (min/max for sensors)
      */
     public SensorAdviceMessages(FormattedGraphData dayData, AdviceRanges adviceRanges) {
@@ -52,11 +64,12 @@ public class SensorAdviceMessages {
         temperatureReferences.add("\"5 Warning Signs Your Plants Are Experiencing Cold Shock\" : \"https://garrettchurchill.com/5-warning-signs-your-plants-are-experiencing-cold-shock/\"");
         temperatureReferences.add("\"Heat wave in the garden: How to identify and prevent heat stress in plants\" : \"https://extension.oregonstate.edu/gardening/flowers-shrubs-trees/heat-wave-garden-how-identify-prevent-heat-stress-plants#:~:text=Above%20104%C2%B0F%2C%20many,activity%20and%20growth%20in%20plants.\"");
 
-        moistureReferences.add("\"websiteName\" : \"url\"");
-        moistureReferences.add("\"websiteName2\" : \"url2\"");
+        moistureReferences.add("\"DIY Natural\" : \"https://diynatural.com/soil-moisture/\"");
+        moistureReferences.add("\"Evergreen Seeds\" : \"https://www.evergreenseeds.com/how-to-fix-dry-soil/#The_Role_of_Organic_Matter_in_Soil_Structure\"");
+        moistureReferences.add("\"Gardening Know How\" : \"https://www.gardeningknowhow.com/garden-how-to/soil-fertilizers/waterlogged-soil-fixes\"");
 
-        humidityReferences.add("\"websiteName3\" : \"url3\"");
-        humidityReferences.add("\"websiteName4\" : \"url4\"");
+        humidityReferences.add("\"The Green Pages: Humidity, temperature and watering\" : \"https://espacepourlavie.ca/en/humidity-temperature-and-watering#:~:text=Most%20plants%20grow%20best%20with,tolerate%20humidity%20levels%20below%2025%25\"");
+        humidityReferences.add("\"7 Mistakes Growers Make with Humidity\" : \"https://www.shogunfertilisers.com/en/growing-information/blogs/7-mistakes-growers-make-with-humidity/#:~:text=Generally%2C%20as%20the%20temperature%20increases,aim%20for%2055%2D70%25.\"");
     }
 
 
@@ -64,8 +77,8 @@ public class SensorAdviceMessages {
      * Helper method to identify the type of advice needed.
      *
      * @param sensorReadings List of sensor readings for a particular sensor
-     * @param sensorMin Minimum advice range for that sensor
-     * @param sensorMax Maximum advice range for that sensor
+     * @param sensorMin      Minimum advice range for that sensor
+     * @param sensorMax      Maximum advice range for that sensor
      * @return The type of advice needed.
      */
     private AdviceMessageType findAdviceMessageType(List<Double> sensorReadings, double sensorMin, double sensorMax) {
@@ -89,12 +102,12 @@ public class SensorAdviceMessages {
     /**
      * Helper method to get the advice message.
      *
-     * @param sensorName Name of sensor. This is what is shown to the user.
+     * @param sensorName     Name of sensor. This is what is shown to the user.
      * @param sensorReadings List of sensor readings for that sensor.
-     * @param minRange Minimum advice range for that sensor
-     * @param maxRange Maximum advice range for that sensor
-     * @param belowAdvice Message for a point being below the advice range for that sensor
-     * @param aboveAdvice Message for a point being above the advice range for that sensor
+     * @param minRange       Minimum advice range for that sensor
+     * @param maxRange       Maximum advice range for that sensor
+     * @param belowAdvice    Message for a point being below the advice range for that sensor
+     * @param aboveAdvice    Message for a point being above the advice range for that sensor
      * @return an advice message to show to the user
      */
     private String getAdvice(String sensorName, List<Double> sensorReadings, double minRange, double maxRange,
@@ -112,6 +125,7 @@ public class SensorAdviceMessages {
 
     /**
      * Add temperature advice and references to the model.
+     *
      * @param model Model to add attributes to
      */
     public void addTemperatureAdviceToModel(Model model) {
@@ -129,6 +143,7 @@ public class SensorAdviceMessages {
 
     /**
      * Add soil moisture advice and references to the model.
+     *
      * @param model Model to add attributes to
      */
     public void addSoilMoistureAdviceToModel(Model model) {
@@ -144,6 +159,7 @@ public class SensorAdviceMessages {
 
     /**
      * Add humidity advice and references to the model.
+     *
      * @param model Model to add attributes to
      */
     public void addHumidityAdviceToModel(Model model) {

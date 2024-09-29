@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import nz.ac.canterbury.seng302.gardenersgrove.cucumber.AdviceSharedState;
 import nz.ac.canterbury.seng302.gardenersgrove.cucumber.RunCucumberTest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.*;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -40,15 +42,19 @@ public class TemperatureMonitoringFeature {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AdviceSharedState adviceSharedState;
+
     private Authentication auth;
 
     private Long gardenId;
+
+    private ResultActions resultActions;
     private FormattedGraphData formattedWeekResults;
 
     private FormattedGraphData formattedDayResults;
 
     private FormattedGraphData formattedMonthResults;
-
 
     @Given("I have a logged in user with a monitored garden")
     public void iHaveALoggedInUserWithAMonitoredGarden() {
@@ -65,6 +71,7 @@ public class TemperatureMonitoringFeature {
         Garden garden = new Garden(user, "Test", "", location, null, true);
         gardenService.saveGarden(garden);
         gardenId = garden.getId();
+        adviceSharedState.setGardenId(gardenId);
         auth = RunCucumberTest.authMaker.accept(user.getEmail(), "Password1!", userService);
     }
 
@@ -96,9 +103,9 @@ public class TemperatureMonitoringFeature {
     @Given("I am on the garden stats page")
     public void iAmOnTheGardenStatsPage() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(auth);
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
-                        .with(csrf()))
-                .andExpect(status().isOk());
+        resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(monitorGardenUri(gardenId)).with(csrf())
+        );
     }
 
     @When("I choose to see a graph of the temperature in Degree Celsius over the last seven days")
@@ -135,8 +142,8 @@ public class TemperatureMonitoringFeature {
     }
 
     // AC2
-    @Then("I see a a display of results for the average temperature for each half hour of that day.")
-    public void iSeeAADisplayOfResultsForTheAverageTemperatureForEachHalfHourOfThatDay() {
+    @Then("I see a display of results for the average temperature for each half hour of that day.")
+    public void iSeeADisplayOfResultsForTheAverageTemperatureForEachHalfHourOfThatDay() {
         List<List<Double>> expectedData = Arrays.asList(
                 Arrays.asList(30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 Arrays.asList(40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
@@ -315,7 +322,7 @@ public class TemperatureMonitoringFeature {
                         "A temperature reading in the last 24 hours has " +
                                 "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
                                 " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
-                                "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+                                "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
                                 "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize."));
     }
 
@@ -382,7 +389,15 @@ public class TemperatureMonitoringFeature {
                                 "\nA temperature reading in the last 24 hours has " +
                                 "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
                                 " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
-                                "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+                                "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
                                 "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize."));
     }
+
+    @Then("I see the current temperature")
+    public void iSeeTheCurrentTemperature() throws Exception {
+        resultActions.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("tempReading"));
+    }
+
+
 }

@@ -1,5 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Gardeners' Grove</title>
 </head>
@@ -153,7 +155,14 @@
                         Compare <i class="bi bi-layers"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        <li th:each="userGarden: ${gardenList}"><a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" href="#" th:text="${userGarden.getName()}"></a></li>
+                        <li>
+                            <a class="dropdown-item text-truncate"
+                               style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                               th:text="'No Comparison'"></a>
+                        </li>
+                        <li th:each="userGarden: ${gardenList}">
+                            <a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{|/garden/compare/${garden.getId()}/${userGarden.getId()}|}" th:text="${userGarden.getName()}"></a>
+                        </li>
                     </ul>
                 </div>
                 <div class="row" id="temp-units">
@@ -197,7 +206,6 @@
                 </div>
             </div>
         </div>
-    </div>
     <div id="settingsModal" class="modal fade" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -305,12 +313,17 @@
                             </select>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
-                            Close <i class="bi bi-x"></i>
-                        </button>
-                        <button type="submit" class="btn btn-confirm">
-                            Save <i class="bi bi-check"></i>
+                    <div class="modal-footer d-flex justify-content-between w-100">
+                        <div>
+                            <button type="submit" class="btn btn-confirm">
+                                Save <i class="bi bi-check"></i>
+                            </button>
+                            <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
+                                Close <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                        <button id="resetAdviceRangesButton" type="button" class="btn btn-danger">
+                            Reset to default <i class="bi bi-arrow-counterclockwise"></i>
                         </button>
                     </div>
                 </form>
