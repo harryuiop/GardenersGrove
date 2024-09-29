@@ -92,7 +92,7 @@ public class ViewGardenController extends NavBar {
                     Model model,
                     String cookies,
                     String... errorMessages
-    ) throws InterruptedException, ProfanityCheckingException {
+    ) throws InterruptedException {
         this.updateGardensNavBar(model, gardenService, userService);
 
         if (errorMessages.length > 0) {

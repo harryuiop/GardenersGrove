@@ -7,7 +7,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoDataBlock;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ArduinoGraphResults;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -108,8 +107,13 @@ public class ArduinoDataPointService {
         return ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocks, accessTime);
     }
 
+    /**
+     * Check if a garden with the given ID has data in the database from the past 14 days.
+     * @param gardenId The id of the garden being checked
+     * @return True if there is 14 days of data and false otherwise
+     */
     public boolean checkFourteenDaysOfData(Long gardenId) {
-        return true;
+        return dataPointRepository.daysofData(gardenId, LocalDateTime.now().minusWeeks(2)) >= 14;
     }
 
 }
