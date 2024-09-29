@@ -13,6 +13,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,11 +88,14 @@ class PlantControllerCreateTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"Test Plant", "a", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"})
-    void submitForm_allValid_plantSaved(String plantName) throws Exception {
-        Integer plantCount = 4;
-        String plantDescription = "Test Description";
-        String plantedDate = "2024-01-01";
+    @CsvSource({
+            "Test Plant, 4, Test Description, 2024-01-30",
+            "a, 1, Test Description, 2024-12-01",
+            "oneHundredCharacterPlantNameaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 001, Test Description, 2024-02-28",
+    })
+    void submitForm_allValid_plantSaved(
+            String plantName, String plantCount, String plantDescription, String plantedDate
+    ) throws Exception {
         byte[] fakeImageBytes = new byte[10];
         new Random().nextBytes(fakeImageBytes);
         long gardenId = gardenRepository.findAllByOwner(user).get(0).getId();
@@ -99,7 +103,7 @@ class PlantControllerCreateTest {
         mockMvc.perform(MockMvcRequestBuilders.multipart(newPlantUri(gardenId))
                                         .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, fakeImageBytes))
                                         .param("plantName", plantName)
-                                        .param("plantCount", String.valueOf(plantCount))
+                                        .param("plantCount", plantCount)
                                         .param("plantDescription", plantDescription)
                                         .param("plantedDate", plantedDate))
                         .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
@@ -109,7 +113,7 @@ class PlantControllerCreateTest {
         assertEquals(1, allPlants.size());
         Plant plant = allPlants.get(0);
         assertEquals(plantName, plant.getName());
-        assertEquals(plantCount, plant.getCount());
+        assertEquals(Integer.parseInt(plantCount), plant.getCount());
         assertEquals(plantDescription, plant.getDescription());
         assertNotNull(plant.getImageFileName());
     }
@@ -219,7 +223,7 @@ class PlantControllerCreateTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"-1", "text"})
+    @ValueSource(strings = {"-1", "text", "0", "00"})
     void submitForm_invalidCount_plantNotSaved(String plantCount) throws Exception {
         String plantName = "Test Plant";
         String plantDescription = "Test Description";

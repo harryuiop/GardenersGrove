@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:insert="~{fragments/importFragment :: headerfiles}"><title>Gardeners' Grove</title></head>
-
+<title>View Garden - Garden Pulse</title>
 <body class="bg">
 <div class="container-fluid d-flex flex-column p-0 m-0 align-items-center">
   <nav th:insert="~{fragments/navbar :: navbar}" class="w-100"></nav>
@@ -19,21 +19,23 @@
                   </div>
                   <div th:if="${owner}" class="col-sm-2 col-md-3 col-lg-4">
                     <a th:href="@{${editGardenUri}}" style="text-decoration: none">
-                      <button class="btn btn-edit"
-                              type="button"
-                      > Edit Garden <i class="bi bi-pencil"></i>
+                      <button class="btn btn-edit" type="button">
+                        Edit Garden <i class="bi bi-pencil"></i>
                       </button>
                     </a>
                   </div>
                   <div class="col-sm-2 col-md-3 col-lg-4">
                     <a th:href="@{${monitorGardenUriString}}" style="text-decoration: none">
-                      <button class="btn btn-edit"
-                              type="button"
-                      > Monitor Garden <i class="bi bi-bar-chart-line"></i>
+                      <button class="btn btn-edit" type="button">
+                        Monitor Garden <i class="bi bi-bar-chart-line"></i>
                       </button>
                     </a>
                   </div>
                 </div>
+                <button type="button" class="btn btn-edit mt-1" data-bs-toggle="modal"
+                        data-bs-target="#plantSuggestionModal">
+                  Plant Suggestions
+                </button>
               </div>
             </div>
 
@@ -163,7 +165,8 @@
           <div class="container">
             <div class="row">
               <div class="col-auto">
-                <h2>My Plants</h2>
+                <h2 th:if="${owner}">My Plants</h2>
+                <h2 th:unless="${owner}" th:text="${garden.getOwner().getFirstName()} + '\'s Plants'"></h2>
               </div>
               <div class="col-auto">
                 <a th:href="@{${newPlantUri}}">
@@ -196,6 +199,22 @@
       </div>
     </div>
 
+  </div>
+</div>
+<div id="plantSuggestionModal" class="modal fade" tabindex="-1" aria-labelledby="plantSuggestionModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fs-5" id="plantSuggestionModalLabel">Suggested Plants</h5>
+      </div>
+      <div class="modal-body">
+        Suggested Plants will show here!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-edit" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
   </div>
 </div>
 </body>

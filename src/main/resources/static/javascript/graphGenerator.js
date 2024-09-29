@@ -11,7 +11,6 @@ const currentTempReading = document.getElementById("current-temp-reading");
 // Containers
 const temperatureGraphContainer = document.getElementById("graphs");
 const disconnectedWarning = document.getElementById("disconnected-warning");
-const alertSensor = document.getElementById("sensor-alert")
 
 // Labels
 const graphDataSet = document.getElementById("display-graphs").dataset;
@@ -29,6 +28,7 @@ const GraphType = Object.freeze({
 
 // graph declarations
 let monthGraph, weekGraph, dayGraph;
+let currentlySelectedSensorView = "Temperature";
 
 /**
  * Render temperature graphs on page load.
@@ -39,7 +39,7 @@ window.onload = function() {
 
 /**
  * Make graphs for that sensor shown.
- * @param buttonId Sensor selected
+ * @param {string} buttonId Sensor selected
  */
 function makeActive(buttonId) {
     const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
@@ -48,11 +48,12 @@ function makeActive(buttonId) {
     button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead';
 
     allButtons.forEach( allButtonsItem => {
-            if (allButtonsItem !== buttonId) {
-                document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
-            }
+        if (allButtonsItem !== buttonId) {
+            document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
         }
-    )
+    })
+
+    currentlySelectedSensorView = buttonId;
 
     switch (buttonId){
         case "Temperature":
@@ -77,7 +78,7 @@ function makeActive(buttonId) {
 
 /**
  * Change temperature unit to Fahrenheit or Celsius, update graph, update current temperature
- * @param unit c for Celsius, anything else for Fahrenheit
+ * @param {string} unit c for Celsius, anything else for Fahrenheit
  */
 function changeTemperatureUnit(unit) {
     const currentTempUnitText = currentTempUnit.innerText;
@@ -141,16 +142,13 @@ function renderTemperatureGraphs() {
     const temperatureUnit = isCelsius ? '°C' : '°F';
 
     const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
-    monthGraph = createGraph(convertedMonthResults,"graph-month", `Temperature (${temperatureUnit})`,
-        GraphType.MONTH, monthLabels);
+    monthGraph = createGraph(getMonthGraphInformation(`Temperature (${temperatureUnit})`, convertedMonthResults), "graph-month")
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    weekGraph = createGraph(convertedWeeklyResults,"graph-week", `Temperature (${temperatureUnit})`,
-        GraphType.WEEK, weekLabels);
+    weekGraph = createGraph(getWeekGraphInformation(`Temperature (${temperatureUnit})`, convertedWeeklyResults),"graph-week")
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
-    dayGraph = createGraph(convertedDayResults,"graph-day", `Temperature (${temperatureUnit})`,
-        GraphType.DAY, dayLabels);
+    dayGraph = createGraph(getDayGraphInformation(`Temperature (${temperatureUnit})`, convertedDayResults), "graph-day")
 
     alertMessage("Temperature")
 }
@@ -169,9 +167,9 @@ const renderMoistureGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(moistureMonthResults, "graph-month", "Soil Moisture", GraphType.MONTH, monthLabels);
-    weekGraph = createGraph(moistureWeeklyResults, "graph-week", "Soil Moisture", GraphType.WEEK, weekLabels);
-    dayGraph = createGraph(moistureDayResults, "graph-day", "Soil Moisture", GraphType.DAY, dayLabels);
+    monthGraph = createGraph(getMonthGraphInformation("Soil Moisture", moistureMonthResults), "graph-month");
+    weekGraph = createGraph(getWeekGraphInformation("Soil Moisture", moistureWeeklyResults), "graph-week");
+    dayGraph = createGraph(getDayGraphInformation("Soil Moisture", moistureDayResults), "graph-day");
 
     alertMessage("Moisture")
 }
@@ -191,9 +189,9 @@ const renderLightGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(lightMonthResults, "graph-month", "Light", GraphType.MONTH, monthLabels);
-    weekGraph = createGraph(lightWeeklyResults, "graph-week", "Light", GraphType.WEEK, weekLabels);
-    dayGraph = createGraph(lightDayResults, "graph-day", "Light", GraphType.DAY, dayLabels);
+    monthGraph = createGraph(getMonthGraphInformation("Light", lightMonthResults), "graph-month");
+    weekGraph = createGraph(getWeekGraphInformation("Light", lightWeeklyResults), "graph-week");
+    dayGraph = createGraph(getDayGraphInformation("Light", lightDayResults), "graph-day");
 
     alertMessage("Light")
 }
@@ -214,9 +212,9 @@ const renderPressureGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(pressureMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels);
-    weekGraph = createGraph(pressureWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels);
-    dayGraph = createGraph(pressureDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels);
+    monthGraph = createGraph(getMonthGraphInformation(`Pressure (ATM)`, pressureMonthResults), "graph-month");
+    weekGraph = createGraph(getWeekGraphInformation(`Pressure (ATM)`, pressureWeeklyResults), "graph-week");
+    dayGraph = createGraph(getDayGraphInformation(`Pressure (ATM)`, pressureDayResults), "graph-day");
 
     alertMessage("Air-Pressure")
 }
@@ -225,9 +223,9 @@ const renderPressureGraph = () => {
  * Destroys all graphs and render humidity graphs.
  */
 const renderHumidityGraph = () => {
-    const humidityMonthResults = JSON.parse(graphDataSet.monthLight);
-    const humidityWeeklyResults = JSON.parse(graphDataSet.weekLight);
-    const humidityDayResults = JSON.parse(graphDataSet.dayLight);
+    const humidityMonthResults = JSON.parse(graphDataSet.monthHumidity);
+    const humidityWeeklyResults = JSON.parse(graphDataSet.weekHumidity);
+    const humidityDayResults = JSON.parse(graphDataSet.dayHumidity);
 
     tempUnits.style.display = "none";
 
@@ -236,9 +234,9 @@ const renderHumidityGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(humidityMonthResults, "graph-month", "Humidity", GraphType.MONTH, monthLabels);
-    weekGraph = createGraph(humidityWeeklyResults, "graph-week", "Humidity", GraphType.WEEK, weekLabels);
-    dayGraph = createGraph(humidityDayResults, "graph-day", "Humidity", GraphType.DAY, dayLabels);
+    monthGraph = createGraph(getMonthGraphInformation("Humidity", humidityMonthResults), "graph-month");
+    weekGraph = createGraph(getWeekGraphInformation("Humidity", humidityWeeklyResults), "graph-week");
+    dayGraph = createGraph(getDayGraphInformation("Humidity", humidityDayResults), "graph-day");
 
     alertMessage("Humidity")
 }
@@ -260,14 +258,13 @@ function convertFahrenheitToCelsius(fahrenheit) {
  *
  * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
- * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
-function getDayGraphInformation(sensorName, data, timeLabels) {
+function getDayGraphInformation(sensorName, data) {
 
     return [
         {
-        labels: timeLabels,
+        labels: dayLabels,
             datasets: [{
             label: `Average ${sensorName} per Half-hour`,
             data: data,
@@ -282,15 +279,14 @@ function getDayGraphInformation(sensorName, data, timeLabels) {
  * Get graph information for a month graph.
  * Readings each day.
  *
- * @param sensorName Name of sensor used, e.g Temperature
+ * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
- * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
-function getMonthGraphInformation(sensorName, data, timeLabels) {
+function getMonthGraphInformation(sensorName, data) {
     return [
         {
-            labels: timeLabels,
+            labels: monthLabels,
             datasets: [{
                 label: `Average ${sensorName} per Day`,
                 data: data,
@@ -307,10 +303,9 @@ function getMonthGraphInformation(sensorName, data, timeLabels) {
  *
  * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
- * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
-function getWeekGraphInformation(sensorName, data, timeLabels) {
+function getWeekGraphInformation(sensorName, data) {
     const [nightData, morningData, afternoonData, eveningData] = [[], [], [], []];
     for (let i = 0; i < data.length; i++) {
         switch ((i + 1) % 4) {
@@ -330,7 +325,7 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
 
     return [
         {
-            labels: timeLabels,
+            labels: weekLabels,
             datasets: [{
                 label: `Night (12:00am - 5:59am)`,
                 data: nightData,
@@ -363,31 +358,8 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
  * @param graphId       the id of the div where the graph goes
- * @param sensorName    Name of sensor e.g Temperature
- * @param graphType     Type of graph: Month, Week, Day
- * @param timeLabels    Time labels for y-axis
  */
-function createGraph(data, graphId, sensorName, graphType, timeLabels) {
-    if (!data || data.length === 0){
-        console.error("No data points given for data:", data);
-        return;
-    }
-
-    // Get graph information
-    switch (graphType) {
-        case GraphType.DAY:
-            [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
-            break;
-        case GraphType.WEEK:
-            [dataObject, xLabel, yLabel] = getWeekGraphInformation(sensorName, data, timeLabels);
-            break;
-        case GraphType.MONTH:
-            [dataObject, xLabel, yLabel] = getMonthGraphInformation(sensorName, data, timeLabels);
-            break;
-        default:
-            [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
-    }
-
+function createGraph([dataObject, xLabel, yLabel], graphId) {
     return new Chart(document.getElementById(graphId),
         {
             type: 'line',
@@ -413,13 +385,4 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels) {
             }
         }
     )
-}
-
-function alertMessage(sensor) {
-    if (isNaN(Number(disconnectedWarning.getAttribute("data-"+sensor.toLowerCase())))) {
-        disconnectedWarning.style.display = "block"
-        alertSensor.innerText = sensor
-    } else {
-        disconnectedWarning.style.display = "none"
-    }
 }

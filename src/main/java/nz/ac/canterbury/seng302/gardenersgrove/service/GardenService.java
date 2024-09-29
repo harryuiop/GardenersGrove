@@ -2,6 +2,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.service;
 
 import nz.ac.canterbury.seng302.gardenersgrove.controller.PublicGardensController;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchFriendException;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.GardenRepository;
 import org.slf4j.Logger;
@@ -148,6 +149,19 @@ public class GardenService {
      */
     public long countPublicGardens(List<String> givenTags) {
         return gardenRepository.countFindByGardenPublicTrueWithTags(givenTags);
+    }
+
+    /**
+     * Find owned gardens with an arduino connection
+     *
+     * @param owner Logged in user
+     * @return List of owned gardens with an arduino connection
+     */
+    public List<Garden> getConnectedGardens(User owner) {
+        return gardenRepository.findAllByOwner(owner)
+                .stream()
+                .filter(garden -> garden.getArduinoId() != null)
+                .toList();
     }
 
     /**
