@@ -47,7 +47,7 @@ public class GardenPlantSuggestions {
         }
     }
 
-    public static String getSuggestions(String prompt) throws GemmaException {
+    public static String getSuggestions(String prompt) throws GemmaException, InterruptedException {
         URI uri = new DefaultUriBuilderFactory().builder()
                 .scheme("http")
                 .host("localhost")
@@ -68,7 +68,7 @@ public class GardenPlantSuggestions {
         HttpResponse<String> responseMessage;
         try (HttpClient client = HttpClient.newHttpClient()) {
             responseMessage = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException exception) {
+        } catch (IOException exception) {
             throw new GemmaException();
         }
 
