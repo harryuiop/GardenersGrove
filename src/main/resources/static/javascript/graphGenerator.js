@@ -372,28 +372,34 @@ function updateRectangleConfig(minValue, maxValue) {
         beforeDraw: function (chart) {
             if (chart.config.options.shadedRegion) {
                 const ctx = chart.chart.ctx;
-                const chartArea = chart.chartArea;
                 const y = chart.scales['y-axis-0'];
 
-                const xStart1 = chartArea.left;
-                const xEnd1 = chartArea.right;
-                const yStart1 = chartArea.top;
-                const yEnd1 = y.getPixelForValue(maxValue);
-
-                const xStart2 = chartArea.left;
-                const xEnd2 = chartArea.right;
-                const yStart2 = y.getPixelForValue(minValue);
-                const yEnd2 = chartArea.bottom;
-
+                ctx.reset();
                 ctx.save();
-                ctx.fillStyle = 'rgba(150, 0, 0, 0.05)';
+                ctx.fillStyle = 'rgba(150, 0, 0, 0.1)';
+
+                const xStart = chart.chartArea.left;
+                const xEnd = chart.chartArea.right;
+
+                // upper limit shade
+                const yStart1 = chart.chartArea.top;
+                const yEnd1 = y.getPixelForValue(maxValue);
 
                 // Only draw shading if height of rectangle is positive
                 if (yEnd1 - yStart1 > 0) {
-                    ctx.fillRect(xStart1, yStart1, xEnd1 - xStart1, yEnd1 - yStart1);
+                    ctx.fillRect(xStart, yStart1, xEnd - xStart, yEnd1 - yStart1);
                 }
+
+                // lower limit shade
+                let yStart2 = y.getPixelForValue(minValue);
+                const yEnd2 = chart.chartArea.bottom;
+
                 if (yEnd2 - yStart2 > 0) {
-                    ctx.fillRect(xStart2, yStart2, xEnd2 - xStart2, yEnd2 - yStart2);
+                    // prevent the shade rectangle from drawing over the graph legend
+                    if (yStart2 < 0) {
+                        yStart2 = chart.chartArea.top;
+                    }
+                    ctx.fillRect(xStart, yStart2, xEnd - xStart, yEnd2 - yStart2);
                 }
 
                 ctx.restore();
