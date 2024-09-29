@@ -1,9 +1,8 @@
 const plantSuggestionsButton = document.getElementById("plant-suggestions-button");
 const plantSuggestionContainer = document.getElementById("plant-suggestion-container");
-
+const spinner = document.getElementById("suggestion-on-load");
 plantSuggestionsButton.addEventListener("click", function () {
     console.log("PLANT SUGGESTIONS CLICKED");
-    //TODO add loading stuff as suggestion takes a while
     fetchPlantSuggestions(plantSuggestionsButton.dataset.gardenId);
 });
 
@@ -11,6 +10,7 @@ plantSuggestionsButton.addEventListener("click", function () {
 function fetchPlantSuggestions(gardenId) {
     const deployment = window.location.pathname.split('/')[1];
     const baseUri = deployment !== undefined && possible_deployments.includes(deployment) ?`/${deployment}` : '';
+    spinner.style.display = "inline-block";
     fetch( `${baseUri}/ai/suggestions?gardenId=${gardenId}`)
         .then(response => {
             if (!response.ok) {
@@ -19,9 +19,11 @@ function fetchPlantSuggestions(gardenId) {
             return response.json();
         })
         .then(data => {
+            spinner.style.display = "none";
             renderPlantSuggestions(data);
         })
         .catch(error => {
+            spinner.style.display = "none";
             console.error('There was a problem with the fetch operation:', error);
         });
 }
@@ -47,4 +49,3 @@ function renderPlantSuggestions(plantSuggestionList) {
         plantSuggestionContainer.appendChild(itemElement);
     }
 }
-
