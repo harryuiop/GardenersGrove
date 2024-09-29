@@ -1,10 +1,160 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<title>Home - Garden Pulse</title>
 <head th:insert="~{fragments/importFragment :: headerfiles}"></head>
 <body class="bg">
 <div class="container-fluid p-0 m-0">
   <nav th:insert="~{fragments/navbar :: navbar}" style=""></nav>
-  <h1 class="mt-3" style="text-align: center">Gardener's Grove</h1>
+
+    <div class="row">
+      <div class="col mx-4 rounded bg-white shadow-sm p-2">
+        <div class="row">
+          <div class="col-sm-4 col-md-3 col-12 text-center my-4">
+            <img class="rounded-circle profile-img p-4" th:src="@{/images/logo.jpeg}" alt="Garden Pulse Logo"/>
+
+          </div>
+          <div
+                  class="col-sm-8 col-md-9 col-12 my-4 text-sm-start text-center d-flex flex-column justify-content-between">
+            <div class="flex-grow-1">
+              <p class="display-3 mb-0 text-break">
+                 Garden Pulse
+              </p>
+              <p>
+                Garden Pulse provides real-time monitoring and analysis of your garden's conditions through sensor data and customizable thresholds, offering tailored plant suggestions and advice messages to help you effortlessly cultivate a thriving garden.
+              </p>
+
+              <div class="row">
+                <div class="col-md-6 p-3">
+                  <h2>Garden Stats</h2>
+
+                  <div th:if="${connectedGardens.isEmpty()}">
+                    You have no gardens connected to an arduino.
+                    Please get in touch with the Garden Pulse team to connect a garden.
+                  </div>
+
+                  <div th:unless="${connectedGardens.isEmpty()}">
+                    <div class="dropdown">
+                      <button class="btn dropdown-toggle btn-confirm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span id="selected-garden-name" th:text="${connectedGardens.keySet().toArray()[0]}"></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li th:each="entry : ${connectedGardens.entrySet()}">
+                          <a class="dropdown-item text-truncate"
+                             style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                             th:text="${entry.key}"
+                             th:attr="data-temp=${entry.value.getTempCelsius()},
+                                      data-moisture=${entry.value.getMoisturePercent()},
+                                      data-light=${entry.value.getLightPercent()},
+                                      data-pressure=${entry.value.getAtmosphereAtm()},
+                                      data-humidity=${entry.value.getHumidityPercent()}"
+                             onclick="updateGardenStats(this)"></a>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- Garden Stats-->
+                    <div class="row">
+                      <div class="col bg-white rounded">
+                        <div class="d-flex flex-column">
+                          <!-- Temperature -->
+                          <div class="container w-100 align-content-center px-0 py-2">
+                            <i class="bi bi-thermometer-half"></i>
+                            <span>Temperature:&nbsp;</span>
+                            <span id="current-temp-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getTempCelsius() != null ? connectedGardens.values().toArray()[0].getTempCelsius() : '-'}">
+                            </span>
+                            <span id="current-temp-unit">°C</span>
+                          </div>
+
+                          <!-- Soil Moisture -->
+                          <div class="container w-100 align-content-center px-0 py-2">
+                            <i class="bi bi-moisture"></i>
+                            <span>Soil Moisture:&nbsp;</span>
+                            <span id="current-moisture-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getMoisturePercent() != null ? connectedGardens.values().toArray()[0].getMoisturePercent() : '-'}">
+                            </span>
+                            <span>%</span>
+                          </div>
+
+                          <!-- Light -->
+                          <div class="container w-100 align-content-center px-0 py-2">
+                            <i class="bi bi-brightness-high"></i>
+                            <span>Light:&nbsp;</span>
+                            <span id="current-light-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getLightPercent() != null ? connectedGardens.values().toArray()[0].getLightPercent() : '-'}">
+
+                            </span>
+                            <span>%</span>
+                          </div>
+
+                          <!-- Air Pressure -->
+                          <div class="container w-100 align-content-center px-0 py-2">
+                            <i class="bi bi-speedometer"></i>
+                            <span>Pressure:&nbsp;</span>
+                            <span id="current-pressure-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getAtmosphereAtm() != null ? connectedGardens.values().toArray()[0].getAtmosphereAtm() : '-'}">
+                            </span>
+                            <span>atm</span>
+                          </div>
+
+                          <!-- Humidity -->
+                          <div class="container w-100 align-content-center px-0 py-2">
+                            <i class="bi bi-droplet-half"></i>
+                            <span>Humidity:&nbsp;</span>
+                            <span id="current-humidity-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getHumidityPercent() != null ? connectedGardens.values().toArray()[0].getHumidityPercent() : '-'}">
+                            </span>
+                            <span>%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 p-3">
+                  <h2>Where would you like to go?</h2>
+                <p>
+                  <a class="main-links" th:href="@{${browseUri}}"><i class="bi bi-search"></i> Browse Gardens</a>
+                </p>
+                <p>
+                  <a class="main-links" th:href="@{${myGardensUri}}"><i class="bi bi-tree"></i> My Gardens</a>
+                </p>
+                <p>
+                  <a class="main-links" th:href="@{${createGardenUri}}"><i class="bi bi-plus-square"></i> Create Gardens</a>
+                </p>
+                <p>
+                  <a class="main-links" th:href="@{${profileUri}}"><i class="bi bi-person"></i> Profile </a>
+                </p>
+                <p>
+                  <a class="main-links" th:href="@{${friendsUri}}"><i class="bi bi-people"></i> Friends </a>
+                </p>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4"> <!-- Helpful links -->
+    </div>
+
+
 </div>
+<script>
+  function updateGardenStats(selectedItem) {
+    document.getElementById("selected-garden-name").textContent = selectedItem.textContent;
+
+    const temp = selectedItem.getAttribute("data-temp");
+    const moisture = selectedItem.getAttribute("data-moisture");
+    const light = selectedItem.getAttribute("data-light");
+    const pressure = selectedItem.getAttribute("data-pressure");
+    const humidity = selectedItem.getAttribute("data-humidity");
+
+    document.getElementById("current-temp-reading").textContent = temp || "-";
+    document.getElementById("current-moisture-reading").textContent = moisture || "-";
+    document.getElementById("current-light-reading").textContent = light || "-";
+    document.getElementById("current-pressure-reading").textContent = pressure || "-";
+    document.getElementById("current-humidity-reading").textContent = humidity || "-";
+  }
+</script>
 </body>
 
