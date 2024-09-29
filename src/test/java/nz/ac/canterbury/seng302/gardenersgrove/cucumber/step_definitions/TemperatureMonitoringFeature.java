@@ -322,7 +322,7 @@ public class TemperatureMonitoringFeature {
                         "A temperature reading in the last 24 hours has " +
                                 "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
                                 " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
-                                "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+                                "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
                                 "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize."));
     }
 
@@ -389,7 +389,7 @@ public class TemperatureMonitoringFeature {
                                 "\nA temperature reading in the last 24 hours has " +
                                 "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
                                 " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
-                                "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+                                "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
                                 "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize."));
     }
 

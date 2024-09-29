@@ -15,6 +15,8 @@ import org.junit.jupiter.api.*;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,6 +44,7 @@ class MonitorGardenControllerTest {
     GardenRepository gardenRepository;
 
     static Garden garden;
+    static boolean gardenSaved = false;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -55,11 +58,16 @@ class MonitorGardenControllerTest {
 
     @BeforeAll
     void saveGarden() {
+        Mockito.reset(arduinoDataPointService);
+        if (gardenSaved) {
+            return;
+        }
         user = new User("testuser@email.com", "Test", "User", "Password1!", "2000-01-01");
         userRepository.save(user);
         Location location = new Location("Test", "Location");
         garden = new Garden(user, "g1", "desc", location, 1.0f, true);
         gardenRepository.save(garden);
+        gardenSaved = true;
     }
 
     @BeforeEach
