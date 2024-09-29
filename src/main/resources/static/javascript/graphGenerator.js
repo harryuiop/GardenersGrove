@@ -28,9 +28,7 @@ let currentlySelectedSensorView = "Temperature";
 /**
  * Render temperature graphs on page load.
  */
-window.onload = function() {
-    renderTemperatureGraphs();
-}
+window.onload = () => renderTemperatureGraphs();
 
 /**
  * Make graphs for that sensor shown.
@@ -40,17 +38,19 @@ function makeActive(buttonId) {
     const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
     const button = document.getElementById(buttonId);
 
-    button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead';
+    button.classList.add('btn-stats-bar-active');
 
     allButtons.forEach(allButtonsItem => {
         if (allButtonsItem !== buttonId) {
-            document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
+            const otherButton = document.getElementById(allButtonsItem);
+            otherButton.classList.add('btn-stats-bar');
+            otherButton.classList.remove('btn-stats-bar-active');
         }
-    })
+    });
 
     currentlySelectedSensorView = buttonId;
 
-    switch (buttonId){
+    switch (buttonId) {
         case "Temperature":
             renderTemperatureGraphs();
             break;
@@ -104,14 +104,14 @@ function changeTemperatureUnit(unit) {
     renderTemperatureGraphs();
 }
 
-const changeGraphTitle  = (monthTitle, weekTitle, dayTitle) => {
+function changeGraphTitle(monthTitle, weekTitle, dayTitle) {
     document.getElementById("month-title").innerHTML = monthTitle;
     document.getElementById("week-title").innerHTML = weekTitle;
     document.getElementById("day-title").innerHTML = dayTitle;
 }
 
-const destroyGraphs = () => {
-    if(monthGraph) {
+function destroyGraphs() {
+    if (monthGraph) {
         monthGraph.destroy();
         weekGraph.destroy();
         dayGraph.destroy();
@@ -153,7 +153,7 @@ function renderTemperatureGraphs() {
 /**
  * Destroys all graphs and render Moisture graphs.
  */
-const renderMoistureGraph = () => {
+function renderMoistureGraph() {
     const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture);
     const moistureWeeklyResults = JSON.parse(graphDataSet.weekMoisture);
     const moistureDayResults = JSON.parse(graphDataSet.dayMoisture);
@@ -176,7 +176,7 @@ const renderMoistureGraph = () => {
 /**
  * Destroys all graphs and render light graphs.
  */
-const renderLightGraph = () => {
+function renderLightGraph() {
     const lightMonthResults = JSON.parse(graphDataSet.monthLight);
     const lightWeeklyResults = JSON.parse(graphDataSet.weekLight);
     const lightDayResults = JSON.parse(graphDataSet.dayLight);
@@ -199,8 +199,7 @@ const renderLightGraph = () => {
 /**
  * Destroys all graphs and render pressure graphs.
  */
-const renderPressureGraph = () => {
-
+function renderPressureGraph() {
     const pressureMonthResults = JSON.parse(graphDataSet.monthPressure);
     const pressureWeeklyResults = JSON.parse(graphDataSet.weekPressure);
     const pressureDayResults = JSON.parse(graphDataSet.dayPressure);
@@ -209,7 +208,7 @@ const renderPressureGraph = () => {
 
     tempUnits.style.display = "none";
 
-    changeGraphTitle("Pressure Last 30 Days", "Pressure Last 7 Days", "Pressure Today");``
+    changeGraphTitle("Pressure Last 30 Days", "Pressure Last 7 Days", "Pressure Today");
 
     // reset graphs
     destroyGraphs();
@@ -224,7 +223,7 @@ const renderPressureGraph = () => {
 /**
  * Destroys all graphs and render humidity graphs.
  */
-const renderHumidityGraph = () => {
+function renderHumidityGraph() {
     const humidityMonthResults = JSON.parse(graphDataSet.monthHumidity);
     const humidityWeeklyResults = JSON.parse(graphDataSet.weekHumidity);
     const humidityDayResults = JSON.parse(graphDataSet.dayHumidity);
@@ -245,21 +244,31 @@ const renderHumidityGraph = () => {
 }
 
 
+/**
+ * Converts a temperature in degrees celsius to degrees fahrenheit.
+ * @param celsiusInput The temperature in degrees celsius.
+ * @returns {number|null} The temperature in degrees fahrenheit.
+ */
 function convertCelsiusToFahrenheit(celsiusInput) {
     if (celsiusInput === null) return null;
     return celsiusInput * 1.8 + 32;
 }
 
+/**
+ * Converts a temperature in degrees Fahrenheit to degrees Celsius.
+ * @param fahrenheit a temperature in degrees Fahrenheit.
+ * @returns {number} the temperature in degrees Celsius.
+ */
 function convertFahrenheitToCelsius(fahrenheit) {
     return (fahrenheit - 32) / 1.8;
 
 }
 
 /**
- * Get graph information for a single day graph.
+ * Get graph information for a single-day graph.
  * Readings each 30 minutes.
  *
- * @param sensorName Name of sensor used, e.g. Temperature
+ * @param {string} sensorName Name of sensor used, e.g., Temperature
  * @param data Readings from Arduino
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
@@ -267,22 +276,22 @@ function getDayGraphInformation(sensorName, data) {
 
     return [
         {
-        labels: dayLabels,
+            labels: dayLabels,
             datasets: [{
-            label: `Average ${sensorName} per Half-hour`,
-            data: data,
-            fill: true,
-            borderColor: GRAPH_COLOR,
-            tension: 0.1
-        }]
-    }, "Time (Half-hourly)", sensorName];
+                label: `Average ${sensorName} per Half-hour`,
+                data: data,
+                fill: true,
+                borderColor: GRAPH_COLOR,
+                tension: 0.1
+            }]
+        }, "Time (Half-hourly)", sensorName];
 }
 
 /**
  * Get graph information for a month graph.
  * Readings each day.
  *
- * @param sensorName Name of sensor used, e.g. Temperature
+ * @param sensorName Name of sensor used, e.g., Temperature
  * @param data Readings from Arduino
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
@@ -380,7 +389,7 @@ function updateRectangleConfig(minValue, maxValue) {
                 const yEnd2 = chartArea.bottom;
 
                 ctx.save();
-                ctx.fillStyle = 'rgba(100, 0, 0, 0.05)';
+                ctx.fillStyle = 'rgba(150, 0, 0, 0.05)';
 
                 // Only draw shading if height of rectangle is positive
                 if (yEnd1 - yStart1 > 0) {
