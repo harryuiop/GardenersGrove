@@ -1,10 +1,10 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
+import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.SensorAdviceMessages;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,4 +172,5 @@ public class ArduinoControllerDataService {
         model.addAttribute("MAX_VALID_HUMIDITY", ArduinoDataValidator.MAX_HUMIDITY);
         model.addAttribute("LIGHT_LEVELS", Arrays.asList(LightLevel.values()));
     }
+
 }

@@ -27,12 +27,16 @@ public class SensorAdviceMessages {
             "Overly dry soil makes it difficult for plants to absorb moisture decreases the availability of " +
             "nutrients. If you are watering your garden regularly, try adding compost into your soil, or creating " +
             "a layer of compost on top of the soil to prevent the sun from evaporating water from the soil's surface.";
-    private static final String BELOW_HUMIDITY_ADVICE = "HUMIDITY IS BELOW";
+    private static final String BELOW_HUMIDITY_ADVICE = "A temperature reading in the last 24 hours has gone above the " +
+            "set advice range. High temperatures can harm plants by slowing their growth and causing dehydration. " +
+            "This can lead to smaller, low-quality fruits and vegetables. Look for leaf rolling or cupping, wilting, " +
+            "dry leaf edges, sun-scald or bleached leaves. If any of these signs appear, water regularly, mulch, " +
+            "and provide shade. Do not transplant, prune or fertilize.";
 
     private static final String ABOVE_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours has " +
             "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
             " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
-            "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+            "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
             "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize.";
     private static final String ABOVE_MOISTURE_ADVICE = "This garden is above the ideal soil moisture. " +
             "Overly moist soil can create leaching of nutrients, root rot, fungal problems, and prevent growth. " +
@@ -78,8 +82,8 @@ public class SensorAdviceMessages {
         moistureReferences.add("\"Evergreen Seeds\" : \"https://www.evergreenseeds.com/how-to-fix-dry-soil/#The_Role_of_Organic_Matter_in_Soil_Structure\"");
         moistureReferences.add("\"Gardening Know How\" : \"https://www.gardeningknowhow.com/garden-how-to/soil-fertilizers/waterlogged-soil-fixes\"");
 
-        humidityReferences.add("\"websiteName3\" : \"url3\"");
-        humidityReferences.add("\"websiteName4\" : \"url4\"");
+        humidityReferences.add("\"The Green Pages: Humidity, temperature and watering\" : \"https://espacepourlavie.ca/en/humidity-temperature-and-watering#:~:text=Most%20plants%20grow%20best%20with,tolerate%20humidity%20levels%20below%2025%25\"");
+        humidityReferences.add("\"7 Mistakes Growers Make with Humidity\" : \"https://www.shogunfertilisers.com/en/growing-information/blogs/7-mistakes-growers-make-with-humidity/#:~:text=Generally%2C%20as%20the%20temperature%20increases,aim%20for%2055%2D70%25.\"");
 
         lightReferences.add("\"websiteName5\" : \"url5\"");
         lightReferences.add("\"websiteName6\" : \"url6\"");

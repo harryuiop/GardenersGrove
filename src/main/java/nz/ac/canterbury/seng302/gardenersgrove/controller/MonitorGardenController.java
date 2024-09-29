@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -103,16 +104,19 @@ public class MonitorGardenController extends NavBar {
         }
         Garden garden = optionalGarden.get();
 
-        boolean notOwner = garden.getOwner().getId() != currentUser.getId();
+        boolean owner = garden.getOwner().getId() == currentUser.getId();
         boolean privateGarden = !garden.isGardenPublic();
         boolean notFriends = !friendshipService.areFriends(garden.getOwner(), currentUser);
-        if (notOwner && privateGarden && notFriends) {
+        if (!owner && privateGarden && notFriends) {
             throw new NoSuchGardenException(gardenId);
         }
 
+        List<Garden> gardenList = gardenService.getAllGardens();
+        gardenList.removeIf(g -> g.getId().equals(gardenId));
+
         model.addAttribute("garden", garden);
-        model.addAttribute("owner", garden.getOwner() == currentUser);
-        model.addAttribute("gardenList", gardenService.getAllGardens());
+        model.addAttribute("owner", owner);
+        model.addAttribute("gardenList", gardenList);
         model.addAttribute("editAdviceUri", EDIT_ADVICE_RANGES_URI_STRING);
         model.addAllAttributes(adviceRangesErrors);
         model.addAttribute("openAdviceRangesModel", !adviceRangesErrors.isEmpty());

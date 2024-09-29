@@ -155,7 +155,14 @@
                         Compare <i class="bi bi-layers"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        <li th:each="userGarden: ${gardenList}"><a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" href="#" th:text="${userGarden.getName()}"></a></li>
+                        <li>
+                            <a class="dropdown-item text-truncate"
+                               style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                               th:text="'No Comparison'"></a>
+                        </li>
+                        <li th:each="userGarden: ${gardenList}">
+                            <a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{|/garden/compare/${garden.getId()}/${userGarden.getId()}|}" th:text="${userGarden.getName()}"></a>
+                        </li>
                     </ul>
                 </div>
                 <div class="row" id="temp-units">
@@ -199,7 +206,6 @@
                 </div>
             </div>
         </div>
-    </div>
     <div id="settingsModal" class="modal fade" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
