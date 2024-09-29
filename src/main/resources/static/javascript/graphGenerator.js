@@ -372,7 +372,12 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
         }, "Time (Day)", sensorName]
 }
 
-function updateRectangleConfig(sensorName, minValue, maxValue) {
+/**
+ * Draws shading rectangles onto the charts to show advice ranges
+ * @param {number} minValue The advice range lower bound
+ * @param {number} maxValue The advice range upper bound
+ */
+function updateRectangleConfig(minValue, maxValue) {
     Chart.plugins.register({
         beforeDraw: function (chart) {
             if (chart.config.options.shadedRegion) {
@@ -391,10 +396,15 @@ function updateRectangleConfig(sensorName, minValue, maxValue) {
                 const yEnd2 = chartArea.bottom;
 
                 ctx.save();
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillStyle = 'rgba(100, 0, 0, 0.05)';
 
-                ctx.fillRect(xStart1, yStart1, xEnd1 - xStart1, yEnd1 - yStart1);
-                ctx.fillRect(xStart2, yStart2, xEnd2 - xStart2, yEnd2 - yStart2);
+                // Only draw shading if height of rectangle is positive
+                if (yEnd1 - yStart1 > 0) {
+                    ctx.fillRect(xStart1, yStart1, xEnd1 - xStart1, yEnd1 - yStart1);
+                }
+                if (yEnd2 - yStart2 > 0) {
+                    ctx.fillRect(xStart2, yStart2, xEnd2 - xStart2, yEnd2 - yStart2);
+                }
 
                 ctx.restore();
             }
@@ -433,7 +443,7 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels, minValue,
             [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
     }
 
-    updateRectangleConfig(sensorName, minValue, maxValue);
+    updateRectangleConfig(minValue, maxValue);
 
     return new Chart(document.getElementById(graphId),
         {
@@ -444,18 +454,18 @@ function createGraph(data, graphId, sensorName, graphType, timeLabels, minValue,
                 maintainAspectRatio: true,
                 aspectRatio: 1.25,
                 scales: {
-                    yAxes: [{
+                    yAxes: {
                         scaleLabel: {
                             display: true,
                             labelString: yLabel
                         }
-                    }],
-                    xAxes: [{
+                    },
+                    xAxes: {
                         scaleLabel: {
                             display: true,
                             labelString: xLabel
                         }
-                    }]
+                    }
                 },
                 shadedRegion: true
             }
