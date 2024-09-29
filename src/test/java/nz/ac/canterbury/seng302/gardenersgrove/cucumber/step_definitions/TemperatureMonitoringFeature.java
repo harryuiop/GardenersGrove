@@ -3,6 +3,7 @@ package nz.ac.canterbury.seng302.gardenersgrove.cucumber.step_definitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import nz.ac.canterbury.seng302.gardenersgrove.cucumber.AdviceSharedState;
 import nz.ac.canterbury.seng302.gardenersgrove.cucumber.RunCucumberTest;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.*;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
@@ -41,6 +42,9 @@ public class TemperatureMonitoringFeature {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AdviceSharedState adviceSharedState;
+
     private Authentication auth;
 
     private Long gardenId;
@@ -51,7 +55,6 @@ public class TemperatureMonitoringFeature {
     private FormattedGraphData formattedDayResults;
 
     private FormattedGraphData formattedMonthResults;
-
 
     @Given("I have a logged in user with a monitored garden")
     public void iHaveALoggedInUserWithAMonitoredGarden() {
@@ -68,6 +71,7 @@ public class TemperatureMonitoringFeature {
         Garden garden = new Garden(user, "Test", "", location, null, true);
         gardenService.saveGarden(garden);
         gardenId = garden.getId();
+        adviceSharedState.setGardenId(gardenId);
         auth = RunCucumberTest.authMaker.accept(user.getEmail(), "Password1!", userService);
     }
 
@@ -318,7 +322,7 @@ public class TemperatureMonitoringFeature {
                         "A temperature reading in the last 24 hours has " +
                                 "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
                                 " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
-                                "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+                                "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
                                 "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize."));
     }
 
@@ -385,7 +389,7 @@ public class TemperatureMonitoringFeature {
                                 "\nA temperature reading in the last 24 hours has " +
                                 "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
                                 " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
-                                "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+                                "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
                                 "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize."));
     }
 
@@ -394,4 +398,6 @@ public class TemperatureMonitoringFeature {
         resultActions.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("tempReading"));
     }
+
+
 }

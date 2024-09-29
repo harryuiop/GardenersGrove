@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -110,9 +111,12 @@ public class MonitorGardenController extends NavBar {
             throw new NoSuchGardenException(gardenId);
         }
 
+        List<Garden> gardenList = gardenService.getAllGardens();
+        gardenList.removeIf(g -> g.getId().equals(gardenId));
+
         model.addAttribute("garden", garden);
         model.addAttribute("owner", owner);
-        model.addAttribute("gardenList", gardenService.getAllGardens());
+        model.addAttribute("gardenList", gardenList);
         model.addAttribute("editAdviceUri", EDIT_ADVICE_RANGES_URI_STRING);
         model.addAllAttributes(adviceRangesErrors);
         model.addAttribute("openAdviceRangesModel", !adviceRangesErrors.isEmpty());
