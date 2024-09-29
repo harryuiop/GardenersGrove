@@ -180,7 +180,6 @@ function renderLightGraph() {
     const lightMonthResults = JSON.parse(graphDataSet.monthLight);
     const lightWeeklyResults = JSON.parse(graphDataSet.weekLight);
     const lightDayResults = JSON.parse(graphDataSet.dayLight);
-    const lightValue = JSON.parse(graphDataSet.lightLevels);
 
     tempUnits.style.display = "none";
 
@@ -189,9 +188,9 @@ function renderLightGraph() {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(getMonthGraphInformation("Light", lightMonthResults), "graph-month", lightValue, lightValue);
-    weekGraph = createGraph(getWeekGraphInformation("Light", lightWeeklyResults), "graph-week", lightValue, lightValue);
-    dayGraph = createGraph(getDayGraphInformation("Light", lightDayResults), "graph-day", lightValue, lightValue);
+    monthGraph = createGraph(getMonthGraphInformation("Light", lightMonthResults), "graph-month", 0, 100);
+    weekGraph = createGraph(getWeekGraphInformation("Light", lightWeeklyResults), "graph-week", 0, 100);
+    dayGraph = createGraph(getDayGraphInformation("Light", lightDayResults), "graph-day", 0, 100);
 
     alertMessage("Light")
 }
