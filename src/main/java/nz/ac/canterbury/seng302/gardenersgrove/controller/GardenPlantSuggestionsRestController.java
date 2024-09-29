@@ -30,7 +30,9 @@ public class GardenPlantSuggestionsRestController {
         System.out.println("REQUESTED");
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
         if (optionalGarden.isEmpty()) {
-            return new ArrayList<>(); // TODO fix this
+            List<String> error = new ArrayList<>();
+            error.add("No garden Found");
+            return error;
         }
         return gardenPlantSuggestions.getPlantSuggestionsForGarden(optionalGarden.get());
 

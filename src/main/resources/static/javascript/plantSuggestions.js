@@ -29,8 +29,17 @@ function fetchPlantSuggestions(gardenId) {
 
 function renderPlantSuggestions(plantSuggestionList) {
     console.log(plantSuggestionList);
+    plantSuggestionContainer.innerHTML = '';
     if (!plantSuggestionList) {
-        return; //TODO fix
+        const itemElement = document.createElement("p");
+        itemElement.innerHTML = "No Suggestions found";
+        plantSuggestionContainer.appendChild(itemElement);
+        return;
+    } else if (plantSuggestionList.size != 3) {
+        const itemElement = document.createElement("p");
+        itemElement.innerHTML = plantSuggestionList[0];
+        plantSuggestionContainer.appendChild(itemElement);
+        return;
     }
     for (const plantSuggestion of plantSuggestionList) {
         const itemElement = document.createElement("p");

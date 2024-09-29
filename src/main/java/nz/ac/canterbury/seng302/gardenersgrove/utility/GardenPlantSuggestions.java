@@ -64,11 +64,11 @@ public class GardenPlantSuggestions {
         } else if (garden.getLocation().isLocationRecognized()) {
            // Create prompt and get suggestion based on location
             List<String> suggestions = new ArrayList<>();
-            suggestions.add("");
+            suggestions.add("Location Suggestion");
             return suggestions;
         } else {
             List<String> suggestions = new ArrayList<>();
-            suggestions.add("Please connect a device to your garden or update your location.");
+            suggestions.add("Please make sure devices has been connected for 14 days or more or update your location.");
             return suggestions;
         }
     }
