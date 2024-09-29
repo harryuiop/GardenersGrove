@@ -26,10 +26,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.viewGardenUri;
 import static nz.ac.canterbury.seng302.gardenersgrove.utility.GardenPlantSuggestions.getSuggestions;
 import static org.mockito.Mockito.mockStatic;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class PlantSuggestionsFeature {
@@ -47,44 +46,16 @@ public class PlantSuggestionsFeature {
 
     private GardenPlantSuggestions gardenPlantSuggestions;
 
-    String expectedPrompt = "Given me 3 plant suggestions given my garden has, Temperature between -10.0C-42.0C, " +
-                            "Moisture between 3.0%-55.0%, Light between 5.0%-57.0%, Air Pressure between 0.1atm-0.62atm, " +
-                            "Humidity between 0.0%-52.0%";
+    String expectedPrompt = "Give a response of 3 plants in the form 1. Plant Name : plant description, with no extra text before or after, " +
+            "suggestion plants that are suitable for these given environment factors; , Temperature between -10.0C-42.0C, " +
+            "Moisture between 3.0%-55.0%, Light between 5.0%-57.0%, Air Pressure between 0.1atm-0.62atm, Humidity between 0.0%-52.0%";
     String suggestion = """
-            You've got a nice range of conditions for your garden! Let me suggest some plants that thrive in this climate:
-
-            **Option 1: Lush & Green:**
-
-            * **Hosta (Various Varieties):** These popular perennials love humidity and partial shade, thriving even with
-            fluctuating air pressure.  They'll provide beautiful foliage and come in many colors.
-            * **Hydrangea Macrophylla (Bigleaf Hydrangea):** Thriving in humid conditions and partial shade, these beauties
-            offer large, showy blooms that add color to your garden.
-            * **Japanese Maple (Acer palmatum):** These prized trees are adaptable and prefer well-drained soil with moderate
-            moisture levels. They will also benefit from the humidity in your garden.
-
-            **Option 2:  Sunny & Sturdy:**
-
-            * **Clematis (various species):** These climbing vines love sunny spots and can tolerate some shade, but need
-            ample moisture to thrive. The diverse varieties offer beautiful flowers that suit a variety of styles.
-            * **Lavender (Lavandula angustifolia):**  Known for its fragrant purple blooms, Lavender thrives in full sun with
-            well-drained soil and moderate humidity. It's relatively low maintenance and drought-tolerant.
-            * **Succulents (various species):**  Many succulent varieties do well under humid conditions. These plants come in
-            many forms, shapes, and sizes to suit your preferences.
-
-            **Option 3:   Unique & Adaptable:**
-
-            * **Ajuga reptans (Bugleweed):** This groundcover thrives in the humidity you described with a spread of green
-            foliage and beautiful purple flowers, perfect for adding color and texture.
-            * **Ferns (various species):**  Many ferns prefer humid environments.  They add a unique textural element to your
-            garden and require less frequent watering than many other plants.
-
-
-             **Important Notes:**
-
-            * **Specific Varieties:** Check local nurseries or online resources for varieties that thrive in the exact
-            conditions you describe.
-            * **Soil & Drainage:**  Ensure proper soil drainage is available by amending with compost if needed. Avoid heavy
-            clay soils which can hold too much moisture and lead to root rot.
+            1. **Succulents:** These plants thrive in dry climates with minimal water and well-draining soil.  Examples include:  * Aloe vera*, * Echeveria*, * Sedum*.
+            
+            2. **Cacti:** Known for their ability to survive extreme temperatures, cacti are also drought-tolerant and prefer bright, sunny locations. Consider * Echinocactus*, * Opuntia*, * Agave*.
+            
+            3. **Bonsai Trees:** While not strictly a single type, bonsai trees represent miniature versions of species adapted for specific environments.  These can be grown with varying levels of humidity and light depending on the chosen species. Examples include: * Japanese Maple*, * Olive Tree*, * Pine Tree*.
+                                    
             """;
 
     Garden garden;
@@ -116,20 +87,33 @@ public class PlantSuggestionsFeature {
             mockedSuggestions.when(() -> GardenPlantSuggestions.getSuggestions(expectedPrompt)).thenReturn(suggestion);
             Assertions.assertEquals(suggestion, getSuggestions(expectedPrompt));
             Assertions.assertNotEquals(suggestion, getSuggestions("H"));
-            result = mockMvc.perform(MockMvcRequestBuilders.get(viewGardenUri(garden.getId())));
+            result = mockMvc.perform(MockMvcRequestBuilders.get("/ai/suggestions?gardenId="+garden.getId()));
         }
         result.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Then("data is used to suggest 3 plants that would work well in the garden.")
     public void dataIsUsedToSuggestPlantsThatWouldWorkWellInTheGarden() throws Exception {
-        List<String> expectResponse = new ArrayList<>();
-        expectResponse.add("<b>Hosta (Various Varieties):</b>\nThese popular perennials love humidity and partial shade, thriving even with" +
-                " fluctuating air pressure.  They'll provide beautiful foliage and come in many colors. ");
-        expectResponse.add("<b>Clematis (various species):</b>\nThese climbing vines love sunny spots and can tolerate some " +
-                "shade, but need ample moisture to thrive. The diverse varieties offer beautiful flowers that suit a variety of styles. ");
-        expectResponse.add("<b>Ajuga reptans (Bugleweed):</b>\nThis groundcover thrives in the humidity you described with a " +
-                "spread of green foliage and beautiful purple flowers, perfect for adding color and texture. ");
-        result.andExpect(model().attribute("plantSuggestions", expectResponse));
+        System.out.println(gardenPlantSuggestions.parseSuggestions(suggestion));
+        List<String> correctSuggestions = new ArrayList<>();
+        correctSuggestions.add("<b></b>");
+        correctSuggestions.add("""
+                <b>Succulents:</b> These plants thrive in dry climates with minimal water and well-draining soil.  Examples include:   Aloe vera,  Echeveria,  Sedum.
+
+                """);
+        correctSuggestions.add("""
+                <b>Cacti:</b> Known for their ability to survive extreme temperatures, cacti are also drought-tolerant and prefer bright, sunny locations. Consider  Echinocactus,  Opuntia,  Agave.
+
+                """);
+        correctSuggestions.add("""
+                <b>Bonsai Trees:</b> While not strictly a single type, bonsai trees represent miniature versions of species adapted for specific environments.  These can be grown with varying levels of humidity and light depending on the chosen species. Examples include:  Japanese Maple,  Olive Tree,  Pine Tree.
+
+                """);
+        result.andExpect(jsonPath("$").isArray());
+        result.andExpect(jsonPath("$[0]").value(correctSuggestions.get(0)));
+        result.andExpect(jsonPath("$[1]").value(correctSuggestions.get(1)));
+        result.andExpect(jsonPath("$[2]").value(correctSuggestions.get(2)));
+        result.andExpect(jsonPath("$[3]").value(correctSuggestions.get(3)));
+
     }
 }
