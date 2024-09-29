@@ -2,7 +2,6 @@ Feature: As Sarah, I want to know if I need to adjust the plant location so that
   Background:
     Given I have a logged in user with a monitored garden
     And I am on the garden stats page
-    And I am with the current day's light readings
 
   Scenario: AC1 - I receive a full sun advice message that describes the situation
     When I am received a light reading that is above and equal to 50 percent for more than 6 hours

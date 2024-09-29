@@ -213,9 +213,11 @@ public class SensorAdviceMessages {
      */
     public void addLightAdviceToModel(Model model) {
 
-        List<Double> lightReadings = dayData.getLight().stream().filter(Objects::nonNull).toList();
-        Double totalHour = lightReadings.isEmpty() ? null
-                : lightReadings.stream().filter(lightReading -> lightReading >= 50).count() * 0.5;
+        List<Double> lightReadings = dayData.getLight();
+
+        boolean noData = lightReadings.stream().allMatch(Objects::isNull);
+        Double totalHour = noData ? null
+                : lightReadings.stream().filter(lightReading -> lightReading != null && lightReading >= 50).count() * 0.5;
 
         String advice = getAdvice(totalHour);
 
