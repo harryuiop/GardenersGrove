@@ -24,7 +24,7 @@ import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.compareGa
 @SpringBootTest
 @WithMockUser(value = "1")
 @AutoConfigureMockMvc(addFilters = false)
-public class CompareGardenControllerTest {
+class CompareGardenControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

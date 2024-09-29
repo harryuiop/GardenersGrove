@@ -8,12 +8,12 @@ import nz.ac.canterbury.seng302.gardenersgrove.repository.UserRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
+import org.junit.jupiter.api.*;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +23,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ class MonitorGardenControllerTest {
 
     static User user;
 
-    @BeforeEach
+    @BeforeAll
     void saveGarden() {
         Mockito.reset(arduinoDataPointService);
         if (gardenSaved) {
@@ -66,6 +67,12 @@ class MonitorGardenControllerTest {
         garden = new Garden(user, "g1", "desc", location, 1.0f, true);
         gardenRepository.save(garden);
         gardenSaved = true;
+    }
+
+    @BeforeEach
+    void resetData() {
+        Mockito.reset(arduinoDataPointService);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(user);
 
     }
 

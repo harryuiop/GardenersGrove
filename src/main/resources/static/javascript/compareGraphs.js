@@ -1,3 +1,8 @@
+const tempUnits = document.getElementById('temp-units');
+const fahrenheitButton = document.getElementById("fahrenheit-btn");
+const celsiusButton = document.getElementById("celsius-btn");
+let currentUnit = 'C';
+
 const graphDataSet = document.getElementById("display-graphs").dataset;
 const monthLabels = JSON.parse(graphDataSet.monthLabels);
 const dayLabels = JSON.parse(graphDataSet.dayLabels);
@@ -5,8 +10,8 @@ const dayLabels = JSON.parse(graphDataSet.dayLabels);
 const garden1 = document.getElementById("garden-names").dataset.yourGarden;
 const garden2 = document.getElementById("garden-names").dataset.theirGarden;
 
-const GARDEN_1_COLOR = 'rgb(75, 192, 192)';
-const GARDEN_2_COLOR = 'rgb(52, 152, 219)';
+const GARDEN_1_COLOR = 'rgb(71, 118, 65)';
+const GARDEN_2_COLOR = 'rgb(20, 41, 21)';
 
 let monthGraph, dayGraph;
 let currentlySelectedSensorView = "Temperature";
@@ -101,16 +106,27 @@ function compareDayGraphs(sensorName, data1, data2) {
 }
 
 function renderTemperatureCompareGraph(){
+    tempUnits.style.display = "block";
+
     const tempMonthResults = JSON.parse(graphDataSet.monthTemp);
     const tempDayResults = JSON.parse(graphDataSet.dayTemp);
     const tempMonthResultsOther = JSON.parse(graphDataSet.monthTempOther);
     const tempDayResultsOther = JSON.parse(graphDataSet.dayTempOther);
 
-    monthGraph = createGraph(compareMonthGraphs("Temperature", tempMonthResults, tempMonthResultsOther),"graph-compare-month")
-    dayGraph = createGraph(compareDayGraphs("Temperature", tempDayResults, tempDayResultsOther),"graph-compare-day")
+    const isCelsius = currentUnit === 'C';
+
+    const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
+    const convertedMonthResultsOther = isCelsius ? tempMonthResultsOther : tempMonthResultsOther.map(convertCelsiusToFahrenheit);
+    const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
+    const convertedDayResultsOther = isCelsius ? tempDayResultsOther : tempDayResultsOther.map(convertCelsiusToFahrenheit);
+
+    monthGraph = createGraph(compareMonthGraphs("Temperature", convertedMonthResults, convertedMonthResultsOther),"graph-compare-month")
+    dayGraph = createGraph(compareDayGraphs("Temperature", convertedDayResults, convertedDayResultsOther),"graph-compare-day")
 }
 
 function renderMoistureCompareGraph() {
+    tempUnits.style.display = "none";
+
     const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture)
     const moistureDayResults = JSON.parse(graphDataSet.dayMoisture)
     const moistureMonthResultsOther = JSON.parse(graphDataSet.monthMoistureOther)
@@ -121,6 +137,8 @@ function renderMoistureCompareGraph() {
 }
 
 function renderLightCompareGraph() {
+    tempUnits.style.display = "none";
+
     const lightMonthResults = JSON.parse(graphDataSet.monthLight)
     const lightDayResults = JSON.parse(graphDataSet.dayLight)
     const lightMonthResultsOther = JSON.parse(graphDataSet.monthLightOther)
@@ -131,6 +149,8 @@ function renderLightCompareGraph() {
 }
 
 function renderPressureCompareGraph() {
+    tempUnits.style.display = "none";
+
     const pressureMonthResults = JSON.parse(graphDataSet.monthPressure)
     const pressureDayResults = JSON.parse(graphDataSet.dayPressure)
     const pressureMonthResultsOther = JSON.parse(graphDataSet.monthPressureOther)
@@ -141,6 +161,8 @@ function renderPressureCompareGraph() {
 }
 
 function renderHumidityCompareGraph() {
+    tempUnits.style.display = "none";
+
     const humidityMonthResults = JSON.parse(graphDataSet.monthHumidity)
     const humidityDayResults = JSON.parse(graphDataSet.dayHumidity)
     const humidityMonthResultsOther = JSON.parse(graphDataSet.monthHumidityOther)
@@ -181,4 +203,23 @@ function createGraph([dataObject, xLabel, yLabel], graphId) {
             }
         }
     )
+}
+
+function changeTemperatureUnit(unit) {
+    if (unit === 'c') {
+        celsiusButton.className = "btn btn-toggle-selected";
+        fahrenheitButton.className = "btn btn-toggle-unselected";
+        currentUnit = 'C'
+
+    } else {
+        celsiusButton.className = "btn btn-toggle-unselected";
+        fahrenheitButton.className = "btn btn-toggle-selected";
+        currentUnit = 'F'
+    }
+    renderTemperatureCompareGraph();
+}
+
+function convertCelsiusToFahrenheit(celsiusInput) {
+    if (celsiusInput === null) return null;
+    return celsiusInput * 1.8 + 32;
 }

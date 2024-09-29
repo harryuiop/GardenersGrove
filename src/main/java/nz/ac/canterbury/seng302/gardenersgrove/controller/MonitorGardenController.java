@@ -2,8 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.AdviceRangesValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.*;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoControllerDataService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.AdviceRangesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -103,10 +104,10 @@ public class MonitorGardenController extends NavBar {
         }
         Garden garden = optionalGarden.get();
 
-        boolean notOwner = garden.getOwner().getId() != currentUser.getId();
+        boolean owner = garden.getOwner().getId() == currentUser.getId();
         boolean privateGarden = !garden.isGardenPublic();
         boolean notFriends = !friendshipService.areFriends(garden.getOwner(), currentUser);
-        if (notOwner && privateGarden && notFriends) {
+        if (!owner && privateGarden && notFriends) {
             throw new NoSuchGardenException(gardenId);
         }
 
@@ -114,7 +115,7 @@ public class MonitorGardenController extends NavBar {
         gardenList.removeIf(g -> g.getId() == gardenId);
 
         model.addAttribute("garden", garden);
-        model.addAttribute("owner", !notOwner);
+        model.addAttribute("owner", owner);
         model.addAttribute("gardenList", gardenList);
         model.addAttribute("editAdviceUri", EDIT_ADVICE_RANGES_URI_STRING);
         model.addAllAttributes(adviceRangesErrors);
