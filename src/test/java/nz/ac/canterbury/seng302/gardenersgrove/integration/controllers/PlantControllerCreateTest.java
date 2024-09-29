@@ -89,7 +89,7 @@ class PlantControllerCreateTest {
 
     @ParameterizedTest
     @CsvSource({
-            "Test Plant, 4, Test Description, 2024-01-30",
+            "Test Plant, 4, Test Description\uD83C\uDF31, 2024-01-30",
             "a, 1, Test Description, 2024-12-01",
             "oneHundredCharacterPlantNameaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 001, Test Description, 2024-02-28",
     })

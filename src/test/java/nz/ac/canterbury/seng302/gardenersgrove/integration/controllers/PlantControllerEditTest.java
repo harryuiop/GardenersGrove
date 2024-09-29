@@ -281,6 +281,30 @@ class PlantControllerEditTest {
     }
 
     @Test
+    void submitForm_emojiDescription_plantUpdated() throws Exception {
+        Plant plant = plantRepository.findAll().get(0);
+        String plantDescription = "\uD83C\uDF31";
+        byte[] emptyImageBytes = new byte[0];
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart(editPlantUri(plant.getGarden().getId(), plant.getId()))
+                        .file(new MockMultipartFile("plantImage", "mock.jpg", MediaType.IMAGE_JPEG_VALUE, emptyImageBytes))
+                        .param("plantName", plant.getName())
+                        .param("plantCount", String.valueOf(plant.getCount()))
+                        .param("plantDescription", plantDescription)
+                        .param("plantedDate", plant.getPlantedOn().toString()));
+
+        List<Plant> allPlants = plantRepository.findAll();
+        assertEquals(1, allPlants.size());
+        Plant updatedPlant = plantRepository.findAll().get(0);
+
+        assertEquals(originalPlantName, updatedPlant.getName());
+        assertEquals(originalPlantCount, updatedPlant.getCount());
+        assertEquals(plantDescription, updatedPlant.getDescription());
+        assertEquals(originalPlantedDate, updatedPlant.getPlantedOn());
+        assertNull(updatedPlant.getImageFileName());
+    }
+
+    @Test
     void submitForm_imageTooLarge_plantNotUpdated() throws Exception {
         Plant plant = plantRepository.findAll().get(0);
         byte[] fakeImageBytes = new byte[11_000_000];
