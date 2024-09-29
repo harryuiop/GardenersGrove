@@ -11,8 +11,6 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import org.junit.jupiter.api.*;
 import nz.ac.canterbury.seng302.gardenersgrove.service.FriendshipService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
