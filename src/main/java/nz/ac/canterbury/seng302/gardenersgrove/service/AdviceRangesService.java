@@ -1,11 +1,10 @@
 
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.AdviceRangesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AdviceRangesService {
@@ -24,6 +23,4 @@ public class AdviceRangesService {
     public void saveAdviceRanges(AdviceRanges adviceRanges) {
         this.adviceRangesRepository.save(adviceRanges);
     }
-
-//    public void getAdviceRanges(long gardenId) { adviceRangesRepository.findAllById() }
 }
