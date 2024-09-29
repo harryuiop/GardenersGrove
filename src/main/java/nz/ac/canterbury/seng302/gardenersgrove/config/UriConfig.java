@@ -19,6 +19,9 @@ public class UriConfig {
     public static final String NEW_GARDEN_URI_STRING = "/garden/new";
     public static final String VIEW_GARDEN_URI_STRING = "/garden/{gardenId}";
     public static final String MONITOR_GARDEN_URI_STRING = "/garden/{gardenId}/monitor";
+
+    public static final String COMPARE_GARDENS_URI_STRING = "/garden/compare/{gardenId1}/{gardenId2}";
+
     public static final String NEW_GARDEN_TAG_URI_STRING = "/garden/{gardenId}/tag/new";
     public static final String EDIT_GARDEN_URI_STRING = "/garden/{gardenId}/edit";
     public static final String NEW_PLANT_URI_STRING = "/garden/{gardenId}/plant/new";
@@ -34,10 +37,15 @@ public class UriConfig {
     public static final String SEND_FREIND_REQUEST_STRING = "/search/results/send";
     public static final String SET_WEATHER_POPUP_ALERT_COOKIES = "/cookies/set-rain-popup/{gardenId}/{deployed}";
     public static final String ARDUINO_SENSOR_DATA = "/sensor-data";
+    public static final String COMPARE_GARDEN_URI_STRING = "/garden/compare/{yourGardenId}/{theirGardenId}";
+
+
     public static final String EDIT_ADVICE_RANGES_URI_STRING = "/edit-advice/{gardenId}";
+    public static final String RESET_ADVICE_RANGES_URI_STRING = "/garden/{gardenId}/monitor/reset";
     private static final UriTemplate RESET_PASSWORD_URI = new UriTemplate(RESET_PASSWORD_URI_STRING);
     private static final UriTemplate VIEW_GARDEN_URI = new UriTemplate(VIEW_GARDEN_URI_STRING);
     private static final UriTemplate MONITOR_GARDEN_URI = new UriTemplate(MONITOR_GARDEN_URI_STRING);
+    private static final UriTemplate COMPARE_GARDENS_URI = new UriTemplate(COMPARE_GARDENS_URI_STRING);
     private static final UriTemplate NEW_GARDEN_TAG_URI = new UriTemplate(NEW_GARDEN_TAG_URI_STRING);
     private static final UriTemplate VIEW_ALL_FRIENDS_GARDENS_URI = new UriTemplate(VIEW_ALL_FRIENDS_GARDENS_URI_STRING);
     private static final UriTemplate EDIT_GARDEN_URI = new UriTemplate(EDIT_GARDEN_URI_STRING);
@@ -47,6 +55,9 @@ public class UriConfig {
     private static final UriTemplate MAKE_GARDEN_PUBLIC_URI = new UriTemplate(MAKE_GARDEN_PUBLIC_STRING);
     private static final UriTemplate SET_WEATHER_POPUP_ALERT_COOKIES_URI = new UriTemplate(SET_WEATHER_POPUP_ALERT_COOKIES);
     private static final UriTemplate EDIT_ADVICE_RANGES_URI = new UriTemplate(EDIT_ADVICE_RANGES_URI_STRING);
+    private static final UriTemplate COMPARE_GARDEN_URI = new UriTemplate(COMPARE_GARDEN_URI_STRING);
+
+    private static final UriTemplate RESET_ADVICE_RANGES_URI = new UriTemplate(RESET_ADVICE_RANGES_URI_STRING);
 
     private UriConfig() {
         throw new IllegalStateException("Utility class");
@@ -109,6 +120,10 @@ public class UriConfig {
     public static URI monitorGardenUri(long gardenId) {
         return MONITOR_GARDEN_URI.expand(gardenId);
     }
+    public static URI compareGardensUri(long gardenId1, long gardenId2) {
+        return COMPARE_GARDENS_URI.expand(gardenId1, gardenId2);
+    }
+
     public static URI newGardenTagUri(long gardenId) {
         return NEW_GARDEN_TAG_URI.expand(gardenId);
     }
@@ -146,7 +161,14 @@ public class UriConfig {
     }
     public static URI searchResultsUri() {return URI.create(SEARCH_RESULTS_STRING);}
     public static URI sendFriendRequestUri() {return URI.create(SEND_FREIND_REQUEST_STRING);}
+    public static URI compareGardensUri(String yourGardenId, String theirGardenId) {
+        return COMPARE_GARDEN_URI.expand(yourGardenId, theirGardenId);
+    }
     public static URI editAdviceRangesUri(long gardenId) {
         return EDIT_ADVICE_RANGES_URI.expand(gardenId);
+    }
+
+    public static URI resetAdviceRangesUri(long gardenId) {
+        return RESET_ADVICE_RANGES_URI.expand(gardenId);
     }
 }

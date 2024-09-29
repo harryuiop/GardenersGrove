@@ -4,10 +4,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import nz.ac.canterbury.seng302.gardenersgrove.cucumber.RunCucumberTest;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.*;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
@@ -17,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -45,6 +44,8 @@ public class TemperatureMonitoringFeature {
     private Authentication auth;
 
     private Long gardenId;
+
+    private ResultActions resultActions;
     private FormattedGraphData formattedWeekResults;
 
     private FormattedGraphData formattedDayResults;
@@ -98,9 +99,9 @@ public class TemperatureMonitoringFeature {
     @Given("I am on the garden stats page")
     public void iAmOnTheGardenStatsPage() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(auth);
-        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
-                        .with(csrf()))
-                .andExpect(status().isOk());
+        resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(monitorGardenUri(gardenId)).with(csrf())
+        );
     }
 
     @When("I choose to see a graph of the temperature in Degree Celsius over the last seven days")
@@ -137,8 +138,8 @@ public class TemperatureMonitoringFeature {
     }
 
     // AC2
-    @Then("I see a a display of results for the average temperature for each half hour of that day.")
-    public void iSeeAADisplayOfResultsForTheAverageTemperatureForEachHalfHourOfThatDay() {
+    @Then("I see a display of results for the average temperature for each half hour of that day.")
+    public void iSeeADisplayOfResultsForTheAverageTemperatureForEachHalfHourOfThatDay() {
         List<List<Double>> expectedData = Arrays.asList(
                 Arrays.asList(30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 Arrays.asList(40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
@@ -194,5 +195,203 @@ public class TemperatureMonitoringFeature {
 
         Assertions.assertEquals(expectedData, formattedMonthResults.getSensorReadings());
         Assertions.assertEquals(expectedLabels, formattedMonthResults.getLabels());
+    }
+
+    @When("the temperature reading has stayed within some optimal temperature range for the past day")
+    public void theTemperatureReadingHasStayedWithinSomeOptimalTemperatureRangeForThePastDay() {
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            Assertions.fail();
+        }
+        Garden garden = optionalGarden.get();
+
+        AdviceRanges adviceRanges = garden.getAdviceRanges();
+        adviceRanges.setMaxTemperature(35);
+        adviceRanges.setMinTemperature(25);
+        gardenService.saveGarden(garden);
+
+        LocalDateTime startTime = LocalDateTime.now().minusDays(1);
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime currentTime = startTime;
+        while (currentTime.isBefore(endTime)) {
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                    garden,
+                    currentTime,
+                    30d,
+                    40d,
+                    1d,
+                    60d,
+                    70d
+            ));
+            currentTime = currentTime.plusMinutes(25);
+        }
+    }
+
+    @Then("I receive a message saying that the garden is currently at an ideal temperature")
+    public void i_receive_a_message_saying_that_the_garden_is_currently_at_an_ideal_temperature() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
+                        "This garden has an ideal temperature."));
+    }
+
+    @When("the temperature reading has gone below some minimum value in the last day")
+    public void theTemperatureReadingHasGoneBelowSomeMinimumValueInTheLastDay() {
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            Assertions.fail();
+        }
+        Garden garden = optionalGarden.get();
+
+        AdviceRanges adviceRanges = garden.getAdviceRanges();
+        adviceRanges.setMaxTemperature(35);
+        adviceRanges.setMinTemperature(31);
+        gardenService.saveGarden(garden);
+
+        LocalDateTime startTime = LocalDateTime.now().minusDays(1);
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime currentTime = startTime;
+        while (currentTime.isBefore(endTime)) {
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                    garden,
+                    currentTime,
+                    30d,
+                    40d,
+                    1d,
+                    60d,
+                    70d
+            ));
+            currentTime = currentTime.plusMinutes(25);
+        }
+    }
+
+    @Then("I am shown a message informing me of symptoms to look for when plants get too cold")
+    public void iAmShownAMessageInformingMeOfSymptomsToLookForWhenPlantsGetTooCold() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
+                        "A temperature reading in the last 24 hours dropped " +
+                                "below the set advice range. Cold temperatures can make plants go dormant or cause damage. " +
+                                "Look out for discoloured or wilting leaves, root ball damage, split in steam or trunk and " +
+                                "stunted growth. If you notice any of these signs, trim dead roots or repot the plant. " +
+                                "Do not fertilize, overwater, or over-trim the plant while it heals."));
+    }
+
+    @When("the temperature reading has gone above some maximum value in the last day")
+    public void theTemperatureReadingHasGoneAboveSomeMaximumValueInTheLastDay() {
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            Assertions.fail();
+        }
+        Garden garden = optionalGarden.get();
+
+        AdviceRanges adviceRanges = garden.getAdviceRanges();
+        adviceRanges.setMaxTemperature(29);
+        adviceRanges.setMinTemperature(25);
+        gardenService.saveGarden(garden);
+
+        LocalDateTime startTime = LocalDateTime.now().minusDays(1);
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime currentTime = startTime;
+        while (currentTime.isBefore(endTime)) {
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                    garden,
+                    currentTime,
+                    30d,
+                    40d,
+                    1d,
+                    60d,
+                    70d
+            ));
+            currentTime = currentTime.plusMinutes(25);
+        }
+    }
+
+    @Then("I am shown a message informing me of symptoms to look for when plants get too hot")
+    public void iAmShownAMessageInformingMeOfSymptomsToLookForWhenPlantsGetTooHot() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
+                        "A temperature reading in the last 24 hours has " +
+                                "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
+                                " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
+                                "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+                                "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize."));
+    }
+
+    @When("the temperature reading has gone both above the maximum value and below the minimum value in the last day")
+    public void theTemperatureReadingHasGoneBothAboveTheMaximumValueAndBelowTheMinimumValueInTheLastDay() {
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            Assertions.fail();
+        }
+        Garden garden = optionalGarden.get();
+
+        AdviceRanges adviceRanges = garden.getAdviceRanges();
+        adviceRanges.setMaxTemperature(35);
+        adviceRanges.setMinTemperature(25);
+        gardenService.saveGarden(garden);
+
+        LocalDateTime startTime = LocalDateTime.now().minusDays(1);
+        LocalDateTime endTime = LocalDateTime.now().minusHours(6);
+        LocalDateTime currentTime = startTime;
+        while (currentTime.isBefore(endTime)) {
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                    garden,
+                    currentTime,
+                    30d,
+                    40d,
+                    1d,
+                    60d,
+                    70d
+            ));
+            currentTime = currentTime.plusMinutes(25);
+        }
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                garden,
+                currentTime,
+                40d,
+                40d,
+                1d,
+                60d,
+                70d
+        ));
+        currentTime = currentTime.plusMinutes(45);
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                garden,
+                currentTime,
+                20d,
+                40d,
+                1d,
+                60d,
+                70d
+        ));
+    }
+
+    @Then("I am shown a message informing me of the plant symptoms that occur during high temperature fluctuations")
+    public void iAmShownAMessageInformingMeOfThePlantSymptomsThatOccurDuringHighTemperatureFluctuations() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(monitorGardenUri(gardenId))
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attribute("temperatureAdvice",
+                        "A temperature reading in the last 24 hours dropped " +
+                                "below the set advice range. Cold temperatures can make plants go dormant or cause damage. " +
+                                "Look out for discoloured or wilting leaves, root ball damage, split in steam or trunk and " +
+                                "stunted growth. If you notice any of these signs, trim dead roots or repot the plant. " +
+                                "Do not fertilize, overwater, or over-trim the plant while it heals." +
+                                "\nA temperature reading in the last 24 hours has " +
+                                "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
+                                " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
+                                "for leaf rolling or cupping, wilting, dry leaf edges, sunscald or bleached leaves. If any of " +
+                                "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize."));
+    }
+
+    @Then("I see the current temperature")
+    public void iSeeTheCurrentTemperature() throws Exception {
+        resultActions.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("tempReading"));
     }
 }

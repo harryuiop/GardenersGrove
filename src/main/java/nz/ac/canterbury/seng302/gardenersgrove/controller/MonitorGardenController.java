@@ -2,8 +2,8 @@ package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.components.NavBar;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.AdviceRangesValidator;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.*;
@@ -11,13 +11,18 @@ import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceRangesDTO;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoControllerDataService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
+import nz.ac.canterbury.seng302.gardenersgrove.service.AdviceRangesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,10 +47,10 @@ public class MonitorGardenController extends NavBar {
      * Spring will automatically call this constructor at runtime to inject the
      * dependencies.
      *
-     * @param gardenService                  A Garden database access object.
-     * @param userService                    A User database access object.
-     * @param arduinoControllerDataService   A ArduinoControllerDataService object.
-     * @param friendshipService              A friendshipService object.
+     * @param gardenService                A Garden database access object.
+     * @param userService                  A User database access object.
+     * @param arduinoControllerDataService A ArduinoControllerDataService object.
+     * @param friendshipService            A friendshipService object.
      */
     @Autowired
     public MonitorGardenController(
@@ -98,15 +103,15 @@ public class MonitorGardenController extends NavBar {
         }
         Garden garden = optionalGarden.get();
 
-        boolean notOwner = garden.getOwner().getId() != currentUser.getId();
+        boolean owner = garden.getOwner().getId() == currentUser.getId();
         boolean privateGarden = !garden.isGardenPublic();
         boolean notFriends = !friendshipService.areFriends(garden.getOwner(), currentUser);
-        if (notOwner && privateGarden && notFriends) {
+        if (!owner && privateGarden && notFriends) {
             throw new NoSuchGardenException(gardenId);
         }
 
         model.addAttribute("garden", garden);
-        model.addAttribute("owner", garden.getOwner() == currentUser);
+        model.addAttribute("owner", owner);
         model.addAttribute("gardenList", gardenService.getAllGardens());
         model.addAttribute("editAdviceUri", EDIT_ADVICE_RANGES_URI_STRING);
         model.addAllAttributes(adviceRangesErrors);
@@ -126,9 +131,8 @@ public class MonitorGardenController extends NavBar {
 
         arduinoControllerDataService.addDeviceStatusInformationToModel(model, garden);
         arduinoControllerDataService.addCurrentSensorReadingsToModel(model, garden);
-        arduinoControllerDataService.addGraphDataToModel(model, gardenId);
+        arduinoControllerDataService.addGraphDataAndAdviceMessagesToModel(model, gardenId, garden);
         arduinoControllerDataService.addArduinoDataThresholds(model);
-        arduinoControllerDataService.addAdviceMessagesToModel(model);
 
         return "gardenMonitoring";
     }
@@ -193,4 +197,23 @@ public class MonitorGardenController extends NavBar {
         return loadMonitorGardenPage(gardenId, model, errors, Optional.of(adviceRangesDTO));
     }
 
+    /**
+     * Resets the advice range of the requested garden.
+     *
+     * @param gardenId The ID number of the garden to reset ranges for.
+     * @throws NoSuchGardenException If there is no garden with ID {@code gardenId}.
+     */
+    @PostMapping(RESET_ADVICE_RANGES_URI_STRING)
+    @ResponseBody
+    void resetAdviceRanges(@PathVariable long gardenId) throws NoSuchGardenException {
+        logger.info("POST {}", resetAdviceRangesUri(gardenId));
+        Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+        if (optionalGarden.isEmpty()) {
+            throw new NoSuchGardenException(gardenId);
+        }
+
+        Garden garden = optionalGarden.get();
+        garden.getAdviceRanges().resetToDefaults();
+        gardenService.saveGarden(garden);
+    }
 }

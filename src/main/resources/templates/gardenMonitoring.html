@@ -1,5 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <head th:insert="~{fragments/importFragment :: headerfiles}">
     <title>Gardeners' Grove</title>
 </head>
@@ -113,11 +115,11 @@
                  th:data-humidity="${humidReading}"
             >
                 <div class="alert alert-danger">
-                        <i class="bi bi-link"></i>
-                        <span id="sensor-alert">Temperature</span><span>
+                    <i class="bi bi-link"></i>
+                    <span id="sensor-alert">Temperature</span><span>
                             sensor currently not connected, please check connection</span>
-                    </div>
                 </div>
+            </div>
 
             <!-- Advice -->
             <div class="row mx-4">
@@ -126,9 +128,23 @@
                 th:data-moisture="${moistureAdvice}"
                 th:data-light="${lightAdvice}"
                 th:data-humidity="${humidityAdvice}">
+
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#referenceModal" class="btn btn-link">
+                        See References
+                    </a>
+
+                    <p id="references"
+                       th:attr="data-temperature-ref=${temperatureReference},
+                       data-moisture-ref=${moistureReference},
+                       data-light-ref=${lightReference},
+                       data-humidity-ref=${humidityReference}">
+                    </p>
+
+                    <!-- Close Button-->
                     <button class="btn btn-close me-3 mt-3 position-absolute top-0 end-0"
                             type="button" onclick="closeAdvicePopup()">
                     </button>
+
                 </div>
             </div>
 
@@ -139,7 +155,9 @@
                         Compare <i class="bi bi-layers"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        <li th:each="userGarden: ${gardenList}"><a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" href="#" th:text="${userGarden.getName()}"></a></li>
+                        <li th:each="userGarden: ${gardenList}">
+                            <a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{|/garden/compare/${garden.getId()}/${userGarden.getId()}|}" th:text="${userGarden.getName()}"></a>
+                        </li>
                     </ul>
                 </div>
                 <div class="row" id="temp-units">
@@ -159,6 +177,8 @@
                             </button>
                         </div>
                     </div>
+
+                    <!--Graphs-->
                     <div class="row" id="graphs" data-units="c">
                         <div class="container">
                             <div class="row">
@@ -176,11 +196,11 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     <div id="settingsModal" class="modal fade" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -288,19 +308,47 @@
                             </select>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
-                            Close <i class="bi bi-x"></i>
-                        </button>
-                        <button type="submit" class="btn btn-confirm">
-                            Save <i class="bi bi-check"></i>
+                    <div class="modal-footer d-flex justify-content-between w-100">
+                        <div>
+                            <button type="submit" class="btn btn-confirm">
+                                Save <i class="bi bi-check"></i>
+                            </button>
+                            <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
+                                Close <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                        <button id="resetAdviceRangesButton" type="button" class="btn btn-danger">
+                            Reset to default <i class="bi bi-arrow-counterclockwise"></i>
                         </button>
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
+
+    <!-- Reference Modal Structure -->
+    <div class="modal fade" id="referenceModal" tabindex="-1" aria-labelledby="referenceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="referenceModalLabel">Reference Information</h5>
+                </div>
+                <div class="modal-body" id="modalReferenceContent">
+                    <ul id="reference-list"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
+                        Close <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
     <script type="text/javascript" th:src="@{/javascript/adviceRanges.js}"></script>
+    <script type="text/javascript" th:src="@{/javascript/adviceMessages.js}"></script>
 </body>
 </html>
