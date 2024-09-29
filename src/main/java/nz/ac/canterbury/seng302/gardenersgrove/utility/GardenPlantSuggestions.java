@@ -68,10 +68,9 @@ public class GardenPlantSuggestions {
             suggestions.add("Please Check Arduino Connection");
             return suggestions;
         } else if (garden.getLocation().isLocationRecognized()) {
-            String locationPrompt = String.format("give me 3 plant suggestions for a %s garden%n", garden.getLocation());
-            List<String> suggestions = new ArrayList<>();
-            suggestions.add(getSuggestions(locationPrompt));
-            return suggestions;
+            String locationPrompt = String.format(CONTEXT +
+                    "based on this context, give me 3 plant suggestions for a %s garden", garden.getLocation());
+            return parseSuggestions(getSuggestions(locationPrompt));
         } else {
             List<String> suggestions = new ArrayList<>();
             suggestions.add("Please make sure devices has been connected for 14 days or more or update your location.");
