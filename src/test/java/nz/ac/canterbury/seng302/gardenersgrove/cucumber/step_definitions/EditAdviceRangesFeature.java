@@ -62,7 +62,7 @@ public class EditAdviceRangesFeature {
 
     @When("I open the settings modal")
     public void iOpenTheSettingsModal() {
-
+        // The advice ranges data is passed through into the model without the user clicking the settings buttons
     }
 
     @Then("I can see the advice ranges are pre-populated with the current ranges")
