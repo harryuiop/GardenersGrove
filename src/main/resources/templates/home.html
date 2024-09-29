@@ -1,5 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<title>Garden Pulse Home</title>
 <head th:insert="~{fragments/importFragment :: headerfiles}"></head>
 <body class="bg">
 <div class="container-fluid p-0 m-0">
@@ -9,7 +10,7 @@
       <div class="col mx-4 rounded bg-white shadow-sm p-2">
         <div class="row">
           <div class="col-sm-4 col-md-3 col-12 text-center my-4">
-            <img class="rounded-circle profile-img p-4" th:src="@{/images/logo.jpeg}"/>
+            <img class="rounded-circle profile-img p-4" th:src="@{/images/logo.jpeg}" alt="Garden Pulse Logo"/>
 
           </div>
           <div
@@ -34,7 +35,7 @@
                   <div th:unless="${connectedGardens.isEmpty()}">
                     <div class="dropdown">
                       <button class="btn dropdown-toggle btn-confirm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span id="selected-garden-name">Select a Garden</span>
+                        <span id="selected-garden-name" th:text="${connectedGardens.keySet().toArray()[0]}"></span>
                       </button>
                       <ul class="dropdown-menu">
                         <li th:each="entry : ${connectedGardens.entrySet()}">
@@ -58,7 +59,9 @@
                           <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-thermometer-half"></i>
                             <span>Temperature:&nbsp;</span>
-                            <span id="current-temp-reading"></span>
+                            <span id="current-temp-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getTempCelsius() != null ? connectedGardens.values().toArray()[0].getTempCelsius() : '-'}">
+                            </span>
                             <span id="current-temp-unit">°C</span>
                           </div>
 
@@ -66,7 +69,9 @@
                           <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-moisture"></i>
                             <span>Soil Moisture:&nbsp;</span>
-                            <span id="current-moisture-reading"></span>
+                            <span id="current-moisture-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getMoisturePercent() != null ? connectedGardens.values().toArray()[0].getMoisturePercent() : '-'}">
+                            </span>
                             <span>%</span>
                           </div>
 
@@ -74,7 +79,10 @@
                           <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-brightness-high"></i>
                             <span>Light:&nbsp;</span>
-                            <span id="current-light-reading"></span>
+                            <span id="current-light-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getLightPercent() != null ? connectedGardens.values().toArray()[0].getLightPercent() : '-'}">
+
+                            </span>
                             <span>%</span>
                           </div>
 
@@ -82,7 +90,9 @@
                           <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-speedometer"></i>
                             <span>Pressure:&nbsp;</span>
-                            <span id="current-pressure-reading"></span>
+                            <span id="current-pressure-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getAtmosphereAtm() != null ? connectedGardens.values().toArray()[0].getAtmosphereAtm() : '-'}">
+                            </span>
                             <span>atm</span>
                           </div>
 
@@ -90,7 +100,9 @@
                           <div class="container w-100 align-content-center px-0 py-2">
                             <i class="bi bi-droplet-half"></i>
                             <span>Humidity:&nbsp;</span>
-                            <span id="current-humidity-reading"></span>
+                            <span id="current-humidity-reading"
+                                  th:text="${connectedGardens.values().toArray()[0].getHumidityPercent() != null ? connectedGardens.values().toArray()[0].getHumidityPercent() : '-'}">
+                            </span>
                             <span>%</span>
                           </div>
                         </div>
@@ -129,18 +141,14 @@
 </div>
 <script>
   function updateGardenStats(selectedItem) {
-    // Get the selected garden name
-    const gardenName = selectedItem.textContent;
-    document.getElementById("selected-garden-name").textContent = gardenName;
+    document.getElementById("selected-garden-name").textContent = selectedItem.textContent;
 
-    // Retrieve data attributes
     const temp = selectedItem.getAttribute("data-temp");
     const moisture = selectedItem.getAttribute("data-moisture");
     const light = selectedItem.getAttribute("data-light");
     const pressure = selectedItem.getAttribute("data-pressure");
     const humidity = selectedItem.getAttribute("data-humidity");
 
-    // Update the stats in the corresponding HTML elements
     document.getElementById("current-temp-reading").textContent = temp || "-";
     document.getElementById("current-moisture-reading").textContent = moisture || "-";
     document.getElementById("current-light-reading").textContent = light || "-";
