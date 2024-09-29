@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.controller;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.GardenPlantSuggestions;
@@ -33,8 +34,11 @@ public class GardenPlantSuggestionsRestController {
             error.add("No garden Found");
             return error;
         }
-        return gardenPlantSuggestions.getPlantSuggestionsForGarden(optionalGarden.get(), true);
-
+        try {
+            return gardenPlantSuggestions.getPlantSuggestionsForGarden(optionalGarden.get(), true);
+        } catch (ProfanityCheckingException e) {
+            return List.of(e.getMessage());
+        }
     }
 
 }

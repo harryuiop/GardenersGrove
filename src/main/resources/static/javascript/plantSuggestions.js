@@ -2,7 +2,6 @@ const plantSuggestionsButton = document.getElementById("plant-suggestions-button
 const plantSuggestionContainer = document.getElementById("plant-suggestion-container");
 const spinner = document.getElementById("suggestion-on-load");
 plantSuggestionsButton.addEventListener("click", function () {
-    console.log("PLANT SUGGESTIONS CLICKED");
     fetchPlantSuggestions(plantSuggestionsButton.dataset.gardenId);
 });
 

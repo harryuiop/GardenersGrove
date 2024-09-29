@@ -38,10 +38,7 @@ public class GardenPlantSuggestions {
         //
     // pass back a string with suggestions
 
-    public List<String> getPlantSuggestionsForGarden(Garden garden, boolean retry) {
-        //Current default prompt for testing
-        String prompt = String.format("give me 3 plant suggestions for a %s garden%n", garden.getLocation());
-
+    public List<String> getPlantSuggestionsForGarden(Garden garden, boolean retry) throws ProfanityCheckingException {
         if (arduinoDataPointService.checkFourteenDaysOfData(garden.getId())) {
             // Create prompt and get suggestion based on Arduino data
             String arduinoPrompt = getArduinoPrompt(garden.getId());
@@ -51,7 +48,7 @@ public class GardenPlantSuggestions {
                     String response = getSuggestions(arduinoPrompt);
                     while (!response.contains(":")) {
                         logger.warn("Regenerate response");
-                        response = getSuggestions(prompt);
+                        response = getSuggestions(arduinoPrompt);
                     }
                     List<String> parsedResponse = parseSuggestions(response);
                     if (parsedResponse.size() < 4 && retry){
@@ -71,9 +68,9 @@ public class GardenPlantSuggestions {
             suggestions.add("Please Check Arduino Connection");
             return suggestions;
         } else if (garden.getLocation().isLocationRecognized()) {
-           // Create prompt and get suggestion based on location
+            String locationPrompt = String.format("give me 3 plant suggestions for a %s garden%n", garden.getLocation());
             List<String> suggestions = new ArrayList<>();
-            suggestions.add("Location Suggestion");
+            suggestions.add(getSuggestions(locationPrompt));
             return suggestions;
         } else {
             List<String> suggestions = new ArrayList<>();
