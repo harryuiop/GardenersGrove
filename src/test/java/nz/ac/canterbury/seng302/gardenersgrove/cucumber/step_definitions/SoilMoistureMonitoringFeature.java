@@ -103,7 +103,7 @@ public class SoilMoistureMonitoringFeature {
                         30d,
                         40d,
                         1d,
-                        60d,
+                        50d,
                         60d
                 ));
             } else {
@@ -114,12 +114,11 @@ public class SoilMoistureMonitoringFeature {
                         40d,
                         1d,
                         60d,
-                        70d
+                        10d
                 ));
             }
             currentTime = currentTime.plusMinutes(25);
         }
-        System.out.println(arduinoDataPointService.getDayGraphData(adviceSharedState.getGardenId(), endTime).getSensorReadings());
     }
 
     @Then("I am shown a message that tells me to water my garden")
@@ -151,29 +150,29 @@ public class SoilMoistureMonitoringFeature {
         LocalDateTime endTime = LocalDateTime.now();
         LocalDateTime currentTime = startTime;
         while (currentTime.isBefore(endTime)) {
-            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                    garden,
-                    currentTime,
-                    30d,
-                    40d,
-                    1d,
-                    60d,
-                    50d
-            ));
+            if (!currentTime.isEqual(startTime.plusMinutes(25))) {
+                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                        garden,
+                        currentTime,
+                        30d,
+                        40d,
+                        1d,
+                        60d,
+                        50d
+                ));
+            } else {
+                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                        garden,
+                        currentTime,
+                        30d,
+                        40d,
+                        1d,
+                        60d,
+                        90d
+                ));
+            }
             currentTime = currentTime.plusMinutes(25);
         }
-
-        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                garden,
-                startTime.plusMinutes(15),
-                30d,
-                10d,
-                1d,
-                60d,
-                95d
-        ));
-
-        System.out.println(arduinoDataPointService.getDayGraphData(adviceSharedState.getGardenId(), LocalDateTime.now()).getSensorReadings());
     }
 
     @Then("I am shown a message providing tips for very moist soil.")
