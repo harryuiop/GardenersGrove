@@ -112,7 +112,7 @@ public class MonitorGardenController extends NavBar {
         }
 
         List<Garden> gardenList = gardenService.getAllGardens();
-        gardenList.removeIf(g -> g.getId() == gardenId);
+        gardenList.removeIf(g -> g.getId().equals(gardenId));
 
         model.addAttribute("garden", garden);
         model.addAttribute("owner", owner);
