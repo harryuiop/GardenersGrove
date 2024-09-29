@@ -50,12 +50,11 @@ function makeActive(buttonId) {
 
     button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead';
 
-    allButtons.forEach( allButtonsItem => {
-            if (allButtonsItem !== buttonId) {
-                document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
-            }
+    allButtons.forEach(allButtonsItem => {
+        if (allButtonsItem !== buttonId) {
+            document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
         }
-    )
+    })
 
     currentlySelectedSensorView = buttonId;
 
@@ -134,8 +133,8 @@ function renderTemperatureGraphs() {
     const tempMonthResults = JSON.parse(graphDataSet.monthTemp);
     const tempWeeklyResults = JSON.parse(graphDataSet.weekTemp);
     const tempDayResults = JSON.parse(graphDataSet.dayTemp);
-    const minTemperature = JSON.parse(graphDataSet.minTemp)
-    const maxTemperature = JSON.parse(graphDataSet.maxTemp)
+    const minTemperature = JSON.parse(graphDataSet.minTemp);
+    const maxTemperature = JSON.parse(graphDataSet.maxTemp);
 
     tempUnits.style.display = "block";
 
@@ -148,16 +147,13 @@ function renderTemperatureGraphs() {
     const temperatureUnit = isCelsius ? '°C' : '°F';
 
     const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
-    monthGraph = createGraph(convertedMonthResults,"graph-month", `Temperature (${temperatureUnit})`,
-        GraphType.MONTH, monthLabels, minTemperature, maxTemperature);
+    monthGraph = createGraph(getMonthGraphInformation(`Temperature (${temperatureUnit})`, convertedMonthResults), "graph-month", minTemperature, maxTemperature)
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    weekGraph = createGraph(convertedWeeklyResults,"graph-week", `Temperature (${temperatureUnit})`,
-        GraphType.WEEK, weekLabels, minTemperature, maxTemperature);
+    weekGraph = createGraph(getWeekGraphInformation(`Temperature (${temperatureUnit})`, convertedWeeklyResults),"graph-week", minTemperature, maxTemperature)
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
-    dayGraph = createGraph(convertedDayResults,"graph-day", `Temperature (${temperatureUnit})`,
-        GraphType.DAY, dayLabels, minTemperature, maxTemperature);
+    dayGraph = createGraph(getDayGraphInformation(`Temperature (${temperatureUnit})`, convertedDayResults), "graph-day", minTemperature, maxTemperature)
 
     alertMessage("Temperature")
 }
@@ -169,8 +165,8 @@ const renderMoistureGraph = () => {
     const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture);
     const moistureWeeklyResults = JSON.parse(graphDataSet.weekMoisture);
     const moistureDayResults = JSON.parse(graphDataSet.dayMoisture);
-    const minMoisture = JSON.parse(graphDataSet.minMoisture)
-    const maxMoisture = JSON.parse(graphDataSet.maxMoisture)
+    const minMoisture = JSON.parse(graphDataSet.minMoisture);
+    const maxMoisture = JSON.parse(graphDataSet.maxMoisture);
 
     tempUnits.style.display = "none";
     changeGraphTitle("Soil Moisture Last 30 Days", "Soil Moisture Last 7 Days", "Soil Moisture Today");
@@ -178,9 +174,9 @@ const renderMoistureGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(moistureMonthResults, "graph-month", "Soil Moisture", GraphType.MONTH, monthLabels, minMoisture, maxMoisture);
-    weekGraph = createGraph(moistureWeeklyResults, "graph-week", "Soil Moisture", GraphType.WEEK, weekLabels, minMoisture, maxMoisture);
-    dayGraph = createGraph(moistureDayResults, "graph-day", "Soil Moisture", GraphType.DAY, dayLabels, minMoisture, maxMoisture);
+    monthGraph = createGraph(getMonthGraphInformation("Soil Moisture", moistureMonthResults), "graph-month", minMoisture, maxMoisture);
+    weekGraph = createGraph(getWeekGraphInformation("Soil Moisture", moistureWeeklyResults), "graph-week", minMoisture, maxMoisture);
+    dayGraph = createGraph(getDayGraphInformation("Soil Moisture", moistureDayResults), "graph-day", minMoisture, maxMoisture);
 
     alertMessage("Moisture")
 }
@@ -192,7 +188,7 @@ const renderLightGraph = () => {
     const lightMonthResults = JSON.parse(graphDataSet.monthLight);
     const lightWeeklyResults = JSON.parse(graphDataSet.weekLight);
     const lightDayResults = JSON.parse(graphDataSet.dayLight);
-    const lightValue = JSON.parse(graphDataSet.lightLevels)
+    const lightValue = JSON.parse(graphDataSet.lightLevels);
 
     tempUnits.style.display = "none";
 
@@ -201,9 +197,9 @@ const renderLightGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(lightMonthResults, "graph-month", "Light", GraphType.MONTH, monthLabels, lightValue, lightValue);
-    weekGraph = createGraph(lightWeeklyResults, "graph-week", "Light", GraphType.WEEK, weekLabels, lightValue, lightValue);
-    dayGraph = createGraph(lightDayResults, "graph-day", "Light", GraphType.DAY, dayLabels, lightValue, lightValue);
+    monthGraph = createGraph(getMonthGraphInformation("Light", lightMonthResults), "graph-month", lightValue, lightValue);
+    weekGraph = createGraph(getWeekGraphInformation("Light", lightWeeklyResults), "graph-week", lightValue, lightValue);
+    dayGraph = createGraph(getDayGraphInformation("Light", lightDayResults), "graph-day", lightValue, lightValue);
 
     alertMessage("Light")
 }
@@ -216,8 +212,8 @@ const renderPressureGraph = () => {
     const pressureMonthResults = JSON.parse(graphDataSet.monthPressure);
     const pressureWeeklyResults = JSON.parse(graphDataSet.weekPressure);
     const pressureDayResults = JSON.parse(graphDataSet.dayPressure);
-    const minPressure = JSON.parse(graphDataSet.minPressure)
-    const maxPressure = JSON.parse(graphDataSet.maxPressure)
+    const minPressure = JSON.parse(graphDataSet.minPressure);
+    const maxPressure = JSON.parse(graphDataSet.maxPressure);
 
     tempUnits.style.display = "none";
 
@@ -226,9 +222,9 @@ const renderPressureGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(pressureMonthResults, "graph-month", `Pressure (ATM)`, GraphType.MONTH, monthLabels, minPressure, maxPressure);
-    weekGraph = createGraph(pressureWeeklyResults, "graph-week", `Pressure (ATM)`, GraphType.WEEK, weekLabels, minPressure, maxPressure);
-    dayGraph = createGraph(pressureDayResults, "graph-day", `Pressure (ATM)`, GraphType.DAY, dayLabels, minPressure, maxPressure);
+    monthGraph = createGraph(getMonthGraphInformation(`Pressure (ATM)`, pressureMonthResults), "graph-month", minPressure, maxPressure);
+    weekGraph = createGraph(getWeekGraphInformation(`Pressure (ATM)`, pressureWeeklyResults), "graph-week", minPressure, maxPressure);
+    dayGraph = createGraph(getDayGraphInformation(`Pressure (ATM)`, pressureDayResults), "graph-day", minPressure, maxPressure);
 
     alertMessage("Air-Pressure")
 }
@@ -237,12 +233,11 @@ const renderPressureGraph = () => {
  * Destroys all graphs and render humidity graphs.
  */
 const renderHumidityGraph = () => {
-    const humidityMonthResults = JSON.parse(graphDataSet.monthLight);
-    const humidityWeeklyResults = JSON.parse(graphDataSet.weekLight);
-    const humidityDayResults = JSON.parse(graphDataSet.dayLight);
-    const minHumidity = JSON.parse(graphDataSet.minHumidity)
-    const maxHumidity = JSON.parse(graphDataSet.maxHumidity)
-
+    const humidityMonthResults = JSON.parse(graphDataSet.monthHumidity);
+    const humidityWeeklyResults = JSON.parse(graphDataSet.weekHumidity);
+    const humidityDayResults = JSON.parse(graphDataSet.dayHumidity);
+    const minHumidity = JSON.parse(graphDataSet.monthHumidity);
+    const maxHumidity = JSON.parse(graphDataSet.maxHumidity);
     tempUnits.style.display = "none";
 
     changeGraphTitle("Humidity Last 30 Days", "Humidity Last 7 Days", "Humidity Today");
@@ -250,9 +245,9 @@ const renderHumidityGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(humidityMonthResults, "graph-month", "Humidity", GraphType.MONTH, monthLabels, minHumidity, maxHumidity);
-    weekGraph = createGraph(humidityWeeklyResults, "graph-week", "Humidity", GraphType.WEEK, weekLabels, minHumidity, maxHumidity);
-    dayGraph = createGraph(humidityDayResults, "graph-day", "Humidity", GraphType.DAY, dayLabels, minHumidity, maxHumidity);
+    monthGraph = createGraph(getMonthGraphInformation("Humidity", humidityMonthResults), "graph-month", minHumidity, maxHumidity);
+    weekGraph = createGraph(getWeekGraphInformation("Humidity", humidityWeeklyResults), "graph-week", minHumidity, maxHumidity);
+    dayGraph = createGraph(getDayGraphInformation("Humidity", humidityDayResults), "graph-day", minHumidity, maxHumidity);
 
     alertMessage("Humidity")
 }
@@ -274,14 +269,13 @@ function convertFahrenheitToCelsius(fahrenheit) {
  *
  * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
- * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
-function getDayGraphInformation(sensorName, data, timeLabels) {
+function getDayGraphInformation(sensorName, data) {
 
     return [
         {
-        labels: timeLabels,
+        labels: dayLabels,
             datasets: [{
             label: `Average ${sensorName} per Half-hour`,
             data: data,
@@ -298,13 +292,12 @@ function getDayGraphInformation(sensorName, data, timeLabels) {
  *
  * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
- * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
-function getMonthGraphInformation(sensorName, data, timeLabels) {
+function getMonthGraphInformation(sensorName, data) {
     return [
         {
-            labels: timeLabels,
+            labels: monthLabels,
             datasets: [{
                 label: `Average ${sensorName} per Day`,
                 data: data,
@@ -321,10 +314,9 @@ function getMonthGraphInformation(sensorName, data, timeLabels) {
  *
  * @param sensorName Name of sensor used, e.g. Temperature
  * @param data Readings from Arduino
- * @param timeLabels Time labels to be on y-axis
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
-function getWeekGraphInformation(sensorName, data, timeLabels) {
+function getWeekGraphInformation(sensorName, data) {
     const [nightData, morningData, afternoonData, eveningData] = [[], [], [], []];
     for (let i = 0; i < data.length; i++) {
         switch ((i + 1) % 4) {
@@ -344,7 +336,7 @@ function getWeekGraphInformation(sensorName, data, timeLabels) {
 
     return [
         {
-            labels: timeLabels,
+            labels: weekLabels,
             datasets: [{
                 label: `Night (12:00am - 5:59am)`,
                 data: nightData,
@@ -416,35 +408,11 @@ function updateRectangleConfig(minValue, maxValue) {
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
  * @param graphId       the id of the div where the graph goes
- * @param {string} sensorName    Name of sensor e.g. Temperature
- * @param graphType     Type of graph: Month, Week, Day
- * @param timeLabels    Time labels for y-axis
+ * @param minValue      The lower bound of the advice range
+ * @param maxValue      The upper bound of the advice range
  */
-function createGraph(data, graphId, sensorName, graphType, timeLabels, minValue, maxValue) {
-    if (!data || data.length === 0){
-        console.error("No data points given for data:", data);
-        return;
-    }
-
-    console.log(minValue, maxValue)
-
-    // Get graph information
-    switch (graphType) {
-        case GraphType.DAY:
-            [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
-            break;
-        case GraphType.WEEK:
-            [dataObject, xLabel, yLabel] = getWeekGraphInformation(sensorName, data, timeLabels);
-            break;
-        case GraphType.MONTH:
-            [dataObject, xLabel, yLabel] = getMonthGraphInformation(sensorName, data, timeLabels);
-            break;
-        default:
-            [dataObject, xLabel, yLabel] = getDayGraphInformation(sensorName, data, timeLabels);
-    }
-
+function createGraph([dataObject, xLabel, yLabel], graphId, minValue, maxValue) {
     updateRectangleConfig(minValue, maxValue);
-
     return new Chart(document.getElementById(graphId),
         {
             type: 'line',
