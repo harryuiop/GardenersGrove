@@ -142,7 +142,7 @@ function renderTemperatureGraphs() {
     monthGraph = createGraph(getMonthGraphInformation(`Temperature (${temperatureUnit})`, convertedMonthResults), "graph-month", minTemperature, maxTemperature)
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    weekGraph = createGraph(getWeekGraphInformation(`Temperature (${temperatureUnit})`, convertedWeeklyResults),"graph-week", minTemperature, maxTemperature)
+    weekGraph = createGraph(getWeekGraphInformation(`Temperature (${temperatureUnit})`, convertedWeeklyResults), "graph-week", minTemperature, maxTemperature)
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
     dayGraph = createGraph(getDayGraphInformation(`Temperature (${temperatureUnit})`, convertedDayResults), "graph-day", minTemperature, maxTemperature)
@@ -348,20 +348,17 @@ function getWeekGraphInformation(sensorName, data) {
                 data: morningData,
                 borderColor: WEEK_GRAPH_COLORS[1],
                 tension: 0.1
-            },
-            {
+            }, {
                 label: `Afternoon (12:00pm - 5:59pm)`,
                 data: afternoonData,
                 borderColor: WEEK_GRAPH_COLORS[2],
                 tension: 0.1
-            },
-            {
+            }, {
                 label: `Evening (6:00pm - 11:59pm)`,
                 data: eveningData,
                 borderColor: WEEK_GRAPH_COLORS[3],
                 tension: 0.1
-            }
-            ]
+            }]
         }, "Time (Day)", sensorName]
 }
 
