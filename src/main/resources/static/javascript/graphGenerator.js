@@ -21,21 +21,18 @@ const weekLabels = JSON.parse(graphDataSet.weekLabels);
 const GRAPH_COLOR = 'rgb(75, 192, 192)';
 const WEEK_GRAPH_COLORS = ['rgb(44, 62, 80)', 'rgb(241, 196, 15)', 'rgb(52, 152, 219)', 'rgb(231, 76, 60)'];
 
-// Graph Type enum, used for labelling.
-const GraphType = Object.freeze({
-    MONTH: 0, WEEK: 1, DAY: 2
-});
-
 // graph declarations
 let monthGraph, weekGraph, dayGraph;
 let currentlySelectedSensorView = "Temperature";
 
+//  Shaded ranges
+let showShadedRanges = true;
+const toggleGraphShadesButton = document.getElementById("toggleShadedRangesText");
+
 /**
  * Render temperature graphs on page load.
  */
-window.onload = function() {
-    renderTemperatureGraphs();
-}
+window.onload = () => renderTemperatureGraphs();
 
 /**
  * Make graphs for that sensor shown.
@@ -45,17 +42,19 @@ function makeActive(buttonId) {
     const allButtons = ['Temperature', 'Moisture', 'Light', 'Pressure', 'Humidity']
     const button = document.getElementById(buttonId);
 
-    button.classList = 'btn btn-stats-bar-active btn-no-bold m-0 lead';
+    button.classList.add('btn-stats-bar-active');
 
-    allButtons.forEach( allButtonsItem => {
+    allButtons.forEach(allButtonsItem => {
         if (allButtonsItem !== buttonId) {
-            document.getElementById(allButtonsItem).classList = 'btn btn-stats-bar btn-no-bold m-0 lead'
+            const otherButton = document.getElementById(allButtonsItem);
+            otherButton.classList.add('btn-stats-bar');
+            otherButton.classList.remove('btn-stats-bar-active');
         }
-    })
+    });
 
     currentlySelectedSensorView = buttonId;
 
-    switch (buttonId){
+    switch (buttonId) {
         case "Temperature":
             renderTemperatureGraphs();
             break;
@@ -109,14 +108,14 @@ function changeTemperatureUnit(unit) {
     renderTemperatureGraphs();
 }
 
-const changeGraphTitle  = (monthTitle, weekTitle, dayTitle) => {
+function changeGraphTitle(monthTitle, weekTitle, dayTitle) {
     document.getElementById("month-title").innerHTML = monthTitle;
     document.getElementById("week-title").innerHTML = weekTitle;
     document.getElementById("day-title").innerHTML = dayTitle;
 }
 
-const destroyGraphs = () => {
-    if(monthGraph) {
+function destroyGraphs() {
+    if (monthGraph) {
         monthGraph.destroy();
         weekGraph.destroy();
         dayGraph.destroy();
@@ -124,12 +123,25 @@ const destroyGraphs = () => {
 }
 
 /**
+ * Parse data results (day, week, month) into a 2dp javascript array
+ *
+ * @param resultArrayString String representation of dataset passed via thymeleaf
+ * @returns 2dp javascript array
+ */
+function parseDataResults(resultArrayString) {
+    return JSON.parse(resultArrayString).map(reading =>
+        reading == null ? reading : reading.toFixed(2));
+}
+
+/**
  * Destroys all graphs and render temperature graphs.
  */
 function renderTemperatureGraphs() {
-    const tempMonthResults = JSON.parse(graphDataSet.monthTemp);
-    const tempWeeklyResults = JSON.parse(graphDataSet.weekTemp);
-    const tempDayResults = JSON.parse(graphDataSet.dayTemp);
+    const tempMonthResults = parseDataResults(graphDataSet.monthTemp);
+    const tempWeeklyResults = parseDataResults(graphDataSet.weekTemp);
+    const tempDayResults = parseDataResults(graphDataSet.dayTemp);
+    const minTemperature = JSON.parse(graphDataSet.minTemp);
+    const maxTemperature = JSON.parse(graphDataSet.maxTemp);
 
     tempUnits.style.display = "block";
 
@@ -142,13 +154,13 @@ function renderTemperatureGraphs() {
     const temperatureUnit = isCelsius ? '°C' : '°F';
 
     const convertedMonthResults = isCelsius ? tempMonthResults : tempMonthResults.map(convertCelsiusToFahrenheit);
-    monthGraph = createGraph(getMonthGraphInformation(`Temperature (${temperatureUnit})`, convertedMonthResults), "graph-month")
+    monthGraph = createGraph(getMonthGraphInformation(`Temperature (${temperatureUnit})`, convertedMonthResults), "graph-month", minTemperature, maxTemperature)
 
     const convertedWeeklyResults = isCelsius ? tempWeeklyResults : tempWeeklyResults.map(convertCelsiusToFahrenheit);
-    weekGraph = createGraph(getWeekGraphInformation(`Temperature (${temperatureUnit})`, convertedWeeklyResults),"graph-week")
+    weekGraph = createGraph(getWeekGraphInformation(`Temperature (${temperatureUnit})`, convertedWeeklyResults), "graph-week", minTemperature, maxTemperature)
 
     const convertedDayResults = isCelsius ? tempDayResults : tempDayResults.map(convertCelsiusToFahrenheit);
-    dayGraph = createGraph(getDayGraphInformation(`Temperature (${temperatureUnit})`, convertedDayResults), "graph-day")
+    dayGraph = createGraph(getDayGraphInformation(`Temperature (${temperatureUnit})`, convertedDayResults), "graph-day", minTemperature, maxTemperature)
 
     alertMessage("Temperature")
 }
@@ -156,10 +168,12 @@ function renderTemperatureGraphs() {
 /**
  * Destroys all graphs and render Moisture graphs.
  */
-const renderMoistureGraph = () => {
-    const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture);
-    const moistureWeeklyResults = JSON.parse(graphDataSet.weekMoisture);
-    const moistureDayResults = JSON.parse(graphDataSet.dayMoisture);
+function renderMoistureGraph() {
+    const moistureMonthResults = parseDataResults(graphDataSet.monthMoisture);
+    const moistureWeeklyResults = parseDataResults(graphDataSet.weekMoisture);
+    const moistureDayResults = parseDataResults(graphDataSet.dayMoisture);
+    const minMoisture = JSON.parse(graphDataSet.minMoisture);
+    const maxMoisture = JSON.parse(graphDataSet.maxMoisture);
 
     tempUnits.style.display = "none";
     changeGraphTitle("Soil Moisture Last 30 Days", "Soil Moisture Last 7 Days", "Soil Moisture Today");
@@ -167,9 +181,9 @@ const renderMoistureGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(getMonthGraphInformation("Soil Moisture", moistureMonthResults), "graph-month");
-    weekGraph = createGraph(getWeekGraphInformation("Soil Moisture", moistureWeeklyResults), "graph-week");
-    dayGraph = createGraph(getDayGraphInformation("Soil Moisture", moistureDayResults), "graph-day");
+    monthGraph = createGraph(getMonthGraphInformation("Soil Moisture", moistureMonthResults), "graph-month", minMoisture, maxMoisture);
+    weekGraph = createGraph(getWeekGraphInformation("Soil Moisture", moistureWeeklyResults), "graph-week", minMoisture, maxMoisture);
+    dayGraph = createGraph(getDayGraphInformation("Soil Moisture", moistureDayResults), "graph-day", minMoisture, maxMoisture);
 
     alertMessage("Moisture")
 }
@@ -177,10 +191,10 @@ const renderMoistureGraph = () => {
 /**
  * Destroys all graphs and render light graphs.
  */
-const renderLightGraph = () => {
-    const lightMonthResults = JSON.parse(graphDataSet.monthLight);
-    const lightWeeklyResults = JSON.parse(graphDataSet.weekLight);
-    const lightDayResults = JSON.parse(graphDataSet.dayLight);
+function renderLightGraph() {
+    const lightMonthResults = parseDataResults(graphDataSet.monthLight);
+    const lightWeeklyResults = parseDataResults(graphDataSet.weekLight);
+    const lightDayResults = parseDataResults(graphDataSet.dayLight);
 
     tempUnits.style.display = "none";
 
@@ -189,9 +203,9 @@ const renderLightGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(getMonthGraphInformation("Light", lightMonthResults), "graph-month");
-    weekGraph = createGraph(getWeekGraphInformation("Light", lightWeeklyResults), "graph-week");
-    dayGraph = createGraph(getDayGraphInformation("Light", lightDayResults), "graph-day");
+    monthGraph = createGraph(getMonthGraphInformation("Light", lightMonthResults), "graph-month", 0, 100);
+    weekGraph = createGraph(getWeekGraphInformation("Light", lightWeeklyResults), "graph-week", 0, 100);
+    dayGraph = createGraph(getDayGraphInformation("Light", lightDayResults), "graph-day", 0, 100);
 
     alertMessage("Light")
 }
@@ -199,22 +213,23 @@ const renderLightGraph = () => {
 /**
  * Destroys all graphs and render pressure graphs.
  */
-const renderPressureGraph = () => {
-
-    const pressureMonthResults = JSON.parse(graphDataSet.monthPressure);
-    const pressureWeeklyResults = JSON.parse(graphDataSet.weekPressure);
-    const pressureDayResults = JSON.parse(graphDataSet.dayPressure);
+function renderPressureGraph() {
+    const pressureMonthResults = parseDataResults(graphDataSet.monthPressure);
+    const pressureWeeklyResults = parseDataResults(graphDataSet.weekPressure);
+    const pressureDayResults = parseDataResults(graphDataSet.dayPressure);
+    const minPressure = JSON.parse(graphDataSet.minPressure);
+    const maxPressure = JSON.parse(graphDataSet.maxPressure);
 
     tempUnits.style.display = "none";
 
-    changeGraphTitle("Pressure Last 30 Days", "Pressure Last 7 Days", "Pressure Today");``
+    changeGraphTitle("Pressure Last 30 Days", "Pressure Last 7 Days", "Pressure Today");
 
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(getMonthGraphInformation(`Pressure (ATM)`, pressureMonthResults), "graph-month");
-    weekGraph = createGraph(getWeekGraphInformation(`Pressure (ATM)`, pressureWeeklyResults), "graph-week");
-    dayGraph = createGraph(getDayGraphInformation(`Pressure (ATM)`, pressureDayResults), "graph-day");
+    monthGraph = createGraph(getMonthGraphInformation(`Pressure (ATM)`, pressureMonthResults), "graph-month", minPressure, maxPressure);
+    weekGraph = createGraph(getWeekGraphInformation(`Pressure (ATM)`, pressureWeeklyResults), "graph-week", minPressure, maxPressure);
+    dayGraph = createGraph(getDayGraphInformation(`Pressure (ATM)`, pressureDayResults), "graph-day", minPressure, maxPressure);
 
     alertMessage("Air-Pressure")
 }
@@ -222,11 +237,12 @@ const renderPressureGraph = () => {
 /**
  * Destroys all graphs and render humidity graphs.
  */
-const renderHumidityGraph = () => {
-    const humidityMonthResults = JSON.parse(graphDataSet.monthHumidity);
-    const humidityWeeklyResults = JSON.parse(graphDataSet.weekHumidity);
-    const humidityDayResults = JSON.parse(graphDataSet.dayHumidity);
-
+function renderHumidityGraph() {
+    const humidityMonthResults = parseDataResults(graphDataSet.monthHumidity);
+    const humidityWeeklyResults = parseDataResults(graphDataSet.weekHumidity);
+    const humidityDayResults = parseDataResults(graphDataSet.dayHumidity);
+    const minHumidity = JSON.parse(graphDataSet.minHumidity);
+    const maxHumidity = JSON.parse(graphDataSet.maxHumidity);
     tempUnits.style.display = "none";
 
     changeGraphTitle("Humidity Last 30 Days", "Humidity Last 7 Days", "Humidity Today");
@@ -234,29 +250,39 @@ const renderHumidityGraph = () => {
     // reset graphs
     destroyGraphs();
 
-    monthGraph = createGraph(getMonthGraphInformation("Humidity", humidityMonthResults), "graph-month");
-    weekGraph = createGraph(getWeekGraphInformation("Humidity", humidityWeeklyResults), "graph-week");
-    dayGraph = createGraph(getDayGraphInformation("Humidity", humidityDayResults), "graph-day");
+    monthGraph = createGraph(getMonthGraphInformation("Humidity", humidityMonthResults), "graph-month", minHumidity, maxHumidity);
+    weekGraph = createGraph(getWeekGraphInformation("Humidity", humidityWeeklyResults), "graph-week", minHumidity, maxHumidity);
+    dayGraph = createGraph(getDayGraphInformation("Humidity", humidityDayResults), "graph-day", minHumidity, maxHumidity);
 
     alertMessage("Humidity")
 }
 
 
+/**
+ * Converts a temperature in degrees celsius to degrees fahrenheit.
+ * @param celsiusInput The temperature in degrees celsius.
+ * @returns {number|null} The temperature in degrees fahrenheit.
+ */
 function convertCelsiusToFahrenheit(celsiusInput) {
     if (celsiusInput === null) return null;
     return celsiusInput * 1.8 + 32;
 }
 
+/**
+ * Converts a temperature in degrees Fahrenheit to degrees Celsius.
+ * @param fahrenheit a temperature in degrees Fahrenheit.
+ * @returns {number} the temperature in degrees Celsius.
+ */
 function convertFahrenheitToCelsius(fahrenheit) {
     return (fahrenheit - 32) / 1.8;
 
 }
 
 /**
- * Get graph information for a single day graph.
+ * Get graph information for a single-day graph.
  * Readings each 30 minutes.
  *
- * @param sensorName Name of sensor used, e.g. Temperature
+ * @param {string} sensorName Name of sensor used, e.g., Temperature
  * @param data Readings from Arduino
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
@@ -264,22 +290,22 @@ function getDayGraphInformation(sensorName, data) {
 
     return [
         {
-        labels: dayLabels,
+            labels: dayLabels,
             datasets: [{
-            label: `Average ${sensorName} per Half-hour`,
-            data: data,
-            fill: true,
-            borderColor: GRAPH_COLOR,
-            tension: 0.1
-        }]
-    }, "Time (Half-hourly)", sensorName];
+                label: `Average ${sensorName} per Half-hour`,
+                data: data,
+                fill: true,
+                borderColor: GRAPH_COLOR,
+                tension: 0.1
+            }]
+        }, "Time (Half-hourly)", sensorName];
 }
 
 /**
  * Get graph information for a month graph.
  * Readings each day.
  *
- * @param sensorName Name of sensor used, e.g. Temperature
+ * @param sensorName Name of sensor used, e.g., Temperature
  * @param data Readings from Arduino
  * @returns tuple graph data object and xLabel, yLabels for graph
  */
@@ -336,30 +362,82 @@ function getWeekGraphInformation(sensorName, data) {
                 data: morningData,
                 borderColor: WEEK_GRAPH_COLORS[1],
                 tension: 0.1
-            },
-            {
+            }, {
                 label: `Afternoon (12:00pm - 5:59pm)`,
                 data: afternoonData,
                 borderColor: WEEK_GRAPH_COLORS[2],
                 tension: 0.1
-            },
-            {
+            }, {
                 label: `Evening (6:00pm - 11:59pm)`,
                 data: eveningData,
                 borderColor: WEEK_GRAPH_COLORS[3],
                 tension: 0.1
-            }
-            ]
+            }]
         }, "Time (Day)", sensorName]
 }
 
+/**
+ * Draws shading rectangles onto the charts to show advice ranges
+ * @param {number} minValue The advice range lower bound
+ * @param {number} maxValue The advice range upper bound
+ */
+function updateRectangleConfig(minValue, maxValue) {
+    Chart.plugins.register({
+        beforeDraw: function (chart) {
+            if (chart.config.options.shadedRegion) {
+                const ctx = chart.chart.ctx;
+                ctx.reset();
+
+                if (!showShadedRanges) {
+                    console.log("Shades are disabled, skipping...");
+                    return;
+                }
+
+                ctx.save();
+                ctx.fillStyle = 'rgba(150, 0, 0, 0.1)';
+                const y = chart.scales['y-axis-0'];
+
+                const xStart = chart.chartArea.left;
+                const xEnd = chart.chartArea.right;
+
+                // upper limit shade
+                const yStart1 = chart.chartArea.top;
+                let yEnd1 = y.getPixelForValue(maxValue);
+
+                // Only draw shading if height of rectangle is positive (the range is visible on the drawn graph)
+                if (yEnd1 - yStart1 > 0) {
+                    // Prevent the shade rectangle from drawing over the x-axis labels
+                    yEnd1 = Math.min(yEnd1, chart.chartArea.bottom);
+                    ctx.fillRect(xStart, yStart1, xEnd - xStart, yEnd1 - yStart1);
+                }
+
+                // lower limit shade
+                let yStart2 = y.getPixelForValue(minValue);
+                const yEnd2 = chart.chartArea.bottom;
+
+                if (yEnd2 - yStart2 > 0) {
+                    // Prevent the shade rectangle from drawing over the graph legend
+                    if (yStart2 < 0) {
+                        yStart2 = chart.chartArea.top;
+                    }
+                    ctx.fillRect(xStart, yStart2, xEnd - xStart, yEnd2 - yStart2);
+                }
+
+                ctx.restore();
+            }
+        }
+    });
+}
 
 /**
  * Uses data to create a graph which is generated and displayed in given id
  * @param data          data points for the graph
  * @param graphId       the id of the div where the graph goes
+ * @param minValue      The lower bound of the advice range
+ * @param maxValue      The upper bound of the advice range
  */
-function createGraph([dataObject, xLabel, yLabel], graphId) {
+function createGraph([dataObject, xLabel, yLabel], graphId, minValue, maxValue) {
+    updateRectangleConfig(minValue, maxValue);
     return new Chart(document.getElementById(graphId),
         {
             type: 'line',
@@ -369,20 +447,32 @@ function createGraph([dataObject, xLabel, yLabel], graphId) {
                 maintainAspectRatio: true,
                 aspectRatio: 1.25,
                 scales: {
-                    yAxes: [{
+                    yAxes: {
                         scaleLabel: {
                             display: true,
                             labelString: yLabel
                         }
-                    }],
-                    xAxes: [{
+                    },
+                    xAxes: {
                         scaleLabel: {
                             display: true,
                             labelString: xLabel
                         }
-                    }]
+                    }
                 },
+                shadedRegion: true
             }
         }
     )
+}
+
+function toggleShadedRanges() {
+    showShadedRanges = !showShadedRanges;
+    makeActive(currentlySelectedSensorView);
+
+    if (showShadedRanges) {
+        toggleGraphShadesButton.innerHTML = "Hide";
+    } else {
+        toggleGraphShadesButton.innerHTML = "Show";
+    }
 }

@@ -86,7 +86,7 @@
               text-overflow: ellipsis;
               white-space: nowrap;
             " th:text="'No Comparison'"
-                        th:href="${monitorGardenUri}"></a>
+                        th:href="@{|/garden/${yourGarden.getId()}/monitor|}"></a>
             </li>
             <li th:each="userGarden: ${gardenList}">
                 <a class="dropdown-item text-truncate" style="

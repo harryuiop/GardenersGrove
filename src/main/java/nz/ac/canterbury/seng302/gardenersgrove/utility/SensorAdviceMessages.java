@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Handles advice messages for sensors based on the set advice range.
@@ -22,32 +23,45 @@ public class SensorAdviceMessages {
             "Look out for discoloured or wilting leaves, root ball damage, split in steam or trunk and " +
             "stunted growth. If you notice any of these signs, trim dead roots or repot the plant. " +
             "Do not fertilize, overwater, or over-trim the plant while it heals.";
-    private static final String BELOW_MOISTURE_ADVICE = "This garden is below the ideal soil moisture. " +
-            "Overly dry soil makes it difficult for plants to absorb moisture decreases the availability of " +
-            "nutrients. If you are watering your garden regularly, try adding compost into your soil, or creating " +
-            "a layer of compost on top of the soil to prevent the sun from evaporating water from the soil's surface.";
-    private static final String BELOW_HUMIDITY_ADVICE = "A temperature reading in the last 24 hours has gone above the " +
-            "set advice range. High temperatures can harm plants by slowing their growth and causing dehydration. " +
-            "This can lead to smaller, low-quality fruits and vegetables. Look for leaf rolling or cupping, wilting, " +
-            "dry leaf edges, sun-scald or bleached leaves. If any of these signs appear, water regularly, mulch, " +
-            "and provide shade. Do not transplant, prune or fertilize.";
-
     private static final String ABOVE_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours has " +
             "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
             " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
             "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
             "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize.";
+    private static final String BELOW_MOISTURE_ADVICE = "This garden is below the ideal soil moisture. " +
+            "Overly dry soil makes it difficult for plants to absorb moisture decreases the availability of " +
+            "nutrients. If you are watering your garden regularly, try adding compost into your soil, or creating " +
+            "a layer of compost on top of the soil to prevent the sun from evaporating water from the soil's surface.";
     private static final String ABOVE_MOISTURE_ADVICE = "This garden is above the ideal soil moisture. " +
             "Overly moist soil can create leaching of nutrients, root rot, fungal problems, and prevent growth. " +
             "Try adding organic matter/mulch underneath the plant's soil or mix in a speed-treating agent like " +
             "hydrated lime. You may need to raise or move your garden to ensure proper drainage.";
-    private static final String ABOVE_HUMIDITY_ADVICE = "HUMIDITY IS ABOVE";
+    private static final String BELOW_HUMIDITY_ADVICE = "This garden is below ideal humidity. Look out for wilting," +
+            " stunted growth, smaller leaves, dry tip burn, leaf curl. If any of these persist try using a mister," +
+            " fog unit or sprinkler on your garden.";
+    private static final String ABOVE_HUMIDITY_ADVICE = "This garden is above the ideal humidity." +
+            " Look out for soft growth, increase foliar disease, nutrient deficiencies, increased root disease," +
+            " oedema (water spots on leaves, watery swellings or growths that rupture into powdery patches) and edge burn." +
+            " If any if these persist add a fan to your garden.";
 
+    private static final String FULL_SUN_ADVICE = "This garden has full sun lights. This is ideal for most plants, " +
+            "but some plants should avoid full sun lights because it can cause sunburn. If you have any plants that " +
+            "are sensitive to sunlight, consider moving to other places.";
+
+    private static final String PART_SUN_ADVICE = "This garden has partially sun lights. This is ideal for most plants, " +
+            "however some plants that need to be in shade may need some care as they might be sensitive on sun lights. " +
+            "Please consider moving them to other places to avoid sunburn.";
+
+    private static final String PART_SHADE_ADVICE = "This garden is in partially shaded area. This is ideal for most plants, " +
+            " however some plants might need to have some attention if the plants need sun lights but did not get it so far.";
+    private static final String FULL_SHADE_ADVICE = "This garden is in full shaded area. This is ideal for some plants that " +
+            "need to be in shade. Please pay attention to the plants and turn on full spectrum lights if you have.";
     private static final String IDEAL_ADVICE = "This garden has an ideal ";
 
     private final List<String> temperatureReferences = new ArrayList<>();
     private final List<String> moistureReferences = new ArrayList<>();
     private final List<String> humidityReferences = new ArrayList<>();
+    private final List<String> lightReferences = new ArrayList<>();
 
 
     /**
@@ -70,6 +84,10 @@ public class SensorAdviceMessages {
 
         humidityReferences.add("\"The Green Pages: Humidity, temperature and watering\" : \"https://espacepourlavie.ca/en/humidity-temperature-and-watering#:~:text=Most%20plants%20grow%20best%20with,tolerate%20humidity%20levels%20below%2025%25\"");
         humidityReferences.add("\"7 Mistakes Growers Make with Humidity\" : \"https://www.shogunfertilisers.com/en/growing-information/blogs/7-mistakes-growers-make-with-humidity/#:~:text=Generally%2C%20as%20the%20temperature%20increases,aim%20for%2055%2D70%25.\"");
+
+        lightReferences.add("\"Plant Care Simplified\" : \"https://plantcaresimplified.com/the-relationship-between-light-and-plant-growth/\"");
+        lightReferences.add("\"Plant4Harvest\" : \"https://plant4harvest.com/how-does-light-color-affect-plant-growth/\"");
+
     }
 
 
@@ -124,11 +142,25 @@ public class SensorAdviceMessages {
     }
 
     /**
-     * Add temperature advice and references to the model.
+     * Helper method to get the advice message for light sensor.
      *
-     * @param model Model to add attributes to
+     * @param totalHour total hours that sensor value is more than and equal to 50 percent in 24 hours
+     * @return string value of advice message depending on the totalHour value
      */
-    public void addTemperatureAdviceToModel(Model model) {
+    private String getAdvice(Double totalHour) {
+        return switch (LightLevel.getLightLevel(totalHour)) {
+            case FULL_SUN -> FULL_SUN_ADVICE;
+            case PART_SUN -> PART_SUN_ADVICE;
+            case PART_SHADE -> PART_SHADE_ADVICE;
+            case FULL_SHADE -> FULL_SHADE_ADVICE;
+            default -> "";
+        };
+    }
+
+    /**
+     * @return Get temperature advice and references to be added to the model.
+     */
+    public AdviceMessage getTemperatureAdvice() {
         String advice = getAdvice("temperature",
                 dayData.getTemperature(),
                 adviceRanges.getMinTemperature(),
@@ -136,39 +168,56 @@ public class SensorAdviceMessages {
                 BELOW_TEMPERATURE_ADVICE, ABOVE_TEMPERATURE_ADVICE);
 
         if (!advice.isEmpty()) {
-            model.addAttribute("temperatureAdvice", advice);
-            model.addAttribute("temperatureReference", this.temperatureReferences);
+            return new AdviceMessage(advice, this.temperatureReferences);
         }
+        return null;
     }
 
     /**
-     * Add soil moisture advice and references to the model.
-     *
-     * @param model Model to add attributes to
+     * @return Get moisture advice and references to be added to the model.
      */
-    public void addSoilMoistureAdviceToModel(Model model) {
+    public AdviceMessage getSoilMoistureAdvice() {
         String advice = getAdvice("soil moisture", dayData.getMoisture(),
                 adviceRanges.getMinMoisture(), adviceRanges.getMaxMoisture(),
                 BELOW_MOISTURE_ADVICE, ABOVE_MOISTURE_ADVICE);
 
         if (!advice.isEmpty()) {
-            model.addAttribute("moistureAdvice", advice);
-            model.addAttribute("moistureReference", this.moistureReferences);
+            return new AdviceMessage(advice, this.moistureReferences);
         }
+        return null;
     }
 
     /**
-     * Add humidity advice and references to the model.
-     *
-     * @param model Model to add attributes to
+     * @return Get humidity advice and references to be added to the model.
      */
-    public void addHumidityAdviceToModel(Model model) {
+    public AdviceMessage getHumidityAdvice() {
         String advice = getAdvice("humidity", dayData.getHumidity(),
                 adviceRanges.getMinHumidity(), adviceRanges.getMaxHumidity(),
                 BELOW_HUMIDITY_ADVICE, ABOVE_HUMIDITY_ADVICE);
+
         if (!advice.isEmpty()) {
-            model.addAttribute("humidityAdvice", advice);
-            model.addAttribute("humidityReference", this.humidityReferences);
+            return new AdviceMessage(advice, this.humidityReferences);
+        }
+        return null;
+    }
+
+    /**
+     * Add light advice and references to the model.
+     *
+     * @param model Model to add attributes to
+     */
+    public void addLightAdviceToModel(Model model) {
+
+        List<Double> lightReadings = dayData.getLight();
+
+        boolean noData = lightReadings.stream().allMatch(Objects::isNull);
+        Double totalHour = noData ? null
+                : lightReadings.stream().filter(lightReading -> lightReading != null && lightReading >= 50d).count() * 0.5;
+        String advice = getAdvice(totalHour);
+
+        if (!advice.isEmpty()) {
+            model.addAttribute("lightAdvice", advice);
+            model.addAttribute("lightReference", this.lightReferences);
         }
     }
 }

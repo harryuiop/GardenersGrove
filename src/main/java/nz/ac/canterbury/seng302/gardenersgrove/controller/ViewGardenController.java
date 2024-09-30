@@ -100,7 +100,6 @@ public class ViewGardenController extends NavBar {
         int forecastedDays = weatherService.getForecastDayCount();
         List<WeatherData> shownWeatherData = weatherData.subList(pastDays, pastDays + forecastedDays);
 
-
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
         model.addAttribute("newPlantUri", newPlantUri.toString());
@@ -144,13 +143,16 @@ public class ViewGardenController extends NavBar {
 
         User currentUser = userService.getAuthenticatedUser();
 
+
         Optional<Garden> optionalGarden = gardenService.getGardenById(gardenId);
+
         if (optionalGarden.isEmpty()
                 || optionalGarden.get().getOwner().getId() != currentUser.getId()
                 && !optionalGarden.get().isGardenPublic()
                 && !friendshipService.areFriends(optionalGarden.get().getOwner(), currentUser)) {
             throw new NoSuchGardenException(gardenId);
         }
+
         boolean owner = optionalGarden.get().getOwner() == currentUser;
         return loadGardenPage(
                         optionalGarden.get(),
