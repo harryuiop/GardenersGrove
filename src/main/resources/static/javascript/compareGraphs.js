@@ -64,6 +64,17 @@ function makeActive(buttonId) {
     }
 }
 
+/**
+ * Parse data results (day, week, month) into a 2dp javascript array
+ *
+ * @param resultArrayString String representation of dataset passed via thymeleaf
+ * @returns 2dp javascript array
+ */
+function parseDataResults(resultArrayString) {
+    return JSON.parse(resultArrayString).map(reading =>
+        reading == null ? reading : reading.toFixed(2));
+}
+
 
 function compareMonthGraphs(sensorName, data1, data2) {
     return [
@@ -108,10 +119,10 @@ function compareDayGraphs(sensorName, data1, data2) {
 function renderTemperatureCompareGraph(){
     tempUnits.style.display = "block";
 
-    const tempMonthResults = JSON.parse(graphDataSet.monthTemp);
-    const tempDayResults = JSON.parse(graphDataSet.dayTemp);
-    const tempMonthResultsOther = JSON.parse(graphDataSet.monthTempOther);
-    const tempDayResultsOther = JSON.parse(graphDataSet.dayTempOther);
+    const tempMonthResults = parseDataResults(graphDataSet.monthTemp);
+    const tempDayResults = parseDataResults(graphDataSet.dayTemp);
+    const tempMonthResultsOther = parseDataResults(graphDataSet.monthTempOther);
+    const tempDayResultsOther = parseDataResults(graphDataSet.dayTempOther);
 
     const isCelsius = currentUnit === 'C';
 
@@ -127,10 +138,10 @@ function renderTemperatureCompareGraph(){
 function renderMoistureCompareGraph() {
     tempUnits.style.display = "none";
 
-    const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture)
-    const moistureDayResults = JSON.parse(graphDataSet.dayMoisture)
-    const moistureMonthResultsOther = JSON.parse(graphDataSet.monthMoistureOther)
-    const moistureDayResultsOther = JSON.parse(graphDataSet.dayMoistureOther)
+    const moistureMonthResults = parseDataResults(graphDataSet.monthMoisture)
+    const moistureDayResults = parseDataResults(graphDataSet.dayMoisture)
+    const moistureMonthResultsOther = parseDataResults(graphDataSet.monthMoistureOther)
+    const moistureDayResultsOther = parseDataResults(graphDataSet.dayMoistureOther)
 
     monthGraph = createGraph(compareMonthGraphs("Moisture", moistureMonthResults, moistureMonthResultsOther), "graph-compare-month")
     dayGraph = createGraph(compareDayGraphs("Moisture", moistureDayResults, moistureDayResultsOther),"graph-compare-day")
@@ -139,10 +150,10 @@ function renderMoistureCompareGraph() {
 function renderLightCompareGraph() {
     tempUnits.style.display = "none";
 
-    const lightMonthResults = JSON.parse(graphDataSet.monthLight)
-    const lightDayResults = JSON.parse(graphDataSet.dayLight)
-    const lightMonthResultsOther = JSON.parse(graphDataSet.monthLightOther)
-    const lightDayResultsOther = JSON.parse(graphDataSet.dayLightOther)
+    const lightMonthResults = parseDataResults(graphDataSet.monthLight)
+    const lightDayResults = parseDataResults(graphDataSet.dayLight)
+    const lightMonthResultsOther = parseDataResults(graphDataSet.monthLightOther)
+    const lightDayResultsOther = parseDataResults(graphDataSet.dayLightOther)
 
     monthGraph = createGraph(compareMonthGraphs("Light", lightMonthResults, lightMonthResultsOther), "graph-compare-month")
     dayGraph = createGraph(compareDayGraphs("Light", lightDayResults, lightDayResultsOther), "graph-compare-day")
@@ -151,10 +162,10 @@ function renderLightCompareGraph() {
 function renderPressureCompareGraph() {
     tempUnits.style.display = "none";
 
-    const pressureMonthResults = JSON.parse(graphDataSet.monthPressure)
-    const pressureDayResults = JSON.parse(graphDataSet.dayPressure)
-    const pressureMonthResultsOther = JSON.parse(graphDataSet.monthPressureOther)
-    const pressureDayResultsOther = JSON.parse(graphDataSet.dayPressureOther)
+    const pressureMonthResults = parseDataResults(graphDataSet.monthPressure)
+    const pressureDayResults = parseDataResults(graphDataSet.dayPressure)
+    const pressureMonthResultsOther = parseDataResults(graphDataSet.monthPressureOther)
+    const pressureDayResultsOther = parseDataResults(graphDataSet.dayPressureOther)
 
     monthGraph = createGraph(compareMonthGraphs("Pressure", pressureMonthResults, pressureMonthResultsOther), "graph-compare-month")
     dayGraph = createGraph(compareDayGraphs("Pressure", pressureDayResults, pressureDayResultsOther), "graph-compare-day")
@@ -163,10 +174,10 @@ function renderPressureCompareGraph() {
 function renderHumidityCompareGraph() {
     tempUnits.style.display = "none";
 
-    const humidityMonthResults = JSON.parse(graphDataSet.monthHumidity)
-    const humidityDayResults = JSON.parse(graphDataSet.dayHumidity)
-    const humidityMonthResultsOther = JSON.parse(graphDataSet.monthHumidityOther)
-    const humidityDayResultsOther = JSON.parse(graphDataSet.dayHumidityOther)
+    const humidityMonthResults = parseDataResults(graphDataSet.monthHumidity)
+    const humidityDayResults = parseDataResults(graphDataSet.dayHumidity)
+    const humidityMonthResultsOther = parseDataResults(graphDataSet.monthHumidityOther)
+    const humidityDayResultsOther = parseDataResults(graphDataSet.dayHumidityOther)
 
     monthGraph = createGraph(compareMonthGraphs("Humidity", humidityMonthResults, humidityMonthResultsOther), "graph-compare-month")
     dayGraph = createGraph(compareDayGraphs("Humidity", humidityDayResults, humidityDayResultsOther), "graph-compare-day")
