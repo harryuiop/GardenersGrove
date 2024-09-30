@@ -52,7 +52,9 @@ public class GardenPlantSuggestions {
         } else if (garden.getLocation().isLocationRecognized()) {
             String locationPrompt = String.format(
                     "give me 3 plant suggestions for a garden in %s" +
-                    "[insert plant name]: [insert plant description]", garden.getLocation());
+                    "[insert plant name]: [insert plant description that has 2-3 sentences]" +
+                            "note: please do not include the texts 'Plant Name' or 'Plant Description'",
+                    garden.getLocation());
             return generateResponse(locationPrompt, retry);
         } else {
             List<String> suggestions = new ArrayList<>();
