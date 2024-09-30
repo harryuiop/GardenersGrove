@@ -41,71 +41,71 @@ public class ArduinoDataPointServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
     private ArduinoDataPointService arduinoDataPointService;
+
     private Garden garden;
 
     private User user;
-    static User user = new User("arduino@datpoint.com", "First", "Last","Password1!", "");
-    static Garden garden = new Garden(user, "Garden", null, new Location("New Zealand", "Christchurch"),
-            null, true);
 
     @BeforeEach
     void setup() {
+        arduinoDataPointRepository.deleteAll();
+        userRepository.deleteAll();
 
         arduinoDataPointService = new ArduinoDataPointService(arduinoDataPointRepository);
+        user = new User(
+                "test@domain.net",
+                "Test",
+                "User",
+                "Password1!",
+                "2000-01-01"
+        );
+        userRepository.save(user);
 
-        if (user == null) {
-            user = new User(
-                    "test@domain.net",
-                    "Test",
-                    "User",
-                    "Password1!",
-                    "2000-01-01"
-            );
-            userRepository.save(user);
-        }
-        gardenRepository.deleteAll();
         this.garden = new Garden(user, "Test Garden", null, new Location("New Zealand", "Christchurch"),
                 null, true);
         gardenRepository.save(this.garden);
 
-    @ParameterizedTest
-    @CsvSource({
-            "TEMPERATURE, 9",
-            "HUMIDITY, 10",
-            "AIR PRESSURE, 11",
-            "LIGHT, 12",
-            "MOISTURE, 13"
-    })
-    void checkMaxValues(String sensor, double expected) {
-        Assertions.assertEquals(expected, arduinoDataPointService.getMaxValueInRange(garden.getId(), LocalDateTime.now(), sensor));
-    }
-        arduinoDataPointRepository.deleteAll();
-
-    @ParameterizedTest
-    @CsvSource({
-            "TEMPERATURE, 0",
-            "HUMIDITY, 1",
-            "AIR PRESSURE, 2",
-            "LIGHT, 3",
-            "MOISTURE, 4"
-    })
-    void checkMinValues(String sensor, double expected) {
-        Assertions.assertEquals(expected, arduinoDataPointService.getMinValueInRange(garden.getId(), LocalDateTime.now(), sensor));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now(), 0d, 20d, 1d, 60d, 40d));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(1), 0d, 20d, 1d, 60d, 40d));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(2), 0d, 20d, 1d, 60d, 40d));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(3), 0d, 20d, 1d, 60d, 40d));
-        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(4), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(4), 0d, 20d, 1d, 70d, 40d));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(5), 0d, 20d, 1d, 60d, 40d));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(6), 0d, 20d, 1d, 60d, 40d));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(7), 0d, 20d, 1d, 60d, 40d));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(8), 0d, 20d, 1d, 60d, 40d));
-        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(9), 0d, 20d, 1d, 60d, 40d));
-        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(10), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(9), 9d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(10), 0d, 30d, 11d, 60d, 40d));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(11), 0d, 20d, 1d, 60d, 40d));
-        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(12), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(12), 0d, 20d, 1d, 60d, 50d));
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(15), 0d, 20d, 1d, 60d, 40d));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "TEMPERATURE, 9",
+            "HUMIDITY, 30",
+            "AIR PRESSURE, 11",
+            "LIGHT, 70",
+            "MOISTURE, 50"
+    })
+    void checkMaxValues(String sensor, double expected) {
+        Assertions.assertEquals(expected, arduinoDataPointService.getMaxValueInRange(garden.getId(), LocalDateTime.now().minusDays(14), sensor));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "TEMPERATURE, 0",
+            "HUMIDITY, 20",
+            "AIR PRESSURE, 1",
+            "LIGHT, 60",
+            "MOISTURE, 40"
+    })
+    void checkMinValues(String sensor, double expected) {
+        Assertions.assertEquals(expected, arduinoDataPointService.getMinValueInRange(garden.getId(), LocalDateTime.now().minusDays(14), sensor));
 
     }
 
