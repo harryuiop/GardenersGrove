@@ -122,7 +122,8 @@
                            description=${data.weatherDescription},
                            image=${data.weatherIconName},
                            humidity=${data.humidity},
-                           currentDayOfWeek=${currentDayOfWeek}">
+                           currentDayOfWeek=${currentDayOfWeek},
+                           tormorrowDay=${tormorrowDay}">
                     </div>
                   </div>
                   <div th:unless="${garden.getLocation().isLocationRecognized() || !owner}" class="alert alert-warning">

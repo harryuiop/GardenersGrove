@@ -24,7 +24,8 @@
     </style>
     <div class="container shadow rounded-4 text-center p-2 card"
          th:classappend="${dayOfWeek == currentDayOfWeek} ? 'current-day-color' : ''">
-      <p class="h3" th:text="${dayOfWeek == currentDayOfWeek ? 'TODAY' : dayOfWeek}"></p>
+      <p class="h3"
+         th:text="${dayOfWeek == currentDayOfWeek ? 'TODAY' : (dayOfWeek == tomorrowDay ? 'TOMORROW' : dayOfWeek)}"></p>
       <p class="m-0" th:text="${date}"></p>
       <i class="image" th:classappend="${image}"></i>
       <p th:text="${description}"></p>

@@ -118,6 +118,7 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("popupClosed", cookies);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MMM yyyy"));
         model.addAttribute("currentDayOfWeek", LocalDate.now().getDayOfWeek());
+        model.addAttribute("tomorrowDay", LocalDate.now().plusDays(1).getDayOfWeek());
         return "viewGarden";
     }
 
