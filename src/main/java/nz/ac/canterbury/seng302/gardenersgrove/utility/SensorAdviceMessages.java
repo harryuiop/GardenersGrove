@@ -22,26 +22,26 @@ public class SensorAdviceMessages {
             "Look out for discoloured or wilting leaves, root ball damage, split in steam or trunk and " +
             "stunted growth. If you notice any of these signs, trim dead roots or repot the plant. " +
             "Do not fertilize, overwater, or over-trim the plant while it heals.";
-    private static final String BELOW_MOISTURE_ADVICE = "This garden is below the ideal soil moisture. " +
-            "Overly dry soil makes it difficult for plants to absorb moisture decreases the availability of " +
-            "nutrients. If you are watering your garden regularly, try adding compost into your soil, or creating " +
-            "a layer of compost on top of the soil to prevent the sun from evaporating water from the soil's surface.";
-    private static final String BELOW_HUMIDITY_ADVICE = "A temperature reading in the last 24 hours has gone above the " +
-            "set advice range. High temperatures can harm plants by slowing their growth and causing dehydration. " +
-            "This can lead to smaller, low-quality fruits and vegetables. Look for leaf rolling or cupping, wilting, " +
-            "dry leaf edges, sun-scald or bleached leaves. If any of these signs appear, water regularly, mulch, " +
-            "and provide shade. Do not transplant, prune or fertilize.";
-
     private static final String ABOVE_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours has " +
             "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
             " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
             "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
             "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize.";
+    private static final String BELOW_MOISTURE_ADVICE = "This garden is below the ideal soil moisture. " +
+            "Overly dry soil makes it difficult for plants to absorb moisture decreases the availability of " +
+            "nutrients. If you are watering your garden regularly, try adding compost into your soil, or creating " +
+            "a layer of compost on top of the soil to prevent the sun from evaporating water from the soil's surface.";
     private static final String ABOVE_MOISTURE_ADVICE = "This garden is above the ideal soil moisture. " +
             "Overly moist soil can create leaching of nutrients, root rot, fungal problems, and prevent growth. " +
             "Try adding organic matter/mulch underneath the plant's soil or mix in a speed-treating agent like " +
             "hydrated lime. You may need to raise or move your garden to ensure proper drainage.";
-    private static final String ABOVE_HUMIDITY_ADVICE = "HUMIDITY IS ABOVE";
+    private static final String BELOW_HUMIDITY_ADVICE = "This garden is below ideal humidity. Look out for wilting," +
+            " stunted growth, smaller leaves, dry tip burn, leaf curl. If any of these persist try using a mister," +
+            " fog unit or sprinkler on your garden.";
+    private static final String ABOVE_HUMIDITY_ADVICE = "This garden is above the ideal humidity." +
+            " Look out for soft growth, increase foliar disease, nutrient deficiencies, increased root disease," +
+            " oedema (water spots on leaves, watery swellings or growths that rupture into powdery patches) and edge burn." +
+            " If any if these persist add a fan to your garden.";
 
     private static final String IDEAL_ADVICE = "This garden has an ideal ";
 
