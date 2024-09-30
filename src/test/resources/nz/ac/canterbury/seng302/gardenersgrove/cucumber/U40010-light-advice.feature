@@ -12,9 +12,9 @@ Feature: As Sarah, I want to know if I need to adjust the plant location so that
     Then I receive a message saying that the garden is currently receiving partial sun light
 
   Scenario: AC3 - I receive a partial shade advice message that describes the situation
-    When I am received a light reading that is above and equal to 25 percent for more than 2 hours and less than 6 hours
+    When I am received a light reading that is above and equal to 50 percent for more than 2 hours and less than 4 hours
     Then I receive a message saying that the garden is currently receiving partial shade light
 
   Scenario: AC4 - I receive a full shade advice message that describes the situation
-    When I am received a light reading that is above and equal to 25 percent for more than 6 hours
+    When I am received a light reading that is above and equal to 50 percent for more than 0 hours and less than 2 hours
     Then I receive a message saying that the garden is currently receiving full shade light

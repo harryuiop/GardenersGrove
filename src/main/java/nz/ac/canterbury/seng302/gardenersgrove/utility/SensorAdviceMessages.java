@@ -217,8 +217,7 @@ public class SensorAdviceMessages {
 
         boolean noData = lightReadings.stream().allMatch(Objects::isNull);
         Double totalHour = noData ? null
-                : lightReadings.stream().filter(lightReading -> lightReading != null && lightReading >= 50).count() * 0.5;
-
+                : lightReadings.stream().filter(lightReading -> lightReading != null && lightReading >= 50d).count() * 0.5;
         String advice = getAdvice(totalHour);
 
         if (!advice.isEmpty()) {
