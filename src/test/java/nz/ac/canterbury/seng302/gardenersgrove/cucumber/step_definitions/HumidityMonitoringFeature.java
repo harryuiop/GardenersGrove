@@ -93,27 +93,15 @@ public class HumidityMonitoringFeature {
         LocalDateTime endTime = LocalDateTime.now();
         LocalDateTime currentTime = startTime;
         while (currentTime.isBefore(endTime)) {
-            if (!currentTime.isEqual(startTime.plusMinutes(25))) {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        40d,
-                        1d,
-                        50d,
-                        60d
-                ));
-            } else {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        15d,
-                        1d,
-                        60d,
-                        10d
-                ));
-            }
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                    garden,
+                    currentTime,
+                    30d,
+                    5d,
+                    1d,
+                    50d,
+                    60d
+            ));
             currentTime = currentTime.plusMinutes(25);
         }
     }
@@ -146,27 +134,15 @@ public class HumidityMonitoringFeature {
         LocalDateTime endTime = LocalDateTime.now();
         LocalDateTime currentTime = startTime;
         while (currentTime.isBefore(endTime)) {
-            if (!currentTime.isEqual(startTime.plusMinutes(25))) {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        40d,
-                        1d,
-                        50d,
-                        60d
-                ));
-            } else {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        85d,
-                        1d,
-                        60d,
-                        10d
-                ));
-            }
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                    garden,
+                    currentTime,
+                    30d,
+                    90d,
+                    1d,
+                    50d,
+                    60d
+            ));
             currentTime = currentTime.plusMinutes(25);
         }
     }
@@ -199,41 +175,20 @@ public class HumidityMonitoringFeature {
         LocalDateTime startTime = LocalDateTime.now().minusDays(1);
         LocalDateTime endTime = LocalDateTime.now();
         LocalDateTime currentTime = startTime;
+        int counter = 0;
         while (currentTime.isBefore(endTime)) {
-            if (currentTime.isEqual(startTime.plusMinutes(25))) {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        10d,
-                        1d,
-                        50d,
-                        60d
-                ));
-            } else if (currentTime.isEqual(startTime.plusMinutes(50))) {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        85d,
-                        1d,
-                        60d,
-                        10d
-                ));
-            } else {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        40d,
-                        1d,
-                        60d,
-                        10d
-                ));
-            }
-            currentTime = currentTime.plusMinutes(25);
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                garden,
+                currentTime,
+                30d,
+                counter % 2 == 0 ? 5d : 95d,
+                1d,
+                50d,
+                60d
+        ));
+        counter++;
+        currentTime = currentTime.plusMinutes(25);
         }
-        System.out.println(arduinoDataPointService.getDayGraphData(adviceSharedState.getGardenId(), endTime).getSensorReadings().toString());
     }
 
     @Then("I am shown a message informing me of symptoms to look for when the humidity is too high and too low.")
