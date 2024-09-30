@@ -170,6 +170,11 @@
                             <a class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{|/garden/compare/${garden.getId()}/${userGarden.getId()}|}" th:text="${userGarden.getName()}"></a>
                         </li>
                     </ul>
+                    <button class="btn btn-confirm mb-3" onclick="toggleShadedRanges()">
+                        <span id="toggleShadedRangesText">Hide</span>
+                        shaded ranges on graphs
+                        <i class="bi bi-toggles"></i>
+                    </button>
                 </div>
                 <div class="row" id="temp-units">
                     <div class="input-group mb-3">
