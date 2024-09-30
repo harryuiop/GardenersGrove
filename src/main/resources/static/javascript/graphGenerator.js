@@ -25,6 +25,10 @@ const WEEK_GRAPH_COLORS = ['rgb(44, 62, 80)', 'rgb(241, 196, 15)', 'rgb(52, 152,
 let monthGraph, weekGraph, dayGraph;
 let currentlySelectedSensorView = "Temperature";
 
+//  Shaded ranges
+let showShadedRanges = true;
+const toggleGraphShadesButton = document.getElementById("toggleShadedRangesText");
+
 /**
  * Render temperature graphs on page load.
  */
@@ -371,11 +375,16 @@ function updateRectangleConfig(minValue, maxValue) {
         beforeDraw: function (chart) {
             if (chart.config.options.shadedRegion) {
                 const ctx = chart.chart.ctx;
-                const y = chart.scales['y-axis-0'];
-
                 ctx.reset();
+
+                if (!showShadedRanges) {
+                    console.log("Shades are disabled, skipping...");
+                    return;
+                }
+
                 ctx.save();
                 ctx.fillStyle = 'rgba(150, 0, 0, 0.1)';
+                const y = chart.scales['y-axis-0'];
 
                 const xStart = chart.chartArea.left;
                 const xEnd = chart.chartArea.right;
@@ -444,4 +453,15 @@ function createGraph([dataObject, xLabel, yLabel], graphId, minValue, maxValue) 
             }
         }
     )
+}
+
+function toggleShadedRanges() {
+    showShadedRanges = !showShadedRanges;
+    makeActive(currentlySelectedSensorView);
+
+    if (showShadedRanges) {
+        toggleGraphShadesButton.innerHTML = "Hide";
+    } else {
+        toggleGraphShadesButton.innerHTML = "Show";
+    }
 }
