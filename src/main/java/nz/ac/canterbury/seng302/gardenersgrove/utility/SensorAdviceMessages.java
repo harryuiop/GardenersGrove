@@ -158,11 +158,9 @@ public class SensorAdviceMessages {
     }
 
     /**
-     * Add temperature advice and references to the model.
-     *
-     * @param model Model to add attributes to
+     * @return Get temperature advice and references to be added to the model.
      */
-    public void addTemperatureAdviceToModel(Model model) {
+    public AdviceMessage getTemperatureAdvice() {
         String advice = getAdvice("temperature",
                 dayData.getTemperature(),
                 adviceRanges.getMinTemperature(),
@@ -170,40 +168,37 @@ public class SensorAdviceMessages {
                 BELOW_TEMPERATURE_ADVICE, ABOVE_TEMPERATURE_ADVICE);
 
         if (!advice.isEmpty()) {
-            model.addAttribute("temperatureAdvice", advice);
-            model.addAttribute("temperatureReference", this.temperatureReferences);
+            return new AdviceMessage(advice, this.temperatureReferences);
         }
+        return null;
     }
 
     /**
-     * Add soil moisture advice and references to the model.
-     *
-     * @param model Model to add attributes to
+     * @return Get moisture advice and references to be added to the model.
      */
-    public void addSoilMoistureAdviceToModel(Model model) {
+    public AdviceMessage getSoilMoistureAdvice() {
         String advice = getAdvice("soil moisture", dayData.getMoisture(),
                 adviceRanges.getMinMoisture(), adviceRanges.getMaxMoisture(),
                 BELOW_MOISTURE_ADVICE, ABOVE_MOISTURE_ADVICE);
 
         if (!advice.isEmpty()) {
-            model.addAttribute("moistureAdvice", advice);
-            model.addAttribute("moistureReference", this.moistureReferences);
+            return new AdviceMessage(advice, this.moistureReferences);
         }
+        return null;
     }
 
     /**
-     * Add humidity advice and references to the model.
-     *
-     * @param model Model to add attributes to
+     * @return Get humidity advice and references to be added to the model.
      */
-    public void addHumidityAdviceToModel(Model model) {
+    public AdviceMessage getHumidityAdvice() {
         String advice = getAdvice("humidity", dayData.getHumidity(),
                 adviceRanges.getMinHumidity(), adviceRanges.getMaxHumidity(),
                 BELOW_HUMIDITY_ADVICE, ABOVE_HUMIDITY_ADVICE);
+
         if (!advice.isEmpty()) {
-            model.addAttribute("humidityAdvice", advice);
-            model.addAttribute("humidityReference", this.humidityReferences);
+            return new AdviceMessage(advice, this.humidityReferences);
         }
+        return null;
     }
 
     /**

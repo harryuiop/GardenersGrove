@@ -1,10 +1,11 @@
 package nz.ac.canterbury.seng302.gardenersgrove.service;
 
-import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
-import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.ArduinoDataValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
+import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.AdviceMessage;
+import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.LightLevel;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.SensorAdviceMessages;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,22 @@ public class ArduinoControllerDataService {
 
         SensorAdviceMessages sensorAdviceMessages = new SensorAdviceMessages(dayData, adviceRanges);
 
-        sensorAdviceMessages.addTemperatureAdviceToModel(model);
-        sensorAdviceMessages.addSoilMoistureAdviceToModel(model);
-        sensorAdviceMessages.addHumidityAdviceToModel(model);
+        AdviceMessage temperatureAdvice = sensorAdviceMessages.getTemperatureAdvice();
+        if (temperatureAdvice != null) {
+            model.addAttribute("temperatureAdvice", temperatureAdvice.getAdviceMessage());
+            model.addAttribute("temperatureReference", temperatureAdvice.getReferenceList());
+        }
+
+        AdviceMessage soilMoistureAdvice = sensorAdviceMessages.getSoilMoistureAdvice();
+        if (soilMoistureAdvice != null) {
+            model.addAttribute("moistureAdvice", soilMoistureAdvice.getAdviceMessage());
+            model.addAttribute("moistureReference", soilMoistureAdvice.getReferenceList());
+        }
+        AdviceMessage humidityAdvice = sensorAdviceMessages.getHumidityAdvice();
+        if (humidityAdvice != null) {
+            model.addAttribute("humidityAdvice", humidityAdvice.getAdviceMessage());
+            model.addAttribute("humidityReference", humidityAdvice.getReferenceList());
+        }
         sensorAdviceMessages.addLightAdviceToModel(model);
     }
 
