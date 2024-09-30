@@ -134,7 +134,7 @@
 
             <!-- Advice -->
             <div class="row mx-4">
-                <div id="advice" class="alert alert-warning position-relative"
+                <div th:if="${owner}" id="advice" class="alert alert-warning position-relative"
                 th:data-temperature="${temperatureAdvice}"
                 th:data-moisture="${moistureAdvice}"
                 th:data-light="${lightAdvice}"
@@ -167,7 +167,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li th:each="userGarden: ${gardenList}">
-                            <a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{|/garden/compare/${garden.getId()}/${userGarden.getId()}|}" th:text="${userGarden.getName()}"></a>
+                            <a class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{|/garden/compare/${garden.getId()}/${userGarden.getId()}|}" th:text="${userGarden.getName()}"></a>
                         </li>
                     </ul>
                     <button class="btn btn-confirm mb-3" onclick="toggleShadedRanges()">
