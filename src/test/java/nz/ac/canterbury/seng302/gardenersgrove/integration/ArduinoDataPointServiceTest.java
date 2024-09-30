@@ -6,27 +6,18 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Location;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.*;
-import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
 
 @DataJpaTest
 @Import(ArduinoDataPointService.class)
@@ -47,15 +38,13 @@ public class ArduinoDataPointServiceTest {
 
     private Garden garden;
 
-    private User user;
-
     @BeforeEach
     void setup() {
         arduinoDataPointRepository.deleteAll();
         userRepository.deleteAll();
 
         arduinoDataPointService = new ArduinoDataPointService(arduinoDataPointRepository);
-        user = new User(
+        User user = new User(
                 "test@domain.net",
                 "Test",
                 "User",
