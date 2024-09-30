@@ -134,7 +134,7 @@
 
             <!-- Advice -->
             <div class="row mx-4">
-                <div id="advice" class="alert alert-warning position-relative"
+                <div th:if="${owner}" id="advice" class="alert alert-warning position-relative"
                 th:data-temperature="${temperatureAdvice}"
                 th:data-moisture="${moistureAdvice}"
                 th:data-light="${lightAdvice}"
