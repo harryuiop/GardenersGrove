@@ -43,34 +43,17 @@ public class GardenPlantSuggestions {
             // Create prompt and get suggestion based on Arduino data
             String arduinoPrompt = getArduinoPrompt(garden.getId());
 
-            if (!arduinoPrompt.equals(CONTEXT)) {
-                try {
-                    String response = getSuggestions(arduinoPrompt);
-                    while (!response.contains(":")) {
-                        logger.warn("Regenerate response");
-                        response = getSuggestions(arduinoPrompt);
-                    }
-                    List<String> parsedResponse = parseSuggestions(response);
-                    if (parsedResponse.size() < 4 && retry){
-                        return getPlantSuggestionsForGarden(garden, false);
-                    } else if ( parsedResponse.size() < 4) {
-                        throw new NoValidSuggestions("No valid plant suggestions");
-                    }
-                    return parsedResponse;
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                    List<String> suggestions = new ArrayList<>();
-                    suggestions.add("Invalid Response, no suggestions, try again later.");
-                    return suggestions;
-                }
+            if (!arduinoPrompt.equals(CONTEXT)){
+                return generateResponse(arduinoPrompt, retry);
             }
             List<String> suggestions = new ArrayList<>();
             suggestions.add("Please Check Arduino Connection");
             return suggestions;
         } else if (garden.getLocation().isLocationRecognized()) {
-            String locationPrompt = String.format(CONTEXT +
-                    "based on this context, give me 3 plant suggestions for a %s garden", garden.getLocation());
-            return parseSuggestions(getSuggestions(locationPrompt));
+            String locationPrompt = String.format(
+                    "give me 3 plant suggestions for a garden in %s" +
+                    "[insert plant name]: [insert plant description]", garden.getLocation());
+            return generateResponse(locationPrompt, retry);
         } else {
             List<String> suggestions = new ArrayList<>();
             suggestions.add("Please make sure devices has been connected for 14 days or more or update your location.");
@@ -153,4 +136,29 @@ public class GardenPlantSuggestions {
         }
         return  plants;
     }
+
+    public List<String> generateResponse(String prompt, Boolean retry) {
+        try {
+            String response = getSuggestions(prompt);
+            while (!response.contains(":")) {
+                logger.warn("Regenerate response");
+                response = getSuggestions(prompt);
+            }
+            List<String> parsedResponse = parseSuggestions(response);
+
+            if (parsedResponse.size() < 4 && retry){
+                return generateResponse(prompt, false);
+            } else if (parsedResponse.size() < 4) {
+                throw new NoValidSuggestions("No valid plant suggestions");
+            }
+            return parsedResponse;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            List<String> suggestions = new ArrayList<>();
+            suggestions.add("Invalid Response, no suggestions, try again later.");
+            return suggestions;
+        }
+    }
+
 }
+
