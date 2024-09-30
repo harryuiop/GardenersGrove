@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:insert="~{fragments/importFragment :: headerfiles}"> </head>
+<head th:insert="~{fragments/importFragment :: headerfiles}"><title>Weather Cards</title></head>
 
 <body>
   <div th:fragment="weatherCard">
@@ -16,15 +16,22 @@
         margin: 0;
         padding: 0;
       }
+
+      .current-day-color {
+        border-width: medium;
+        border-color: #477641FF;
+      }
     </style>
-    <div class="container shadow rounded-4 text-center p-2 card">
+    <div class="container shadow rounded-4 text-center p-2 card"
+         th:classappend="${dayOfWeek == currentDayOfWeek} ? 'current-day-color' : ''">
       <p class="h3" th:text="${dayOfWeek}"></p>
       <p class="m-0" th:text="${date}"></p>
       <i class="image" th:classappend="${image}"></i>
       <p th:text="${description}"></p>
-        <p class="m-0"><i class="bi bi-thermometer-half"></i><span th:text="${temperature}"></span>&deg;C</p>
-        <p class="m-0"><i class="bi bi-droplet-half"></i><span th:text="${humidity}"></span>% Humidity</p>
+      <p class="m-0"><i class="bi bi-thermometer-half"></i><span th:text="${temperature}"></span>&deg;C</p>
+      <p class="m-0"><i class="bi bi-droplet-half"></i><span th:text="${humidity}"></span>% Humidity</p>
     </div>
+
   </div>
 </body>
 
