@@ -253,6 +253,7 @@ VALUES (1.083, 45.2, 65.5, 25.0, 20.0, 1, '2024-01-10 11:20:00'),
        (1.132, 15.3, 58.0, 34.0, 10.0, 1, '2024-09-27 10:02:00'),
        (1.132, 9.3, 58.0, 34.0, 10.0, 1, '2024-09-29 10:02:00');
 
+
 INSERT INTO arduino_data_point (atmosphere_atm, humidity_percent, light_percent, moisture_percent, temp_celsius, garden_id, time)
 VALUES
     (1.075, 52.8, 58.3, 31.2, 22.5, 2, '2024-08-26 11:20:00'),

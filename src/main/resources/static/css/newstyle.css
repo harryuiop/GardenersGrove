@@ -131,3 +131,8 @@
   background-color: #d0dfd0 !important;
   box-shadow: var(--bs-box-shadow-inset) !important;
 }
+
+.main-links {
+  color: #477641;
+  text-decoration: none;
+}

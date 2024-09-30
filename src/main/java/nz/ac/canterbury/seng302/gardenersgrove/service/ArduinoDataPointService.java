@@ -107,4 +107,13 @@ public class ArduinoDataPointService {
         return ArduinoGraphResults.formatResultsForMonth(arduinoDataBlocks, accessTime);
     }
 
+    /**
+     * Check if a garden with the given ID has data in the database from the past 14 days.
+     * @param gardenId The id of the garden being checked
+     * @return True if there is 14 days of data and false otherwise
+     */
+    public boolean checkFourteenDaysOfData(Long gardenId) {
+        return dataPointRepository.daysofData(gardenId, LocalDateTime.now().minusWeeks(2)) >= 14;
+    }
+
 }

@@ -1,5 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<title>Monitor Garden - Garden Pulse</title>
 <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <head th:insert="~{fragments/importFragment :: headerfiles}">
@@ -105,8 +106,18 @@
                                             data-month-pressure=${graphMonth.getAtmosphere()},
                                             data-week-humidity=${graphWeek.getHumidity()},
                                             data-day-humidity=${graphDay.getHumidity()},
-                                            data-month-humidity=${graphMonth.getHumidity()}">
-                <!-- Sensor disconnected error -->
+                                            data-month-humidity=${graphMonth.getHumidity()},
+                                            data-min-temp=${garden.getAdviceRanges().getMinTemperature()},
+                                            data-max-temp=${garden.getAdviceRanges().getMaxTemperature()},
+                                            data-min-moisture=${garden.getAdviceRanges().getMinMoisture()},
+                                            data-max-moisture=${garden.getAdviceRanges().getMaxMoisture()},
+                                            data-min-pressure=${garden.getAdviceRanges().getMinPressure()},
+                                            data-max-pressure=${garden.getAdviceRanges().getMaxPressure()},
+                                            data-min-humidity=${garden.getAdviceRanges().getMinHumidity()},
+                                            data-max-humidity=${garden.getAdviceRanges().getMaxHumidity()},
+                                            data-light-levels=${garden.getAdviceRanges().getLightLevel()}">
+
+            <!-- Sensor disconnected error -->
             <div th:if="${owner}" class="row mx-4" id="disconnected-warning"
                  th:data-temperature="${tempReading}"
                  th:data-moisture="${moistReading}"
@@ -155,11 +166,6 @@
                         Compare <i class="bi bi-layers"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item text-truncate"
-                               style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
-                               th:text="'No Comparison'"></a>
-                        </li>
                         <li th:each="userGarden: ${gardenList}">
                             <a th:if="${userGarden.getId() != garden.getId()}" class="dropdown-item text-truncate" style="max-width: 75ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:href="@{|/garden/compare/${garden.getId()}/${userGarden.getId()}|}" th:text="${userGarden.getName()}"></a>
                         </li>
@@ -201,157 +207,177 @@
                                 </div>
                             </div>
                         </div>
+
+                    </div>
+            </div>
+        </div>
+            <div id="settingsModal" class="modal fade" tabindex="-1" aria-labelledby="settingsModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title fs-5" id="settingsModalLabel">Settings</h5>
+                        </div>
+                        <form id="garden-advice-ranges" th:action="@{${editAdviceUri}(gardenId=${garden.getId()})}"
+                              method="post"
+                              th:attr="data-open-modal=${openAdviceRangesModel},
+                                    data-min-temp=${savedAdviceRanges.getMinTemperature()},
+                                    data-max-temp=${savedAdviceRanges.getMaxTemperature()},
+                                    data-min-humidity=${savedAdviceRanges.getMinHumidity()},
+                                    data-max-humidity=${savedAdviceRanges.getMaxHumidity()},
+                                    data-min-pressure=${savedAdviceRanges.getMinPressure()},
+                                    data-max-pressure=${savedAdviceRanges.getMaxPressure()},
+                                    data-min-moisture=${savedAdviceRanges.getMinMoisture()},
+                                    data-max-moisture=${savedAdviceRanges.getMaxMoisture()},
+                                    data-light-level=${savedAdviceRanges.getLightLevel().toString()}"
+                        >
+                            <div class="modal-body">
+                                <p class="mb-0">Temperature Range ºC</p>
+                                <div class="d-flex flew-row">
+                                    <div class="form-field form-floating w-100 mx-1">
+                                        <input type="number" th:min="${MIN_VALID_TEMP}" th:max="${MAX_VALID_TEMP}"
+                                               class="form-control advice-range" placeholder="10"
+                                               id="minTemp" th:name="minTemp" th:value="*{adviceRanges.getMinTemp()}"
+                                               data-cy="minTemp"
+                                               th:classappend="${temperatureError} ? 'border border-danger'"
+                                               step="0.01"/>
+                                        <label class="form-input" for="minTemp"> Minimum</label>
+                                    </div>
+                                    <div class="form-field form-floating w-100 mx-1">
+                                        <input type="number" th:min="${MIN_VALID_TEMP}" th:max="${MAX_VALID_TEMP}"
+                                               class="form-control advice-range" placeholder="10"
+                                               id="maxTemp" th:name="maxTemp" th:value="*{adviceRanges.getMaxTemp()}"
+                                               data-cy="maxTemp"
+                                               th:classappend="${temperatureError} ? 'border border-danger'"
+                                               step="0.01"/>
+                                        <label class="form-input" for="maxTemp"> Maximum</label>
+                                    </div>
+                                </div>
+                                <p class="error message" th:text="${temperatureError}"></p>
+                                <p class="mb-0">Soil Moisture Range (%)</p>
+                                <div class="d-flex flew-row">
+                                    <div class="form-field form-floating w-100 mx-1">
+                                        <input type="number" th:min="${MIN_VALID_MOISTURE}"
+                                               th:max="${MAX_VALID_MOISTURE}" class="form-control advice-range"
+                                               placeholder="10"
+                                               id="minSoilMoisture" th:name="minSoilMoisture"
+                                               th:value="*{adviceRanges.getMinSoilMoisture()}"
+                                               data-cy="minSoilMoisture"
+                                               th:classappend="${moistureError} ? 'border border-danger'" step="0.01"/>
+                                        <label class="form-input" for="minSoilMoisture">Minimum</label>
+                                    </div>
+                                    <div class="form-field form-floating w-100 mx-1">
+                                        <input type="number" th:min="${MIN_VALID_MOISTURE}"
+                                               th:max="${MAX_VALID_MOISTURE}"
+                                               class="form-control advice-range" placeholder="60"
+                                               id="maxSoilMoisture" th:name="maxSoilMoisture"
+                                               th:value="*{adviceRanges.getMaxSoilMoisture()}"
+                                               data-cy="maxSoilMoisture"
+                                               th:classappend="${moistureError} ? 'border border-danger'" step="0.01"/>
+                                        <label class="form-input" for="maxSoilMoisture">Maximum</label>
+                                    </div>
+                                </div>
+                                <p class="error message" th:text="${moistureError}"></p>
+                                <p class="mb-0">Air Pressure Range (Atm)</p>
+                                <div class="d-flex flew-row">
+                                    <div class="form-field form-floating w-100 mx-1">
+                                        <input type="number" th:min="${MIN_VALID_PRESSURE}"
+                                               th:max="${MAX_VALID_PRESSURE}"
+                                               class="form-control advice-range" placeholder="10" step="0.01"
+                                               id="minAirPressure" th:name="minAirPressure"
+                                               th:value="*{adviceRanges.getMinAirPressure()}"
+                                               data-cy="minAirPressure"
+                                               th:classappend="${pressureError} ? 'border border-danger'"/>
+                                        <label class="form-input" for="minAirPressure"> Minimum</label>
+                                    </div>
+                                    <div class="form-field form-floating w-100 mx-1">
+                                        <input type="number" th:min="${MIN_VALID_PRESSURE}"
+                                               th:max="${MAX_VALID_PRESSURE}"
+                                               class="form-control advice-range" placeholder="10" step="0.01"
+                                               id="maxAirPressure" th:name="maxAirPressure"
+                                               th:value="*{adviceRanges.getMaxAirPressure()}"
+                                               data-cy="maxAirPressure"
+                                               th:classappend="${pressureError} ? 'border border-danger'"/>
+                                        <label class="form-input" for="maxAirPressure"> Maximum</label>
+                                    </div>
+                                </div>
+                                <p class="error message" th:text="${pressureError}"></p>
+                                <p class="mb-0">Humidity Range (%)</p>
+                                <div class="d-flex flew-row">
+                                    <div class="form-field form-floating w-100 mx-1">
+                                        <input type="number" th:min="${MIN_VALID_HUMIDITY}"
+                                               th:max="${MAX_VALID_HUMIDITY}" class="form-control advice-range"
+                                               placeholder="10"
+                                               id="minHumidity" th:name="minHumidity"
+                                               th:value="*{adviceRanges.getMinHumidity()}"
+                                               data-cy="minHumidity"
+                                               th:classappend="${humidityError} ? 'border border-danger'" step="0.01"/>
+                                        <label class="form-input" for="minHumidity">Minimum</label>
+                                    </div>
+                                    <div class="form-field form-floating w-100 mx-1">
+                                        <input type="number" th:min="${MIN_VALID_HUMIDITY}"
+                                               th:max="${MAX_VALID_HUMIDITY}" class="form-control advice-range"
+                                               placeholder="10"
+                                               id="maxHumidity" th:name="maxHumidity"
+                                               th:value="*{adviceRanges.getMaxHumidity()}"
+                                               data-cy="maxHumidity"
+                                               th:classappend="${humidityError} ? 'border border-danger'" step="0.01"/>
+                                        <label class="form-input" for="maxHumidity">Maximum</label>
+                                    </div>
+                                </div>
+                                <p class="error message" th:text="${humidityError}"></p>
+                                <p class="mb-0">Light Level</p>
+                                <div class="d-flex flew-row">
+                                    <select class="form-select form-floating w-100 mx-1" name="lightLevel"
+                                            id="lightLevel">
+                                        <option th:each="lightLevel : ${LIGHT_LEVELS}"
+                                                th:value="${lightLevel}"
+                                                th:text="${lightLevel}"
+                                                th:selected="${lightLevel == adviceRanges.getLightLevel()}"
+                                        ></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between w-100">
+                                <div>
+                                    <button type="submit" class="btn btn-confirm">
+                                        Save <i class="bi bi-check"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
+                                        Close <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                                <button id="resetAdviceRangesButton" type="button" class="btn btn-danger">
+                                    Reset to default <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                 </div>
             </div>
-        </div>
-    <div id="settingsModal" class="modal fade" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fs-5" id="settingsModalLabel">Settings</h5>
-                </div>
-                <form id="garden-advice-ranges" th:action="@{${editAdviceUri}(gardenId=${garden.getId()})}" method="post"
-                      th:attr="data-open-modal=${openAdviceRangesModel},
-                                data-min-temp=${savedAdviceRanges.getMinTemperature()},
-                                data-max-temp=${savedAdviceRanges.getMaxTemperature()},
-                                data-min-humidity=${savedAdviceRanges.getMinHumidity()},
-                                data-max-humidity=${savedAdviceRanges.getMaxHumidity()},
-                                data-min-pressure=${savedAdviceRanges.getMinPressure()},
-                                data-max-pressure=${savedAdviceRanges.getMaxPressure()},
-                                data-min-moisture=${savedAdviceRanges.getMinMoisture()},
-                                data-max-moisture=${savedAdviceRanges.getMaxMoisture()},
-                                data-light-level=${savedAdviceRanges.getLightLevel().toString()}"
-                >
-                    <div class="modal-body">
-                        <p class="mb-0">Temperature Range ºC</p>
-                        <div class="d-flex flew-row">
-                            <div class="form-field form-floating w-100 mx-1">
-                                    <input type="number" th:min="${MIN_VALID_TEMP}" th:max="${MAX_VALID_TEMP}" class="form-control advice-range" placeholder="10"
-                                    id="minTemp" th:name="minTemp" th:value="*{adviceRanges.getMinTemp()}" data-cy="minTemp"
-                                    th:classappend="${temperatureError} ? 'border border-danger'" step="0.01" />
-                                <label class="form-input" for="minTemp"> Minimum</label>
-                            </div>
-                            <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" th:min="${MIN_VALID_TEMP}" th:max="${MAX_VALID_TEMP}"
-                                       class="form-control advice-range" placeholder="10"
-                                    id="maxTemp" th:name="maxTemp" th:value="*{adviceRanges.getMaxTemp()}" data-cy="maxTemp"
-                                    th:classappend="${temperatureError} ? 'border border-danger'" step="0.01"/>
-                                <label class="form-input" for="maxTemp"> Maximum</label>
-                            </div>
+
+            <!-- Reference Modal Structure -->
+            <div class="modal fade" id="referenceModal" tabindex="-1" aria-labelledby="referenceModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="referenceModalLabel">Reference Information</h5>
                         </div>
-                        <p class="error message" th:text="${temperatureError}"></p>
-                        <p class="mb-0">Soil Moisture Range (%)</p>
-                        <div class="d-flex flew-row">
-                            <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" th:min="${MIN_VALID_MOISTURE}"
-                                       th:max="${MAX_VALID_MOISTURE}" class="form-control advice-range" placeholder="10"
-                                    id="minSoilMoisture" th:name="minSoilMoisture" th:value="*{adviceRanges.getMinSoilMoisture()}"
-                                    data-cy="minSoilMoisture"
-                                    th:classappend="${moistureError} ? 'border border-danger'" step="0.01"/>
-                                <label class="form-input" for="minSoilMoisture">Minimum</label>
-                            </div>
-                            <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" th:min="${MIN_VALID_MOISTURE}" th:max="${MAX_VALID_MOISTURE}"
-                                       class="form-control advice-range" placeholder="60"
-                                    id="maxSoilMoisture" th:name="maxSoilMoisture" th:value="*{adviceRanges.getMaxSoilMoisture()}"
-                                    data-cy="maxSoilMoisture"
-                                    th:classappend="${moistureError} ? 'border border-danger'" step="0.01"/>
-                                <label class="form-input" for="maxSoilMoisture">Maximum</label>
-                            </div>
+                        <div class="modal-body" id="modalReferenceContent">
+                            <ul id="reference-list"></ul>
                         </div>
-                        <p class="error message" th:text="${moistureError}"></p>
-                        <p class="mb-0">Air Pressure Range (Atm)</p>
-                        <div class="d-flex flew-row">
-                            <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" th:min="${MIN_VALID_PRESSURE}" th:max="${MAX_VALID_PRESSURE}"
-                                       class="form-control advice-range" placeholder="10" step="0.01"
-                                    id="minAirPressure" th:name="minAirPressure" th:value="*{adviceRanges.getMinAirPressure()}"
-                                    data-cy="minAirPressure"
-                                    th:classappend="${pressureError} ? 'border border-danger'"/>
-                                <label class="form-input" for="minAirPressure"> Minimum</label>
-                            </div>
-                            <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" th:min="${MIN_VALID_PRESSURE}" th:max="${MAX_VALID_PRESSURE}"
-                                       class="form-control advice-range" placeholder="10" step="0.01"
-                                    id="maxAirPressure" th:name="maxAirPressure" th:value="*{adviceRanges.getMaxAirPressure()}"
-                                    data-cy="maxAirPressure"
-                                    th:classappend="${pressureError} ? 'border border-danger'"/>
-                                <label class="form-input" for="maxAirPressure"> Maximum</label>
-                            </div>
-                        </div>
-                        <p class="error message" th:text="${pressureError}"></p>
-                        <p class="mb-0">Humidity Range (%)</p>
-                        <div class="d-flex flew-row">
-                            <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" th:min="${MIN_VALID_HUMIDITY}"
-                                       th:max="${MAX_VALID_HUMIDITY}" class="form-control advice-range" placeholder="10"
-                                    id="minHumidity" th:name="minHumidity" th:value="*{adviceRanges.getMinHumidity()}"
-                                    data-cy="minHumidity"
-                                    th:classappend="${humidityError} ? 'border border-danger'" step="0.01"/>
-                                <label class="form-input" for="minHumidity">Minimum</label>
-                            </div>
-                            <div class="form-field form-floating w-100 mx-1">
-                                <input type="number" th:min="${MIN_VALID_HUMIDITY}"
-                                       th:max="${MAX_VALID_HUMIDITY}" class="form-control advice-range" placeholder="10"
-                                    id="maxHumidity" th:name="maxHumidity" th:value="*{adviceRanges.getMaxHumidity()}"
-                                    data-cy="maxHumidity"
-                                    th:classappend="${humidityError} ? 'border border-danger'" step="0.01"/>
-                                <label class="form-input" for="maxHumidity">Maximum</label>
-                            </div>
-                        </div>
-                        <p class="error message" th:text="${humidityError}"></p>
-                        <p class="mb-0">Light Level</p>
-                        <div class="d-flex flew-row">
-                            <select class="form-select form-floating w-100 mx-1" name="lightLevel" id="lightLevel">
-                                <option th:each="lightLevel : ${LIGHT_LEVELS}"
-                                        th:value="${lightLevel}"
-                                        th:text="${lightLevel}"
-                                        th:selected="${lightLevel == adviceRanges.getLightLevel()}"
-                                    ></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer d-flex justify-content-between w-100">
-                        <div>
-                            <button type="submit" class="btn btn-confirm">
-                                Save <i class="bi bi-check"></i>
-                            </button>
+                        <div class="modal-footer">
                             <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
                                 Close <i class="bi bi-x"></i>
                             </button>
                         </div>
-                        <button id="resetAdviceRangesButton" type="button" class="btn btn-danger">
-                            Reset to default <i class="bi bi-arrow-counterclockwise"></i>
-                        </button>
                     </div>
-                </form>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Reference Modal Structure -->
-    <div class="modal fade" id="referenceModal" tabindex="-1" aria-labelledby="referenceModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="referenceModalLabel">Reference Information</h5>
-                </div>
-                <div class="modal-body" id="modalReferenceContent">
-                    <ul id="reference-list"></ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-edit" data-bs-dismiss="modal">
-                        Close <i class="bi bi-x"></i>
-                    </button>
                 </div>
             </div>
         </div>
     </div>
-
-
     <script type="text/javascript" th:src="@{/javascript/graphGenerator.js}"></script>
     <script type="text/javascript" th:src="@{/javascript/adviceRanges.js}"></script>
     <script type="text/javascript" th:src="@{/javascript/adviceMessages.js}"></script>
