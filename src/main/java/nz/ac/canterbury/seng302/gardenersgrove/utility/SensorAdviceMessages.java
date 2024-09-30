@@ -4,6 +4,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Handles advice messages for sensors based on the set advice range.
@@ -42,11 +43,24 @@ public class SensorAdviceMessages {
             "hydrated lime. You may need to raise or move your garden to ensure proper drainage.";
     private static final String ABOVE_HUMIDITY_ADVICE = "HUMIDITY IS ABOVE";
 
+    private static final String FULL_SUN_ADVICE = "This garden has full sun lights. This is ideal for most plants, " +
+            "but some plants should avoid full sun lights because it can cause sunburn. If you have any plants that " +
+            "are sensitive to sunlight, consider moving to other places.";
+
+    private static final String PART_SUN_ADVICE = "This garden has partially sun lights. This is ideal for most plants, " +
+            "however some plants that need to be in shade may need some care as they might be sensitive on sun lights. " +
+            "Please consider moving them to other places to avoid sunburn.";
+
+    private static final String PART_SHADE_ADVICE = "This garden is in partially shaded area. This is ideal for most plants, " +
+            " however some plants might need to have some attention if the plants need sun lights but did not get it so far.";
+    private static final String FULL_SHADE_ADVICE = "This garden is in full shaded area. This is ideal for some plants that " +
+            "need to be in shade. Please pay attention to the plants and turn on full spectrum lights if you have.";
     private static final String IDEAL_ADVICE = "This garden has an ideal ";
 
     private final List<String> temperatureReferences = new ArrayList<>();
     private final List<String> moistureReferences = new ArrayList<>();
     private final List<String> humidityReferences = new ArrayList<>();
+    private final List<String> lightReferences = new ArrayList<>();
 
 
     /**
@@ -69,6 +83,10 @@ public class SensorAdviceMessages {
 
         humidityReferences.add("\"The Green Pages: Humidity, temperature and watering\" : \"https://espacepourlavie.ca/en/humidity-temperature-and-watering#:~:text=Most%20plants%20grow%20best%20with,tolerate%20humidity%20levels%20below%2025%25\"");
         humidityReferences.add("\"7 Mistakes Growers Make with Humidity\" : \"https://www.shogunfertilisers.com/en/growing-information/blogs/7-mistakes-growers-make-with-humidity/#:~:text=Generally%2C%20as%20the%20temperature%20increases,aim%20for%2055%2D70%25.\"");
+
+        lightReferences.add("\"Plant Care Simplified\" : \"https://plantcaresimplified.com/the-relationship-between-light-and-plant-growth/\"");
+        lightReferences.add("\"Plant4Harvest\" : \"https://plant4harvest.com/how-does-light-color-affect-plant-growth/\"");
+
     }
 
 
@@ -123,6 +141,22 @@ public class SensorAdviceMessages {
     }
 
     /**
+     * Helper method to get the advice message for light sensor.
+     *
+     * @param totalHour total hours that sensor value is more than and equal to 50 percent in 24 hours
+     * @return string value of advice message depending on the totalHour value
+     */
+    private String getAdvice(Double totalHour) {
+        return switch (LightLevel.getLightLevel(totalHour)) {
+            case FULL_SUN -> FULL_SUN_ADVICE;
+            case PART_SUN -> PART_SUN_ADVICE;
+            case PART_SHADE -> PART_SHADE_ADVICE;
+            case FULL_SHADE -> FULL_SHADE_ADVICE;
+            default -> "";
+        };
+    }
+
+    /**
      * @return Get temperature advice and references to be added to the model.
      */
     public AdviceMessage getTemperatureAdvice() {
@@ -164,5 +198,25 @@ public class SensorAdviceMessages {
             return new AdviceMessage(advice, this.humidityReferences);
         }
         return null;
+    }
+
+    /**
+     * Add light advice and references to the model.
+     *
+     * @param model Model to add attributes to
+     */
+    public void addLightAdviceToModel(Model model) {
+
+        List<Double> lightReadings = dayData.getLight();
+
+        boolean noData = lightReadings.stream().allMatch(Objects::isNull);
+        Double totalHour = noData ? null
+                : lightReadings.stream().filter(lightReading -> lightReading != null && lightReading >= 50d).count() * 0.5;
+        String advice = getAdvice(totalHour);
+
+        if (!advice.isEmpty()) {
+            model.addAttribute("lightAdvice", advice);
+            model.addAttribute("lightReference", this.lightReferences);
+        }
     }
 }

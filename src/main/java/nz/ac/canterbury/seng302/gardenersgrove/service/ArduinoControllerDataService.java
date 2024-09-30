@@ -68,6 +68,10 @@ public class ArduinoControllerDataService {
             model.addAttribute("humidityAdvice", humidityAdvice.getAdviceMessage());
             model.addAttribute("humidityReference", humidityAdvice.getReferenceList());
         }
+        sensorAdviceMessages.addTemperatureAdviceToModel(model);
+        sensorAdviceMessages.addSoilMoistureAdviceToModel(model);
+        sensorAdviceMessages.addHumidityAdviceToModel(model);
+        sensorAdviceMessages.addLightAdviceToModel(model);
     }
 
     /**
