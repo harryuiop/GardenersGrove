@@ -9,6 +9,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.authentication.CustomAuthenticati
 import nz.ac.canterbury.seng302.gardenersgrove.controller.validation.FormValuesValidator;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.location.MapTilerGeocoding;
+import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.platform.suite.api.*;
@@ -49,6 +50,8 @@ public class RunCucumberTest {
     UserService userService;
 
     public static TriConsumer<String, String, UserService> authMaker;
+    @Autowired
+    private GardenService gardenService;
 
     @BeforeAll
     public static void beforeAll() {
