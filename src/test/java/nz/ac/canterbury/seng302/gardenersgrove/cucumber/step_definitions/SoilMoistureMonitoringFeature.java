@@ -8,13 +8,9 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.ArduinoDataPoint;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
-import nz.ac.canterbury.seng302.gardenersgrove.service.UserService;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.FormattedGraphData;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -96,27 +92,15 @@ public class SoilMoistureMonitoringFeature {
         LocalDateTime endTime = LocalDateTime.now();
         LocalDateTime currentTime = startTime;
         while (currentTime.isBefore(endTime)) {
-            if (!currentTime.isEqual(startTime.plusMinutes(25))) {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        40d,
-                        1d,
-                        50d,
-                        60d
-                ));
-            } else {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        40d,
-                        1d,
-                        60d,
-                        10d
-                ));
-            }
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                    garden,
+                    currentTime,
+                    30d,
+                    40d,
+                    1d,
+                    60d,
+                    10d
+            ));
             currentTime = currentTime.plusMinutes(25);
         }
     }

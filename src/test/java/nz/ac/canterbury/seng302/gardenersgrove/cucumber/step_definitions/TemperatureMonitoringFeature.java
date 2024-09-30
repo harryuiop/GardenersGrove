@@ -363,7 +363,7 @@ public class TemperatureMonitoringFeature {
                 60d,
                 70d
         ));
-        currentTime = currentTime.plusMinutes(45);
+        currentTime = currentTime.plusMinutes(65);
         arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
                 garden,
                 currentTime,
