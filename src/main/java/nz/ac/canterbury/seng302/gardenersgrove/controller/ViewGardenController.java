@@ -100,8 +100,6 @@ public class ViewGardenController extends NavBar {
         int forecastedDays = weatherService.getForecastDayCount();
         List<WeatherData> shownWeatherData = weatherData.subList(pastDays, pastDays + forecastedDays);
 
-//        GardenPlantSuggestions gardenPlantSuggestions = new GardenPlantSuggestions(arduinoDataPointService);
-
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
         model.addAttribute("newPlantUri", newPlantUri.toString());
@@ -118,7 +116,6 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("isRainy", weatherService.isRainy(weatherData));
         model.addAttribute("popupClosed", cookies);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MMM yyyy"));
-//        model.addAttribute("plantSuggestions", gardenPlantSuggestions.getPlantSuggestionsForGarden(garden));
         return "viewGarden";
     }
 

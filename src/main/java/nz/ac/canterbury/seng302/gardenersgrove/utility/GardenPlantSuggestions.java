@@ -1,8 +1,6 @@
 package nz.ac.canterbury.seng302.gardenersgrove.utility;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.Garden;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoValidSuggestions;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.GemmaException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import org.slf4j.Logger;
@@ -23,7 +21,7 @@ public class GardenPlantSuggestions {
     Logger logger = LoggerFactory.getLogger(GardenPlantSuggestions.class);
 
     ArduinoDataPointService arduinoDataPointService;
-    private final String CONTEXT = "Give a response of 3 plants in the form 1. Plant Name : plant description, with no extra text before or after, suggestion plants that are suitable for these given environment factors; ";
+    private static final String CONTEXT = "Give a response of 3 plants in the form 1. Plant Name : plant description, with no extra text before or after, suggestion plants that are suitable for these given environment factors; ";
 
     public GardenPlantSuggestions(ArduinoDataPointService arduinoDataPointService)  {
         this.arduinoDataPointService = arduinoDataPointService;
@@ -39,17 +37,15 @@ public class GardenPlantSuggestions {
         //
     // pass back a string with suggestions
 
-    public List<String> getPlantSuggestionsForGarden(Garden garden, boolean retry) throws ProfanityCheckingException {
+    public List<String> getPlantSuggestionsForGarden(Garden garden, boolean retry) throws InterruptedException {
         if (arduinoDataPointService.checkFourteenDaysOfData(garden.getId())) {
             // Create prompt and get suggestion based on Arduino data
             String arduinoPrompt = getArduinoPrompt(garden.getId());
 
-            if (!arduinoPrompt.equals(CONTEXT)){
-                return generateResponse(arduinoPrompt, retry);
+            if (arduinoPrompt.equals(CONTEXT)) { // Checks if data has been added to context if not there is no request.
+                return List.of("Please Check Arduino Connection");
             }
-            List<String> suggestions = new ArrayList<>();
-            suggestions.add("Please Check Arduino Connection");
-            return suggestions;
+            return generateResponse(arduinoPrompt, retry);
         } else if (garden.getLocation().isLocationRecognized()) {
             String locationPrompt = String.format(
                     "give me 3 plant suggestions for a garden in %s" +
@@ -58,9 +54,7 @@ public class GardenPlantSuggestions {
                     garden.getLocation());
             return generateResponse(locationPrompt, retry);
         } else {
-            List<String> suggestions = new ArrayList<>();
-            suggestions.add("Please make sure devices has been connected for 14 days or more or update your location.");
-            return suggestions;
+            return List.of("Please make sure device has been connected for 14 days or more or update your location.");
         }
     }
 
@@ -129,7 +123,7 @@ public class GardenPlantSuggestions {
      */
     public List<String> parseSuggestions(String response) {
         List<String> plants = new ArrayList<>();
-        String[] splitResponse = response.split("[0-9]. ");
+        String[] splitResponse = response.split("\\d. ");
         for (String environment : splitResponse) {
                 String str = environment.replace("\\n", "\n").replace("*", "");
                 int index = str.indexOf(":");
@@ -140,27 +134,30 @@ public class GardenPlantSuggestions {
         return  plants;
     }
 
-    public List<String> generateResponse(String prompt, Boolean retry) {
+    public List<String> generateResponse(String prompt, boolean retry) throws InterruptedException {
+        String response;
         try {
-            String response = getSuggestions(prompt);
+            response = getSuggestions(prompt);
             while (!response.contains(":")) {
                 logger.warn("Regenerate response");
                 response = getSuggestions(prompt);
             }
-            List<String> parsedResponse = parseSuggestions(response);
-
-            if (parsedResponse.size() < 4 && retry){
-                return generateResponse(prompt, false);
-            } else if (parsedResponse.size() < 4) {
-                throw new NoValidSuggestions("No valid plant suggestions");
-            }
-            return parsedResponse;
-        } catch (Exception e) {
+        } catch (GemmaException e) {
             logger.error(e.getMessage());
             List<String> suggestions = new ArrayList<>();
             suggestions.add("Invalid Response, no suggestions, try again later.");
             return suggestions;
         }
+
+        List<String> parsedResponse = parseSuggestions(response);
+
+        if (parsedResponse.size() < 4 && retry) {
+            return generateResponse(prompt, false);
+        } else if (parsedResponse.size() < 4) {
+            return List.of("No valid suggestions");
+        }
+        return parsedResponse;
+
     }
 
 }
