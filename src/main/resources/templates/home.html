@@ -60,7 +60,7 @@
                             <i class="bi bi-thermometer-half"></i>
                             <span>Temperature:&nbsp;</span>
                             <span id="current-temp-reading"
-                                  th:text="${connectedGardens.values().toArray()[0].getTempCelsius() != null ? connectedGardens.values().toArray()[0].getTempCelsius() : '-'}">
+                                  th:text="${connectedGardens.values().toArray()[0].getTempCelsius() != null ? #numbers.formatDecimal(connectedGardens.values().toArray()[0].getTempCelsius(), 0, 2) : '-'}">
                             </span>
                             <span id="current-temp-unit">°C</span>
                           </div>
@@ -70,7 +70,7 @@
                             <i class="bi bi-moisture"></i>
                             <span>Soil Moisture:&nbsp;</span>
                             <span id="current-moisture-reading"
-                                  th:text="${connectedGardens.values().toArray()[0].getMoisturePercent() != null ? connectedGardens.values().toArray()[0].getMoisturePercent() : '-'}">
+                                  th:text="${connectedGardens.values().toArray()[0].getMoisturePercent() != null ? #numbers.formatDecimal(connectedGardens.values().toArray()[0].getMoisturePercent(), 0, 2) : '-'}">
                             </span>
                             <span>%</span>
                           </div>
@@ -80,7 +80,7 @@
                             <i class="bi bi-brightness-high"></i>
                             <span>Light:&nbsp;</span>
                             <span id="current-light-reading"
-                                  th:text="${connectedGardens.values().toArray()[0].getLightPercent() != null ? connectedGardens.values().toArray()[0].getLightPercent() : '-'}">
+                                  th:text="${connectedGardens.values().toArray()[0].getLightPercent() != null ? #numbers.formatDecimal(connectedGardens.values().toArray()[0].getLightPercent(), 0, 2) : '-'}">
 
                             </span>
                             <span>%</span>
@@ -91,7 +91,7 @@
                             <i class="bi bi-speedometer"></i>
                             <span>Pressure:&nbsp;</span>
                             <span id="current-pressure-reading"
-                                  th:text="${connectedGardens.values().toArray()[0].getAtmosphereAtm() != null ? connectedGardens.values().toArray()[0].getAtmosphereAtm() : '-'}">
+                                  th:text="${connectedGardens.values().toArray()[0].getAtmosphereAtm() != null ? #numbers.formatDecimal(connectedGardens.values().toArray()[0].getAtmosphereAtm(), 0, 2) : '-'}">
                             </span>
                             <span>atm</span>
                           </div>
@@ -101,7 +101,7 @@
                             <i class="bi bi-droplet-half"></i>
                             <span>Humidity:&nbsp;</span>
                             <span id="current-humidity-reading"
-                                  th:text="${connectedGardens.values().toArray()[0].getHumidityPercent() != null ? connectedGardens.values().toArray()[0].getHumidityPercent() : '-'}">
+                                  th:text="${connectedGardens.values().toArray()[0].getHumidityPercent() != null ? #numbers.formatDecimal(connectedGardens.values().toArray()[0].getHumidityPercent(), 0, 2) : '-'}">
                             </span>
                             <span>%</span>
                           </div>
@@ -149,11 +149,11 @@
     const pressure = selectedItem.getAttribute("data-pressure");
     const humidity = selectedItem.getAttribute("data-humidity");
 
-    document.getElementById("current-temp-reading").textContent = temp || "-";
-    document.getElementById("current-moisture-reading").textContent = moisture || "-";
-    document.getElementById("current-light-reading").textContent = light || "-";
-    document.getElementById("current-pressure-reading").textContent = pressure || "-";
-    document.getElementById("current-humidity-reading").textContent = humidity || "-";
+      document.getElementById("current-temp-reading").textContent = temp !== null ? JSON.parse(temp).toFixed(2) : "-";
+      document.getElementById("current-moisture-reading").textContent = moisture !== null ? JSON.parse(moisture) : "-";
+      document.getElementById("current-light-reading").textContent = light !== null ? JSON.parse(light) : "-";
+      document.getElementById("current-pressure-reading").textContent = pressure !== null ? JSON.parse(pressure) : "-";
+      document.getElementById("current-humidity-reading").textContent = humidity !== null ? JSON.parse(humidity) : "-";
   }
 </script>
 </body>
