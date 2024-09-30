@@ -8,9 +8,7 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.Plant;
 import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchGardenException;
 import nz.ac.canterbury.seng302.gardenersgrove.exceptions.NoSuchPlantException;
-import nz.ac.canterbury.seng302.gardenersgrove.exceptions.ProfanityCheckingException;
 import nz.ac.canterbury.seng302.gardenersgrove.service.*;
-import nz.ac.canterbury.seng302.gardenersgrove.utility.GardenPlantSuggestions;
 import nz.ac.canterbury.seng302.gardenersgrove.utility.ImageStore;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherData;
 import nz.ac.canterbury.seng302.gardenersgrove.weather.WeatherService;
@@ -47,7 +45,6 @@ public class ViewGardenController extends NavBar {
     private final TagService tagService;
     private final ErrorChecker errorChecker;
     private final WeatherService weatherService;
-    private final ArduinoDataPointService arduinoDataPointService;
 
     /**
      * Spring will automatically call this constructor at runtime to inject the dependencies.
@@ -61,7 +58,7 @@ public class ViewGardenController extends NavBar {
     @Autowired
     public ViewGardenController(GardenService gardenService, PlantService plantService, UserService userService,
                                 TagService tagService, FriendshipService friendshipService, ErrorChecker errorChecker,
-                                WeatherService weatherService, ArduinoDataPointService arduinoDataPointService, ArduinoDataPointService arduinoDataPointService1) {
+                                WeatherService weatherService) {
         this.gardenService = gardenService;
         this.plantService = plantService;
         this.userService = userService;
@@ -69,7 +66,6 @@ public class ViewGardenController extends NavBar {
         this.tagService = tagService;
         this.weatherService = weatherService;
         this.errorChecker = errorChecker;
-        this.arduinoDataPointService = arduinoDataPointService1;
     }
 
     /**
@@ -105,8 +101,6 @@ public class ViewGardenController extends NavBar {
         int forecastedDays = weatherService.getForecastDayCount();
         List<WeatherData> shownWeatherData = weatherData.subList(pastDays, pastDays + forecastedDays);
 
-        GardenPlantSuggestions gardenPlantSuggestions = new GardenPlantSuggestions(arduinoDataPointService);
-
         model.addAttribute("garden", garden);
         model.addAttribute("editGardenUri", editGardenUri.toString());
         model.addAttribute("newPlantUri", newPlantUri.toString());
@@ -140,7 +134,7 @@ public class ViewGardenController extends NavBar {
             @PathVariable long gardenId,
             @CookieValue(value="rainPopupSeen", defaultValue = "false") String popupClose,
             Model model
-    ) throws NoSuchGardenException, InterruptedException, ProfanityCheckingException {
+    ) throws NoSuchGardenException, InterruptedException {
         logger.info("GET {}", viewGardenUri(gardenId));
 
 

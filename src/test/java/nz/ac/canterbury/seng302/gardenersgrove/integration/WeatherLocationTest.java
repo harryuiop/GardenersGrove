@@ -125,7 +125,6 @@ public class WeatherLocationTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("viewGarden"));
 
-        System.out.println(expectedCoords);
         assertEquals(expectedLat, garden.getLocation().getLat());
         assertEquals(expectedLng, garden.getLocation().getLng());
         Mockito.verify(mockWeatherService).getWeatherData(expectedLng, expectedLat);
