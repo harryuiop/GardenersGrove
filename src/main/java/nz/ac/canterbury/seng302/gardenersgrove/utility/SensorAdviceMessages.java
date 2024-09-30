@@ -85,8 +85,8 @@ public class SensorAdviceMessages {
         humidityReferences.add("\"The Green Pages: Humidity, temperature and watering\" : \"https://espacepourlavie.ca/en/humidity-temperature-and-watering#:~:text=Most%20plants%20grow%20best%20with,tolerate%20humidity%20levels%20below%2025%25\"");
         humidityReferences.add("\"7 Mistakes Growers Make with Humidity\" : \"https://www.shogunfertilisers.com/en/growing-information/blogs/7-mistakes-growers-make-with-humidity/#:~:text=Generally%2C%20as%20the%20temperature%20increases,aim%20for%2055%2D70%25.\"");
 
-        lightReferences.add("\"websiteName5\" : \"url5\"");
-        lightReferences.add("\"websiteName6\" : \"url6\"");
+        lightReferences.add("\"Plant Care Simplified\" : \"https://plantcaresimplified.com/the-relationship-between-light-and-plant-growth/\"");
+        lightReferences.add("\"Plant4Harvest\" : \"https://plant4harvest.com/how-does-light-color-affect-plant-growth/\"");
 
     }
 
