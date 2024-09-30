@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +117,8 @@ public class ViewGardenController extends NavBar {
         model.addAttribute("isRainy", weatherService.isRainy(weatherData));
         model.addAttribute("popupClosed", cookies);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd MMM yyyy"));
+        model.addAttribute("currentDayOfWeek", LocalDate.now().getDayOfWeek());
+        model.addAttribute("tomorrowDay", LocalDate.now().plusDays(1).getDayOfWeek());
         return "viewGarden";
     }
 
