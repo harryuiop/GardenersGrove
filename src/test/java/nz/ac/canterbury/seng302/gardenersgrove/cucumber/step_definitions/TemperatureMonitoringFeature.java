@@ -340,39 +340,22 @@ public class TemperatureMonitoringFeature {
         gardenService.saveGarden(garden);
 
         LocalDateTime startTime = LocalDateTime.now().minusDays(1);
-        LocalDateTime endTime = LocalDateTime.now().minusHours(6);
+        LocalDateTime endTime = LocalDateTime.now();
         LocalDateTime currentTime = startTime;
+        int counter = 0;
         while (currentTime.isBefore(endTime)) {
             arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
                     garden,
                     currentTime,
-                    30d,
+                    counter % 2 == 0 ? 40d : 20d,
                     40d,
                     1d,
                     60d,
                     70d
             ));
+            counter++;
             currentTime = currentTime.plusMinutes(25);
         }
-        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                garden,
-                currentTime,
-                40d,
-                40d,
-                1d,
-                60d,
-                70d
-        ));
-        currentTime = currentTime.plusMinutes(65);
-        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                garden,
-                currentTime,
-                20d,
-                40d,
-                1d,
-                60d,
-                70d
-        ));
     }
 
     @Then("I am shown a message informing me of the plant symptoms that occur during high temperature fluctuations")

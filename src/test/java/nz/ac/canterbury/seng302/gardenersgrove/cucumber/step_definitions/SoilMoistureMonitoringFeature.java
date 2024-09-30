@@ -134,27 +134,15 @@ public class SoilMoistureMonitoringFeature {
         LocalDateTime endTime = LocalDateTime.now();
         LocalDateTime currentTime = startTime;
         while (currentTime.isBefore(endTime)) {
-            if (!currentTime.isEqual(startTime.plusMinutes(25))) {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        40d,
-                        1d,
-                        60d,
-                        50d
-                ));
-            } else {
-                arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
-                        garden,
-                        currentTime,
-                        30d,
-                        40d,
-                        1d,
-                        60d,
-                        90d
-                ));
-            }
+            arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(
+                    garden,
+                    currentTime,
+                    30d,
+                    40d,
+                    1d,
+                    60d,
+                    90d
+            ));
             currentTime = currentTime.plusMinutes(25);
         }
     }
