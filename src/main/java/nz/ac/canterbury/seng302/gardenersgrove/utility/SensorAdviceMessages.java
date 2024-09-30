@@ -23,26 +23,26 @@ public class SensorAdviceMessages {
             "Look out for discoloured or wilting leaves, root ball damage, split in steam or trunk and " +
             "stunted growth. If you notice any of these signs, trim dead roots or repot the plant. " +
             "Do not fertilize, overwater, or over-trim the plant while it heals.";
-    private static final String BELOW_MOISTURE_ADVICE = "This garden is below the ideal soil moisture. " +
-            "Overly dry soil makes it difficult for plants to absorb moisture decreases the availability of " +
-            "nutrients. If you are watering your garden regularly, try adding compost into your soil, or creating " +
-            "a layer of compost on top of the soil to prevent the sun from evaporating water from the soil's surface.";
-    private static final String BELOW_HUMIDITY_ADVICE = "A temperature reading in the last 24 hours has gone above the " +
-            "set advice range. High temperatures can harm plants by slowing their growth and causing dehydration. " +
-            "This can lead to smaller, low-quality fruits and vegetables. Look for leaf rolling or cupping, wilting, " +
-            "dry leaf edges, sun-scald or bleached leaves. If any of these signs appear, water regularly, mulch, " +
-            "and provide shade. Do not transplant, prune or fertilize.";
-
     private static final String ABOVE_TEMPERATURE_ADVICE = "A temperature reading in the last 24 hours has " +
             "gone above the set advice range. High temperatures can harm plants by slowing their growth" +
             " and causing dehydration. This can lead to smaller, low-quality fruits and vegetables. Look " +
             "for leaf rolling or cupping, wilting, dry leaf edges, sun-scald or bleached leaves. If any of " +
             "these signs appear, water regularly, mulch, and provide shade. Do not transplant, prune or fertilize.";
+    private static final String BELOW_MOISTURE_ADVICE = "This garden is below the ideal soil moisture. " +
+            "Overly dry soil makes it difficult for plants to absorb moisture decreases the availability of " +
+            "nutrients. If you are watering your garden regularly, try adding compost into your soil, or creating " +
+            "a layer of compost on top of the soil to prevent the sun from evaporating water from the soil's surface.";
     private static final String ABOVE_MOISTURE_ADVICE = "This garden is above the ideal soil moisture. " +
             "Overly moist soil can create leaching of nutrients, root rot, fungal problems, and prevent growth. " +
             "Try adding organic matter/mulch underneath the plant's soil or mix in a speed-treating agent like " +
             "hydrated lime. You may need to raise or move your garden to ensure proper drainage.";
-    private static final String ABOVE_HUMIDITY_ADVICE = "HUMIDITY IS ABOVE";
+    private static final String BELOW_HUMIDITY_ADVICE = "This garden is below ideal humidity. Look out for wilting," +
+            " stunted growth, smaller leaves, dry tip burn, leaf curl. If any of these persist try using a mister," +
+            " fog unit or sprinkler on your garden.";
+    private static final String ABOVE_HUMIDITY_ADVICE = "This garden is above the ideal humidity." +
+            " Look out for soft growth, increase foliar disease, nutrient deficiencies, increased root disease," +
+            " oedema (water spots on leaves, watery swellings or growths that rupture into powdery patches) and edge burn." +
+            " If any if these persist add a fan to your garden.";
 
     private static final String FULL_SUN_ADVICE = "This garden has full sun lights. This is ideal for most plants, " +
             "but some plants should avoid full sun lights because it can cause sunburn. If you have any plants that " +
@@ -158,11 +158,9 @@ public class SensorAdviceMessages {
     }
 
     /**
-     * Add temperature advice and references to the model.
-     *
-     * @param model Model to add attributes to
+     * @return Get temperature advice and references to be added to the model.
      */
-    public void addTemperatureAdviceToModel(Model model) {
+    public AdviceMessage getTemperatureAdvice() {
         String advice = getAdvice("temperature",
                 dayData.getTemperature(),
                 adviceRanges.getMinTemperature(),
@@ -170,40 +168,37 @@ public class SensorAdviceMessages {
                 BELOW_TEMPERATURE_ADVICE, ABOVE_TEMPERATURE_ADVICE);
 
         if (!advice.isEmpty()) {
-            model.addAttribute("temperatureAdvice", advice);
-            model.addAttribute("temperatureReference", this.temperatureReferences);
+            return new AdviceMessage(advice, this.temperatureReferences);
         }
+        return null;
     }
 
     /**
-     * Add soil moisture advice and references to the model.
-     *
-     * @param model Model to add attributes to
+     * @return Get moisture advice and references to be added to the model.
      */
-    public void addSoilMoistureAdviceToModel(Model model) {
+    public AdviceMessage getSoilMoistureAdvice() {
         String advice = getAdvice("soil moisture", dayData.getMoisture(),
                 adviceRanges.getMinMoisture(), adviceRanges.getMaxMoisture(),
                 BELOW_MOISTURE_ADVICE, ABOVE_MOISTURE_ADVICE);
 
         if (!advice.isEmpty()) {
-            model.addAttribute("moistureAdvice", advice);
-            model.addAttribute("moistureReference", this.moistureReferences);
+            return new AdviceMessage(advice, this.moistureReferences);
         }
+        return null;
     }
 
     /**
-     * Add humidity advice and references to the model.
-     *
-     * @param model Model to add attributes to
+     * @return Get humidity advice and references to be added to the model.
      */
-    public void addHumidityAdviceToModel(Model model) {
+    public AdviceMessage getHumidityAdvice() {
         String advice = getAdvice("humidity", dayData.getHumidity(),
                 adviceRanges.getMinHumidity(), adviceRanges.getMaxHumidity(),
                 BELOW_HUMIDITY_ADVICE, ABOVE_HUMIDITY_ADVICE);
+
         if (!advice.isEmpty()) {
-            model.addAttribute("humidityAdvice", advice);
-            model.addAttribute("humidityReference", this.humidityReferences);
+            return new AdviceMessage(advice, this.humidityReferences);
         }
+        return null;
     }
 
     /**

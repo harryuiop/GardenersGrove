@@ -73,8 +73,11 @@ public class HomeController extends NavBar {
 
         Map<String, ArduinoDataPoint> arduinoDataPointsMap = new HashMap<>();
         for (Garden connectedGarden : connectedGardens) {
-            arduinoDataPointsMap.put(connectedGarden.getName(),
-                    arduinoDataPointService.getMostRecentArduinoDataPoint(connectedGarden));
+            ArduinoDataPoint arduinoDataPoint = arduinoDataPointService.getMostRecentArduinoDataPoint(connectedGarden);
+            if (arduinoDataPoint != null) {
+                arduinoDataPointsMap.put(connectedGarden.getName(),
+                        arduinoDataPointService.getMostRecentArduinoDataPoint(connectedGarden));
+            }
         }
         model.addAttribute("connectedGardens", arduinoDataPointsMap);
 
