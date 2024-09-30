@@ -148,7 +148,7 @@ public class GardenPlantSuggestions {
             suggestions.add("Invalid Response, no suggestions, try again later.");
             return suggestions;
         }
-
+        logger.info("Gemma Response: " + response);
         List<String> parsedResponse = parseSuggestions(response);
 
         if (parsedResponse.size() < 4 && retry) {
