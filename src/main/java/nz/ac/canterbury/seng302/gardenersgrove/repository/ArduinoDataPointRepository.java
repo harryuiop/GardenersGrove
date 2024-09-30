@@ -22,4 +22,8 @@ public interface ArduinoDataPointRepository extends CrudRepository<ArduinoDataPo
     List<ArduinoDataPoint> getArduinoDataPointOverDays(Long gardenId, LocalDateTime startDateRange, LocalDateTime endDataRange);
 
     ArduinoDataPoint findFirstByGardenOrderByTimeDesc(Garden garden);
+
+    @Query(value = "SELECT COUNT(*) FROM (SELECT CAST(a.time AS DATE) as date FROM arduino_data_point " +
+            "a WHERE a.garden_id = ?1 and a.time >= ?2 GROUP BY CAST(a.time AS DATE)) AS grouped_dates", nativeQuery = true)
+    int daysofData(Long gardenId, LocalDateTime twoWeeksAgo);
 }

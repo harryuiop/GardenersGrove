@@ -7,6 +7,8 @@ import nz.ac.canterbury.seng302.gardenersgrove.entity.User;
 import nz.ac.canterbury.seng302.gardenersgrove.repository.ArduinoDataPointRepository;
 import nz.ac.canterbury.seng302.gardenersgrove.service.ArduinoDataPointService;
 import nz.ac.canterbury.seng302.gardenersgrove.service.GardenService;
+import nz.ac.canterbury.seng302.gardenersgrove.repository.*;
+import nz.ac.canterbury.seng302.gardenersgrove.service.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -28,35 +31,43 @@ import static org.mockito.ArgumentMatchers.any;
 @DataJpaTest
 @Import(ArduinoDataPointService.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ArduinoDataPointServiceTest {
-    ArduinoDataPointRepository arduinoDataPointRepositoryMock;
+public class ArduinoDataPointServiceTest {
 
-    ArduinoDataPointService arduinoDataPointService;
-    @MockBean
-    GardenService gardenService;
+    @Autowired
+    private ArduinoDataPointRepository arduinoDataPointRepository;
 
+    @Autowired
+    private GardenRepository gardenRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+    private ArduinoDataPointService arduinoDataPointService;
+    private Garden garden;
+
+    private User user;
     static User user = new User("arduino@datpoint.com", "First", "Last","Password1!", "");
     static Garden garden = new Garden(user, "Garden", null, new Location("New Zealand", "Christchurch"),
             null, true);
 
     @BeforeEach
-    void setUpArduinoDataPointService() {
-        Mockito.when(gardenService.getGardenById(any())).thenReturn(Optional.ofNullable(garden));
-        arduinoDataPointRepositoryMock = Mockito.mock(ArduinoDataPointRepository.class);
-        arduinoDataPointService = new ArduinoDataPointService(arduinoDataPointRepositoryMock, gardenService);
-        List<ArduinoDataPoint> points = new ArrayList<>();
-        for (double i=10; i<20; i++) {
-            points.add(new ArduinoDataPoint(
-                    garden,
-                    LocalDateTime.now(),
-                    i-10,
-                    i-9,
-                    i-8,
-                    i-7,
-                    i-6));
+    void setup() {
+
+        arduinoDataPointService = new ArduinoDataPointService(arduinoDataPointRepository);
+
+        if (user == null) {
+            user = new User(
+                    "test@domain.net",
+                    "Test",
+                    "User",
+                    "Password1!",
+                    "2000-01-01"
+            );
+            userRepository.save(user);
         }
-        Mockito.when(arduinoDataPointRepositoryMock.getArduinoDataPointOverDays(any(), any(), any())).thenReturn(points);
-    }
+        gardenRepository.deleteAll();
+        this.garden = new Garden(user, "Test Garden", null, new Location("New Zealand", "Christchurch"),
+                null, true);
+        gardenRepository.save(this.garden);
 
     @ParameterizedTest
     @CsvSource({
@@ -69,6 +80,7 @@ class ArduinoDataPointServiceTest {
     void checkMaxValues(String sensor, double expected) {
         Assertions.assertEquals(expected, arduinoDataPointService.getMaxValueInRange(garden.getId(), LocalDateTime.now(), sensor));
     }
+        arduinoDataPointRepository.deleteAll();
 
     @ParameterizedTest
     @CsvSource({
@@ -80,28 +92,32 @@ class ArduinoDataPointServiceTest {
     })
     void checkMinValues(String sensor, double expected) {
         Assertions.assertEquals(expected, arduinoDataPointService.getMinValueInRange(garden.getId(), LocalDateTime.now(), sensor));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now(), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(1), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(2), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(3), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(4), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(5), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(6), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(7), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(8), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(9), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(10), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(11), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(12), 0d, 20d, 1d, 60d, 40d));
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(15), 0d, 20d, 1d, 60d, 40d));
+
     }
 
     @Test
-    void checkFourteenDaysOfData_noData_returnFalse() {
-        Mockito.when(arduinoDataPointRepositoryMock.getArduinoDataPointOverDays(any(), any(), any())).thenReturn(new ArrayList<>());
+    void check14DaysOfDataTrue(){
+        arduinoDataPointService.saveDataPoint(new ArduinoDataPoint(garden, LocalDateTime.now().minusDays(13), 0d, 20d, 1d, 60d, 40d));
+        Assertions.assertTrue(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
+    }
+
+    @Test
+    void check14DaysOfDataFalse(){
         Assertions.assertFalse(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
     }
 
-    @Test
-    void checkFourteenDaysOfData_enoughData_returnTrue() {
-        List<ArduinoDataPoint> points = new ArrayList<>();
-        for (double i=10, j=0; j<=14; i++, j++) {
-            points.add(new ArduinoDataPoint(
-                    garden,
-                    LocalDateTime.now().minusDays((long)j),
-                    i-10,
-                    i-9,
-                    i-8,
-                    i-7,
-                    i-6));
-        }
-        Mockito.when(arduinoDataPointRepositoryMock.getArduinoDataPointOverDays(any(), any(), any())).thenReturn(points);
-        Assertions.assertTrue(arduinoDataPointService.checkFourteenDaysOfData(garden.getId()));
-    }
 }
