@@ -230,7 +230,7 @@ function renderHumidityGraph() {
     const humidityMonthResults = JSON.parse(graphDataSet.monthHumidity);
     const humidityWeeklyResults = JSON.parse(graphDataSet.weekHumidity);
     const humidityDayResults = JSON.parse(graphDataSet.dayHumidity);
-    const minHumidity = JSON.parse(graphDataSet.monthHumidity);
+    const minHumidity = JSON.parse(graphDataSet.minHumidity);
     const maxHumidity = JSON.parse(graphDataSet.maxHumidity);
     tempUnits.style.display = "none";
 
