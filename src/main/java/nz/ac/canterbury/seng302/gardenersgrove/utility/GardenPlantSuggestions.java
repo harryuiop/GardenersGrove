@@ -54,7 +54,7 @@ public class GardenPlantSuggestions {
                     garden.getLocation());
             return generateResponse(locationPrompt, retry);
         } else {
-            return List.of("Please make sure device has been connected for 14 days or more or update your location.");
+            return List.of("Please make sure device has been connected for at least 14 days or update your location.");
         }
     }
 
