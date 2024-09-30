@@ -28,7 +28,7 @@ import java.util.Optional;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.compareGardensUri;
 import static nz.ac.canterbury.seng302.gardenersgrove.config.UriConfig.monitorGardenUri;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class CompareGraphsFeature {
@@ -58,12 +58,11 @@ public class CompareGraphsFeature {
             user = userService.getUserByEmail(email);
         }
         auth = RunCucumberTest.authMaker.accept(user.getEmail(), "Password1!", userService);
-        if (gardenService.getAllGardens().size() < 1) {
-            Location location = new Location("New Zealand", "Auckland");
-            Garden garden = new Garden(user, "First Garden", "This is the user's first garden", location, null, true);
-            gardenService.saveGarden(garden);
-            gardenId = garden.getId();
-        }
+
+        Location location = new Location("New Zealand", "Auckland");
+        Garden garden = new Garden(user, "First Garden", "This is the user's first garden", location, null, true);
+        gardenService.saveGarden(garden);
+        gardenId = garden.getId();
     }
     @And("I have a garden with a connected Arduino")
     public void iHaveAGardenWithAConnectedArduino() {

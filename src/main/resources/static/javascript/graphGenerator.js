@@ -119,12 +119,23 @@ function destroyGraphs() {
 }
 
 /**
+ * Parse data results (day, week, month) into a 2dp javascript array
+ *
+ * @param resultArrayString String representation of dataset passed via thymeleaf
+ * @returns 2dp javascript array
+ */
+function parseDataResults(resultArrayString) {
+    return JSON.parse(resultArrayString).map(reading =>
+        reading == null ? reading : reading.toFixed(2));
+}
+
+/**
  * Destroys all graphs and render temperature graphs.
  */
 function renderTemperatureGraphs() {
-    const tempMonthResults = JSON.parse(graphDataSet.monthTemp);
-    const tempWeeklyResults = JSON.parse(graphDataSet.weekTemp);
-    const tempDayResults = JSON.parse(graphDataSet.dayTemp);
+    const tempMonthResults = parseDataResults(graphDataSet.monthTemp);
+    const tempWeeklyResults = parseDataResults(graphDataSet.weekTemp);
+    const tempDayResults = parseDataResults(graphDataSet.dayTemp);
     const minTemperature = JSON.parse(graphDataSet.minTemp);
     const maxTemperature = JSON.parse(graphDataSet.maxTemp);
 
@@ -154,9 +165,9 @@ function renderTemperatureGraphs() {
  * Destroys all graphs and render Moisture graphs.
  */
 function renderMoistureGraph() {
-    const moistureMonthResults = JSON.parse(graphDataSet.monthMoisture);
-    const moistureWeeklyResults = JSON.parse(graphDataSet.weekMoisture);
-    const moistureDayResults = JSON.parse(graphDataSet.dayMoisture);
+    const moistureMonthResults = parseDataResults(graphDataSet.monthMoisture);
+    const moistureWeeklyResults = parseDataResults(graphDataSet.weekMoisture);
+    const moistureDayResults = parseDataResults(graphDataSet.dayMoisture);
     const minMoisture = JSON.parse(graphDataSet.minMoisture);
     const maxMoisture = JSON.parse(graphDataSet.maxMoisture);
 
@@ -177,9 +188,9 @@ function renderMoistureGraph() {
  * Destroys all graphs and render light graphs.
  */
 function renderLightGraph() {
-    const lightMonthResults = JSON.parse(graphDataSet.monthLight);
-    const lightWeeklyResults = JSON.parse(graphDataSet.weekLight);
-    const lightDayResults = JSON.parse(graphDataSet.dayLight);
+    const lightMonthResults = parseDataResults(graphDataSet.monthLight);
+    const lightWeeklyResults = parseDataResults(graphDataSet.weekLight);
+    const lightDayResults = parseDataResults(graphDataSet.dayLight);
 
     tempUnits.style.display = "none";
 
@@ -199,9 +210,9 @@ function renderLightGraph() {
  * Destroys all graphs and render pressure graphs.
  */
 function renderPressureGraph() {
-    const pressureMonthResults = JSON.parse(graphDataSet.monthPressure);
-    const pressureWeeklyResults = JSON.parse(graphDataSet.weekPressure);
-    const pressureDayResults = JSON.parse(graphDataSet.dayPressure);
+    const pressureMonthResults = parseDataResults(graphDataSet.monthPressure);
+    const pressureWeeklyResults = parseDataResults(graphDataSet.weekPressure);
+    const pressureDayResults = parseDataResults(graphDataSet.dayPressure);
     const minPressure = JSON.parse(graphDataSet.minPressure);
     const maxPressure = JSON.parse(graphDataSet.maxPressure);
 
@@ -223,9 +234,9 @@ function renderPressureGraph() {
  * Destroys all graphs and render humidity graphs.
  */
 function renderHumidityGraph() {
-    const humidityMonthResults = JSON.parse(graphDataSet.monthHumidity);
-    const humidityWeeklyResults = JSON.parse(graphDataSet.weekHumidity);
-    const humidityDayResults = JSON.parse(graphDataSet.dayHumidity);
+    const humidityMonthResults = parseDataResults(graphDataSet.monthHumidity);
+    const humidityWeeklyResults = parseDataResults(graphDataSet.weekHumidity);
+    const humidityDayResults = parseDataResults(graphDataSet.dayHumidity);
     const minHumidity = JSON.parse(graphDataSet.monthHumidity);
     const maxHumidity = JSON.parse(graphDataSet.maxHumidity);
     tempUnits.style.display = "none";
