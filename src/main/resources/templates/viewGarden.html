@@ -17,6 +17,8 @@
                   <div class="col-auto">
                     <h2 class="text-break" th:text="${garden.getName()}"></h2>
                   </div>
+                </div>
+                <div class="row">
                   <div th:if="${owner}" class="col-sm-2 col-md-3 col-lg-4">
                     <a th:href="@{${editGardenUri}}" style="text-decoration: none">
                       <button class="btn btn-edit" type="button">
@@ -32,10 +34,6 @@
                     </a>
                   </div>
                 </div>
-                <button type="button" class="btn btn-edit mt-1" data-bs-toggle="modal"
-                        data-bs-target="#plantSuggestionModal">
-                  Plant Suggestions
-                </button>
               </div>
             </div>
 
@@ -163,7 +161,7 @@
 
         <div class="row">
           <div class="container">
-            <div class="row">
+            <div class="row align-items-center">
               <div class="col-auto">
                 <h2 th:if="${owner}">My Plants</h2>
                 <h2 th:unless="${owner}" th:text="${garden.getOwner().getFirstName()} + '\'s Plants'"></h2>
@@ -173,9 +171,15 @@
                   <button th:if="${owner}"
                           class="btn btn-confirm"
                           type="button"
-                  ><i class="bi bi-plus-lg"></i> Add Plant
+                  >Add Plant <i class="bi bi-plus-lg"></i>
                   </button>
                 </a>
+              </div>
+              <div class="col-auto">
+                <button id="plant-suggestions-button" type="button" class="btn btn-edit" data-bs-toggle="modal"
+                        data-bs-target="#plantSuggestionModal" th:attr="data-garden-id=${garden.getId()}">
+                  Plant Suggestions <i class="bi bi-question-diamond-fill"></i>
+                </button>
               </div>
             </div>
             <br>
@@ -208,10 +212,15 @@
       <div class="modal-header">
         <h5 class="modal-title fs-5" id="plantSuggestionModalLabel">Suggested Plants</h5>
       </div>
-      <div class="modal-body">
-        <p th:text="${plantSuggestions}"></p>
+      <div class="modal-body d-flex justify-content-center align-items-center" style="min-height:200px;">
+        <div id="suggestion-on-load" class="spinner-border text-success " role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <div id="plant-suggestion-container"></div>
+
       </div>
       <div class="modal-footer">
+        <p>These are ai generated suggestions</p>
         <button type="button" class="btn btn-edit" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -231,4 +240,5 @@
 </script>
 <script type="text/javascript" th:src="@{/javascript/tagAutocomplete.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/cookies.js}"></script>
+<script type="text/javascript" th:src="@{/javascript/plantSuggestions.js}"></script>
 </html>
