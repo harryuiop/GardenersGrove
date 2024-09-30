@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng302.gardenersgrove.utility;
 
 import nz.ac.canterbury.seng302.gardenersgrove.entity.AdviceRanges;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
