@@ -1,4 +1,4 @@
-# SENG302 Team 400 Project
+Gradeners Grove
 
 Project's tech stack includes
 
