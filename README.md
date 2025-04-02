@@ -1,88 +1,113 @@
-Gradeners Grove
+# Gardeners Grove
 
-Project's tech stack includes
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white)
+![Thymeleaf](https://img.shields.io/badge/Thymeleaf-%23005C0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
-- [`gradle`](https://gradle.org/),
-- [`Spring Boot`](https://spring.io/),
-- [`Thymeleaf`](https://www.thymeleaf.org/),
-- [`Spring Boot Starter Mail`](https://docs.spring.io/spring-boot/reference/io/email.html),
-- [`MapTiler`](https://www.maptiler.com/cloud/geocoding/),
-- [`Open-Meteo`](https://open-meteo.com/),
-- [`Chart.js`](https://www.chartjs.org/),
-- [`GitLab CI`](https://about.gitlab.com/).
+## Overview
 
-## How to run tests
+Gardeners Grove is a web application that helps users manage their gardens and plants. The application includes features for user authentication, garden management, plant tracking, friend connections, and sensor data monitoring.
 
-> Run ./gradlew test
+## Dependencies
 
-## How to run
+- [MapTiler](https://www.maptiler.com/cloud/geocoding/) - Geocoding services
+- [Open-Meteo](https://open-meteo.com/) - Weather data
+- [Chart.js](https://www.chartjs.org/) - Data visualization
 
-### 1 - Product Status
+## Getting Started
 
-Our project has been deployed to PROD instance.
+### How to Run Tests
 
-### 2 - Running the program
-On Linux:
+```bash
+./gradlew test
 ```
+
+### How to Run the Application
+
+**On Linux:**
+```bash
 ./gradlew bootRun
 ```
 
-On Windows:
-```
+**On Windows:**
+```bash
 gradlew bootRun
 ```
 
-By default, the application will run on local port 8080 [http://localhost:8080](http://localhost:8080)
+By default, the application runs on [http://localhost:8080](http://localhost:8080)
 
-### 3 - Using the application
+## Using the Application
 
-> - You will first need to register an account or login with persisting account.
-> - If registering you must get a code from your email to verify your account before you are able to access the account.
-> - If you have forgotten your password you can get a reset password form sent to your email from the login page.
-> - The forgotten password and register links will expire after 10 minutes.
-> - Once logged in, you have the ability to view the users details, add a profile picture, and change any of the users details.
-> - To view the users profile click on the profile image or name. 
-> - From viewing the users profile you can edit the profile image and view all public knowledge details (everything except users password).
-> - On the edit profile page you can edit users name, email, and date of birth. To edit password you must go through to change password.
-> - If password is updated an email will be sent to the user notifying them of the update.
-> - When logged in you will also have access to add garden's or view existing gardens that the user has created.
-> - All gardens can be seen in the sidebar or on the "My Gardens" page also accessible through the sidebar.
-> - When viewing a garden you can also see any plants added to the garden. If you have more than 10 plants you may not be able to see them all on your page, so a scroll wheel appears and you can scroll through them.
-> - You can add a plant by viewing the garden you want to add a plant to.
-> - You can add an image to the plant either through the adding/editing of a plant or on the garden view page by clicking on the image.
-> - You can also add tags to your garden while viewing the garden by entering the tag name and hitting the plus button.
-> - Gardens can also be made either public or private to prevent other users from viewing them.
-> - To view your friends you must select the My Friends button on the navigation bar. This will take you to the manage
-    my friends page.
-> - Friends can be removed and friend requests can be sent, accepted or declined on this page.
-> - To send a friend request you must search for another users name or email and then select Send Request.
-> - Pending and declined requests are visible below the incoming friend requests and can be cancelled on ths page.
+### Authentication
+
+- **Registration**: Create a new account and verify using the email code sent to you
+- **Login**: Access your account with email and password
+- **Password Reset**: Request a password reset form via email from the login page
+- **Note**: Registration and password reset links expire after 10 minutes
+
+### User Profile
+
+- View user details by clicking on the profile image or name
+- Add or change profile picture
+- Edit user details (name, email, date of birth)
+- Change password (generates email notification)
+
+### Garden Management
+
+- Access gardens through the sidebar or "My Gardens" page
+- View existing gardens created by the user
+- Add new gardens to your account
+- Set gardens as public or private to control visibility
+
+### Sensor Data
+
+- Monitor garden sensor data on the "Monitor Gardens" page
+- View historical sensor data visualized in graphs
+- Check current sensor readings
+
+### Plant Management
+
+- View plants associated with each garden
+- Scroll through plants when there are more than 10
+- Add plants to specific gardens
+- Add images to plants during creation/editing or from the garden view
+- Add tags to gardens for better organization
+
+### Friend Management
+
+- Access friend list via "My Friends" in the navigation bar
+- Send friend requests by searching for users by name or email
+- Accept or decline incoming friend requests
+- View pending and declined requests
+- Cancel sent requests
 
 ## Default User Credentials
 
-### On Test
-__Email__: user1@gmail.com \
-__Password__: Password1!\
-User 1 should have at least 9 gardens, the first with 10 plants and the second with 1 plant.
+### Test Environment
 
-The first garden contains inserted arduino data for the sensors (on the monitor gardens page).
-Dummy sensor data is from August 11th 2024 to October 10th 2024. Note not every 30-minute
-period in this time frame is accounted for. Current reading also grabs the newest data reading,
-since we need to add data in the future for your marking this result may not be accurate with the graphs.
+**Email**: user1@gmail.com  
+**Password**: Password1!
 
-There are 9 more users that share a password with User 1 and have emails in the same format as User 1 but with a
-different number up to 9.
+Features:
+- Has at least 9 gardens
+- First garden has 10 plants
+- Second garden has 1 plant
+- First garden contains Arduino sensor data (August 11th to October 10th, 2024)
 
-### On Prod
+Additional test users available with emails user2@gmail.com through user9@gmail.com (same password)
 
-__Email__: user2@gmail.com \
-__Password__: Password1!\
-User 2 should have at least 10 gardens, the first with 7 plants.
+### Production Environment
 
-The first garden contains inserted arduino data for the sensors (on the monitor gardens page).
-Dummy sensor data is from August 11th 2024 to October 10th 2024. Note not every 30-minute
-period in this time frame is accounted for. Current reading also grabs the newest data reading,
-since we need to add data in the future for your marking this result may not be accurate with the graphs.
+**Email**: user2@gmail.com  
+**Password**: Password1!
+
+Features:
+- Has at least 10 gardens
+- First garden has 7 plants
+- First garden contains Arduino sensor data (August 11th to October 10th, 2024)
 
 ## Contributors
 
@@ -93,13 +118,13 @@ since we need to add data in the future for your marking this result may not be 
 - Zoe Perry
 - Harry Ellis
 - Sam Willems
-- Vincent Chen 
+- Vincent Chen
 - HanByeol Yang
 
 ## References
 
-- [Spring Boot Docs](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
-- [Spring JPA docs](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
-- [Thymeleaf Docs](https://www.thymeleaf.org/documentation.html)
-- [Learn resources](https://learn.canterbury.ac.nz/course/view.php?id=17797&section=8)
-- [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/)
+- [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
+- [Spring JPA Documentation](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
+- [Thymeleaf Documentation](https://www.thymeleaf.org/documentation.html)
+- [University of Canterbury Learn Resources](https://learn.canterbury.ac.nz/course/view.php?id=17797&section=8)
+- [Bootstrap Documentation](https://getbootstrap.com/docs/5.3/getting-started/introduction/)
